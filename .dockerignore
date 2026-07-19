@@ -10,6 +10,4 @@ __pycache__
 tests/
 docs/
 science_olympiad_platform.egg-info/
-IMPLEMENTATION_PROGRESS*.md
-TEST_REPORT*.md
 data/

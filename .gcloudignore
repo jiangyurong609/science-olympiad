@@ -13,5 +13,3 @@ tests/
 .ruff_cache/
 *.egg-info/
 alembic/versions/__pycache__/
-IMPLEMENTATION_PROGRESS*.md
-TEST_REPORT*.md

@@ -67,7 +67,7 @@ handles email delivery, model-based generation jobs, and the discovery crawler s
 - Audited timed-accommodation profiles with server-authoritative extended time and immutable timing snapshots.
 - Responsive interface verified at desktop and mobile widths.
 
-> The full capability history by version lives in `IMPLEMENTATION_PROGRESS*.md` and `TEST_REPORT*.md`.
+> The full capability history by version lives in `docs/history/`.
 
 ---
 
@@ -330,7 +330,7 @@ only `--image` preserves the existing env vars, Secret Manager references, and C
 - `docs/PRODUCT_DESIGN.md` — product design
 - `docs/science_olympiad_platform_comprehensive_design.md` — comprehensive design reference
 - `docs/science-olympiad-material-catalog-2026/` — 2026 source material catalog and reports
-- `IMPLEMENTATION_PROGRESS*.md` / `TEST_REPORT*.md` — capability history by version
+- `docs/history/` — capability history and test reports by version
 
 ---
 
