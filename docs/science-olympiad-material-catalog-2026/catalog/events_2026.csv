@@ -1,0 +1,47 @@
+event_id,season,division,name,category,topic_focus,official_event_url,official_division_url,material_manifest
+anatomy-and-physiology-b-2026,2026,B,Anatomy & Physiology,"Life, Personal & Social Science","Nervous system, sense organs, endocrine system",https://www.soinc.org/anatomy-and-physiology-b,https://www.soinc.org/division-b-events,events/anatomy-and-physiology-b-2026/manifest.json
+disease-detectives-b-2026,2026,B,Disease Detectives,"Life, Personal & Social Science",,https://www.soinc.org/disease-detectives-b,https://www.soinc.org/division-b-events,events/disease-detectives-b-2026/manifest.json
+entomology-b-2026,2026,B,Entomology,"Life, Personal & Social Science",,https://www.soinc.org/entomology-b,https://www.soinc.org/division-b-events,events/entomology-b-2026/manifest.json
+heredity-b-2026,2026,B,Heredity,"Life, Personal & Social Science",,https://www.soinc.org/heredity-b,https://www.soinc.org/division-b-events,events/heredity-b-2026/manifest.json
+water-quality-b-2026,2026,B,Water Quality,"Life, Personal & Social Science",Fresh water,https://www.soinc.org/water-quality-b,https://www.soinc.org/division-b-events,events/water-quality-b-2026/manifest.json
+dynamic-planet-b-2026,2026,B,Dynamic Planet,Earth & Space Science,Oceanography,https://www.soinc.org/dynamic-planet-b,https://www.soinc.org/division-b-events,events/dynamic-planet-b-2026/manifest.json
+meteorology-b-2026,2026,B,Meteorology,Earth & Space Science,Everyday weather,https://www.soinc.org/meteorology-b,https://www.soinc.org/division-b-events,events/meteorology-b-2026/manifest.json
+remote-sensing-b-2026,2026,B,Remote Sensing,Earth & Space Science,,https://www.soinc.org/remote-sensing-b,https://www.soinc.org/division-b-events,events/remote-sensing-b-2026/manifest.json
+rocks-and-minerals-b-2026,2026,B,Rocks and Minerals,Earth & Space Science,,https://www.soinc.org/rocks-and-minerals-b,https://www.soinc.org/division-b-events,events/rocks-and-minerals-b-2026/manifest.json
+solar-system-b-2026,2026,B,Solar System,Earth & Space Science,,https://www.soinc.org/solar-system-b,https://www.soinc.org/division-b-events,events/solar-system-b-2026/manifest.json
+hovercraft-b-2026,2026,B,Hovercraft,Physical Science & Chemistry,,https://www.soinc.org/hovercraft-b,https://www.soinc.org/division-b-events,events/hovercraft-b-2026/manifest.json
+circuit-lab-b-2026,2026,B,Circuit Lab,Physical Science & Chemistry,,https://www.soinc.org/circuit-lab-b,https://www.soinc.org/division-b-events,events/circuit-lab-b-2026/manifest.json
+machines-b-2026,2026,B,Machines,Physical Science & Chemistry,,https://www.soinc.org/machines-b,https://www.soinc.org/division-b-events,events/machines-b-2026/manifest.json
+crime-busters-b-2026,2026,B,Crime Busters,Physical Science & Chemistry,,https://www.soinc.org/crime-busters-b,https://www.soinc.org/division-b-events,events/crime-busters-b-2026/manifest.json
+potions-and-poisons-b-2026,2026,B,Potions and Poisons,Physical Science & Chemistry,,https://www.soinc.org/potions-and-poisons-b,https://www.soinc.org/division-b-events,events/potions-and-poisons-b-2026/manifest.json
+boomilever-b-2026,2026,B,Boomilever,Technology & Engineering Design,,https://www.soinc.org/boomilever-b,https://www.soinc.org/division-b-events,events/boomilever-b-2026/manifest.json
+helicopter-b-2026,2026,B,Helicopter,Technology & Engineering Design,,https://www.soinc.org/helicopter-b,https://www.soinc.org/division-b-events,events/helicopter-b-2026/manifest.json
+mission-possible-b-2026,2026,B,Mission Possible,Technology & Engineering Design,,https://www.soinc.org/mission-possible-b,https://www.soinc.org/division-b-events,events/mission-possible-b-2026/manifest.json
+scrambler-b-2026,2026,B,Scrambler,Technology & Engineering Design,,https://www.soinc.org/scrambler-b,https://www.soinc.org/division-b-events,events/scrambler-b-2026/manifest.json
+codebusters-b-2026,2026,B,Codebusters,Inquiry & Nature of Science,,https://www.soinc.org/codebusters-b,https://www.soinc.org/division-b-events,events/codebusters-b-2026/manifest.json
+experimental-design-b-2026,2026,B,Experimental Design,Inquiry & Nature of Science,,https://www.soinc.org/experimental-design-b,https://www.soinc.org/division-b-events,events/experimental-design-b-2026/manifest.json
+metric-mastery-b-2026,2026,B,Metric Mastery,Inquiry & Nature of Science,,https://www.soinc.org/metric-mastery-b,https://www.soinc.org/division-b-events,events/metric-mastery-b-2026/manifest.json
+write-it-do-it-b-2026,2026,B,Write It Do It,Inquiry & Nature of Science,,https://www.soinc.org/write-it-do-it-b,https://www.soinc.org/division-b-events,events/write-it-do-it-b-2026/manifest.json
+anatomy-and-physiology-c-2026,2026,C,Anatomy & Physiology,"Life, Personal & Social Science","Nervous system, sense organs, endocrine system",https://www.soinc.org/anatomy-and-physiology-c,https://www.soinc.org/division-c-events,events/anatomy-and-physiology-c-2026/manifest.json
+designer-genes-c-2026,2026,C,Designer Genes,"Life, Personal & Social Science",,https://www.soinc.org/designer-genes-c,https://www.soinc.org/division-c-events,events/designer-genes-c-2026/manifest.json
+disease-detectives-c-2026,2026,C,Disease Detectives,"Life, Personal & Social Science",,https://www.soinc.org/disease-detectives-c,https://www.soinc.org/division-c-events,events/disease-detectives-c-2026/manifest.json
+entomology-c-2026,2026,C,Entomology,"Life, Personal & Social Science",,https://www.soinc.org/entomology-c,https://www.soinc.org/division-c-events,events/entomology-c-2026/manifest.json
+water-quality-c-2026,2026,C,Water Quality,"Life, Personal & Social Science",Fresh water,https://www.soinc.org/water-quality-c,https://www.soinc.org/division-c-events,events/water-quality-c-2026/manifest.json
+astronomy-c-2026,2026,C,Astronomy,Earth & Space Science,,https://www.soinc.org/astronomy-c,https://www.soinc.org/division-c-events,events/astronomy-c-2026/manifest.json
+dynamic-planet-c-2026,2026,C,Dynamic Planet,Earth & Space Science,Oceanography,https://www.soinc.org/dynamic-planet-c,https://www.soinc.org/division-c-events,events/dynamic-planet-c-2026/manifest.json
+remote-sensing-c-2026,2026,C,Remote Sensing,Earth & Space Science,,https://www.soinc.org/remote-sensing-c,https://www.soinc.org/division-c-events,events/remote-sensing-c-2026/manifest.json
+rocks-and-minerals-c-2026,2026,C,Rocks and Minerals,Earth & Space Science,,https://www.soinc.org/rocks-and-minerals-c,https://www.soinc.org/division-c-events,events/rocks-and-minerals-c-2026/manifest.json
+circuit-lab-c-2026,2026,C,Circuit Lab,Physical Science & Chemistry,,https://www.soinc.org/circuit-lab-c,https://www.soinc.org/division-c-events,events/circuit-lab-c-2026/manifest.json
+hovercraft-c-2026,2026,C,Hovercraft,Physical Science & Chemistry,,https://www.soinc.org/hovercraft-c,https://www.soinc.org/division-c-events,events/hovercraft-c-2026/manifest.json
+machines-c-2026,2026,C,Machines,Physical Science & Chemistry,,https://www.soinc.org/machines-c,https://www.soinc.org/division-c-events,events/machines-c-2026/manifest.json
+chemistry-lab-c-2026,2026,C,Chemistry Lab,Physical Science & Chemistry,"Kinetics, chemical reactions, stoichiometry",https://www.soinc.org/chemistry-lab-c,https://www.soinc.org/division-c-events,events/chemistry-lab-c-2026/manifest.json
+forensics-c-2026,2026,C,Forensics,Physical Science & Chemistry,,https://www.soinc.org/forensics-c,https://www.soinc.org/division-c-events,events/forensics-c-2026/manifest.json
+materials-science-c-2026,2026,C,Materials Science,Physical Science & Chemistry,Nanomaterials,https://www.soinc.org/materials-science-c,https://www.soinc.org/division-c-events,events/materials-science-c-2026/manifest.json
+boomilever-c-2026,2026,C,Boomilever,Technology & Engineering Design,,https://www.soinc.org/boomilever-c,https://www.soinc.org/division-c-events,events/boomilever-c-2026/manifest.json
+electric-vehicle-c-2026,2026,C,Electric Vehicle,Technology & Engineering Design,,https://www.soinc.org/electric-vehicle-c,https://www.soinc.org/division-c-events,events/electric-vehicle-c-2026/manifest.json
+helicopter-c-2026,2026,C,Helicopter,Technology & Engineering Design,,https://www.soinc.org/helicopter-c,https://www.soinc.org/division-c-events,events/helicopter-c-2026/manifest.json
+robot-tour-c-2026,2026,C,Robot Tour,Technology & Engineering Design,,https://www.soinc.org/robot-tour-c,https://www.soinc.org/division-c-events,events/robot-tour-c-2026/manifest.json
+codebusters-c-2026,2026,C,Codebusters,Inquiry & Nature of Science,,https://www.soinc.org/codebusters-c,https://www.soinc.org/division-c-events,events/codebusters-c-2026/manifest.json
+experimental-design-c-2026,2026,C,Experimental Design,Inquiry & Nature of Science,,https://www.soinc.org/experimental-design-c,https://www.soinc.org/division-c-events,events/experimental-design-c-2026/manifest.json
+bungee-drop-c-2026,2026,C,Bungee Drop,Inquiry & Nature of Science,,https://www.soinc.org/bungee-drop-c,https://www.soinc.org/division-c-events,events/bungee-drop-c-2026/manifest.json
+engineering-cad-c-2026,2026,C,Engineering CAD,Inquiry & Nature of Science,,https://www.soinc.org/engineering-cad-c,https://www.soinc.org/division-c-events,events/engineering-cad-c-2026/manifest.json

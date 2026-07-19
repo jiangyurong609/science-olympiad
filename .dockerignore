@@ -1,0 +1,15 @@
+.git
+.gitignore
+.pytest_cache
+.ruff_cache
+__pycache__
+*.pyc
+*.db
+.env
+.env.example
+tests/
+docs/
+science_olympiad_platform.egg-info/
+IMPLEMENTATION_PROGRESS*.md
+TEST_REPORT*.md
+data/

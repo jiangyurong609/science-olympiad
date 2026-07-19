@@ -1,0 +1,194 @@
+{
+  "event": {
+    "event_id": "boomilever-c-2026",
+    "season": 2026,
+    "division": "C",
+    "name": "Boomilever",
+    "category": "Technology & Engineering Design",
+    "topic_focus": "",
+    "official_event_url": "https://www.soinc.org/boomilever-c",
+    "official_division_url": "https://www.soinc.org/division-c-events",
+    "material_manifest": "events/boomilever-c-2026/manifest.json"
+  },
+  "materials": [
+    {
+      "material_type": "official_event_page",
+      "description": "Official event page and public resource index",
+      "source_url": "https://www.soinc.org/boomilever-c",
+      "status": "CATALOGED",
+      "student_display_allowed": false,
+      "llm_grounding_allowed": false,
+      "notes": "Review exact source license before download, parsing, display, or LLM use."
+    },
+    {
+      "material_type": "rules_manual",
+      "description": "Current rules; do not redistribute without permission",
+      "source_url": "",
+      "status": "DISCOVERY_REQUIRED",
+      "student_display_allowed": false,
+      "llm_grounding_allowed": false,
+      "notes": "Review exact source license before download, parsing, display, or LLM use."
+    },
+    {
+      "material_type": "rules_corrections",
+      "description": "Current official corrections and clarifications",
+      "source_url": "",
+      "status": "DISCOVERY_REQUIRED",
+      "student_display_allowed": false,
+      "llm_grounding_allowed": false,
+      "notes": "Review exact source license before download, parsing, display, or LLM use."
+    },
+    {
+      "material_type": "faq",
+      "description": "Official event FAQ and interpretations",
+      "source_url": "",
+      "status": "DISCOVERY_REQUIRED",
+      "student_display_allowed": false,
+      "llm_grounding_allowed": false,
+      "notes": "Review exact source license before download, parsing, display, or LLM use."
+    },
+    {
+      "material_type": "score_sheet",
+      "description": "Official score sheet when available",
+      "source_url": "",
+      "status": "DISCOVERY_REQUIRED",
+      "student_display_allowed": false,
+      "llm_grounding_allowed": false,
+      "notes": "Review exact source license before download, parsing, display, or LLM use."
+    },
+    {
+      "material_type": "team_checklist",
+      "description": "Official checklist when available",
+      "source_url": "",
+      "status": "DISCOVERY_REQUIRED",
+      "student_display_allowed": false,
+      "llm_grounding_allowed": false,
+      "notes": "Review exact source license before download, parsing, display, or LLM use."
+    },
+    {
+      "material_type": "sample_test",
+      "description": "Practice or sample test; verify reuse terms",
+      "source_url": "",
+      "status": "DISCOVERY_REQUIRED",
+      "student_display_allowed": false,
+      "llm_grounding_allowed": false,
+      "notes": "Review exact source license before download, parsing, display, or LLM use."
+    },
+    {
+      "material_type": "training_handout",
+      "description": "Public handout or presentation",
+      "source_url": "",
+      "status": "DISCOVERY_REQUIRED",
+      "student_display_allowed": false,
+      "llm_grounding_allowed": false,
+      "notes": "Review exact source license before download, parsing, display, or LLM use."
+    },
+    {
+      "material_type": "official_video",
+      "description": "Official instructional video",
+      "source_url": "",
+      "status": "DISCOVERY_REQUIRED",
+      "student_display_allowed": false,
+      "llm_grounding_allowed": false,
+      "notes": "Review exact source license before download, parsing, display, or LLM use."
+    },
+    {
+      "material_type": "government_reference",
+      "description": "Government scientific source",
+      "source_url": "",
+      "status": "DISCOVERY_REQUIRED",
+      "student_display_allowed": false,
+      "llm_grounding_allowed": false,
+      "notes": "Review exact source license before download, parsing, display, or LLM use."
+    },
+    {
+      "material_type": "open_educational_resource",
+      "description": "Open educational source",
+      "source_url": "",
+      "status": "DISCOVERY_REQUIRED",
+      "student_display_allowed": false,
+      "llm_grounding_allowed": false,
+      "notes": "Review exact source license before download, parsing, display, or LLM use."
+    },
+    {
+      "material_type": "licensed_historical_test",
+      "description": "Past competition test under contract",
+      "source_url": "",
+      "status": "DISCOVERY_REQUIRED",
+      "student_display_allowed": false,
+      "llm_grounding_allowed": false,
+      "notes": "Review exact source license before download, parsing, display, or LLM use."
+    },
+    {
+      "material_type": "original_lesson",
+      "description": "Platform-authored lesson",
+      "source_url": "",
+      "status": "DISCOVERY_REQUIRED",
+      "student_display_allowed": true,
+      "llm_grounding_allowed": false,
+      "notes": "Review exact source license before download, parsing, display, or LLM use."
+    },
+    {
+      "material_type": "original_question_bank",
+      "description": "Platform-authored or reviewed generated questions",
+      "source_url": "",
+      "status": "DISCOVERY_REQUIRED",
+      "student_display_allowed": true,
+      "llm_grounding_allowed": false,
+      "notes": "Review exact source license before download, parsing, display, or LLM use."
+    },
+    {
+      "material_type": "answer_key_and_rubric",
+      "description": "Original answer keys and partial-credit rubrics",
+      "source_url": "",
+      "status": "DISCOVERY_REQUIRED",
+      "student_display_allowed": true,
+      "llm_grounding_allowed": false,
+      "notes": "Review exact source license before download, parsing, display, or LLM use."
+    },
+    {
+      "material_type": "near_transfer_remediation",
+      "description": "Equivalent remediation item",
+      "source_url": "",
+      "status": "DISCOVERY_REQUIRED",
+      "student_display_allowed": true,
+      "llm_grounding_allowed": false,
+      "notes": "Review exact source license before download, parsing, display, or LLM use."
+    },
+    {
+      "material_type": "far_transfer_remediation",
+      "description": "Unfamiliar-context remediation item",
+      "source_url": "",
+      "status": "DISCOVERY_REQUIRED",
+      "student_display_allowed": true,
+      "llm_grounding_allowed": false,
+      "notes": "Review exact source license before download, parsing, display, or LLM use."
+    },
+    {
+      "material_type": "delayed_retention_item",
+      "description": "Spaced retention check",
+      "source_url": "",
+      "status": "DISCOVERY_REQUIRED",
+      "student_display_allowed": true,
+      "llm_grounding_allowed": false,
+      "notes": "Review exact source license before download, parsing, display, or LLM use."
+    }
+  ],
+  "required_assessment_assets": [
+    "diagnostic",
+    "topic_drills",
+    "timed_event_drill",
+    "invitational_level_mock",
+    "regional_level_mock",
+    "state_level_mock",
+    "national_challenge_set",
+    "multiple_equivalent_forms",
+    "answer_key",
+    "partial_credit_rubric",
+    "difficulty_and_time_estimates",
+    "error_taxonomy",
+    "near_transfer_items",
+    "far_transfer_items",
+    "delayed_retention_items"
+  ]
+}

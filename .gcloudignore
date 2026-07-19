@@ -1,0 +1,17 @@
+.git/
+.gitignore
+__pycache__/
+*.pyc
+*.db
+.env
+.env.example
+.venv/
+data/
+docs/
+tests/
+.pytest_cache/
+.ruff_cache/
+*.egg-info/
+alembic/versions/__pycache__/
+IMPLEMENTATION_PROGRESS*.md
+TEST_REPORT*.md

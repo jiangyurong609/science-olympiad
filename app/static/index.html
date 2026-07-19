@@ -1,0 +1,419 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#f4f1e8">
+  <meta name="description" content="Science Olympiad learning, competition practice, and guided error review.">
+  <title>Fieldstone — Science Olympiad Study Lab</title>
+  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='16' fill='%231f5a45'/%3E%3Ctext x='32' y='44' text-anchor='middle' font-size='38' fill='white'%3EF%3C/text%3E%3C/svg%3E">
+  <link rel="preload" href="/static/fonts/Fraunces.woff2" as="font" type="font/woff2" crossorigin>
+  <link rel="preload" href="/static/fonts/AtkinsonHyperlegibleNext.woff2" as="font" type="font/woff2" crossorigin>
+  <link rel="stylesheet" href="/static/styles.css?v=25">
+  <link rel="stylesheet" href="/static/theme.css?v=25">
+</head>
+<body>
+  <a class="skip-link" href="#main-content">Skip to Main Content</a>
+
+  <header class="site-header">
+    <a class="brand" href="#overview" aria-label="Fieldstone home">
+      <span class="brand-mark" aria-hidden="true">F</span>
+      <span><strong>Fieldstone</strong><small>Science Olympiad Study Lab</small></span>
+    </a>
+    <div class="header-actions">
+      <span id="save-state" class="save-state" aria-live="polite"></span>
+      <button id="notifications-button" class="notification-button" type="button" aria-label="Open notifications" aria-expanded="false" aria-controls="notification-panel" hidden><span aria-hidden="true">♢</span><span id="notification-count" class="notification-count" hidden>0</span></button>
+      <button id="logout" class="button button-quiet" type="button" hidden>Log Out</button>
+    </div>
+    <aside id="notification-panel" class="notification-panel surface" aria-labelledby="notification-heading" hidden>
+      <header><div><p class="kicker">Updates</p><h2 id="notification-heading" tabindex="-1">Notifications</h2></div><button id="mark-notifications-read" class="text-button" type="button">Mark All Read</button></header>
+      <div id="notification-list" class="notification-list" aria-live="polite"></div>
+      <div id="notification-empty" class="notification-empty" hidden><span aria-hidden="true">◇</span><p>You’re all caught up.</p></div>
+    </aside>
+  </header>
+
+  <main id="main-content">
+    <section id="auth" class="auth-shell" aria-labelledby="auth-heading">
+      <div class="auth-story">
+        <p class="kicker">Built for the season ahead</p>
+        <h1 id="auth-heading">Turn every mistake into an advantage.</h1>
+        <p class="auth-lede">Learn the science, practice under competition conditions, and keep working until the idea sticks.</p>
+        <div class="subject-preview" aria-label="Initial subjects">
+          <article><span aria-hidden="true">◆</span><strong>Rocks & Minerals</strong><small>First production course</small></article>
+          <article><span aria-hidden="true">⌁</span><strong>Ecology</strong><small>Data & field systems</small></article>
+          <article><span aria-hidden="true">✦</span><strong>Entomology</strong><small>Visual identification</small></article>
+        </div>
+        <p class="trust-note"><span aria-hidden="true">✓</span> Source-grounded lessons · Reviewed answer keys · Guided error follow-through</p>
+      </div>
+
+      <div class="auth-panel surface">
+        <div class="tabs" role="tablist" aria-label="Account access">
+          <button id="login-tab" role="tab" aria-selected="true" aria-controls="login-form" data-tab="login" type="button">Log In</button>
+          <button id="register-tab" role="tab" aria-selected="false" aria-controls="register-form" data-tab="register" type="button">Create Account</button>
+        </div>
+
+        <form id="login-form" aria-labelledby="login-title">
+          <div class="form-heading"><p class="kicker">Welcome back</p><h2 id="login-title">Continue Your Training</h2></div>
+          <label for="login-email">Email</label>
+          <input id="login-email" name="email" type="email" autocomplete="email" spellcheck="false" required>
+          <label for="login-password">Password</label>
+          <input id="login-password" name="password" type="password" autocomplete="current-password" required>
+          <button id="forgot-password" class="text-button" type="button">Reset Password</button>
+          <button class="button button-primary button-full" type="submit">Log In</button>
+          <p class="demo-note">Demo: <span translate="no">student@example.com</span> / <span translate="no">StudentPass123!</span></p>
+        </form>
+
+        <form id="register-form" aria-labelledby="register-title" hidden>
+          <div class="form-heading"><p class="kicker">Start your season</p><h2 id="register-title">Create a Student Account</h2></div>
+          <label for="register-name">Student Name</label>
+          <input id="register-name" name="full_name" autocomplete="name" maxlength="120" required>
+          <label for="register-email">Email</label>
+          <input id="register-email" name="email" type="email" autocomplete="email" spellcheck="false" required>
+          <label for="register-password">Password <span class="label-note">8+ characters</span></label>
+          <input id="register-password" name="password" type="password" autocomplete="new-password" minlength="8" required>
+          <div class="form-row">
+            <div><label for="register-division">Division</label><select id="register-division" name="division"><option value="B">Division B</option><option value="C">Division C</option></select></div>
+            <div><label for="register-age">Age <span class="label-note">optional</span></label><input id="register-age" name="age_years" type="number" inputmode="numeric" min="5" max="100" autocomplete="off"></div>
+          </div>
+          <label for="guardian-email">Guardian Email <span class="label-note">required under 13</span></label>
+          <input id="guardian-email" name="guardian_email" type="email" autocomplete="email" spellcheck="false">
+          <button class="button button-primary button-full" type="submit">Create Student Account</button>
+        </form>
+
+        <form id="google-profile-form" aria-labelledby="google-profile-title" hidden>
+          <div class="form-heading"><p class="kicker">Almost there</p><h2 id="google-profile-title">Finish Your Student Profile</h2><p class="google-profile-note">You’re signed in as <strong id="google-profile-email"></strong>.</p></div>
+          <label for="google-profile-name">Student Name</label>
+          <input id="google-profile-name" name="full_name" autocomplete="name" maxlength="120" required>
+          <div class="form-row">
+            <div><label for="google-profile-division">Division</label><select id="google-profile-division" name="division"><option value="B">Division B</option><option value="C">Division C</option></select></div>
+            <div><label for="google-profile-age">Age <span class="label-note">optional</span></label><input id="google-profile-age" name="age_years" type="number" inputmode="numeric" min="5" max="100" autocomplete="off"></div>
+          </div>
+          <label for="google-profile-guardian">Guardian Email <span class="label-note">required under 13</span></label>
+          <input id="google-profile-guardian" name="guardian_email" type="email" autocomplete="email" spellcheck="false">
+          <button class="button button-primary button-full" type="submit">Create Student Profile</button>
+        </form>
+
+        <div id="google-auth" class="google-auth" hidden>
+          <div class="auth-divider" aria-hidden="true"><span>or</span></div>
+          <button id="google-signin" class="button button-secondary button-full google-button" type="button">
+            <svg viewBox="0 0 18 18" width="18" height="18" aria-hidden="true"><path fill="#4285F4" d="M17.64 9.2c0-.64-.06-1.25-.16-1.84H9v3.48h4.84a4.14 4.14 0 0 1-1.8 2.72v2.26h2.92a8.78 8.78 0 0 0 2.68-6.62z"/><path fill="#34A853" d="M9 18c2.43 0 4.47-.8 5.96-2.18l-2.92-2.26c-.8.54-1.84.86-3.04.86-2.34 0-4.32-1.58-5.03-3.7H.96v2.32A9 9 0 0 0 9 18z"/><path fill="#FBBC05" d="M3.97 10.72a5.4 5.4 0 0 1 0-3.44V4.96H.96a9 9 0 0 0 0 8.08l3.01-2.32z"/><path fill="#EA4335" d="M9 3.58c1.32 0 2.5.45 3.44 1.35l2.58-2.59A9 9 0 0 0 .96 4.96l3.01 2.32C4.68 5.16 6.66 3.58 9 3.58z"/></svg>
+            Continue with Google
+          </button>
+        </div>
+
+        <p id="auth-error" class="form-message error" role="alert" tabindex="-1"></p>
+        <button id="resend-verification" class="text-button" type="button" hidden>Resend Verification Email</button>
+      </div>
+    </section>
+
+    <section id="app-shell" class="app-shell" hidden>
+      <aside class="sidebar" aria-label="Primary navigation">
+        <div class="season-chip"><span class="status-dot" aria-hidden="true"></span><span>2026 Season</span></div>
+        <nav>
+          <a href="#overview" data-view-link="dashboard" data-student-nav class="active"><span aria-hidden="true">⌂</span>Overview</a>
+          <a href="#learn" data-view-link="learn" data-student-nav><span aria-hidden="true">◇</span>Learn</a>
+          <a href="#practice" data-view-link="practice" data-student-nav><span aria-hidden="true">◎</span>Practice & Exams</a>
+          <a href="#errors" data-view-link="errors" data-student-nav><span aria-hidden="true">↻</span>Error Notebook <span id="nav-error-count" class="nav-count">0</span></a>
+          <a href="#coach" data-view-link="coach" data-coach-nav hidden><span aria-hidden="true">⌂</span>Coach Overview</a>
+          <a href="#content" data-view-link="content" data-content-nav hidden><span aria-hidden="true">◫</span>Source Operations</a>
+        </nav>
+        <div class="sidebar-footer">
+          <div class="avatar" id="user-initials" aria-hidden="true">SO</div>
+          <div><strong id="sidebar-name">Student</strong><small id="sidebar-division">Division B</small></div>
+        </div>
+      </aside>
+
+      <div class="workspace">
+        <div id="app-loading-bar" class="app-loading-bar" hidden aria-hidden="true"></div>
+        <div id="app-error" class="app-error surface" role="alert" hidden><div><strong>We couldn’t load your workspace.</strong><span id="app-error-detail"> Check your connection and try again.</span></div><button id="app-error-retry" class="button button-primary" type="button">Retry</button></div>
+        <section id="dashboard" class="view" aria-labelledby="welcome">
+          <div class="dashboard-heading dashboard-hero">
+            <div><p class="kicker">Today at Fieldstone</p><h1 id="welcome" tabindex="-1">Ready for the next discovery?</h1><p id="today-copy" class="lede">One focused step at a time.</p></div>
+            <button id="continue-button" class="button button-primary dashboard-primary-action" type="button">Start Today’s Mission <span aria-hidden="true">→</span></button>
+          </div>
+
+          <dl class="dashboard-snapshot" aria-label="Learning snapshot">
+            <div><dt>Today</dt><dd><strong id="assignment-count">0</strong><span>focused steps</span></dd></div>
+            <div><dt>Mastery</dt><dd><strong id="mastery-count">0</strong><span>skills practiced</span></dd></div>
+            <div><dt>Review</dt><dd><strong id="open-error-count">0</strong><span>open corrections</span></dd></div>
+          </dl>
+
+          <section class="daily-mission surface" aria-labelledby="daily-mission-title">
+            <div class="mission-compass" aria-hidden="true"><span>✦</span><small>Your Plan</small></div>
+            <div class="mission-content"><header><div><p class="kicker">Recommended Next</p><h2 id="daily-mission-title">Your Focused Study Plan</h2><p id="mission-summary">Loading the highest-value next steps…</p></div><div class="mission-workload"><strong id="mission-minutes">0</strong><span>minutes</span></div></header><ol id="daily-plan-list" class="daily-plan-list" aria-live="polite"></ol><div id="daily-plan-empty" class="mission-empty" hidden><strong>You’re caught up.</strong><p>Choose an event below to learn something new or sharpen a competition skill.</p></div><footer><span><strong id="mission-active-days">0</strong> active days this week</span><span><strong id="mission-due-reviews">0</strong> reviews due</span><span><strong id="mission-pending-assignments">0</strong> assignments waiting</span></footer></div>
+          </section>
+
+          <section class="current-event surface" aria-labelledby="current-event-title">
+            <div class="current-event-header">
+              <div id="overview-event-icon" class="current-event-icon" aria-hidden="true">◇</div>
+              <div class="current-event-identity"><p id="overview-event-category" class="kicker">Current Event</p><h2 id="current-event-title">Choose an Event</h2><p id="overview-event-focus">Your learning path, practice, and progress stay together.</p></div>
+              <label class="event-picker overview-event-picker" for="overview-event-select"><span>Switch Event</span><select id="overview-event-select" name="overview_event" autocomplete="off" aria-label="Choose your current event"></select></label>
+            </div>
+            <div class="current-event-body">
+              <div class="current-event-progress"><div class="progress-label"><span>Course Progress</span><strong id="course-progress-label">0%</strong></div><div class="progress-track" role="progressbar" aria-label="Course progress" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0"><span id="course-progress-bar"></span></div><p id="overview-event-availability">Loading available lessons and practice…</p></div>
+              <div class="current-event-actions"><button id="overview-learn-button" class="button button-dark" type="button">Open Learning Path <span aria-hidden="true">→</span></button><button id="overview-practice-button" class="button button-secondary" type="button">Practice This Event</button></div>
+            </div>
+          </section>
+
+          <section class="section-block" aria-labelledby="subjects-title">
+            <div class="section-heading"><div><p class="kicker">Your Library</p><h2 id="subjects-title">Continue Across Events</h2></div><p>Open a learning path or go straight to event practice.</p></div>
+            <div id="subject-list" class="subject-grid" aria-live="polite"></div>
+          </section>
+
+          <details class="event-browser section-block surface">
+            <summary><span><span class="kicker">2026 Official Slate</span><strong id="event-catalog-title">Browse All Events</strong></span><span class="event-browser-summary">Official links and content availability <span aria-hidden="true">＋</span></span></summary>
+            <div class="event-browser-content">
+              <div class="catalog-controls" role="group" aria-label="Filter events by division">
+                <button type="button" class="catalog-chip" data-catalog-division="all">All Events</button>
+                <button type="button" class="catalog-chip" data-catalog-division="B">Division B</button>
+                <button type="button" class="catalog-chip" data-catalog-division="C">Division C</button>
+                <span id="event-catalog-count" class="catalog-count" aria-live="polite"></span>
+              </div>
+              <div id="event-catalog-list" class="event-catalog" aria-live="polite"></div>
+            </div>
+          </details>
+        </section>
+
+        <section id="learn" class="view" aria-labelledby="learn-title" hidden>
+          <div id="learn-catalog" class="student-catalog">
+          <header class="event-context surface">
+            <div id="learn-event-icon" class="event-context-icon" aria-hidden="true">◇</div>
+            <div class="event-context-copy"><span id="learn-event-category">2026 Event</span><strong id="learn-event-name">Choose an Event</strong><small id="learn-event-meta">Division · Season</small></div>
+            <label class="event-picker" for="learn-event-select"><span>Study Event</span><select id="learn-event-select" name="learn_event" autocomplete="off" aria-label="Choose an event to learn"></select></label>
+            <a id="learn-official-link" class="event-source-link" href="#" target="_blank" rel="noopener noreferrer" hidden>Official Event <span aria-hidden="true">↗</span></a>
+          </header>
+
+          <div class="course-overview">
+            <div class="course-overview-main">
+              <p id="learn-kicker" class="kicker">Course Workspace</p>
+              <h1 id="learn-title" tabindex="-1">Learn Your Event</h1>
+              <p id="learn-lede" class="lede">Choose an event to load its current lessons and progress.</p>
+              <dl class="course-metrics" aria-label="Course summary">
+                <div><dt>Modules</dt><dd id="learn-module-count">0</dd></div>
+                <div><dt>Study Time</dt><dd id="learn-duration">0 min</dd></div>
+                <div><dt>Complete</dt><dd id="learn-progress-value">0%</dd></div>
+              </dl>
+            </div>
+            <div class="course-next surface">
+              <div class="course-next-top"><span id="featured-event-kicker">Up Next</span><span id="featured-lesson-status" class="status-pill">Not Started</span></div>
+              <h2 id="featured-lesson-title">Select an Event to Begin</h2>
+              <p id="featured-lesson-summary">Your next lesson will appear here.</p>
+              <button id="start-featured-lesson" class="button button-primary" type="button" disabled>Start Lesson <span aria-hidden="true">→</span></button>
+            </div>
+          </div>
+          <div id="subject-scope-note" class="scope-note" role="note" hidden></div>
+
+          <section class="learning-path section-block" aria-labelledby="learning-path-title">
+            <div class="section-heading"><div><p class="kicker">Learning Path</p><h2 id="learning-path-title">Course Modules</h2></div><p id="course-scope" class="queue-count"></p></div>
+            <div id="lesson-list" class="lesson-list"></div>
+            <div id="lessons-empty" class="empty-state surface" hidden><span aria-hidden="true">◇</span><h3>Lessons Are in Review</h3><p>This event is available, but its learning path has not been published yet.</p></div>
+          </section>
+          <section id="concepts-block" class="section-block" aria-labelledby="concepts-title" hidden><div class="section-heading"><div><p class="kicker">Mastery Map</p><h2 id="concepts-title">Skills You’re Building</h2></div></div><div id="concept-list" class="concept-list"></div></section>
+          </div>
+
+          <article id="lesson-reader" class="lesson-reader" aria-labelledby="lesson-reader-title" hidden>
+            <header class="lesson-reader-header">
+              <button id="close-lesson" class="button button-quiet" type="button"><span aria-hidden="true">←</span> Back to Learning Path</button>
+              <div class="lesson-reader-meta"><button id="open-lesson-tutor" class="button button-secondary button-compact" type="button">Ask Grounded Tutor</button><span id="lesson-save-state" aria-live="polite">Progress saved</span><strong id="lesson-position">1 of 1</strong></div>
+            </header>
+            <div class="lesson-progress" aria-hidden="true"><span id="lesson-progress-bar"></span></div>
+            <div id="lesson-block" class="lesson-block surface" tabindex="-1"></div>
+            <footer class="lesson-reader-actions">
+              <button id="lesson-previous" class="button button-secondary" type="button">Previous</button>
+              <button id="lesson-next" class="button button-dark" type="button">Next Section</button>
+              <button id="lesson-finish" class="button button-primary" type="button" hidden>Finish Lesson</button>
+            </footer>
+          </article>
+        </section>
+
+        <section id="practice" class="view" aria-labelledby="practice-title" hidden>
+          <div id="practice-catalog" class="student-catalog">
+          <header class="event-context surface">
+            <div id="practice-event-icon" class="event-context-icon" aria-hidden="true">◇</div>
+            <div class="event-context-copy"><span id="practice-event-category">2026 Event</span><strong id="practice-event-name">Choose an Event</strong><small id="practice-event-meta">Division · Season</small></div>
+            <label class="event-picker" for="practice-event-select"><span>Practice Event</span><select id="practice-event-select" name="practice_event" autocomplete="off" aria-label="Choose an event to practice"></select></label>
+            <a id="practice-official-link" class="event-source-link" href="#" target="_blank" rel="noopener noreferrer" hidden>Official Event <span aria-hidden="true">↗</span></a>
+          </header>
+
+          <div class="practice-heading"><div><p class="kicker">Practice Workspace</p><h1 id="practice-title" tabindex="-1">Practice Your Event</h1><p id="practice-lede" class="lede">Build accuracy, then add competition pressure when you’re ready.</p></div><dl class="practice-metrics" aria-label="Available practice"><div><dt>Skill Labs</dt><dd id="practice-set-count">0</dd></div><div><dt>Mock Exams</dt><dd id="practice-exam-count">0</dd></div></dl></div>
+
+          <section id="practice-labs-block" class="section-block student-section" aria-labelledby="practice-labs-title"><div class="section-heading"><div><p class="kicker">Targeted Training</p><h2 id="practice-labs-title">Skill Labs</h2></div><p>Study with feedback or rehearse under station timing.</p></div><div id="practice-set-list" class="practice-set-grid"></div><div id="practice-sets-empty" class="empty-state surface" hidden><span aria-hidden="true">◇</span><h3>Labs Are in Review</h3><p>Use a mock exam while targeted practice is being prepared.</p></div></section>
+
+          <section class="section-block student-section" aria-labelledby="mock-exams-title"><div class="section-heading"><div><p class="kicker">Timed Simulations</p><h2 id="mock-exams-title">Mock Exams</h2></div><button id="generate-mock" class="button button-primary" type="button">Generate Mock Exam <span aria-hidden="true">✦</span></button></div>
+          <div id="exam-list" class="exam-grid" aria-live="polite"></div>
+          <div id="exam-empty" class="empty-state surface" hidden><span aria-hidden="true">◇</span><h3>No Published Exams Yet</h3><p>Generate a practice exam from the reviewed question pool.</p></div>
+          </section>
+          <section class="section-block" id="results-history-block" aria-labelledby="results-history-title" hidden><div class="section-heading"><div><p class="kicker">Your progress</p><h2 id="results-history-title">Recent Results</h2></div></div>
+          <div id="results-history-list" class="results-history" aria-live="polite"></div>
+          </section>
+          <section class="section-block" id="materials-block" aria-labelledby="materials-title" hidden><div class="section-heading"><div><p class="kicker">Reference library</p><h2 id="materials-title">Event Materials</h2></div><p>Official rules, handouts, and references collected for this event.</p></div>
+          <div id="materials-list" class="materials-grid" aria-live="polite"></div>
+          </section>
+          </div>
+
+          <article id="material-reader" class="material-reader surface" aria-labelledby="material-reader-title" hidden>
+            <header class="material-reader-header"><button id="close-material" class="button button-quiet" type="button"><span aria-hidden="true">←</span> Back to Practice</button><a id="material-source-link" class="button button-secondary button-compact" href="#" target="_blank" rel="noopener noreferrer">Open Original <span aria-hidden="true">↗</span></a></header>
+            <h2 id="material-reader-title" tabindex="-1">Material</h2>
+            <p id="material-reader-meta" class="material-reader-meta"></p>
+            <pre id="material-text" class="material-text"></pre>
+          </article>
+
+          <article id="practice-runner" class="practice-runner" aria-labelledby="practice-runner-title" hidden>
+            <header class="practice-runner-header"><button id="close-practice-lab" class="button button-quiet" type="button"><span aria-hidden="true">←</span> Back to Practice</button><div class="practice-runner-status"><span id="practice-mode-badge" class="practice-mode-badge">Study Lab</span><span id="practice-live-score">0 correct</span><strong id="practice-position">1 of 5</strong><span id="practice-timer" class="station-timer" role="timer" aria-label="Station time remaining" hidden>00:45</span></div></header>
+            <div class="lesson-progress" aria-hidden="true"><span id="practice-progress-bar"></span></div>
+            <div id="practice-item" class="practice-item surface" tabindex="-1"></div>
+          </article>
+        </section>
+
+        <section id="errors" class="view" aria-labelledby="errors-title" hidden>
+          <div class="page-heading"><p class="kicker">Error notebook</p><h1 id="errors-title">Make the Miss Useful</h1><p class="lede">Diagnose the cause, repair the idea, prove it on a new problem, then check it again later.</p></div>
+          <div class="repair-roadmap surface" aria-label="Error repair process"><span>1 · Explain</span><span>2 · Repair</span><span>3 · Prove</span><span>4 · Recheck</span></div>
+          <div id="error-notebook-list" aria-live="polite"></div>
+          <div id="error-empty" class="empty-state surface"><span aria-hidden="true">✓</span><h2>Your Follow-Through Is Complete</h2><p>Future lesson, lab, and exam misses will appear here with a specific repair path.</p></div>
+        </section>
+
+        <section id="coach" class="view" aria-labelledby="coach-title" hidden>
+          <div class="dashboard-heading">
+            <div><p class="kicker">Team command center</p><h1 id="coach-title">Coach Overview</h1><p class="lede">See who needs attention, assign the next practice, and keep every correction moving.</p></div>
+            <button id="show-assignment-form" class="button button-primary" type="button">Create Assignment <span aria-hidden="true">+</span></button>
+          </div>
+
+          <div class="coach-metrics">
+            <article class="coach-metric surface"><p>Active Students</p><strong id="coach-student-count">0</strong><small>Across your teams</small></article>
+            <article class="coach-metric surface"><p>Completion</p><strong id="coach-completion-rate">0%</strong><small>Assigned exam attempts</small></article>
+            <article class="coach-metric attention surface"><p>Needs Follow-Through</p><strong id="coach-error-count">0</strong><small>Open remediation cases</small></article>
+            <article class="coach-metric surface"><p>Average Score</p><strong id="coach-score">—</strong><small>Across scored assignments</small></article>
+          </div>
+
+          <form id="assignment-form" class="assignment-form surface" hidden>
+            <div class="form-heading"><p class="kicker">New team assignment</p><h2>Assign Reviewed Practice</h2><p>Choose a team and published exam. Students will see it on their learning dashboard.</p></div>
+            <div class="form-row"><div><label for="assignment-title">Assignment Title</label><input id="assignment-title" name="title" maxlength="255" autocomplete="off" required></div><div><label for="assignment-team">Team</label><select id="assignment-team" name="team_id" autocomplete="off" required></select></div></div>
+            <div class="form-row"><div><label for="assignment-exam">Reviewed Exam</label><select id="assignment-exam" name="exam_id" autocomplete="off" required></select></div><div><label for="assignment-due">Due Date</label><input id="assignment-due" name="due_at" type="datetime-local" autocomplete="off"></div></div>
+            <label for="assignment-instructions">Coach Note <span class="label-note">optional</span></label><textarea id="assignment-instructions" name="instructions" rows="3" maxlength="4000" autocomplete="off"></textarea>
+            <div class="form-actions"><button id="cancel-assignment" class="button button-secondary" type="button">Cancel</button><button class="button button-dark" type="submit">Assign to Team</button></div>
+            <p id="assignment-message" class="form-message" role="status" aria-live="polite"></p>
+          </form>
+
+          <form id="accommodation-form" class="assignment-form accommodation-form surface" hidden>
+            <input id="accommodation-student-id" name="student_id" type="hidden">
+            <div class="form-heading"><p class="kicker">Access plan</p><h2 id="accommodation-form-title">Configure Timed Support</h2><p>Changes apply only to new attempts. Active exams and station sessions keep their original timing.</p></div>
+            <div class="form-row"><div><label for="accommodation-multiplier">Time Allowance</label><select id="accommodation-multiplier" name="time_multiplier" autocomplete="off"><option value="1">Standard time</option><option value="1.25">1.25× time</option><option value="1.5">1.5× time</option><option value="2">2× time</option><option value="3">3× time</option></select></div><div><label for="accommodation-until">Effective Until <span class="label-note">optional</span></label><input id="accommodation-until" name="effective_until" type="datetime-local" autocomplete="off"></div></div>
+            <fieldset class="accommodation-options"><legend>Plan Status</legend><label><input name="active" type="checkbox" checked><span>Apply this time allowance to new exams and station sessions</span></label></fieldset>
+            <label for="accommodation-reason">Change Reason</label><textarea id="accommodation-reason" name="reason" rows="3" minlength="10" maxlength="500" autocomplete="off" placeholder="Example: Approved school accommodation plan dated…" required></textarea>
+            <div class="form-actions"><button id="cancel-accommodation" class="button button-secondary" type="button">Cancel</button><button class="button button-dark" type="submit">Save Access Plan</button></div>
+            <p id="accommodation-message" class="form-message" role="status" aria-live="polite"></p>
+          </form>
+
+          <section class="section-block" aria-labelledby="student-readiness-title">
+            <div class="section-heading"><div><p class="kicker">Intervention queue</p><h2 id="student-readiness-title">Student Readiness</h2></div><p>Attention flags combine unresolved errors and assignment performance.</p></div>
+            <div class="coach-table-wrap surface"><table class="coach-table"><thead><tr><th scope="col">Student</th><th scope="col">Assignments</th><th scope="col">Average</th><th scope="col">Open Errors</th><th scope="col">Status</th><th scope="col">Access</th></tr></thead><tbody id="coach-student-rows"></tbody></table><div id="coach-student-empty" class="table-empty" hidden>No students have joined this team yet.</div></div>
+          </section>
+
+          <section class="section-block" aria-labelledby="assignment-list-title">
+            <div class="section-heading"><div><p class="kicker">Current workload</p><h2 id="assignment-list-title">Assignments</h2></div></div>
+            <div id="coach-assignment-list" class="assignment-list"></div>
+            <div id="coach-assignment-empty" class="empty-state surface" hidden><span aria-hidden="true">◇</span><h2>No Assignments Yet</h2><p>Assign a reviewed mock exam when your team is ready.</p></div>
+          </section>
+        </section>
+
+        <section id="content" class="view" aria-labelledby="content-title" hidden>
+          <div class="dashboard-heading"><div><p class="kicker">Content operations</p><h1 id="content-title" tabindex="-1">Release Only Evidence-Ready Material</h1><p class="lede">Review generated questions, then verify that the crawler has grounded the full event source map.</p></div><button id="refresh-content-operations" class="button button-primary" type="button">Refresh Workspace</button></div>
+          <section id="people-workspace" class="people-workspace" aria-labelledby="people-title" hidden>
+            <div class="section-heading"><div><p class="kicker">Platform administration</p><h2 id="people-title">People &amp; Roles</h2><p>Assign staff roles and manage account access. Changes take effect immediately.</p></div><p id="people-count" class="queue-count">0 Users</p></div>
+            <div class="people-controls">
+              <input id="people-search" name="people_search" type="search" placeholder="Search name or email…" autocomplete="off" aria-label="Search users">
+              <select id="people-role-filter" aria-label="Filter by role"><option value="">All roles</option><option value="student">Student</option><option value="coach">Coach</option><option value="editor">Editor</option><option value="sme">SME</option><option value="calibrator">Calibrator</option><option value="admin">Admin</option></select>
+            </div>
+            <div id="people-list" class="people-list" aria-live="polite"></div>
+            <div id="people-empty" class="empty-state surface" hidden><span aria-hidden="true">◇</span><h3>No matching people</h3><p>Adjust your search or role filter.</p></div>
+          </section>
+          <section id="answerkey-workspace" class="answerkey-workspace" aria-labelledby="answerkey-title" hidden>
+            <div class="section-heading"><div><p class="kicker">Content repair</p><h2 id="answerkey-title">Answer Keys to Fix</h2><p>Short-answer questions with no reference answer — students can’t be graded on these until a key is added.</p></div><p id="answerkey-count" class="queue-count">0 Items</p></div>
+            <div id="answerkey-list" class="answerkey-list" aria-live="polite"></div>
+            <div id="answerkey-empty" class="empty-state surface" hidden><span aria-hidden="true">✓</span><h3>All keyed</h3><p>No short-answer questions are missing a reference answer.</p></div>
+          </section>
+          <section class="editorial-workspace" aria-labelledby="editorial-title">
+            <div class="section-heading"><div><p class="kicker">Human quality gate</p><h2 id="editorial-title">Question Review Queue</h2></div><p id="editorial-count" class="queue-count">0 Items</p></div>
+            <div id="question-review-queue" class="question-review-queue" aria-live="polite"></div>
+            <div id="question-review-empty" class="empty-state surface" hidden><span aria-hidden="true">✓</span><h3>Review Queue Clear</h3><p>No questions currently require your role’s review.</p></div>
+          </section>
+          <section class="calibration-workspace" aria-labelledby="calibration-title">
+            <div class="section-heading"><div><p class="kicker">Pilot evidence gate</p><h2 id="calibration-title">Calibration Queue</h2><p>Use first-exposure student data to verify difficulty, discrimination, omissions, timing, and cohort representation.</p></div><p id="calibration-count" class="queue-count">0 Items</p></div>
+            <div id="calibration-queue" class="calibration-queue" aria-live="polite"></div>
+            <div id="calibration-empty" class="empty-state surface" hidden><span aria-hidden="true">◇</span><h3>No Published Items Awaiting Calibration</h3><p>Reviewed practice items appear here after students generate pilot evidence.</p></div>
+          </section>
+          <section class="challenge-workspace" aria-labelledby="challenge-ops-title">
+            <div class="section-heading"><div><p class="kicker">Correction operations</p><h2 id="challenge-ops-title">Content Challenge Queue</h2><p>Triage student reports, pause severe defects, record a two-person decision, and audit every score impact.</p></div><p id="challenge-ops-count" class="queue-count">0 Open</p></div>
+            <div id="content-challenge-queue" class="content-challenge-queue" aria-live="polite"></div>
+            <div id="content-challenge-empty" class="empty-state surface" hidden><span aria-hidden="true">✓</span><h3>No Content Challenges</h3><p>No student reports currently require content-operations review.</p></div>
+          </section>
+          <div class="section-heading source-coverage-heading"><div><p class="kicker">Acquisition readiness</p><h2>Source Coverage</h2></div></div>
+          <div class="coverage-metrics">
+            <article class="coach-metric surface"><p>Mapped Sources</p><strong id="coverage-mapped">0</strong><small>Across scoped events</small></article>
+            <article class="coach-metric surface"><p>Required Sources</p><strong id="coverage-required">0</strong><small>In reviewed source maps</small></article>
+            <article class="coach-metric surface"><p>Monitored</p><strong id="coverage-monitored">0</strong><small>Fresh, grounded, and scheduled</small></article>
+            <article class="coach-metric attention surface"><p>Open Gaps</p><strong id="coverage-gaps">0</strong><small>Required sources not monitored</small></article>
+          </div>
+          <div class="coverage-legend" aria-label="Coverage state progression"><span>Registered</span><span>Crawled</span><span>Parsed</span><span>Grounded</span><span>Monitored</span></div>
+          <div id="coverage-scorecards" class="coverage-scorecards" aria-live="polite"></div>
+          <div id="coverage-empty" class="empty-state surface" hidden><span aria-hidden="true">◇</span><h2>No Reviewed Source Maps</h2><p>Add an event source universe before claiming comprehensive coverage.</p></div>
+        </section>
+      </div>
+    </section>
+
+    <section id="exam" class="exam-mode" aria-labelledby="exam-title" hidden>
+      <header class="exam-header surface">
+        <div><p class="kicker">Timed simulation · <span id="exam-release-label">Reviewed Practice</span></p><h1 id="exam-title">Mock Exam</h1></div>
+        <div class="exam-status"><span id="exam-save-state" class="exam-save-state" role="status" aria-live="polite">All answers synced</span><span id="exam-accommodation" class="accommodation-badge" hidden>Extended Time</span><span id="answered-count">0 of 0 answered</span><div id="timer" class="timer" role="timer" aria-label="Time remaining">00:00</div><button id="exit-exam" class="button button-secondary exam-exit" type="button">Save &amp; Exit</button></div>
+      </header>
+      <div class="exam-layout">
+        <aside class="question-nav surface" aria-label="Question navigator"><p class="kicker">Question map</p><div id="question-map"></div><p><span class="map-key answered"></span>Answered <span class="map-key current"></span>Current</p></aside>
+        <div><form id="exam-form"></form><div class="exam-actions"><button id="previous-question" class="button button-secondary" type="button">Previous</button><button id="next-question" class="button button-dark" type="button">Next Question</button><button id="submit-exam" class="button button-primary" type="button">Submit Exam</button></div></div>
+      </div>
+    </section>
+
+    <section id="review" class="review-mode" aria-labelledby="score" hidden>
+      <div class="review-hero surface"><div><p class="kicker">Post-exam review</p><h1 id="score">Exam Complete</h1><p>A score is a snapshot. Your next steps are where learning happens.</p></div><div id="score-ring" class="score-ring"><strong id="score-percent">0%</strong><span>Score</span></div></div>
+      <div class="review-intro"><p class="kicker">Your follow-through plan</p><h2>Work Every Error to Resolution</h2><p>Explain your thinking, repair the concept, and prove it on an unseen transfer problem.</p></div>
+      <section class="student-challenge-panel surface" aria-labelledby="student-challenge-title">
+        <div><p class="kicker">Content quality</p><h2 id="student-challenge-title">Something Wrong With a Question?</h2><p>Report a possible key, wording, factual, asset, or accessibility issue. Your report will be tied to the exact version you saw.</p></div>
+        <form id="student-challenge-form">
+          <label>Question<select id="challenge-question" name="question_id" required></select></label>
+          <label>Issue Type<select name="category" required><option value="wrong_key">Possible Wrong Key</option><option value="ambiguity">Ambiguous Wording</option><option value="factual_error">Factual Error</option><option value="broken_asset">Broken or Missing Asset</option><option value="accessibility">Accessibility Problem</option><option value="other">Other Content Issue</option></select></label>
+          <label class="challenge-description">What evidence suggests a problem?<textarea name="description" rows="4" minlength="20" maxlength="4000" autocomplete="off" placeholder="Describe the conflicting evidence, wording, source, or accessibility barrier…" required></textarea></label>
+          <div class="form-actions"><button class="button button-secondary" type="submit">Submit Content Report</button></div>
+          <p id="student-challenge-status" class="form-message" role="status" aria-live="polite"></p>
+        </form>
+      </section>
+      <section id="answer-key-panel" class="answer-key-panel surface" aria-labelledby="answer-key-title" hidden>
+        <div class="section-heading"><div><p class="kicker">Answer key</p><h2 id="answer-key-title">Review Every Question</h2></div><p>Your response, the reference answer, and why.</p></div>
+        <div id="answer-key-list"></div>
+      </section>
+      <div id="remediation-list"></div>
+      <button id="back-dashboard" class="button button-secondary" type="button">Return to Overview</button>
+    </section>
+  </main>
+
+  <aside id="tutor-panel" class="tutor-panel surface" aria-labelledby="tutor-title" hidden>
+    <header><div><p class="kicker">Grounded learning support</p><h2 id="tutor-title" tabindex="-1">Fieldstone Tutor</h2></div><button id="close-tutor" class="button button-quiet button-compact" type="button"><span aria-hidden="true">×</span> Close Tutor</button></header>
+    <div class="tutor-controls"><label for="tutor-mode">Tutor Mode</label><select id="tutor-mode" name="tutor_mode" autocomplete="off"><option value="socratic_hint">Socratic Hint</option><option value="explain">Explain the Concept</option><option value="diagnose_error">Diagnose My Error</option><option value="quiz_me">Quiz Me</option></select><span class="tutor-grounding"><span aria-hidden="true">✓</span> Approved source grounding</span></div>
+    <div id="tutor-messages" class="tutor-messages" aria-live="polite"><div class="tutor-welcome"><span aria-hidden="true">✦</span><h3>Start With Your Thinking</h3><p>Ask about the lesson evidence or your error-repair case. The tutor will cite the reviewed sources it uses.</p></div></div>
+    <div id="tutor-starters" class="tutor-starters" aria-label="Suggested tutor questions"><button type="button" data-tutor-starter="Give me one hint without giving away the full reasoning.">One Hint</button><button type="button" data-tutor-starter="Help me identify where my reasoning changed course.">Diagnose My Reasoning</button><button type="button" data-tutor-starter="Quiz me on the key idea using a new prompt.">Quiz Me</button></div>
+    <form id="tutor-form"><label class="sr-only" for="tutor-input">Message the grounded tutor</label><textarea id="tutor-input" name="message" rows="3" minlength="2" maxlength="2000" autocomplete="off" placeholder="Explain what you tried or ask for the next hint…" required></textarea><div><span id="tutor-status" role="status" aria-live="polite"></span><button class="button button-primary" type="submit">Send to Tutor</button></div></form>
+  </aside>
+
+  <div id="toast" class="toast" role="status" aria-live="polite" hidden></div>
+
+  <div id="confirm-modal" class="confirm-modal" hidden>
+    <div class="confirm-card surface" role="dialog" aria-modal="true" aria-labelledby="confirm-title" aria-describedby="confirm-body">
+      <h2 id="confirm-title"></h2>
+      <p id="confirm-body"></p>
+      <div class="confirm-actions">
+        <button id="confirm-cancel" class="button button-secondary" type="button">Cancel</button>
+        <button id="confirm-ok" class="button button-dark" type="button">OK</button>
+      </div>
+    </div>
+  </div>
+  <script src="/static/app.js?v=25"></script>
+</body>
+</html>

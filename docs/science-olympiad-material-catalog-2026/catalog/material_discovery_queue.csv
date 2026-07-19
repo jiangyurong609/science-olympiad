@@ -1,0 +1,829 @@
+event_id,division,event_name,material_type,status,source_url,review_notes
+anatomy-and-physiology-b-2026,B,Anatomy & Physiology,official_event_page,CATALOGED,https://www.soinc.org/anatomy-and-physiology-b,Official event page and public resource index
+anatomy-and-physiology-b-2026,B,Anatomy & Physiology,rules_manual,DISCOVERY_REQUIRED,,Current rules; do not redistribute without permission
+anatomy-and-physiology-b-2026,B,Anatomy & Physiology,rules_corrections,DISCOVERY_REQUIRED,,Current official corrections and clarifications
+anatomy-and-physiology-b-2026,B,Anatomy & Physiology,faq,DISCOVERY_REQUIRED,,Official event FAQ and interpretations
+anatomy-and-physiology-b-2026,B,Anatomy & Physiology,score_sheet,DISCOVERY_REQUIRED,,Official score sheet when available
+anatomy-and-physiology-b-2026,B,Anatomy & Physiology,team_checklist,DISCOVERY_REQUIRED,,Official checklist when available
+anatomy-and-physiology-b-2026,B,Anatomy & Physiology,sample_test,DISCOVERY_REQUIRED,,Practice or sample test; verify reuse terms
+anatomy-and-physiology-b-2026,B,Anatomy & Physiology,training_handout,DISCOVERY_REQUIRED,,Public handout or presentation
+anatomy-and-physiology-b-2026,B,Anatomy & Physiology,official_video,DISCOVERY_REQUIRED,,Official instructional video
+anatomy-and-physiology-b-2026,B,Anatomy & Physiology,government_reference,DISCOVERY_REQUIRED,,Government scientific source
+anatomy-and-physiology-b-2026,B,Anatomy & Physiology,open_educational_resource,DISCOVERY_REQUIRED,,Open educational source
+anatomy-and-physiology-b-2026,B,Anatomy & Physiology,licensed_historical_test,DISCOVERY_REQUIRED,,Past competition test under contract
+anatomy-and-physiology-b-2026,B,Anatomy & Physiology,original_lesson,DISCOVERY_REQUIRED,,Platform-authored lesson
+anatomy-and-physiology-b-2026,B,Anatomy & Physiology,original_question_bank,DISCOVERY_REQUIRED,,Platform-authored or reviewed generated questions
+anatomy-and-physiology-b-2026,B,Anatomy & Physiology,answer_key_and_rubric,DISCOVERY_REQUIRED,,Original answer keys and partial-credit rubrics
+anatomy-and-physiology-b-2026,B,Anatomy & Physiology,near_transfer_remediation,DISCOVERY_REQUIRED,,Equivalent remediation item
+anatomy-and-physiology-b-2026,B,Anatomy & Physiology,far_transfer_remediation,DISCOVERY_REQUIRED,,Unfamiliar-context remediation item
+anatomy-and-physiology-b-2026,B,Anatomy & Physiology,delayed_retention_item,DISCOVERY_REQUIRED,,Spaced retention check
+disease-detectives-b-2026,B,Disease Detectives,official_event_page,CATALOGED,https://www.soinc.org/disease-detectives-b,Official event page and public resource index
+disease-detectives-b-2026,B,Disease Detectives,rules_manual,DISCOVERY_REQUIRED,,Current rules; do not redistribute without permission
+disease-detectives-b-2026,B,Disease Detectives,rules_corrections,DISCOVERY_REQUIRED,,Current official corrections and clarifications
+disease-detectives-b-2026,B,Disease Detectives,faq,DISCOVERY_REQUIRED,,Official event FAQ and interpretations
+disease-detectives-b-2026,B,Disease Detectives,score_sheet,DISCOVERY_REQUIRED,,Official score sheet when available
+disease-detectives-b-2026,B,Disease Detectives,team_checklist,DISCOVERY_REQUIRED,,Official checklist when available
+disease-detectives-b-2026,B,Disease Detectives,sample_test,DISCOVERY_REQUIRED,,Practice or sample test; verify reuse terms
+disease-detectives-b-2026,B,Disease Detectives,training_handout,DISCOVERY_REQUIRED,,Public handout or presentation
+disease-detectives-b-2026,B,Disease Detectives,official_video,DISCOVERY_REQUIRED,,Official instructional video
+disease-detectives-b-2026,B,Disease Detectives,government_reference,DISCOVERY_REQUIRED,,Government scientific source
+disease-detectives-b-2026,B,Disease Detectives,open_educational_resource,DISCOVERY_REQUIRED,,Open educational source
+disease-detectives-b-2026,B,Disease Detectives,licensed_historical_test,DISCOVERY_REQUIRED,,Past competition test under contract
+disease-detectives-b-2026,B,Disease Detectives,original_lesson,DISCOVERY_REQUIRED,,Platform-authored lesson
+disease-detectives-b-2026,B,Disease Detectives,original_question_bank,DISCOVERY_REQUIRED,,Platform-authored or reviewed generated questions
+disease-detectives-b-2026,B,Disease Detectives,answer_key_and_rubric,DISCOVERY_REQUIRED,,Original answer keys and partial-credit rubrics
+disease-detectives-b-2026,B,Disease Detectives,near_transfer_remediation,DISCOVERY_REQUIRED,,Equivalent remediation item
+disease-detectives-b-2026,B,Disease Detectives,far_transfer_remediation,DISCOVERY_REQUIRED,,Unfamiliar-context remediation item
+disease-detectives-b-2026,B,Disease Detectives,delayed_retention_item,DISCOVERY_REQUIRED,,Spaced retention check
+entomology-b-2026,B,Entomology,official_event_page,CATALOGED,https://www.soinc.org/entomology-b,Official event page and public resource index
+entomology-b-2026,B,Entomology,rules_manual,DISCOVERY_REQUIRED,,Current rules; do not redistribute without permission
+entomology-b-2026,B,Entomology,rules_corrections,DISCOVERY_REQUIRED,,Current official corrections and clarifications
+entomology-b-2026,B,Entomology,faq,DISCOVERY_REQUIRED,,Official event FAQ and interpretations
+entomology-b-2026,B,Entomology,score_sheet,DISCOVERY_REQUIRED,,Official score sheet when available
+entomology-b-2026,B,Entomology,team_checklist,DISCOVERY_REQUIRED,,Official checklist when available
+entomology-b-2026,B,Entomology,sample_test,DISCOVERY_REQUIRED,,Practice or sample test; verify reuse terms
+entomology-b-2026,B,Entomology,training_handout,DISCOVERY_REQUIRED,,Public handout or presentation
+entomology-b-2026,B,Entomology,official_video,DISCOVERY_REQUIRED,,Official instructional video
+entomology-b-2026,B,Entomology,government_reference,DISCOVERY_REQUIRED,,Government scientific source
+entomology-b-2026,B,Entomology,open_educational_resource,DISCOVERY_REQUIRED,,Open educational source
+entomology-b-2026,B,Entomology,licensed_historical_test,DISCOVERY_REQUIRED,,Past competition test under contract
+entomology-b-2026,B,Entomology,original_lesson,DISCOVERY_REQUIRED,,Platform-authored lesson
+entomology-b-2026,B,Entomology,original_question_bank,DISCOVERY_REQUIRED,,Platform-authored or reviewed generated questions
+entomology-b-2026,B,Entomology,answer_key_and_rubric,DISCOVERY_REQUIRED,,Original answer keys and partial-credit rubrics
+entomology-b-2026,B,Entomology,near_transfer_remediation,DISCOVERY_REQUIRED,,Equivalent remediation item
+entomology-b-2026,B,Entomology,far_transfer_remediation,DISCOVERY_REQUIRED,,Unfamiliar-context remediation item
+entomology-b-2026,B,Entomology,delayed_retention_item,DISCOVERY_REQUIRED,,Spaced retention check
+heredity-b-2026,B,Heredity,official_event_page,CATALOGED,https://www.soinc.org/heredity-b,Official event page and public resource index
+heredity-b-2026,B,Heredity,rules_manual,DISCOVERY_REQUIRED,,Current rules; do not redistribute without permission
+heredity-b-2026,B,Heredity,rules_corrections,DISCOVERY_REQUIRED,,Current official corrections and clarifications
+heredity-b-2026,B,Heredity,faq,DISCOVERY_REQUIRED,,Official event FAQ and interpretations
+heredity-b-2026,B,Heredity,score_sheet,DISCOVERY_REQUIRED,,Official score sheet when available
+heredity-b-2026,B,Heredity,team_checklist,DISCOVERY_REQUIRED,,Official checklist when available
+heredity-b-2026,B,Heredity,sample_test,DISCOVERY_REQUIRED,,Practice or sample test; verify reuse terms
+heredity-b-2026,B,Heredity,training_handout,DISCOVERY_REQUIRED,,Public handout or presentation
+heredity-b-2026,B,Heredity,official_video,DISCOVERY_REQUIRED,,Official instructional video
+heredity-b-2026,B,Heredity,government_reference,DISCOVERY_REQUIRED,,Government scientific source
+heredity-b-2026,B,Heredity,open_educational_resource,DISCOVERY_REQUIRED,,Open educational source
+heredity-b-2026,B,Heredity,licensed_historical_test,DISCOVERY_REQUIRED,,Past competition test under contract
+heredity-b-2026,B,Heredity,original_lesson,DISCOVERY_REQUIRED,,Platform-authored lesson
+heredity-b-2026,B,Heredity,original_question_bank,DISCOVERY_REQUIRED,,Platform-authored or reviewed generated questions
+heredity-b-2026,B,Heredity,answer_key_and_rubric,DISCOVERY_REQUIRED,,Original answer keys and partial-credit rubrics
+heredity-b-2026,B,Heredity,near_transfer_remediation,DISCOVERY_REQUIRED,,Equivalent remediation item
+heredity-b-2026,B,Heredity,far_transfer_remediation,DISCOVERY_REQUIRED,,Unfamiliar-context remediation item
+heredity-b-2026,B,Heredity,delayed_retention_item,DISCOVERY_REQUIRED,,Spaced retention check
+water-quality-b-2026,B,Water Quality,official_event_page,CATALOGED,https://www.soinc.org/water-quality-b,Official event page and public resource index
+water-quality-b-2026,B,Water Quality,rules_manual,DISCOVERY_REQUIRED,,Current rules; do not redistribute without permission
+water-quality-b-2026,B,Water Quality,rules_corrections,DISCOVERY_REQUIRED,,Current official corrections and clarifications
+water-quality-b-2026,B,Water Quality,faq,DISCOVERY_REQUIRED,,Official event FAQ and interpretations
+water-quality-b-2026,B,Water Quality,score_sheet,DISCOVERY_REQUIRED,,Official score sheet when available
+water-quality-b-2026,B,Water Quality,team_checklist,DISCOVERY_REQUIRED,,Official checklist when available
+water-quality-b-2026,B,Water Quality,sample_test,DISCOVERY_REQUIRED,,Practice or sample test; verify reuse terms
+water-quality-b-2026,B,Water Quality,training_handout,DISCOVERY_REQUIRED,,Public handout or presentation
+water-quality-b-2026,B,Water Quality,official_video,DISCOVERY_REQUIRED,,Official instructional video
+water-quality-b-2026,B,Water Quality,government_reference,DISCOVERY_REQUIRED,,Government scientific source
+water-quality-b-2026,B,Water Quality,open_educational_resource,DISCOVERY_REQUIRED,,Open educational source
+water-quality-b-2026,B,Water Quality,licensed_historical_test,DISCOVERY_REQUIRED,,Past competition test under contract
+water-quality-b-2026,B,Water Quality,original_lesson,DISCOVERY_REQUIRED,,Platform-authored lesson
+water-quality-b-2026,B,Water Quality,original_question_bank,DISCOVERY_REQUIRED,,Platform-authored or reviewed generated questions
+water-quality-b-2026,B,Water Quality,answer_key_and_rubric,DISCOVERY_REQUIRED,,Original answer keys and partial-credit rubrics
+water-quality-b-2026,B,Water Quality,near_transfer_remediation,DISCOVERY_REQUIRED,,Equivalent remediation item
+water-quality-b-2026,B,Water Quality,far_transfer_remediation,DISCOVERY_REQUIRED,,Unfamiliar-context remediation item
+water-quality-b-2026,B,Water Quality,delayed_retention_item,DISCOVERY_REQUIRED,,Spaced retention check
+dynamic-planet-b-2026,B,Dynamic Planet,official_event_page,CATALOGED,https://www.soinc.org/dynamic-planet-b,Official event page and public resource index
+dynamic-planet-b-2026,B,Dynamic Planet,rules_manual,DISCOVERY_REQUIRED,,Current rules; do not redistribute without permission
+dynamic-planet-b-2026,B,Dynamic Planet,rules_corrections,DISCOVERY_REQUIRED,,Current official corrections and clarifications
+dynamic-planet-b-2026,B,Dynamic Planet,faq,DISCOVERY_REQUIRED,,Official event FAQ and interpretations
+dynamic-planet-b-2026,B,Dynamic Planet,score_sheet,DISCOVERY_REQUIRED,,Official score sheet when available
+dynamic-planet-b-2026,B,Dynamic Planet,team_checklist,DISCOVERY_REQUIRED,,Official checklist when available
+dynamic-planet-b-2026,B,Dynamic Planet,sample_test,DISCOVERY_REQUIRED,,Practice or sample test; verify reuse terms
+dynamic-planet-b-2026,B,Dynamic Planet,training_handout,DISCOVERY_REQUIRED,,Public handout or presentation
+dynamic-planet-b-2026,B,Dynamic Planet,official_video,DISCOVERY_REQUIRED,,Official instructional video
+dynamic-planet-b-2026,B,Dynamic Planet,government_reference,DISCOVERY_REQUIRED,,Government scientific source
+dynamic-planet-b-2026,B,Dynamic Planet,open_educational_resource,DISCOVERY_REQUIRED,,Open educational source
+dynamic-planet-b-2026,B,Dynamic Planet,licensed_historical_test,DISCOVERY_REQUIRED,,Past competition test under contract
+dynamic-planet-b-2026,B,Dynamic Planet,original_lesson,DISCOVERY_REQUIRED,,Platform-authored lesson
+dynamic-planet-b-2026,B,Dynamic Planet,original_question_bank,DISCOVERY_REQUIRED,,Platform-authored or reviewed generated questions
+dynamic-planet-b-2026,B,Dynamic Planet,answer_key_and_rubric,DISCOVERY_REQUIRED,,Original answer keys and partial-credit rubrics
+dynamic-planet-b-2026,B,Dynamic Planet,near_transfer_remediation,DISCOVERY_REQUIRED,,Equivalent remediation item
+dynamic-planet-b-2026,B,Dynamic Planet,far_transfer_remediation,DISCOVERY_REQUIRED,,Unfamiliar-context remediation item
+dynamic-planet-b-2026,B,Dynamic Planet,delayed_retention_item,DISCOVERY_REQUIRED,,Spaced retention check
+meteorology-b-2026,B,Meteorology,official_event_page,CATALOGED,https://www.soinc.org/meteorology-b,Official event page and public resource index
+meteorology-b-2026,B,Meteorology,rules_manual,DISCOVERY_REQUIRED,,Current rules; do not redistribute without permission
+meteorology-b-2026,B,Meteorology,rules_corrections,DISCOVERY_REQUIRED,,Current official corrections and clarifications
+meteorology-b-2026,B,Meteorology,faq,DISCOVERY_REQUIRED,,Official event FAQ and interpretations
+meteorology-b-2026,B,Meteorology,score_sheet,DISCOVERY_REQUIRED,,Official score sheet when available
+meteorology-b-2026,B,Meteorology,team_checklist,DISCOVERY_REQUIRED,,Official checklist when available
+meteorology-b-2026,B,Meteorology,sample_test,DISCOVERY_REQUIRED,,Practice or sample test; verify reuse terms
+meteorology-b-2026,B,Meteorology,training_handout,DISCOVERY_REQUIRED,,Public handout or presentation
+meteorology-b-2026,B,Meteorology,official_video,DISCOVERY_REQUIRED,,Official instructional video
+meteorology-b-2026,B,Meteorology,government_reference,DISCOVERY_REQUIRED,,Government scientific source
+meteorology-b-2026,B,Meteorology,open_educational_resource,DISCOVERY_REQUIRED,,Open educational source
+meteorology-b-2026,B,Meteorology,licensed_historical_test,DISCOVERY_REQUIRED,,Past competition test under contract
+meteorology-b-2026,B,Meteorology,original_lesson,DISCOVERY_REQUIRED,,Platform-authored lesson
+meteorology-b-2026,B,Meteorology,original_question_bank,DISCOVERY_REQUIRED,,Platform-authored or reviewed generated questions
+meteorology-b-2026,B,Meteorology,answer_key_and_rubric,DISCOVERY_REQUIRED,,Original answer keys and partial-credit rubrics
+meteorology-b-2026,B,Meteorology,near_transfer_remediation,DISCOVERY_REQUIRED,,Equivalent remediation item
+meteorology-b-2026,B,Meteorology,far_transfer_remediation,DISCOVERY_REQUIRED,,Unfamiliar-context remediation item
+meteorology-b-2026,B,Meteorology,delayed_retention_item,DISCOVERY_REQUIRED,,Spaced retention check
+remote-sensing-b-2026,B,Remote Sensing,official_event_page,CATALOGED,https://www.soinc.org/remote-sensing-b,Official event page and public resource index
+remote-sensing-b-2026,B,Remote Sensing,rules_manual,DISCOVERY_REQUIRED,,Current rules; do not redistribute without permission
+remote-sensing-b-2026,B,Remote Sensing,rules_corrections,DISCOVERY_REQUIRED,,Current official corrections and clarifications
+remote-sensing-b-2026,B,Remote Sensing,faq,DISCOVERY_REQUIRED,,Official event FAQ and interpretations
+remote-sensing-b-2026,B,Remote Sensing,score_sheet,DISCOVERY_REQUIRED,,Official score sheet when available
+remote-sensing-b-2026,B,Remote Sensing,team_checklist,DISCOVERY_REQUIRED,,Official checklist when available
+remote-sensing-b-2026,B,Remote Sensing,sample_test,DISCOVERY_REQUIRED,,Practice or sample test; verify reuse terms
+remote-sensing-b-2026,B,Remote Sensing,training_handout,DISCOVERY_REQUIRED,,Public handout or presentation
+remote-sensing-b-2026,B,Remote Sensing,official_video,DISCOVERY_REQUIRED,,Official instructional video
+remote-sensing-b-2026,B,Remote Sensing,government_reference,DISCOVERY_REQUIRED,,Government scientific source
+remote-sensing-b-2026,B,Remote Sensing,open_educational_resource,DISCOVERY_REQUIRED,,Open educational source
+remote-sensing-b-2026,B,Remote Sensing,licensed_historical_test,DISCOVERY_REQUIRED,,Past competition test under contract
+remote-sensing-b-2026,B,Remote Sensing,original_lesson,DISCOVERY_REQUIRED,,Platform-authored lesson
+remote-sensing-b-2026,B,Remote Sensing,original_question_bank,DISCOVERY_REQUIRED,,Platform-authored or reviewed generated questions
+remote-sensing-b-2026,B,Remote Sensing,answer_key_and_rubric,DISCOVERY_REQUIRED,,Original answer keys and partial-credit rubrics
+remote-sensing-b-2026,B,Remote Sensing,near_transfer_remediation,DISCOVERY_REQUIRED,,Equivalent remediation item
+remote-sensing-b-2026,B,Remote Sensing,far_transfer_remediation,DISCOVERY_REQUIRED,,Unfamiliar-context remediation item
+remote-sensing-b-2026,B,Remote Sensing,delayed_retention_item,DISCOVERY_REQUIRED,,Spaced retention check
+rocks-and-minerals-b-2026,B,Rocks and Minerals,official_event_page,CATALOGED,https://www.soinc.org/rocks-and-minerals-b,Official event page and public resource index
+rocks-and-minerals-b-2026,B,Rocks and Minerals,rules_manual,DISCOVERY_REQUIRED,,Current rules; do not redistribute without permission
+rocks-and-minerals-b-2026,B,Rocks and Minerals,rules_corrections,DISCOVERY_REQUIRED,,Current official corrections and clarifications
+rocks-and-minerals-b-2026,B,Rocks and Minerals,faq,DISCOVERY_REQUIRED,,Official event FAQ and interpretations
+rocks-and-minerals-b-2026,B,Rocks and Minerals,score_sheet,DISCOVERY_REQUIRED,,Official score sheet when available
+rocks-and-minerals-b-2026,B,Rocks and Minerals,team_checklist,DISCOVERY_REQUIRED,,Official checklist when available
+rocks-and-minerals-b-2026,B,Rocks and Minerals,sample_test,DISCOVERY_REQUIRED,,Practice or sample test; verify reuse terms
+rocks-and-minerals-b-2026,B,Rocks and Minerals,training_handout,DISCOVERY_REQUIRED,,Public handout or presentation
+rocks-and-minerals-b-2026,B,Rocks and Minerals,official_video,DISCOVERY_REQUIRED,,Official instructional video
+rocks-and-minerals-b-2026,B,Rocks and Minerals,government_reference,DISCOVERY_REQUIRED,,Government scientific source
+rocks-and-minerals-b-2026,B,Rocks and Minerals,open_educational_resource,DISCOVERY_REQUIRED,,Open educational source
+rocks-and-minerals-b-2026,B,Rocks and Minerals,licensed_historical_test,DISCOVERY_REQUIRED,,Past competition test under contract
+rocks-and-minerals-b-2026,B,Rocks and Minerals,original_lesson,DISCOVERY_REQUIRED,,Platform-authored lesson
+rocks-and-minerals-b-2026,B,Rocks and Minerals,original_question_bank,DISCOVERY_REQUIRED,,Platform-authored or reviewed generated questions
+rocks-and-minerals-b-2026,B,Rocks and Minerals,answer_key_and_rubric,DISCOVERY_REQUIRED,,Original answer keys and partial-credit rubrics
+rocks-and-minerals-b-2026,B,Rocks and Minerals,near_transfer_remediation,DISCOVERY_REQUIRED,,Equivalent remediation item
+rocks-and-minerals-b-2026,B,Rocks and Minerals,far_transfer_remediation,DISCOVERY_REQUIRED,,Unfamiliar-context remediation item
+rocks-and-minerals-b-2026,B,Rocks and Minerals,delayed_retention_item,DISCOVERY_REQUIRED,,Spaced retention check
+solar-system-b-2026,B,Solar System,official_event_page,CATALOGED,https://www.soinc.org/solar-system-b,Official event page and public resource index
+solar-system-b-2026,B,Solar System,rules_manual,DISCOVERY_REQUIRED,,Current rules; do not redistribute without permission
+solar-system-b-2026,B,Solar System,rules_corrections,DISCOVERY_REQUIRED,,Current official corrections and clarifications
+solar-system-b-2026,B,Solar System,faq,DISCOVERY_REQUIRED,,Official event FAQ and interpretations
+solar-system-b-2026,B,Solar System,score_sheet,DISCOVERY_REQUIRED,,Official score sheet when available
+solar-system-b-2026,B,Solar System,team_checklist,DISCOVERY_REQUIRED,,Official checklist when available
+solar-system-b-2026,B,Solar System,sample_test,DISCOVERY_REQUIRED,,Practice or sample test; verify reuse terms
+solar-system-b-2026,B,Solar System,training_handout,DISCOVERY_REQUIRED,,Public handout or presentation
+solar-system-b-2026,B,Solar System,official_video,DISCOVERY_REQUIRED,,Official instructional video
+solar-system-b-2026,B,Solar System,government_reference,DISCOVERY_REQUIRED,,Government scientific source
+solar-system-b-2026,B,Solar System,open_educational_resource,DISCOVERY_REQUIRED,,Open educational source
+solar-system-b-2026,B,Solar System,licensed_historical_test,DISCOVERY_REQUIRED,,Past competition test under contract
+solar-system-b-2026,B,Solar System,original_lesson,DISCOVERY_REQUIRED,,Platform-authored lesson
+solar-system-b-2026,B,Solar System,original_question_bank,DISCOVERY_REQUIRED,,Platform-authored or reviewed generated questions
+solar-system-b-2026,B,Solar System,answer_key_and_rubric,DISCOVERY_REQUIRED,,Original answer keys and partial-credit rubrics
+solar-system-b-2026,B,Solar System,near_transfer_remediation,DISCOVERY_REQUIRED,,Equivalent remediation item
+solar-system-b-2026,B,Solar System,far_transfer_remediation,DISCOVERY_REQUIRED,,Unfamiliar-context remediation item
+solar-system-b-2026,B,Solar System,delayed_retention_item,DISCOVERY_REQUIRED,,Spaced retention check
+hovercraft-b-2026,B,Hovercraft,official_event_page,CATALOGED,https://www.soinc.org/hovercraft-b,Official event page and public resource index
+hovercraft-b-2026,B,Hovercraft,rules_manual,DISCOVERY_REQUIRED,,Current rules; do not redistribute without permission
+hovercraft-b-2026,B,Hovercraft,rules_corrections,DISCOVERY_REQUIRED,,Current official corrections and clarifications
+hovercraft-b-2026,B,Hovercraft,faq,DISCOVERY_REQUIRED,,Official event FAQ and interpretations
+hovercraft-b-2026,B,Hovercraft,score_sheet,DISCOVERY_REQUIRED,,Official score sheet when available
+hovercraft-b-2026,B,Hovercraft,team_checklist,DISCOVERY_REQUIRED,,Official checklist when available
+hovercraft-b-2026,B,Hovercraft,sample_test,DISCOVERY_REQUIRED,,Practice or sample test; verify reuse terms
+hovercraft-b-2026,B,Hovercraft,training_handout,DISCOVERY_REQUIRED,,Public handout or presentation
+hovercraft-b-2026,B,Hovercraft,official_video,DISCOVERY_REQUIRED,,Official instructional video
+hovercraft-b-2026,B,Hovercraft,government_reference,DISCOVERY_REQUIRED,,Government scientific source
+hovercraft-b-2026,B,Hovercraft,open_educational_resource,DISCOVERY_REQUIRED,,Open educational source
+hovercraft-b-2026,B,Hovercraft,licensed_historical_test,DISCOVERY_REQUIRED,,Past competition test under contract
+hovercraft-b-2026,B,Hovercraft,original_lesson,DISCOVERY_REQUIRED,,Platform-authored lesson
+hovercraft-b-2026,B,Hovercraft,original_question_bank,DISCOVERY_REQUIRED,,Platform-authored or reviewed generated questions
+hovercraft-b-2026,B,Hovercraft,answer_key_and_rubric,DISCOVERY_REQUIRED,,Original answer keys and partial-credit rubrics
+hovercraft-b-2026,B,Hovercraft,near_transfer_remediation,DISCOVERY_REQUIRED,,Equivalent remediation item
+hovercraft-b-2026,B,Hovercraft,far_transfer_remediation,DISCOVERY_REQUIRED,,Unfamiliar-context remediation item
+hovercraft-b-2026,B,Hovercraft,delayed_retention_item,DISCOVERY_REQUIRED,,Spaced retention check
+circuit-lab-b-2026,B,Circuit Lab,official_event_page,CATALOGED,https://www.soinc.org/circuit-lab-b,Official event page and public resource index
+circuit-lab-b-2026,B,Circuit Lab,rules_manual,DISCOVERY_REQUIRED,,Current rules; do not redistribute without permission
+circuit-lab-b-2026,B,Circuit Lab,rules_corrections,DISCOVERY_REQUIRED,,Current official corrections and clarifications
+circuit-lab-b-2026,B,Circuit Lab,faq,DISCOVERY_REQUIRED,,Official event FAQ and interpretations
+circuit-lab-b-2026,B,Circuit Lab,score_sheet,DISCOVERY_REQUIRED,,Official score sheet when available
+circuit-lab-b-2026,B,Circuit Lab,team_checklist,DISCOVERY_REQUIRED,,Official checklist when available
+circuit-lab-b-2026,B,Circuit Lab,sample_test,DISCOVERY_REQUIRED,,Practice or sample test; verify reuse terms
+circuit-lab-b-2026,B,Circuit Lab,training_handout,DISCOVERY_REQUIRED,,Public handout or presentation
+circuit-lab-b-2026,B,Circuit Lab,official_video,DISCOVERY_REQUIRED,,Official instructional video
+circuit-lab-b-2026,B,Circuit Lab,government_reference,DISCOVERY_REQUIRED,,Government scientific source
+circuit-lab-b-2026,B,Circuit Lab,open_educational_resource,DISCOVERY_REQUIRED,,Open educational source
+circuit-lab-b-2026,B,Circuit Lab,licensed_historical_test,DISCOVERY_REQUIRED,,Past competition test under contract
+circuit-lab-b-2026,B,Circuit Lab,original_lesson,DISCOVERY_REQUIRED,,Platform-authored lesson
+circuit-lab-b-2026,B,Circuit Lab,original_question_bank,DISCOVERY_REQUIRED,,Platform-authored or reviewed generated questions
+circuit-lab-b-2026,B,Circuit Lab,answer_key_and_rubric,DISCOVERY_REQUIRED,,Original answer keys and partial-credit rubrics
+circuit-lab-b-2026,B,Circuit Lab,near_transfer_remediation,DISCOVERY_REQUIRED,,Equivalent remediation item
+circuit-lab-b-2026,B,Circuit Lab,far_transfer_remediation,DISCOVERY_REQUIRED,,Unfamiliar-context remediation item
+circuit-lab-b-2026,B,Circuit Lab,delayed_retention_item,DISCOVERY_REQUIRED,,Spaced retention check
+machines-b-2026,B,Machines,official_event_page,CATALOGED,https://www.soinc.org/machines-b,Official event page and public resource index
+machines-b-2026,B,Machines,rules_manual,DISCOVERY_REQUIRED,,Current rules; do not redistribute without permission
+machines-b-2026,B,Machines,rules_corrections,DISCOVERY_REQUIRED,,Current official corrections and clarifications
+machines-b-2026,B,Machines,faq,DISCOVERY_REQUIRED,,Official event FAQ and interpretations
+machines-b-2026,B,Machines,score_sheet,DISCOVERY_REQUIRED,,Official score sheet when available
+machines-b-2026,B,Machines,team_checklist,DISCOVERY_REQUIRED,,Official checklist when available
+machines-b-2026,B,Machines,sample_test,DISCOVERY_REQUIRED,,Practice or sample test; verify reuse terms
+machines-b-2026,B,Machines,training_handout,DISCOVERY_REQUIRED,,Public handout or presentation
+machines-b-2026,B,Machines,official_video,DISCOVERY_REQUIRED,,Official instructional video
+machines-b-2026,B,Machines,government_reference,DISCOVERY_REQUIRED,,Government scientific source
+machines-b-2026,B,Machines,open_educational_resource,DISCOVERY_REQUIRED,,Open educational source
+machines-b-2026,B,Machines,licensed_historical_test,DISCOVERY_REQUIRED,,Past competition test under contract
+machines-b-2026,B,Machines,original_lesson,DISCOVERY_REQUIRED,,Platform-authored lesson
+machines-b-2026,B,Machines,original_question_bank,DISCOVERY_REQUIRED,,Platform-authored or reviewed generated questions
+machines-b-2026,B,Machines,answer_key_and_rubric,DISCOVERY_REQUIRED,,Original answer keys and partial-credit rubrics
+machines-b-2026,B,Machines,near_transfer_remediation,DISCOVERY_REQUIRED,,Equivalent remediation item
+machines-b-2026,B,Machines,far_transfer_remediation,DISCOVERY_REQUIRED,,Unfamiliar-context remediation item
+machines-b-2026,B,Machines,delayed_retention_item,DISCOVERY_REQUIRED,,Spaced retention check
+crime-busters-b-2026,B,Crime Busters,official_event_page,CATALOGED,https://www.soinc.org/crime-busters-b,Official event page and public resource index
+crime-busters-b-2026,B,Crime Busters,rules_manual,DISCOVERY_REQUIRED,,Current rules; do not redistribute without permission
+crime-busters-b-2026,B,Crime Busters,rules_corrections,DISCOVERY_REQUIRED,,Current official corrections and clarifications
+crime-busters-b-2026,B,Crime Busters,faq,DISCOVERY_REQUIRED,,Official event FAQ and interpretations
+crime-busters-b-2026,B,Crime Busters,score_sheet,DISCOVERY_REQUIRED,,Official score sheet when available
+crime-busters-b-2026,B,Crime Busters,team_checklist,DISCOVERY_REQUIRED,,Official checklist when available
+crime-busters-b-2026,B,Crime Busters,sample_test,DISCOVERY_REQUIRED,,Practice or sample test; verify reuse terms
+crime-busters-b-2026,B,Crime Busters,training_handout,DISCOVERY_REQUIRED,,Public handout or presentation
+crime-busters-b-2026,B,Crime Busters,official_video,DISCOVERY_REQUIRED,,Official instructional video
+crime-busters-b-2026,B,Crime Busters,government_reference,DISCOVERY_REQUIRED,,Government scientific source
+crime-busters-b-2026,B,Crime Busters,open_educational_resource,DISCOVERY_REQUIRED,,Open educational source
+crime-busters-b-2026,B,Crime Busters,licensed_historical_test,DISCOVERY_REQUIRED,,Past competition test under contract
+crime-busters-b-2026,B,Crime Busters,original_lesson,DISCOVERY_REQUIRED,,Platform-authored lesson
+crime-busters-b-2026,B,Crime Busters,original_question_bank,DISCOVERY_REQUIRED,,Platform-authored or reviewed generated questions
+crime-busters-b-2026,B,Crime Busters,answer_key_and_rubric,DISCOVERY_REQUIRED,,Original answer keys and partial-credit rubrics
+crime-busters-b-2026,B,Crime Busters,near_transfer_remediation,DISCOVERY_REQUIRED,,Equivalent remediation item
+crime-busters-b-2026,B,Crime Busters,far_transfer_remediation,DISCOVERY_REQUIRED,,Unfamiliar-context remediation item
+crime-busters-b-2026,B,Crime Busters,delayed_retention_item,DISCOVERY_REQUIRED,,Spaced retention check
+potions-and-poisons-b-2026,B,Potions and Poisons,official_event_page,CATALOGED,https://www.soinc.org/potions-and-poisons-b,Official event page and public resource index
+potions-and-poisons-b-2026,B,Potions and Poisons,rules_manual,DISCOVERY_REQUIRED,,Current rules; do not redistribute without permission
+potions-and-poisons-b-2026,B,Potions and Poisons,rules_corrections,DISCOVERY_REQUIRED,,Current official corrections and clarifications
+potions-and-poisons-b-2026,B,Potions and Poisons,faq,DISCOVERY_REQUIRED,,Official event FAQ and interpretations
+potions-and-poisons-b-2026,B,Potions and Poisons,score_sheet,DISCOVERY_REQUIRED,,Official score sheet when available
+potions-and-poisons-b-2026,B,Potions and Poisons,team_checklist,DISCOVERY_REQUIRED,,Official checklist when available
+potions-and-poisons-b-2026,B,Potions and Poisons,sample_test,DISCOVERY_REQUIRED,,Practice or sample test; verify reuse terms
+potions-and-poisons-b-2026,B,Potions and Poisons,training_handout,DISCOVERY_REQUIRED,,Public handout or presentation
+potions-and-poisons-b-2026,B,Potions and Poisons,official_video,DISCOVERY_REQUIRED,,Official instructional video
+potions-and-poisons-b-2026,B,Potions and Poisons,government_reference,DISCOVERY_REQUIRED,,Government scientific source
+potions-and-poisons-b-2026,B,Potions and Poisons,open_educational_resource,DISCOVERY_REQUIRED,,Open educational source
+potions-and-poisons-b-2026,B,Potions and Poisons,licensed_historical_test,DISCOVERY_REQUIRED,,Past competition test under contract
+potions-and-poisons-b-2026,B,Potions and Poisons,original_lesson,DISCOVERY_REQUIRED,,Platform-authored lesson
+potions-and-poisons-b-2026,B,Potions and Poisons,original_question_bank,DISCOVERY_REQUIRED,,Platform-authored or reviewed generated questions
+potions-and-poisons-b-2026,B,Potions and Poisons,answer_key_and_rubric,DISCOVERY_REQUIRED,,Original answer keys and partial-credit rubrics
+potions-and-poisons-b-2026,B,Potions and Poisons,near_transfer_remediation,DISCOVERY_REQUIRED,,Equivalent remediation item
+potions-and-poisons-b-2026,B,Potions and Poisons,far_transfer_remediation,DISCOVERY_REQUIRED,,Unfamiliar-context remediation item
+potions-and-poisons-b-2026,B,Potions and Poisons,delayed_retention_item,DISCOVERY_REQUIRED,,Spaced retention check
+boomilever-b-2026,B,Boomilever,official_event_page,CATALOGED,https://www.soinc.org/boomilever-b,Official event page and public resource index
+boomilever-b-2026,B,Boomilever,rules_manual,DISCOVERY_REQUIRED,,Current rules; do not redistribute without permission
+boomilever-b-2026,B,Boomilever,rules_corrections,DISCOVERY_REQUIRED,,Current official corrections and clarifications
+boomilever-b-2026,B,Boomilever,faq,DISCOVERY_REQUIRED,,Official event FAQ and interpretations
+boomilever-b-2026,B,Boomilever,score_sheet,DISCOVERY_REQUIRED,,Official score sheet when available
+boomilever-b-2026,B,Boomilever,team_checklist,DISCOVERY_REQUIRED,,Official checklist when available
+boomilever-b-2026,B,Boomilever,sample_test,DISCOVERY_REQUIRED,,Practice or sample test; verify reuse terms
+boomilever-b-2026,B,Boomilever,training_handout,DISCOVERY_REQUIRED,,Public handout or presentation
+boomilever-b-2026,B,Boomilever,official_video,DISCOVERY_REQUIRED,,Official instructional video
+boomilever-b-2026,B,Boomilever,government_reference,DISCOVERY_REQUIRED,,Government scientific source
+boomilever-b-2026,B,Boomilever,open_educational_resource,DISCOVERY_REQUIRED,,Open educational source
+boomilever-b-2026,B,Boomilever,licensed_historical_test,DISCOVERY_REQUIRED,,Past competition test under contract
+boomilever-b-2026,B,Boomilever,original_lesson,DISCOVERY_REQUIRED,,Platform-authored lesson
+boomilever-b-2026,B,Boomilever,original_question_bank,DISCOVERY_REQUIRED,,Platform-authored or reviewed generated questions
+boomilever-b-2026,B,Boomilever,answer_key_and_rubric,DISCOVERY_REQUIRED,,Original answer keys and partial-credit rubrics
+boomilever-b-2026,B,Boomilever,near_transfer_remediation,DISCOVERY_REQUIRED,,Equivalent remediation item
+boomilever-b-2026,B,Boomilever,far_transfer_remediation,DISCOVERY_REQUIRED,,Unfamiliar-context remediation item
+boomilever-b-2026,B,Boomilever,delayed_retention_item,DISCOVERY_REQUIRED,,Spaced retention check
+helicopter-b-2026,B,Helicopter,official_event_page,CATALOGED,https://www.soinc.org/helicopter-b,Official event page and public resource index
+helicopter-b-2026,B,Helicopter,rules_manual,DISCOVERY_REQUIRED,,Current rules; do not redistribute without permission
+helicopter-b-2026,B,Helicopter,rules_corrections,DISCOVERY_REQUIRED,,Current official corrections and clarifications
+helicopter-b-2026,B,Helicopter,faq,DISCOVERY_REQUIRED,,Official event FAQ and interpretations
+helicopter-b-2026,B,Helicopter,score_sheet,DISCOVERY_REQUIRED,,Official score sheet when available
+helicopter-b-2026,B,Helicopter,team_checklist,DISCOVERY_REQUIRED,,Official checklist when available
+helicopter-b-2026,B,Helicopter,sample_test,DISCOVERY_REQUIRED,,Practice or sample test; verify reuse terms
+helicopter-b-2026,B,Helicopter,training_handout,DISCOVERY_REQUIRED,,Public handout or presentation
+helicopter-b-2026,B,Helicopter,official_video,DISCOVERY_REQUIRED,,Official instructional video
+helicopter-b-2026,B,Helicopter,government_reference,DISCOVERY_REQUIRED,,Government scientific source
+helicopter-b-2026,B,Helicopter,open_educational_resource,DISCOVERY_REQUIRED,,Open educational source
+helicopter-b-2026,B,Helicopter,licensed_historical_test,DISCOVERY_REQUIRED,,Past competition test under contract
+helicopter-b-2026,B,Helicopter,original_lesson,DISCOVERY_REQUIRED,,Platform-authored lesson
+helicopter-b-2026,B,Helicopter,original_question_bank,DISCOVERY_REQUIRED,,Platform-authored or reviewed generated questions
+helicopter-b-2026,B,Helicopter,answer_key_and_rubric,DISCOVERY_REQUIRED,,Original answer keys and partial-credit rubrics
+helicopter-b-2026,B,Helicopter,near_transfer_remediation,DISCOVERY_REQUIRED,,Equivalent remediation item
+helicopter-b-2026,B,Helicopter,far_transfer_remediation,DISCOVERY_REQUIRED,,Unfamiliar-context remediation item
+helicopter-b-2026,B,Helicopter,delayed_retention_item,DISCOVERY_REQUIRED,,Spaced retention check
+mission-possible-b-2026,B,Mission Possible,official_event_page,CATALOGED,https://www.soinc.org/mission-possible-b,Official event page and public resource index
+mission-possible-b-2026,B,Mission Possible,rules_manual,DISCOVERY_REQUIRED,,Current rules; do not redistribute without permission
+mission-possible-b-2026,B,Mission Possible,rules_corrections,DISCOVERY_REQUIRED,,Current official corrections and clarifications
+mission-possible-b-2026,B,Mission Possible,faq,DISCOVERY_REQUIRED,,Official event FAQ and interpretations
+mission-possible-b-2026,B,Mission Possible,score_sheet,DISCOVERY_REQUIRED,,Official score sheet when available
+mission-possible-b-2026,B,Mission Possible,team_checklist,DISCOVERY_REQUIRED,,Official checklist when available
+mission-possible-b-2026,B,Mission Possible,sample_test,DISCOVERY_REQUIRED,,Practice or sample test; verify reuse terms
+mission-possible-b-2026,B,Mission Possible,training_handout,DISCOVERY_REQUIRED,,Public handout or presentation
+mission-possible-b-2026,B,Mission Possible,official_video,DISCOVERY_REQUIRED,,Official instructional video
+mission-possible-b-2026,B,Mission Possible,government_reference,DISCOVERY_REQUIRED,,Government scientific source
+mission-possible-b-2026,B,Mission Possible,open_educational_resource,DISCOVERY_REQUIRED,,Open educational source
+mission-possible-b-2026,B,Mission Possible,licensed_historical_test,DISCOVERY_REQUIRED,,Past competition test under contract
+mission-possible-b-2026,B,Mission Possible,original_lesson,DISCOVERY_REQUIRED,,Platform-authored lesson
+mission-possible-b-2026,B,Mission Possible,original_question_bank,DISCOVERY_REQUIRED,,Platform-authored or reviewed generated questions
+mission-possible-b-2026,B,Mission Possible,answer_key_and_rubric,DISCOVERY_REQUIRED,,Original answer keys and partial-credit rubrics
+mission-possible-b-2026,B,Mission Possible,near_transfer_remediation,DISCOVERY_REQUIRED,,Equivalent remediation item
+mission-possible-b-2026,B,Mission Possible,far_transfer_remediation,DISCOVERY_REQUIRED,,Unfamiliar-context remediation item
+mission-possible-b-2026,B,Mission Possible,delayed_retention_item,DISCOVERY_REQUIRED,,Spaced retention check
+scrambler-b-2026,B,Scrambler,official_event_page,CATALOGED,https://www.soinc.org/scrambler-b,Official event page and public resource index
+scrambler-b-2026,B,Scrambler,rules_manual,DISCOVERY_REQUIRED,,Current rules; do not redistribute without permission
+scrambler-b-2026,B,Scrambler,rules_corrections,DISCOVERY_REQUIRED,,Current official corrections and clarifications
+scrambler-b-2026,B,Scrambler,faq,DISCOVERY_REQUIRED,,Official event FAQ and interpretations
+scrambler-b-2026,B,Scrambler,score_sheet,DISCOVERY_REQUIRED,,Official score sheet when available
+scrambler-b-2026,B,Scrambler,team_checklist,DISCOVERY_REQUIRED,,Official checklist when available
+scrambler-b-2026,B,Scrambler,sample_test,DISCOVERY_REQUIRED,,Practice or sample test; verify reuse terms
+scrambler-b-2026,B,Scrambler,training_handout,DISCOVERY_REQUIRED,,Public handout or presentation
+scrambler-b-2026,B,Scrambler,official_video,DISCOVERY_REQUIRED,,Official instructional video
+scrambler-b-2026,B,Scrambler,government_reference,DISCOVERY_REQUIRED,,Government scientific source
+scrambler-b-2026,B,Scrambler,open_educational_resource,DISCOVERY_REQUIRED,,Open educational source
+scrambler-b-2026,B,Scrambler,licensed_historical_test,DISCOVERY_REQUIRED,,Past competition test under contract
+scrambler-b-2026,B,Scrambler,original_lesson,DISCOVERY_REQUIRED,,Platform-authored lesson
+scrambler-b-2026,B,Scrambler,original_question_bank,DISCOVERY_REQUIRED,,Platform-authored or reviewed generated questions
+scrambler-b-2026,B,Scrambler,answer_key_and_rubric,DISCOVERY_REQUIRED,,Original answer keys and partial-credit rubrics
+scrambler-b-2026,B,Scrambler,near_transfer_remediation,DISCOVERY_REQUIRED,,Equivalent remediation item
+scrambler-b-2026,B,Scrambler,far_transfer_remediation,DISCOVERY_REQUIRED,,Unfamiliar-context remediation item
+scrambler-b-2026,B,Scrambler,delayed_retention_item,DISCOVERY_REQUIRED,,Spaced retention check
+codebusters-b-2026,B,Codebusters,official_event_page,CATALOGED,https://www.soinc.org/codebusters-b,Official event page and public resource index
+codebusters-b-2026,B,Codebusters,rules_manual,DISCOVERY_REQUIRED,,Current rules; do not redistribute without permission
+codebusters-b-2026,B,Codebusters,rules_corrections,DISCOVERY_REQUIRED,,Current official corrections and clarifications
+codebusters-b-2026,B,Codebusters,faq,DISCOVERY_REQUIRED,,Official event FAQ and interpretations
+codebusters-b-2026,B,Codebusters,score_sheet,DISCOVERY_REQUIRED,,Official score sheet when available
+codebusters-b-2026,B,Codebusters,team_checklist,DISCOVERY_REQUIRED,,Official checklist when available
+codebusters-b-2026,B,Codebusters,sample_test,DISCOVERY_REQUIRED,,Practice or sample test; verify reuse terms
+codebusters-b-2026,B,Codebusters,training_handout,DISCOVERY_REQUIRED,,Public handout or presentation
+codebusters-b-2026,B,Codebusters,official_video,DISCOVERY_REQUIRED,,Official instructional video
+codebusters-b-2026,B,Codebusters,government_reference,DISCOVERY_REQUIRED,,Government scientific source
+codebusters-b-2026,B,Codebusters,open_educational_resource,DISCOVERY_REQUIRED,,Open educational source
+codebusters-b-2026,B,Codebusters,licensed_historical_test,DISCOVERY_REQUIRED,,Past competition test under contract
+codebusters-b-2026,B,Codebusters,original_lesson,DISCOVERY_REQUIRED,,Platform-authored lesson
+codebusters-b-2026,B,Codebusters,original_question_bank,DISCOVERY_REQUIRED,,Platform-authored or reviewed generated questions
+codebusters-b-2026,B,Codebusters,answer_key_and_rubric,DISCOVERY_REQUIRED,,Original answer keys and partial-credit rubrics
+codebusters-b-2026,B,Codebusters,near_transfer_remediation,DISCOVERY_REQUIRED,,Equivalent remediation item
+codebusters-b-2026,B,Codebusters,far_transfer_remediation,DISCOVERY_REQUIRED,,Unfamiliar-context remediation item
+codebusters-b-2026,B,Codebusters,delayed_retention_item,DISCOVERY_REQUIRED,,Spaced retention check
+experimental-design-b-2026,B,Experimental Design,official_event_page,CATALOGED,https://www.soinc.org/experimental-design-b,Official event page and public resource index
+experimental-design-b-2026,B,Experimental Design,rules_manual,DISCOVERY_REQUIRED,,Current rules; do not redistribute without permission
+experimental-design-b-2026,B,Experimental Design,rules_corrections,DISCOVERY_REQUIRED,,Current official corrections and clarifications
+experimental-design-b-2026,B,Experimental Design,faq,DISCOVERY_REQUIRED,,Official event FAQ and interpretations
+experimental-design-b-2026,B,Experimental Design,score_sheet,DISCOVERY_REQUIRED,,Official score sheet when available
+experimental-design-b-2026,B,Experimental Design,team_checklist,DISCOVERY_REQUIRED,,Official checklist when available
+experimental-design-b-2026,B,Experimental Design,sample_test,DISCOVERY_REQUIRED,,Practice or sample test; verify reuse terms
+experimental-design-b-2026,B,Experimental Design,training_handout,DISCOVERY_REQUIRED,,Public handout or presentation
+experimental-design-b-2026,B,Experimental Design,official_video,DISCOVERY_REQUIRED,,Official instructional video
+experimental-design-b-2026,B,Experimental Design,government_reference,DISCOVERY_REQUIRED,,Government scientific source
+experimental-design-b-2026,B,Experimental Design,open_educational_resource,DISCOVERY_REQUIRED,,Open educational source
+experimental-design-b-2026,B,Experimental Design,licensed_historical_test,DISCOVERY_REQUIRED,,Past competition test under contract
+experimental-design-b-2026,B,Experimental Design,original_lesson,DISCOVERY_REQUIRED,,Platform-authored lesson
+experimental-design-b-2026,B,Experimental Design,original_question_bank,DISCOVERY_REQUIRED,,Platform-authored or reviewed generated questions
+experimental-design-b-2026,B,Experimental Design,answer_key_and_rubric,DISCOVERY_REQUIRED,,Original answer keys and partial-credit rubrics
+experimental-design-b-2026,B,Experimental Design,near_transfer_remediation,DISCOVERY_REQUIRED,,Equivalent remediation item
+experimental-design-b-2026,B,Experimental Design,far_transfer_remediation,DISCOVERY_REQUIRED,,Unfamiliar-context remediation item
+experimental-design-b-2026,B,Experimental Design,delayed_retention_item,DISCOVERY_REQUIRED,,Spaced retention check
+metric-mastery-b-2026,B,Metric Mastery,official_event_page,CATALOGED,https://www.soinc.org/metric-mastery-b,Official event page and public resource index
+metric-mastery-b-2026,B,Metric Mastery,rules_manual,DISCOVERY_REQUIRED,,Current rules; do not redistribute without permission
+metric-mastery-b-2026,B,Metric Mastery,rules_corrections,DISCOVERY_REQUIRED,,Current official corrections and clarifications
+metric-mastery-b-2026,B,Metric Mastery,faq,DISCOVERY_REQUIRED,,Official event FAQ and interpretations
+metric-mastery-b-2026,B,Metric Mastery,score_sheet,DISCOVERY_REQUIRED,,Official score sheet when available
+metric-mastery-b-2026,B,Metric Mastery,team_checklist,DISCOVERY_REQUIRED,,Official checklist when available
+metric-mastery-b-2026,B,Metric Mastery,sample_test,DISCOVERY_REQUIRED,,Practice or sample test; verify reuse terms
+metric-mastery-b-2026,B,Metric Mastery,training_handout,DISCOVERY_REQUIRED,,Public handout or presentation
+metric-mastery-b-2026,B,Metric Mastery,official_video,DISCOVERY_REQUIRED,,Official instructional video
+metric-mastery-b-2026,B,Metric Mastery,government_reference,DISCOVERY_REQUIRED,,Government scientific source
+metric-mastery-b-2026,B,Metric Mastery,open_educational_resource,DISCOVERY_REQUIRED,,Open educational source
+metric-mastery-b-2026,B,Metric Mastery,licensed_historical_test,DISCOVERY_REQUIRED,,Past competition test under contract
+metric-mastery-b-2026,B,Metric Mastery,original_lesson,DISCOVERY_REQUIRED,,Platform-authored lesson
+metric-mastery-b-2026,B,Metric Mastery,original_question_bank,DISCOVERY_REQUIRED,,Platform-authored or reviewed generated questions
+metric-mastery-b-2026,B,Metric Mastery,answer_key_and_rubric,DISCOVERY_REQUIRED,,Original answer keys and partial-credit rubrics
+metric-mastery-b-2026,B,Metric Mastery,near_transfer_remediation,DISCOVERY_REQUIRED,,Equivalent remediation item
+metric-mastery-b-2026,B,Metric Mastery,far_transfer_remediation,DISCOVERY_REQUIRED,,Unfamiliar-context remediation item
+metric-mastery-b-2026,B,Metric Mastery,delayed_retention_item,DISCOVERY_REQUIRED,,Spaced retention check
+write-it-do-it-b-2026,B,Write It Do It,official_event_page,CATALOGED,https://www.soinc.org/write-it-do-it-b,Official event page and public resource index
+write-it-do-it-b-2026,B,Write It Do It,rules_manual,DISCOVERY_REQUIRED,,Current rules; do not redistribute without permission
+write-it-do-it-b-2026,B,Write It Do It,rules_corrections,DISCOVERY_REQUIRED,,Current official corrections and clarifications
+write-it-do-it-b-2026,B,Write It Do It,faq,DISCOVERY_REQUIRED,,Official event FAQ and interpretations
+write-it-do-it-b-2026,B,Write It Do It,score_sheet,DISCOVERY_REQUIRED,,Official score sheet when available
+write-it-do-it-b-2026,B,Write It Do It,team_checklist,DISCOVERY_REQUIRED,,Official checklist when available
+write-it-do-it-b-2026,B,Write It Do It,sample_test,DISCOVERY_REQUIRED,,Practice or sample test; verify reuse terms
+write-it-do-it-b-2026,B,Write It Do It,training_handout,DISCOVERY_REQUIRED,,Public handout or presentation
+write-it-do-it-b-2026,B,Write It Do It,official_video,DISCOVERY_REQUIRED,,Official instructional video
+write-it-do-it-b-2026,B,Write It Do It,government_reference,DISCOVERY_REQUIRED,,Government scientific source
+write-it-do-it-b-2026,B,Write It Do It,open_educational_resource,DISCOVERY_REQUIRED,,Open educational source
+write-it-do-it-b-2026,B,Write It Do It,licensed_historical_test,DISCOVERY_REQUIRED,,Past competition test under contract
+write-it-do-it-b-2026,B,Write It Do It,original_lesson,DISCOVERY_REQUIRED,,Platform-authored lesson
+write-it-do-it-b-2026,B,Write It Do It,original_question_bank,DISCOVERY_REQUIRED,,Platform-authored or reviewed generated questions
+write-it-do-it-b-2026,B,Write It Do It,answer_key_and_rubric,DISCOVERY_REQUIRED,,Original answer keys and partial-credit rubrics
+write-it-do-it-b-2026,B,Write It Do It,near_transfer_remediation,DISCOVERY_REQUIRED,,Equivalent remediation item
+write-it-do-it-b-2026,B,Write It Do It,far_transfer_remediation,DISCOVERY_REQUIRED,,Unfamiliar-context remediation item
+write-it-do-it-b-2026,B,Write It Do It,delayed_retention_item,DISCOVERY_REQUIRED,,Spaced retention check
+anatomy-and-physiology-c-2026,C,Anatomy & Physiology,official_event_page,CATALOGED,https://www.soinc.org/anatomy-and-physiology-c,Official event page and public resource index
+anatomy-and-physiology-c-2026,C,Anatomy & Physiology,rules_manual,DISCOVERY_REQUIRED,,Current rules; do not redistribute without permission
+anatomy-and-physiology-c-2026,C,Anatomy & Physiology,rules_corrections,DISCOVERY_REQUIRED,,Current official corrections and clarifications
+anatomy-and-physiology-c-2026,C,Anatomy & Physiology,faq,DISCOVERY_REQUIRED,,Official event FAQ and interpretations
+anatomy-and-physiology-c-2026,C,Anatomy & Physiology,score_sheet,DISCOVERY_REQUIRED,,Official score sheet when available
+anatomy-and-physiology-c-2026,C,Anatomy & Physiology,team_checklist,DISCOVERY_REQUIRED,,Official checklist when available
+anatomy-and-physiology-c-2026,C,Anatomy & Physiology,sample_test,DISCOVERY_REQUIRED,,Practice or sample test; verify reuse terms
+anatomy-and-physiology-c-2026,C,Anatomy & Physiology,training_handout,DISCOVERY_REQUIRED,,Public handout or presentation
+anatomy-and-physiology-c-2026,C,Anatomy & Physiology,official_video,DISCOVERY_REQUIRED,,Official instructional video
+anatomy-and-physiology-c-2026,C,Anatomy & Physiology,government_reference,DISCOVERY_REQUIRED,,Government scientific source
+anatomy-and-physiology-c-2026,C,Anatomy & Physiology,open_educational_resource,DISCOVERY_REQUIRED,,Open educational source
+anatomy-and-physiology-c-2026,C,Anatomy & Physiology,licensed_historical_test,DISCOVERY_REQUIRED,,Past competition test under contract
+anatomy-and-physiology-c-2026,C,Anatomy & Physiology,original_lesson,DISCOVERY_REQUIRED,,Platform-authored lesson
+anatomy-and-physiology-c-2026,C,Anatomy & Physiology,original_question_bank,DISCOVERY_REQUIRED,,Platform-authored or reviewed generated questions
+anatomy-and-physiology-c-2026,C,Anatomy & Physiology,answer_key_and_rubric,DISCOVERY_REQUIRED,,Original answer keys and partial-credit rubrics
+anatomy-and-physiology-c-2026,C,Anatomy & Physiology,near_transfer_remediation,DISCOVERY_REQUIRED,,Equivalent remediation item
+anatomy-and-physiology-c-2026,C,Anatomy & Physiology,far_transfer_remediation,DISCOVERY_REQUIRED,,Unfamiliar-context remediation item
+anatomy-and-physiology-c-2026,C,Anatomy & Physiology,delayed_retention_item,DISCOVERY_REQUIRED,,Spaced retention check
+designer-genes-c-2026,C,Designer Genes,official_event_page,CATALOGED,https://www.soinc.org/designer-genes-c,Official event page and public resource index
+designer-genes-c-2026,C,Designer Genes,rules_manual,DISCOVERY_REQUIRED,,Current rules; do not redistribute without permission
+designer-genes-c-2026,C,Designer Genes,rules_corrections,DISCOVERY_REQUIRED,,Current official corrections and clarifications
+designer-genes-c-2026,C,Designer Genes,faq,DISCOVERY_REQUIRED,,Official event FAQ and interpretations
+designer-genes-c-2026,C,Designer Genes,score_sheet,DISCOVERY_REQUIRED,,Official score sheet when available
+designer-genes-c-2026,C,Designer Genes,team_checklist,DISCOVERY_REQUIRED,,Official checklist when available
+designer-genes-c-2026,C,Designer Genes,sample_test,DISCOVERY_REQUIRED,,Practice or sample test; verify reuse terms
+designer-genes-c-2026,C,Designer Genes,training_handout,DISCOVERY_REQUIRED,,Public handout or presentation
+designer-genes-c-2026,C,Designer Genes,official_video,DISCOVERY_REQUIRED,,Official instructional video
+designer-genes-c-2026,C,Designer Genes,government_reference,DISCOVERY_REQUIRED,,Government scientific source
+designer-genes-c-2026,C,Designer Genes,open_educational_resource,DISCOVERY_REQUIRED,,Open educational source
+designer-genes-c-2026,C,Designer Genes,licensed_historical_test,DISCOVERY_REQUIRED,,Past competition test under contract
+designer-genes-c-2026,C,Designer Genes,original_lesson,DISCOVERY_REQUIRED,,Platform-authored lesson
+designer-genes-c-2026,C,Designer Genes,original_question_bank,DISCOVERY_REQUIRED,,Platform-authored or reviewed generated questions
+designer-genes-c-2026,C,Designer Genes,answer_key_and_rubric,DISCOVERY_REQUIRED,,Original answer keys and partial-credit rubrics
+designer-genes-c-2026,C,Designer Genes,near_transfer_remediation,DISCOVERY_REQUIRED,,Equivalent remediation item
+designer-genes-c-2026,C,Designer Genes,far_transfer_remediation,DISCOVERY_REQUIRED,,Unfamiliar-context remediation item
+designer-genes-c-2026,C,Designer Genes,delayed_retention_item,DISCOVERY_REQUIRED,,Spaced retention check
+disease-detectives-c-2026,C,Disease Detectives,official_event_page,CATALOGED,https://www.soinc.org/disease-detectives-c,Official event page and public resource index
+disease-detectives-c-2026,C,Disease Detectives,rules_manual,DISCOVERY_REQUIRED,,Current rules; do not redistribute without permission
+disease-detectives-c-2026,C,Disease Detectives,rules_corrections,DISCOVERY_REQUIRED,,Current official corrections and clarifications
+disease-detectives-c-2026,C,Disease Detectives,faq,DISCOVERY_REQUIRED,,Official event FAQ and interpretations
+disease-detectives-c-2026,C,Disease Detectives,score_sheet,DISCOVERY_REQUIRED,,Official score sheet when available
+disease-detectives-c-2026,C,Disease Detectives,team_checklist,DISCOVERY_REQUIRED,,Official checklist when available
+disease-detectives-c-2026,C,Disease Detectives,sample_test,DISCOVERY_REQUIRED,,Practice or sample test; verify reuse terms
+disease-detectives-c-2026,C,Disease Detectives,training_handout,DISCOVERY_REQUIRED,,Public handout or presentation
+disease-detectives-c-2026,C,Disease Detectives,official_video,DISCOVERY_REQUIRED,,Official instructional video
+disease-detectives-c-2026,C,Disease Detectives,government_reference,DISCOVERY_REQUIRED,,Government scientific source
+disease-detectives-c-2026,C,Disease Detectives,open_educational_resource,DISCOVERY_REQUIRED,,Open educational source
+disease-detectives-c-2026,C,Disease Detectives,licensed_historical_test,DISCOVERY_REQUIRED,,Past competition test under contract
+disease-detectives-c-2026,C,Disease Detectives,original_lesson,DISCOVERY_REQUIRED,,Platform-authored lesson
+disease-detectives-c-2026,C,Disease Detectives,original_question_bank,DISCOVERY_REQUIRED,,Platform-authored or reviewed generated questions
+disease-detectives-c-2026,C,Disease Detectives,answer_key_and_rubric,DISCOVERY_REQUIRED,,Original answer keys and partial-credit rubrics
+disease-detectives-c-2026,C,Disease Detectives,near_transfer_remediation,DISCOVERY_REQUIRED,,Equivalent remediation item
+disease-detectives-c-2026,C,Disease Detectives,far_transfer_remediation,DISCOVERY_REQUIRED,,Unfamiliar-context remediation item
+disease-detectives-c-2026,C,Disease Detectives,delayed_retention_item,DISCOVERY_REQUIRED,,Spaced retention check
+entomology-c-2026,C,Entomology,official_event_page,CATALOGED,https://www.soinc.org/entomology-c,Official event page and public resource index
+entomology-c-2026,C,Entomology,rules_manual,DISCOVERY_REQUIRED,,Current rules; do not redistribute without permission
+entomology-c-2026,C,Entomology,rules_corrections,DISCOVERY_REQUIRED,,Current official corrections and clarifications
+entomology-c-2026,C,Entomology,faq,DISCOVERY_REQUIRED,,Official event FAQ and interpretations
+entomology-c-2026,C,Entomology,score_sheet,DISCOVERY_REQUIRED,,Official score sheet when available
+entomology-c-2026,C,Entomology,team_checklist,DISCOVERY_REQUIRED,,Official checklist when available
+entomology-c-2026,C,Entomology,sample_test,DISCOVERY_REQUIRED,,Practice or sample test; verify reuse terms
+entomology-c-2026,C,Entomology,training_handout,DISCOVERY_REQUIRED,,Public handout or presentation
+entomology-c-2026,C,Entomology,official_video,DISCOVERY_REQUIRED,,Official instructional video
+entomology-c-2026,C,Entomology,government_reference,DISCOVERY_REQUIRED,,Government scientific source
+entomology-c-2026,C,Entomology,open_educational_resource,DISCOVERY_REQUIRED,,Open educational source
+entomology-c-2026,C,Entomology,licensed_historical_test,DISCOVERY_REQUIRED,,Past competition test under contract
+entomology-c-2026,C,Entomology,original_lesson,DISCOVERY_REQUIRED,,Platform-authored lesson
+entomology-c-2026,C,Entomology,original_question_bank,DISCOVERY_REQUIRED,,Platform-authored or reviewed generated questions
+entomology-c-2026,C,Entomology,answer_key_and_rubric,DISCOVERY_REQUIRED,,Original answer keys and partial-credit rubrics
+entomology-c-2026,C,Entomology,near_transfer_remediation,DISCOVERY_REQUIRED,,Equivalent remediation item
+entomology-c-2026,C,Entomology,far_transfer_remediation,DISCOVERY_REQUIRED,,Unfamiliar-context remediation item
+entomology-c-2026,C,Entomology,delayed_retention_item,DISCOVERY_REQUIRED,,Spaced retention check
+water-quality-c-2026,C,Water Quality,official_event_page,CATALOGED,https://www.soinc.org/water-quality-c,Official event page and public resource index
+water-quality-c-2026,C,Water Quality,rules_manual,DISCOVERY_REQUIRED,,Current rules; do not redistribute without permission
+water-quality-c-2026,C,Water Quality,rules_corrections,DISCOVERY_REQUIRED,,Current official corrections and clarifications
+water-quality-c-2026,C,Water Quality,faq,DISCOVERY_REQUIRED,,Official event FAQ and interpretations
+water-quality-c-2026,C,Water Quality,score_sheet,DISCOVERY_REQUIRED,,Official score sheet when available
+water-quality-c-2026,C,Water Quality,team_checklist,DISCOVERY_REQUIRED,,Official checklist when available
+water-quality-c-2026,C,Water Quality,sample_test,DISCOVERY_REQUIRED,,Practice or sample test; verify reuse terms
+water-quality-c-2026,C,Water Quality,training_handout,DISCOVERY_REQUIRED,,Public handout or presentation
+water-quality-c-2026,C,Water Quality,official_video,DISCOVERY_REQUIRED,,Official instructional video
+water-quality-c-2026,C,Water Quality,government_reference,DISCOVERY_REQUIRED,,Government scientific source
+water-quality-c-2026,C,Water Quality,open_educational_resource,DISCOVERY_REQUIRED,,Open educational source
+water-quality-c-2026,C,Water Quality,licensed_historical_test,DISCOVERY_REQUIRED,,Past competition test under contract
+water-quality-c-2026,C,Water Quality,original_lesson,DISCOVERY_REQUIRED,,Platform-authored lesson
+water-quality-c-2026,C,Water Quality,original_question_bank,DISCOVERY_REQUIRED,,Platform-authored or reviewed generated questions
+water-quality-c-2026,C,Water Quality,answer_key_and_rubric,DISCOVERY_REQUIRED,,Original answer keys and partial-credit rubrics
+water-quality-c-2026,C,Water Quality,near_transfer_remediation,DISCOVERY_REQUIRED,,Equivalent remediation item
+water-quality-c-2026,C,Water Quality,far_transfer_remediation,DISCOVERY_REQUIRED,,Unfamiliar-context remediation item
+water-quality-c-2026,C,Water Quality,delayed_retention_item,DISCOVERY_REQUIRED,,Spaced retention check
+astronomy-c-2026,C,Astronomy,official_event_page,CATALOGED,https://www.soinc.org/astronomy-c,Official event page and public resource index
+astronomy-c-2026,C,Astronomy,rules_manual,DISCOVERY_REQUIRED,,Current rules; do not redistribute without permission
+astronomy-c-2026,C,Astronomy,rules_corrections,DISCOVERY_REQUIRED,,Current official corrections and clarifications
+astronomy-c-2026,C,Astronomy,faq,DISCOVERY_REQUIRED,,Official event FAQ and interpretations
+astronomy-c-2026,C,Astronomy,score_sheet,DISCOVERY_REQUIRED,,Official score sheet when available
+astronomy-c-2026,C,Astronomy,team_checklist,DISCOVERY_REQUIRED,,Official checklist when available
+astronomy-c-2026,C,Astronomy,sample_test,DISCOVERY_REQUIRED,,Practice or sample test; verify reuse terms
+astronomy-c-2026,C,Astronomy,training_handout,DISCOVERY_REQUIRED,,Public handout or presentation
+astronomy-c-2026,C,Astronomy,official_video,DISCOVERY_REQUIRED,,Official instructional video
+astronomy-c-2026,C,Astronomy,government_reference,DISCOVERY_REQUIRED,,Government scientific source
+astronomy-c-2026,C,Astronomy,open_educational_resource,DISCOVERY_REQUIRED,,Open educational source
+astronomy-c-2026,C,Astronomy,licensed_historical_test,DISCOVERY_REQUIRED,,Past competition test under contract
+astronomy-c-2026,C,Astronomy,original_lesson,DISCOVERY_REQUIRED,,Platform-authored lesson
+astronomy-c-2026,C,Astronomy,original_question_bank,DISCOVERY_REQUIRED,,Platform-authored or reviewed generated questions
+astronomy-c-2026,C,Astronomy,answer_key_and_rubric,DISCOVERY_REQUIRED,,Original answer keys and partial-credit rubrics
+astronomy-c-2026,C,Astronomy,near_transfer_remediation,DISCOVERY_REQUIRED,,Equivalent remediation item
+astronomy-c-2026,C,Astronomy,far_transfer_remediation,DISCOVERY_REQUIRED,,Unfamiliar-context remediation item
+astronomy-c-2026,C,Astronomy,delayed_retention_item,DISCOVERY_REQUIRED,,Spaced retention check
+dynamic-planet-c-2026,C,Dynamic Planet,official_event_page,CATALOGED,https://www.soinc.org/dynamic-planet-c,Official event page and public resource index
+dynamic-planet-c-2026,C,Dynamic Planet,rules_manual,DISCOVERY_REQUIRED,,Current rules; do not redistribute without permission
+dynamic-planet-c-2026,C,Dynamic Planet,rules_corrections,DISCOVERY_REQUIRED,,Current official corrections and clarifications
+dynamic-planet-c-2026,C,Dynamic Planet,faq,DISCOVERY_REQUIRED,,Official event FAQ and interpretations
+dynamic-planet-c-2026,C,Dynamic Planet,score_sheet,DISCOVERY_REQUIRED,,Official score sheet when available
+dynamic-planet-c-2026,C,Dynamic Planet,team_checklist,DISCOVERY_REQUIRED,,Official checklist when available
+dynamic-planet-c-2026,C,Dynamic Planet,sample_test,DISCOVERY_REQUIRED,,Practice or sample test; verify reuse terms
+dynamic-planet-c-2026,C,Dynamic Planet,training_handout,DISCOVERY_REQUIRED,,Public handout or presentation
+dynamic-planet-c-2026,C,Dynamic Planet,official_video,DISCOVERY_REQUIRED,,Official instructional video
+dynamic-planet-c-2026,C,Dynamic Planet,government_reference,DISCOVERY_REQUIRED,,Government scientific source
+dynamic-planet-c-2026,C,Dynamic Planet,open_educational_resource,DISCOVERY_REQUIRED,,Open educational source
+dynamic-planet-c-2026,C,Dynamic Planet,licensed_historical_test,DISCOVERY_REQUIRED,,Past competition test under contract
+dynamic-planet-c-2026,C,Dynamic Planet,original_lesson,DISCOVERY_REQUIRED,,Platform-authored lesson
+dynamic-planet-c-2026,C,Dynamic Planet,original_question_bank,DISCOVERY_REQUIRED,,Platform-authored or reviewed generated questions
+dynamic-planet-c-2026,C,Dynamic Planet,answer_key_and_rubric,DISCOVERY_REQUIRED,,Original answer keys and partial-credit rubrics
+dynamic-planet-c-2026,C,Dynamic Planet,near_transfer_remediation,DISCOVERY_REQUIRED,,Equivalent remediation item
+dynamic-planet-c-2026,C,Dynamic Planet,far_transfer_remediation,DISCOVERY_REQUIRED,,Unfamiliar-context remediation item
+dynamic-planet-c-2026,C,Dynamic Planet,delayed_retention_item,DISCOVERY_REQUIRED,,Spaced retention check
+remote-sensing-c-2026,C,Remote Sensing,official_event_page,CATALOGED,https://www.soinc.org/remote-sensing-c,Official event page and public resource index
+remote-sensing-c-2026,C,Remote Sensing,rules_manual,DISCOVERY_REQUIRED,,Current rules; do not redistribute without permission
+remote-sensing-c-2026,C,Remote Sensing,rules_corrections,DISCOVERY_REQUIRED,,Current official corrections and clarifications
+remote-sensing-c-2026,C,Remote Sensing,faq,DISCOVERY_REQUIRED,,Official event FAQ and interpretations
+remote-sensing-c-2026,C,Remote Sensing,score_sheet,DISCOVERY_REQUIRED,,Official score sheet when available
+remote-sensing-c-2026,C,Remote Sensing,team_checklist,DISCOVERY_REQUIRED,,Official checklist when available
+remote-sensing-c-2026,C,Remote Sensing,sample_test,DISCOVERY_REQUIRED,,Practice or sample test; verify reuse terms
+remote-sensing-c-2026,C,Remote Sensing,training_handout,DISCOVERY_REQUIRED,,Public handout or presentation
+remote-sensing-c-2026,C,Remote Sensing,official_video,DISCOVERY_REQUIRED,,Official instructional video
+remote-sensing-c-2026,C,Remote Sensing,government_reference,DISCOVERY_REQUIRED,,Government scientific source
+remote-sensing-c-2026,C,Remote Sensing,open_educational_resource,DISCOVERY_REQUIRED,,Open educational source
+remote-sensing-c-2026,C,Remote Sensing,licensed_historical_test,DISCOVERY_REQUIRED,,Past competition test under contract
+remote-sensing-c-2026,C,Remote Sensing,original_lesson,DISCOVERY_REQUIRED,,Platform-authored lesson
+remote-sensing-c-2026,C,Remote Sensing,original_question_bank,DISCOVERY_REQUIRED,,Platform-authored or reviewed generated questions
+remote-sensing-c-2026,C,Remote Sensing,answer_key_and_rubric,DISCOVERY_REQUIRED,,Original answer keys and partial-credit rubrics
+remote-sensing-c-2026,C,Remote Sensing,near_transfer_remediation,DISCOVERY_REQUIRED,,Equivalent remediation item
+remote-sensing-c-2026,C,Remote Sensing,far_transfer_remediation,DISCOVERY_REQUIRED,,Unfamiliar-context remediation item
+remote-sensing-c-2026,C,Remote Sensing,delayed_retention_item,DISCOVERY_REQUIRED,,Spaced retention check
+rocks-and-minerals-c-2026,C,Rocks and Minerals,official_event_page,CATALOGED,https://www.soinc.org/rocks-and-minerals-c,Official event page and public resource index
+rocks-and-minerals-c-2026,C,Rocks and Minerals,rules_manual,DISCOVERY_REQUIRED,,Current rules; do not redistribute without permission
+rocks-and-minerals-c-2026,C,Rocks and Minerals,rules_corrections,DISCOVERY_REQUIRED,,Current official corrections and clarifications
+rocks-and-minerals-c-2026,C,Rocks and Minerals,faq,DISCOVERY_REQUIRED,,Official event FAQ and interpretations
+rocks-and-minerals-c-2026,C,Rocks and Minerals,score_sheet,DISCOVERY_REQUIRED,,Official score sheet when available
+rocks-and-minerals-c-2026,C,Rocks and Minerals,team_checklist,DISCOVERY_REQUIRED,,Official checklist when available
+rocks-and-minerals-c-2026,C,Rocks and Minerals,sample_test,DISCOVERY_REQUIRED,,Practice or sample test; verify reuse terms
+rocks-and-minerals-c-2026,C,Rocks and Minerals,training_handout,DISCOVERY_REQUIRED,,Public handout or presentation
+rocks-and-minerals-c-2026,C,Rocks and Minerals,official_video,DISCOVERY_REQUIRED,,Official instructional video
+rocks-and-minerals-c-2026,C,Rocks and Minerals,government_reference,DISCOVERY_REQUIRED,,Government scientific source
+rocks-and-minerals-c-2026,C,Rocks and Minerals,open_educational_resource,DISCOVERY_REQUIRED,,Open educational source
+rocks-and-minerals-c-2026,C,Rocks and Minerals,licensed_historical_test,DISCOVERY_REQUIRED,,Past competition test under contract
+rocks-and-minerals-c-2026,C,Rocks and Minerals,original_lesson,DISCOVERY_REQUIRED,,Platform-authored lesson
+rocks-and-minerals-c-2026,C,Rocks and Minerals,original_question_bank,DISCOVERY_REQUIRED,,Platform-authored or reviewed generated questions
+rocks-and-minerals-c-2026,C,Rocks and Minerals,answer_key_and_rubric,DISCOVERY_REQUIRED,,Original answer keys and partial-credit rubrics
+rocks-and-minerals-c-2026,C,Rocks and Minerals,near_transfer_remediation,DISCOVERY_REQUIRED,,Equivalent remediation item
+rocks-and-minerals-c-2026,C,Rocks and Minerals,far_transfer_remediation,DISCOVERY_REQUIRED,,Unfamiliar-context remediation item
+rocks-and-minerals-c-2026,C,Rocks and Minerals,delayed_retention_item,DISCOVERY_REQUIRED,,Spaced retention check
+circuit-lab-c-2026,C,Circuit Lab,official_event_page,CATALOGED,https://www.soinc.org/circuit-lab-c,Official event page and public resource index
+circuit-lab-c-2026,C,Circuit Lab,rules_manual,DISCOVERY_REQUIRED,,Current rules; do not redistribute without permission
+circuit-lab-c-2026,C,Circuit Lab,rules_corrections,DISCOVERY_REQUIRED,,Current official corrections and clarifications
+circuit-lab-c-2026,C,Circuit Lab,faq,DISCOVERY_REQUIRED,,Official event FAQ and interpretations
+circuit-lab-c-2026,C,Circuit Lab,score_sheet,DISCOVERY_REQUIRED,,Official score sheet when available
+circuit-lab-c-2026,C,Circuit Lab,team_checklist,DISCOVERY_REQUIRED,,Official checklist when available
+circuit-lab-c-2026,C,Circuit Lab,sample_test,DISCOVERY_REQUIRED,,Practice or sample test; verify reuse terms
+circuit-lab-c-2026,C,Circuit Lab,training_handout,DISCOVERY_REQUIRED,,Public handout or presentation
+circuit-lab-c-2026,C,Circuit Lab,official_video,DISCOVERY_REQUIRED,,Official instructional video
+circuit-lab-c-2026,C,Circuit Lab,government_reference,DISCOVERY_REQUIRED,,Government scientific source
+circuit-lab-c-2026,C,Circuit Lab,open_educational_resource,DISCOVERY_REQUIRED,,Open educational source
+circuit-lab-c-2026,C,Circuit Lab,licensed_historical_test,DISCOVERY_REQUIRED,,Past competition test under contract
+circuit-lab-c-2026,C,Circuit Lab,original_lesson,DISCOVERY_REQUIRED,,Platform-authored lesson
+circuit-lab-c-2026,C,Circuit Lab,original_question_bank,DISCOVERY_REQUIRED,,Platform-authored or reviewed generated questions
+circuit-lab-c-2026,C,Circuit Lab,answer_key_and_rubric,DISCOVERY_REQUIRED,,Original answer keys and partial-credit rubrics
+circuit-lab-c-2026,C,Circuit Lab,near_transfer_remediation,DISCOVERY_REQUIRED,,Equivalent remediation item
+circuit-lab-c-2026,C,Circuit Lab,far_transfer_remediation,DISCOVERY_REQUIRED,,Unfamiliar-context remediation item
+circuit-lab-c-2026,C,Circuit Lab,delayed_retention_item,DISCOVERY_REQUIRED,,Spaced retention check
+hovercraft-c-2026,C,Hovercraft,official_event_page,CATALOGED,https://www.soinc.org/hovercraft-c,Official event page and public resource index
+hovercraft-c-2026,C,Hovercraft,rules_manual,DISCOVERY_REQUIRED,,Current rules; do not redistribute without permission
+hovercraft-c-2026,C,Hovercraft,rules_corrections,DISCOVERY_REQUIRED,,Current official corrections and clarifications
+hovercraft-c-2026,C,Hovercraft,faq,DISCOVERY_REQUIRED,,Official event FAQ and interpretations
+hovercraft-c-2026,C,Hovercraft,score_sheet,DISCOVERY_REQUIRED,,Official score sheet when available
+hovercraft-c-2026,C,Hovercraft,team_checklist,DISCOVERY_REQUIRED,,Official checklist when available
+hovercraft-c-2026,C,Hovercraft,sample_test,DISCOVERY_REQUIRED,,Practice or sample test; verify reuse terms
+hovercraft-c-2026,C,Hovercraft,training_handout,DISCOVERY_REQUIRED,,Public handout or presentation
+hovercraft-c-2026,C,Hovercraft,official_video,DISCOVERY_REQUIRED,,Official instructional video
+hovercraft-c-2026,C,Hovercraft,government_reference,DISCOVERY_REQUIRED,,Government scientific source
+hovercraft-c-2026,C,Hovercraft,open_educational_resource,DISCOVERY_REQUIRED,,Open educational source
+hovercraft-c-2026,C,Hovercraft,licensed_historical_test,DISCOVERY_REQUIRED,,Past competition test under contract
+hovercraft-c-2026,C,Hovercraft,original_lesson,DISCOVERY_REQUIRED,,Platform-authored lesson
+hovercraft-c-2026,C,Hovercraft,original_question_bank,DISCOVERY_REQUIRED,,Platform-authored or reviewed generated questions
+hovercraft-c-2026,C,Hovercraft,answer_key_and_rubric,DISCOVERY_REQUIRED,,Original answer keys and partial-credit rubrics
+hovercraft-c-2026,C,Hovercraft,near_transfer_remediation,DISCOVERY_REQUIRED,,Equivalent remediation item
+hovercraft-c-2026,C,Hovercraft,far_transfer_remediation,DISCOVERY_REQUIRED,,Unfamiliar-context remediation item
+hovercraft-c-2026,C,Hovercraft,delayed_retention_item,DISCOVERY_REQUIRED,,Spaced retention check
+machines-c-2026,C,Machines,official_event_page,CATALOGED,https://www.soinc.org/machines-c,Official event page and public resource index
+machines-c-2026,C,Machines,rules_manual,DISCOVERY_REQUIRED,,Current rules; do not redistribute without permission
+machines-c-2026,C,Machines,rules_corrections,DISCOVERY_REQUIRED,,Current official corrections and clarifications
+machines-c-2026,C,Machines,faq,DISCOVERY_REQUIRED,,Official event FAQ and interpretations
+machines-c-2026,C,Machines,score_sheet,DISCOVERY_REQUIRED,,Official score sheet when available
+machines-c-2026,C,Machines,team_checklist,DISCOVERY_REQUIRED,,Official checklist when available
+machines-c-2026,C,Machines,sample_test,DISCOVERY_REQUIRED,,Practice or sample test; verify reuse terms
+machines-c-2026,C,Machines,training_handout,DISCOVERY_REQUIRED,,Public handout or presentation
+machines-c-2026,C,Machines,official_video,DISCOVERY_REQUIRED,,Official instructional video
+machines-c-2026,C,Machines,government_reference,DISCOVERY_REQUIRED,,Government scientific source
+machines-c-2026,C,Machines,open_educational_resource,DISCOVERY_REQUIRED,,Open educational source
+machines-c-2026,C,Machines,licensed_historical_test,DISCOVERY_REQUIRED,,Past competition test under contract
+machines-c-2026,C,Machines,original_lesson,DISCOVERY_REQUIRED,,Platform-authored lesson
+machines-c-2026,C,Machines,original_question_bank,DISCOVERY_REQUIRED,,Platform-authored or reviewed generated questions
+machines-c-2026,C,Machines,answer_key_and_rubric,DISCOVERY_REQUIRED,,Original answer keys and partial-credit rubrics
+machines-c-2026,C,Machines,near_transfer_remediation,DISCOVERY_REQUIRED,,Equivalent remediation item
+machines-c-2026,C,Machines,far_transfer_remediation,DISCOVERY_REQUIRED,,Unfamiliar-context remediation item
+machines-c-2026,C,Machines,delayed_retention_item,DISCOVERY_REQUIRED,,Spaced retention check
+chemistry-lab-c-2026,C,Chemistry Lab,official_event_page,CATALOGED,https://www.soinc.org/chemistry-lab-c,Official event page and public resource index
+chemistry-lab-c-2026,C,Chemistry Lab,rules_manual,DISCOVERY_REQUIRED,,Current rules; do not redistribute without permission
+chemistry-lab-c-2026,C,Chemistry Lab,rules_corrections,DISCOVERY_REQUIRED,,Current official corrections and clarifications
+chemistry-lab-c-2026,C,Chemistry Lab,faq,DISCOVERY_REQUIRED,,Official event FAQ and interpretations
+chemistry-lab-c-2026,C,Chemistry Lab,score_sheet,DISCOVERY_REQUIRED,,Official score sheet when available
+chemistry-lab-c-2026,C,Chemistry Lab,team_checklist,DISCOVERY_REQUIRED,,Official checklist when available
+chemistry-lab-c-2026,C,Chemistry Lab,sample_test,DISCOVERY_REQUIRED,,Practice or sample test; verify reuse terms
+chemistry-lab-c-2026,C,Chemistry Lab,training_handout,DISCOVERY_REQUIRED,,Public handout or presentation
+chemistry-lab-c-2026,C,Chemistry Lab,official_video,DISCOVERY_REQUIRED,,Official instructional video
+chemistry-lab-c-2026,C,Chemistry Lab,government_reference,DISCOVERY_REQUIRED,,Government scientific source
+chemistry-lab-c-2026,C,Chemistry Lab,open_educational_resource,DISCOVERY_REQUIRED,,Open educational source
+chemistry-lab-c-2026,C,Chemistry Lab,licensed_historical_test,DISCOVERY_REQUIRED,,Past competition test under contract
+chemistry-lab-c-2026,C,Chemistry Lab,original_lesson,DISCOVERY_REQUIRED,,Platform-authored lesson
+chemistry-lab-c-2026,C,Chemistry Lab,original_question_bank,DISCOVERY_REQUIRED,,Platform-authored or reviewed generated questions
+chemistry-lab-c-2026,C,Chemistry Lab,answer_key_and_rubric,DISCOVERY_REQUIRED,,Original answer keys and partial-credit rubrics
+chemistry-lab-c-2026,C,Chemistry Lab,near_transfer_remediation,DISCOVERY_REQUIRED,,Equivalent remediation item
+chemistry-lab-c-2026,C,Chemistry Lab,far_transfer_remediation,DISCOVERY_REQUIRED,,Unfamiliar-context remediation item
+chemistry-lab-c-2026,C,Chemistry Lab,delayed_retention_item,DISCOVERY_REQUIRED,,Spaced retention check
+forensics-c-2026,C,Forensics,official_event_page,CATALOGED,https://www.soinc.org/forensics-c,Official event page and public resource index
+forensics-c-2026,C,Forensics,rules_manual,DISCOVERY_REQUIRED,,Current rules; do not redistribute without permission
+forensics-c-2026,C,Forensics,rules_corrections,DISCOVERY_REQUIRED,,Current official corrections and clarifications
+forensics-c-2026,C,Forensics,faq,DISCOVERY_REQUIRED,,Official event FAQ and interpretations
+forensics-c-2026,C,Forensics,score_sheet,DISCOVERY_REQUIRED,,Official score sheet when available
+forensics-c-2026,C,Forensics,team_checklist,DISCOVERY_REQUIRED,,Official checklist when available
+forensics-c-2026,C,Forensics,sample_test,DISCOVERY_REQUIRED,,Practice or sample test; verify reuse terms
+forensics-c-2026,C,Forensics,training_handout,DISCOVERY_REQUIRED,,Public handout or presentation
+forensics-c-2026,C,Forensics,official_video,DISCOVERY_REQUIRED,,Official instructional video
+forensics-c-2026,C,Forensics,government_reference,DISCOVERY_REQUIRED,,Government scientific source
+forensics-c-2026,C,Forensics,open_educational_resource,DISCOVERY_REQUIRED,,Open educational source
+forensics-c-2026,C,Forensics,licensed_historical_test,DISCOVERY_REQUIRED,,Past competition test under contract
+forensics-c-2026,C,Forensics,original_lesson,DISCOVERY_REQUIRED,,Platform-authored lesson
+forensics-c-2026,C,Forensics,original_question_bank,DISCOVERY_REQUIRED,,Platform-authored or reviewed generated questions
+forensics-c-2026,C,Forensics,answer_key_and_rubric,DISCOVERY_REQUIRED,,Original answer keys and partial-credit rubrics
+forensics-c-2026,C,Forensics,near_transfer_remediation,DISCOVERY_REQUIRED,,Equivalent remediation item
+forensics-c-2026,C,Forensics,far_transfer_remediation,DISCOVERY_REQUIRED,,Unfamiliar-context remediation item
+forensics-c-2026,C,Forensics,delayed_retention_item,DISCOVERY_REQUIRED,,Spaced retention check
+materials-science-c-2026,C,Materials Science,official_event_page,CATALOGED,https://www.soinc.org/materials-science-c,Official event page and public resource index
+materials-science-c-2026,C,Materials Science,rules_manual,DISCOVERY_REQUIRED,,Current rules; do not redistribute without permission
+materials-science-c-2026,C,Materials Science,rules_corrections,DISCOVERY_REQUIRED,,Current official corrections and clarifications
+materials-science-c-2026,C,Materials Science,faq,DISCOVERY_REQUIRED,,Official event FAQ and interpretations
+materials-science-c-2026,C,Materials Science,score_sheet,DISCOVERY_REQUIRED,,Official score sheet when available
+materials-science-c-2026,C,Materials Science,team_checklist,DISCOVERY_REQUIRED,,Official checklist when available
+materials-science-c-2026,C,Materials Science,sample_test,DISCOVERY_REQUIRED,,Practice or sample test; verify reuse terms
+materials-science-c-2026,C,Materials Science,training_handout,DISCOVERY_REQUIRED,,Public handout or presentation
+materials-science-c-2026,C,Materials Science,official_video,DISCOVERY_REQUIRED,,Official instructional video
+materials-science-c-2026,C,Materials Science,government_reference,DISCOVERY_REQUIRED,,Government scientific source
+materials-science-c-2026,C,Materials Science,open_educational_resource,DISCOVERY_REQUIRED,,Open educational source
+materials-science-c-2026,C,Materials Science,licensed_historical_test,DISCOVERY_REQUIRED,,Past competition test under contract
+materials-science-c-2026,C,Materials Science,original_lesson,DISCOVERY_REQUIRED,,Platform-authored lesson
+materials-science-c-2026,C,Materials Science,original_question_bank,DISCOVERY_REQUIRED,,Platform-authored or reviewed generated questions
+materials-science-c-2026,C,Materials Science,answer_key_and_rubric,DISCOVERY_REQUIRED,,Original answer keys and partial-credit rubrics
+materials-science-c-2026,C,Materials Science,near_transfer_remediation,DISCOVERY_REQUIRED,,Equivalent remediation item
+materials-science-c-2026,C,Materials Science,far_transfer_remediation,DISCOVERY_REQUIRED,,Unfamiliar-context remediation item
+materials-science-c-2026,C,Materials Science,delayed_retention_item,DISCOVERY_REQUIRED,,Spaced retention check
+boomilever-c-2026,C,Boomilever,official_event_page,CATALOGED,https://www.soinc.org/boomilever-c,Official event page and public resource index
+boomilever-c-2026,C,Boomilever,rules_manual,DISCOVERY_REQUIRED,,Current rules; do not redistribute without permission
+boomilever-c-2026,C,Boomilever,rules_corrections,DISCOVERY_REQUIRED,,Current official corrections and clarifications
+boomilever-c-2026,C,Boomilever,faq,DISCOVERY_REQUIRED,,Official event FAQ and interpretations
+boomilever-c-2026,C,Boomilever,score_sheet,DISCOVERY_REQUIRED,,Official score sheet when available
+boomilever-c-2026,C,Boomilever,team_checklist,DISCOVERY_REQUIRED,,Official checklist when available
+boomilever-c-2026,C,Boomilever,sample_test,DISCOVERY_REQUIRED,,Practice or sample test; verify reuse terms
+boomilever-c-2026,C,Boomilever,training_handout,DISCOVERY_REQUIRED,,Public handout or presentation
+boomilever-c-2026,C,Boomilever,official_video,DISCOVERY_REQUIRED,,Official instructional video
+boomilever-c-2026,C,Boomilever,government_reference,DISCOVERY_REQUIRED,,Government scientific source
+boomilever-c-2026,C,Boomilever,open_educational_resource,DISCOVERY_REQUIRED,,Open educational source
+boomilever-c-2026,C,Boomilever,licensed_historical_test,DISCOVERY_REQUIRED,,Past competition test under contract
+boomilever-c-2026,C,Boomilever,original_lesson,DISCOVERY_REQUIRED,,Platform-authored lesson
+boomilever-c-2026,C,Boomilever,original_question_bank,DISCOVERY_REQUIRED,,Platform-authored or reviewed generated questions
+boomilever-c-2026,C,Boomilever,answer_key_and_rubric,DISCOVERY_REQUIRED,,Original answer keys and partial-credit rubrics
+boomilever-c-2026,C,Boomilever,near_transfer_remediation,DISCOVERY_REQUIRED,,Equivalent remediation item
+boomilever-c-2026,C,Boomilever,far_transfer_remediation,DISCOVERY_REQUIRED,,Unfamiliar-context remediation item
+boomilever-c-2026,C,Boomilever,delayed_retention_item,DISCOVERY_REQUIRED,,Spaced retention check
+electric-vehicle-c-2026,C,Electric Vehicle,official_event_page,CATALOGED,https://www.soinc.org/electric-vehicle-c,Official event page and public resource index
+electric-vehicle-c-2026,C,Electric Vehicle,rules_manual,DISCOVERY_REQUIRED,,Current rules; do not redistribute without permission
+electric-vehicle-c-2026,C,Electric Vehicle,rules_corrections,DISCOVERY_REQUIRED,,Current official corrections and clarifications
+electric-vehicle-c-2026,C,Electric Vehicle,faq,DISCOVERY_REQUIRED,,Official event FAQ and interpretations
+electric-vehicle-c-2026,C,Electric Vehicle,score_sheet,DISCOVERY_REQUIRED,,Official score sheet when available
+electric-vehicle-c-2026,C,Electric Vehicle,team_checklist,DISCOVERY_REQUIRED,,Official checklist when available
+electric-vehicle-c-2026,C,Electric Vehicle,sample_test,DISCOVERY_REQUIRED,,Practice or sample test; verify reuse terms
+electric-vehicle-c-2026,C,Electric Vehicle,training_handout,DISCOVERY_REQUIRED,,Public handout or presentation
+electric-vehicle-c-2026,C,Electric Vehicle,official_video,DISCOVERY_REQUIRED,,Official instructional video
+electric-vehicle-c-2026,C,Electric Vehicle,government_reference,DISCOVERY_REQUIRED,,Government scientific source
+electric-vehicle-c-2026,C,Electric Vehicle,open_educational_resource,DISCOVERY_REQUIRED,,Open educational source
+electric-vehicle-c-2026,C,Electric Vehicle,licensed_historical_test,DISCOVERY_REQUIRED,,Past competition test under contract
+electric-vehicle-c-2026,C,Electric Vehicle,original_lesson,DISCOVERY_REQUIRED,,Platform-authored lesson
+electric-vehicle-c-2026,C,Electric Vehicle,original_question_bank,DISCOVERY_REQUIRED,,Platform-authored or reviewed generated questions
+electric-vehicle-c-2026,C,Electric Vehicle,answer_key_and_rubric,DISCOVERY_REQUIRED,,Original answer keys and partial-credit rubrics
+electric-vehicle-c-2026,C,Electric Vehicle,near_transfer_remediation,DISCOVERY_REQUIRED,,Equivalent remediation item
+electric-vehicle-c-2026,C,Electric Vehicle,far_transfer_remediation,DISCOVERY_REQUIRED,,Unfamiliar-context remediation item
+electric-vehicle-c-2026,C,Electric Vehicle,delayed_retention_item,DISCOVERY_REQUIRED,,Spaced retention check
+helicopter-c-2026,C,Helicopter,official_event_page,CATALOGED,https://www.soinc.org/helicopter-c,Official event page and public resource index
+helicopter-c-2026,C,Helicopter,rules_manual,DISCOVERY_REQUIRED,,Current rules; do not redistribute without permission
+helicopter-c-2026,C,Helicopter,rules_corrections,DISCOVERY_REQUIRED,,Current official corrections and clarifications
+helicopter-c-2026,C,Helicopter,faq,DISCOVERY_REQUIRED,,Official event FAQ and interpretations
+helicopter-c-2026,C,Helicopter,score_sheet,DISCOVERY_REQUIRED,,Official score sheet when available
+helicopter-c-2026,C,Helicopter,team_checklist,DISCOVERY_REQUIRED,,Official checklist when available
+helicopter-c-2026,C,Helicopter,sample_test,DISCOVERY_REQUIRED,,Practice or sample test; verify reuse terms
+helicopter-c-2026,C,Helicopter,training_handout,DISCOVERY_REQUIRED,,Public handout or presentation
+helicopter-c-2026,C,Helicopter,official_video,DISCOVERY_REQUIRED,,Official instructional video
+helicopter-c-2026,C,Helicopter,government_reference,DISCOVERY_REQUIRED,,Government scientific source
+helicopter-c-2026,C,Helicopter,open_educational_resource,DISCOVERY_REQUIRED,,Open educational source
+helicopter-c-2026,C,Helicopter,licensed_historical_test,DISCOVERY_REQUIRED,,Past competition test under contract
+helicopter-c-2026,C,Helicopter,original_lesson,DISCOVERY_REQUIRED,,Platform-authored lesson
+helicopter-c-2026,C,Helicopter,original_question_bank,DISCOVERY_REQUIRED,,Platform-authored or reviewed generated questions
+helicopter-c-2026,C,Helicopter,answer_key_and_rubric,DISCOVERY_REQUIRED,,Original answer keys and partial-credit rubrics
+helicopter-c-2026,C,Helicopter,near_transfer_remediation,DISCOVERY_REQUIRED,,Equivalent remediation item
+helicopter-c-2026,C,Helicopter,far_transfer_remediation,DISCOVERY_REQUIRED,,Unfamiliar-context remediation item
+helicopter-c-2026,C,Helicopter,delayed_retention_item,DISCOVERY_REQUIRED,,Spaced retention check
+robot-tour-c-2026,C,Robot Tour,official_event_page,CATALOGED,https://www.soinc.org/robot-tour-c,Official event page and public resource index
+robot-tour-c-2026,C,Robot Tour,rules_manual,DISCOVERY_REQUIRED,,Current rules; do not redistribute without permission
+robot-tour-c-2026,C,Robot Tour,rules_corrections,DISCOVERY_REQUIRED,,Current official corrections and clarifications
+robot-tour-c-2026,C,Robot Tour,faq,DISCOVERY_REQUIRED,,Official event FAQ and interpretations
+robot-tour-c-2026,C,Robot Tour,score_sheet,DISCOVERY_REQUIRED,,Official score sheet when available
+robot-tour-c-2026,C,Robot Tour,team_checklist,DISCOVERY_REQUIRED,,Official checklist when available
+robot-tour-c-2026,C,Robot Tour,sample_test,DISCOVERY_REQUIRED,,Practice or sample test; verify reuse terms
+robot-tour-c-2026,C,Robot Tour,training_handout,DISCOVERY_REQUIRED,,Public handout or presentation
+robot-tour-c-2026,C,Robot Tour,official_video,DISCOVERY_REQUIRED,,Official instructional video
+robot-tour-c-2026,C,Robot Tour,government_reference,DISCOVERY_REQUIRED,,Government scientific source
+robot-tour-c-2026,C,Robot Tour,open_educational_resource,DISCOVERY_REQUIRED,,Open educational source
+robot-tour-c-2026,C,Robot Tour,licensed_historical_test,DISCOVERY_REQUIRED,,Past competition test under contract
+robot-tour-c-2026,C,Robot Tour,original_lesson,DISCOVERY_REQUIRED,,Platform-authored lesson
+robot-tour-c-2026,C,Robot Tour,original_question_bank,DISCOVERY_REQUIRED,,Platform-authored or reviewed generated questions
+robot-tour-c-2026,C,Robot Tour,answer_key_and_rubric,DISCOVERY_REQUIRED,,Original answer keys and partial-credit rubrics
+robot-tour-c-2026,C,Robot Tour,near_transfer_remediation,DISCOVERY_REQUIRED,,Equivalent remediation item
+robot-tour-c-2026,C,Robot Tour,far_transfer_remediation,DISCOVERY_REQUIRED,,Unfamiliar-context remediation item
+robot-tour-c-2026,C,Robot Tour,delayed_retention_item,DISCOVERY_REQUIRED,,Spaced retention check
+codebusters-c-2026,C,Codebusters,official_event_page,CATALOGED,https://www.soinc.org/codebusters-c,Official event page and public resource index
+codebusters-c-2026,C,Codebusters,rules_manual,DISCOVERY_REQUIRED,,Current rules; do not redistribute without permission
+codebusters-c-2026,C,Codebusters,rules_corrections,DISCOVERY_REQUIRED,,Current official corrections and clarifications
+codebusters-c-2026,C,Codebusters,faq,DISCOVERY_REQUIRED,,Official event FAQ and interpretations
+codebusters-c-2026,C,Codebusters,score_sheet,DISCOVERY_REQUIRED,,Official score sheet when available
+codebusters-c-2026,C,Codebusters,team_checklist,DISCOVERY_REQUIRED,,Official checklist when available
+codebusters-c-2026,C,Codebusters,sample_test,DISCOVERY_REQUIRED,,Practice or sample test; verify reuse terms
+codebusters-c-2026,C,Codebusters,training_handout,DISCOVERY_REQUIRED,,Public handout or presentation
+codebusters-c-2026,C,Codebusters,official_video,DISCOVERY_REQUIRED,,Official instructional video
+codebusters-c-2026,C,Codebusters,government_reference,DISCOVERY_REQUIRED,,Government scientific source
+codebusters-c-2026,C,Codebusters,open_educational_resource,DISCOVERY_REQUIRED,,Open educational source
+codebusters-c-2026,C,Codebusters,licensed_historical_test,DISCOVERY_REQUIRED,,Past competition test under contract
+codebusters-c-2026,C,Codebusters,original_lesson,DISCOVERY_REQUIRED,,Platform-authored lesson
+codebusters-c-2026,C,Codebusters,original_question_bank,DISCOVERY_REQUIRED,,Platform-authored or reviewed generated questions
+codebusters-c-2026,C,Codebusters,answer_key_and_rubric,DISCOVERY_REQUIRED,,Original answer keys and partial-credit rubrics
+codebusters-c-2026,C,Codebusters,near_transfer_remediation,DISCOVERY_REQUIRED,,Equivalent remediation item
+codebusters-c-2026,C,Codebusters,far_transfer_remediation,DISCOVERY_REQUIRED,,Unfamiliar-context remediation item
+codebusters-c-2026,C,Codebusters,delayed_retention_item,DISCOVERY_REQUIRED,,Spaced retention check
+experimental-design-c-2026,C,Experimental Design,official_event_page,CATALOGED,https://www.soinc.org/experimental-design-c,Official event page and public resource index
+experimental-design-c-2026,C,Experimental Design,rules_manual,DISCOVERY_REQUIRED,,Current rules; do not redistribute without permission
+experimental-design-c-2026,C,Experimental Design,rules_corrections,DISCOVERY_REQUIRED,,Current official corrections and clarifications
+experimental-design-c-2026,C,Experimental Design,faq,DISCOVERY_REQUIRED,,Official event FAQ and interpretations
+experimental-design-c-2026,C,Experimental Design,score_sheet,DISCOVERY_REQUIRED,,Official score sheet when available
+experimental-design-c-2026,C,Experimental Design,team_checklist,DISCOVERY_REQUIRED,,Official checklist when available
+experimental-design-c-2026,C,Experimental Design,sample_test,DISCOVERY_REQUIRED,,Practice or sample test; verify reuse terms
+experimental-design-c-2026,C,Experimental Design,training_handout,DISCOVERY_REQUIRED,,Public handout or presentation
+experimental-design-c-2026,C,Experimental Design,official_video,DISCOVERY_REQUIRED,,Official instructional video
+experimental-design-c-2026,C,Experimental Design,government_reference,DISCOVERY_REQUIRED,,Government scientific source
+experimental-design-c-2026,C,Experimental Design,open_educational_resource,DISCOVERY_REQUIRED,,Open educational source
+experimental-design-c-2026,C,Experimental Design,licensed_historical_test,DISCOVERY_REQUIRED,,Past competition test under contract
+experimental-design-c-2026,C,Experimental Design,original_lesson,DISCOVERY_REQUIRED,,Platform-authored lesson
+experimental-design-c-2026,C,Experimental Design,original_question_bank,DISCOVERY_REQUIRED,,Platform-authored or reviewed generated questions
+experimental-design-c-2026,C,Experimental Design,answer_key_and_rubric,DISCOVERY_REQUIRED,,Original answer keys and partial-credit rubrics
+experimental-design-c-2026,C,Experimental Design,near_transfer_remediation,DISCOVERY_REQUIRED,,Equivalent remediation item
+experimental-design-c-2026,C,Experimental Design,far_transfer_remediation,DISCOVERY_REQUIRED,,Unfamiliar-context remediation item
+experimental-design-c-2026,C,Experimental Design,delayed_retention_item,DISCOVERY_REQUIRED,,Spaced retention check
+bungee-drop-c-2026,C,Bungee Drop,official_event_page,CATALOGED,https://www.soinc.org/bungee-drop-c,Official event page and public resource index
+bungee-drop-c-2026,C,Bungee Drop,rules_manual,DISCOVERY_REQUIRED,,Current rules; do not redistribute without permission
+bungee-drop-c-2026,C,Bungee Drop,rules_corrections,DISCOVERY_REQUIRED,,Current official corrections and clarifications
+bungee-drop-c-2026,C,Bungee Drop,faq,DISCOVERY_REQUIRED,,Official event FAQ and interpretations
+bungee-drop-c-2026,C,Bungee Drop,score_sheet,DISCOVERY_REQUIRED,,Official score sheet when available
+bungee-drop-c-2026,C,Bungee Drop,team_checklist,DISCOVERY_REQUIRED,,Official checklist when available
+bungee-drop-c-2026,C,Bungee Drop,sample_test,DISCOVERY_REQUIRED,,Practice or sample test; verify reuse terms
+bungee-drop-c-2026,C,Bungee Drop,training_handout,DISCOVERY_REQUIRED,,Public handout or presentation
+bungee-drop-c-2026,C,Bungee Drop,official_video,DISCOVERY_REQUIRED,,Official instructional video
+bungee-drop-c-2026,C,Bungee Drop,government_reference,DISCOVERY_REQUIRED,,Government scientific source
+bungee-drop-c-2026,C,Bungee Drop,open_educational_resource,DISCOVERY_REQUIRED,,Open educational source
+bungee-drop-c-2026,C,Bungee Drop,licensed_historical_test,DISCOVERY_REQUIRED,,Past competition test under contract
+bungee-drop-c-2026,C,Bungee Drop,original_lesson,DISCOVERY_REQUIRED,,Platform-authored lesson
+bungee-drop-c-2026,C,Bungee Drop,original_question_bank,DISCOVERY_REQUIRED,,Platform-authored or reviewed generated questions
+bungee-drop-c-2026,C,Bungee Drop,answer_key_and_rubric,DISCOVERY_REQUIRED,,Original answer keys and partial-credit rubrics
+bungee-drop-c-2026,C,Bungee Drop,near_transfer_remediation,DISCOVERY_REQUIRED,,Equivalent remediation item
+bungee-drop-c-2026,C,Bungee Drop,far_transfer_remediation,DISCOVERY_REQUIRED,,Unfamiliar-context remediation item
+bungee-drop-c-2026,C,Bungee Drop,delayed_retention_item,DISCOVERY_REQUIRED,,Spaced retention check
+engineering-cad-c-2026,C,Engineering CAD,official_event_page,CATALOGED,https://www.soinc.org/engineering-cad-c,Official event page and public resource index
+engineering-cad-c-2026,C,Engineering CAD,rules_manual,DISCOVERY_REQUIRED,,Current rules; do not redistribute without permission
+engineering-cad-c-2026,C,Engineering CAD,rules_corrections,DISCOVERY_REQUIRED,,Current official corrections and clarifications
+engineering-cad-c-2026,C,Engineering CAD,faq,DISCOVERY_REQUIRED,,Official event FAQ and interpretations
+engineering-cad-c-2026,C,Engineering CAD,score_sheet,DISCOVERY_REQUIRED,,Official score sheet when available
+engineering-cad-c-2026,C,Engineering CAD,team_checklist,DISCOVERY_REQUIRED,,Official checklist when available
+engineering-cad-c-2026,C,Engineering CAD,sample_test,DISCOVERY_REQUIRED,,Practice or sample test; verify reuse terms
+engineering-cad-c-2026,C,Engineering CAD,training_handout,DISCOVERY_REQUIRED,,Public handout or presentation
+engineering-cad-c-2026,C,Engineering CAD,official_video,DISCOVERY_REQUIRED,,Official instructional video
+engineering-cad-c-2026,C,Engineering CAD,government_reference,DISCOVERY_REQUIRED,,Government scientific source
+engineering-cad-c-2026,C,Engineering CAD,open_educational_resource,DISCOVERY_REQUIRED,,Open educational source
+engineering-cad-c-2026,C,Engineering CAD,licensed_historical_test,DISCOVERY_REQUIRED,,Past competition test under contract
+engineering-cad-c-2026,C,Engineering CAD,original_lesson,DISCOVERY_REQUIRED,,Platform-authored lesson
+engineering-cad-c-2026,C,Engineering CAD,original_question_bank,DISCOVERY_REQUIRED,,Platform-authored or reviewed generated questions
+engineering-cad-c-2026,C,Engineering CAD,answer_key_and_rubric,DISCOVERY_REQUIRED,,Original answer keys and partial-credit rubrics
+engineering-cad-c-2026,C,Engineering CAD,near_transfer_remediation,DISCOVERY_REQUIRED,,Equivalent remediation item
+engineering-cad-c-2026,C,Engineering CAD,far_transfer_remediation,DISCOVERY_REQUIRED,,Unfamiliar-context remediation item
+engineering-cad-c-2026,C,Engineering CAD,delayed_retention_item,DISCOVERY_REQUIRED,,Spaced retention check

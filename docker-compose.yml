@@ -1,0 +1,39 @@
+services:
+  web:
+    build: .
+    command: sh -c "alembic upgrade head && uvicorn app.main:app --host 0.0.0.0 --port 8000"
+    ports:
+      - "8000:8000"
+    environment: &app_env
+      DATABASE_URL: sqlite:////data/science_olympiad.db
+      JWT_SECRET: replace-this-with-a-long-production-secret
+      ENVIRONMENT: development
+      AUTH_PROVIDER: ${AUTH_PROVIDER:-local}
+      FIREBASE_PROJECT_ID: ${FIREBASE_PROJECT_ID:-}
+      FIREBASE_WEB_API_KEY: ${FIREBASE_WEB_API_KEY:-}
+      FIREBASE_CHECK_REVOKED: ${FIREBASE_CHECK_REVOKED:-true}
+      ARTIFACT_STORE_PATH: /data/artifacts
+      CRAWL_SCHEDULER_MINUTES: ${CRAWL_SCHEDULER_MINUTES:-15}
+      OPENAI_COMPATIBLE_BASE_URL: ${OPENAI_COMPATIBLE_BASE_URL:-}
+      OPENAI_API_KEY: ${OPENAI_API_KEY:-}
+      OPENAI_MODEL: ${OPENAI_MODEL:-gpt-4.1-mini}
+      EMAIL_DELIVERY_PROVIDER: ${EMAIL_DELIVERY_PROVIDER:-disabled}
+      SMTP_HOST: ${SMTP_HOST:-}
+      SMTP_PORT: ${SMTP_PORT:-587}
+      SMTP_USERNAME: ${SMTP_USERNAME:-}
+      SMTP_PASSWORD: ${SMTP_PASSWORD:-}
+      SMTP_FROM_EMAIL: ${SMTP_FROM_EMAIL:-}
+      PUBLIC_APP_URL: ${PUBLIC_APP_URL:-http://localhost:8000}
+      TUTOR_DAILY_MESSAGES: ${TUTOR_DAILY_MESSAGES:-50}
+    volumes:
+      - science_data:/data
+  worker:
+    build: .
+    command: sh -c "alembic upgrade head && python -m scripts.worker"
+    environment: *app_env
+    volumes:
+      - science_data:/data
+    depends_on:
+      - web
+volumes:
+  science_data:

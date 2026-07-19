@@ -1,0 +1,1036 @@
+{
+  "rocks-and-minerals": [
+    {
+      "slug": "quartz",
+      "label": "Quartz",
+      "url": "/static/media/rocks-and-minerals/quartz.jpg",
+      "alt": "Photograph of Quartz for identification",
+      "attribution": "Didier Descouens",
+      "license": "CC BY-SA 4.0",
+      "source_url": "https://upload.wikimedia.org/wikipedia/commons/c/ce/Quartz_Br%C3%A9sil.jpg"
+    },
+    {
+      "slug": "calcite",
+      "label": "Calcite",
+      "url": "/static/media/rocks-and-minerals/calcite.png",
+      "alt": "Photograph of Calcite for identification",
+      "attribution": "PaleoNeolitic (montage creator)",
+      "license": "CC BY 4.0",
+      "source_url": "https://upload.wikimedia.org/wikipedia/commons/thumb/a/a6/Calcite_Variation.png/3840px-Calcite_Variation.png"
+    },
+    {
+      "slug": "halite",
+      "label": "Halite",
+      "url": "/static/media/rocks-and-minerals/halite.jpg",
+      "alt": "Photograph of Halite for identification",
+      "attribution": "Lech Darski",
+      "license": "CC BY-SA 4.0",
+      "source_url": "https://upload.wikimedia.org/wikipedia/commons/8/89/Halit_%28NaCl%29_-_Kopalnia_soli_Wieliczka%2C_Polska.jpg"
+    },
+    {
+      "slug": "gypsum",
+      "label": "Gypsum",
+      "url": "/static/media/rocks-and-minerals/gypsum.jpg",
+      "alt": "Photograph of Gypsum for identification",
+      "attribution": "Didier Descouens",
+      "license": "CC BY-SA 4.0",
+      "source_url": "https://upload.wikimedia.org/wikipedia/commons/b/bb/Gypse_Caresse.jpg"
+    },
+    {
+      "slug": "pyrite",
+      "label": "Pyrite",
+      "url": "/static/media/rocks-and-minerals/pyrite.jpg",
+      "alt": "Photograph of Pyrite for identification",
+      "attribution": "Ivar Leidus",
+      "license": "CC BY-SA 4.0",
+      "source_url": "https://upload.wikimedia.org/wikipedia/commons/thumb/9/91/Pyrite_-_Huanzala_mine%2C_Huallanca%2C_Bolognesi%2C_Ancash%2C_Peru.jpg/3840px-Pyrite_-_Huanzala_mine%2C_Huallanca%2C_Bolognesi%2C_Ancash%2C_Peru.jpg"
+    },
+    {
+      "slug": "galena",
+      "label": "Galena",
+      "url": "/static/media/rocks-and-minerals/galena.jpg",
+      "alt": "Photograph of Galena for identification",
+      "attribution": "Ivar Leidus",
+      "license": "CC BY-SA 4.0",
+      "source_url": "https://upload.wikimedia.org/wikipedia/commons/thumb/8/81/Galena_-_Huallanca%2C_Bologesi%2C_Ancash%2C_Peru.jpg/3840px-Galena_-_Huallanca%2C_Bologesi%2C_Ancash%2C_Peru.jpg"
+    },
+    {
+      "slug": "magnetite",
+      "label": "Magnetite",
+      "url": "/static/media/rocks-and-minerals/magnetite.jpg",
+      "alt": "Photograph of Magnetite for identification",
+      "attribution": "Robert M. Lavinsky",
+      "license": "CC BY-SA 3.0",
+      "source_url": "https://upload.wikimedia.org/wikipedia/commons/8/86/Magnetite-118736.jpg"
+    },
+    {
+      "slug": "fluorite",
+      "label": "Fluorite",
+      "url": "/static/media/rocks-and-minerals/fluorite.jpg",
+      "alt": "Photograph of Fluorite for identification",
+      "attribution": "CarlesMillan",
+      "license": "CC BY-SA 3.0",
+      "source_url": "https://upload.wikimedia.org/wikipedia/commons/0/0d/3192M-fluorite1.jpg"
+    },
+    {
+      "slug": "hematite",
+      "label": "Hematite",
+      "url": "/static/media/rocks-and-minerals/hematite.jpg",
+      "alt": "Photograph of Hematite for identification",
+      "attribution": "Wikipedia Loves Art participant \"Assignment_Houston_One\"",
+      "license": "CC BY-SA 2.5",
+      "source_url": "https://upload.wikimedia.org/wikipedia/commons/1/19/WLA_hmns_Hematite.jpg"
+    },
+    {
+      "slug": "talc",
+      "label": "Talc",
+      "url": "/static/media/rocks-and-minerals/talc.jpg",
+      "alt": "Photograph of Talc for identification",
+      "attribution": "Robert M. Lavinsky",
+      "license": "CC BY-SA 3.0",
+      "source_url": "https://upload.wikimedia.org/wikipedia/commons/9/91/Talc-177589.jpg"
+    },
+    {
+      "slug": "malachite",
+      "label": "Malachite",
+      "url": "/static/media/rocks-and-minerals/malachite.jpg",
+      "alt": "Photograph of Malachite for identification",
+      "attribution": "JJ Harrison (https://www.jjharrison.com.au/)",
+      "license": "CC BY-SA 3.0",
+      "source_url": "https://upload.wikimedia.org/wikipedia/commons/5/55/Malachite%2C_Zaire.jpg"
+    },
+    {
+      "slug": "muscovite-mica",
+      "label": "Muscovite (Mica)",
+      "url": "/static/media/rocks-and-minerals/muscovite-mica.jpg",
+      "alt": "Photograph of Muscovite (Mica) for identification",
+      "attribution": "Robert M. Lavinsky",
+      "license": "CC BY-SA 3.0",
+      "source_url": "https://upload.wikimedia.org/wikipedia/commons/2/26/Muscovite-Albite-122887.jpg"
+    },
+    {
+      "slug": "biotite",
+      "label": "Biotite",
+      "url": "/static/media/rocks-and-minerals/biotite.jpg",
+      "alt": "Photograph of Biotite for identification",
+      "attribution": "Fred Kruijen",
+      "license": "CC BY-SA 3.0 nl",
+      "source_url": "https://upload.wikimedia.org/wikipedia/commons/c/c8/Biotite_aggregate_-_Ochtendung%2C_Eifel%2C_Germany.jpg"
+    },
+    {
+      "slug": "orthoclase-feldspar",
+      "label": "Orthoclase Feldspar",
+      "url": "/static/media/rocks-and-minerals/orthoclase-feldspar.jpg",
+      "alt": "Photograph of Orthoclase Feldspar for identification",
+      "attribution": "Didier Descouens",
+      "license": "CC BY-SA 4.0",
+      "source_url": "https://upload.wikimedia.org/wikipedia/commons/thumb/3/31/OrthoclaseBresil.jpg/3840px-OrthoclaseBresil.jpg"
+    },
+    {
+      "slug": "olivine",
+      "label": "Olivine",
+      "url": "/static/media/rocks-and-minerals/olivine.jpg",
+      "alt": "Photograph of Olivine for identification",
+      "attribution": "Robert M. Lavinsky",
+      "license": "CC BY-SA 3.0",
+      "source_url": "https://upload.wikimedia.org/wikipedia/commons/f/fb/Olivine-gem7-10a.jpg"
+    },
+    {
+      "slug": "garnet",
+      "label": "Garnet",
+      "url": "/static/media/rocks-and-minerals/garnet.jpg",
+      "alt": "Photograph of Garnet for identification",
+      "attribution": "Moha112100",
+      "license": "CC BY-SA 3.0",
+      "source_url": "https://upload.wikimedia.org/wikipedia/commons/5/5e/Garnet_Andradite20.jpg"
+    },
+    {
+      "slug": "graphite",
+      "label": "Graphite",
+      "url": "/static/media/rocks-and-minerals/graphite.jpg",
+      "alt": "Photograph of Graphite for identification",
+      "attribution": "Robert M. Lavinsky",
+      "license": "CC BY-SA 3.0",
+      "source_url": "https://upload.wikimedia.org/wikipedia/commons/3/3d/Graphite-233436.jpg"
+    },
+    {
+      "slug": "sulfur",
+      "label": "Sulfur",
+      "url": "/static/media/rocks-and-minerals/sulfur.jpg",
+      "alt": "Photograph of Sulfur for identification",
+      "attribution": "Ivar Leidus",
+      "license": "CC BY-SA 4.0",
+      "source_url": "https://upload.wikimedia.org/wikipedia/commons/thumb/8/88/Sulfur_-_El_Desierto_mine%2C_San_Pablo_de_Napa%2C_Daniel_Campos_Province%2C_Potos%C3%AD%2C_Bolivia.jpg/3840px-Sulfur_-_El_Desierto_mine%2C_San_Pablo_de_Napa%2C_Daniel_Campos_Province%2C_Potos%C3%AD%2C_Bolivia.jpg"
+    },
+    {
+      "slug": "azurite",
+      "label": "Azurite",
+      "url": "/static/media/rocks-and-minerals/azurite.jpg",
+      "alt": "Photograph of Azurite for identification",
+      "attribution": "Ivar Leidus",
+      "license": "CC BY-SA 4.0",
+      "source_url": "https://upload.wikimedia.org/wikipedia/commons/thumb/4/4b/Azurite_-_New_Nevada_Lode%2C_La_Sal%2C_Utah%2C_USA.jpg/3840px-Azurite_-_New_Nevada_Lode%2C_La_Sal%2C_Utah%2C_USA.jpg"
+    },
+    {
+      "slug": "chalcopyrite",
+      "label": "Chalcopyrite",
+      "url": "/static/media/rocks-and-minerals/chalcopyrite.jpg",
+      "alt": "Photograph of Chalcopyrite for identification",
+      "attribution": "Robert M. Lavinsky",
+      "license": "CC BY-SA 3.0",
+      "source_url": "https://upload.wikimedia.org/wikipedia/commons/2/2c/Chalcopyrite-199453.jpg"
+    },
+    {
+      "slug": "corundum",
+      "label": "Corundum",
+      "url": "/static/media/rocks-and-minerals/corundum.jpg",
+      "alt": "Photograph of Corundum for identification",
+      "attribution": "Ra'ike (see also Ra'ike on de.wikipedia",
+      "license": "CC BY-SA 3.0",
+      "source_url": "https://upload.wikimedia.org/wikipedia/commons/9/9a/Several_corundum_crystals.jpg"
+    },
+    {
+      "slug": "dolomite",
+      "label": "Dolomite",
+      "url": "/static/media/rocks-and-minerals/dolomite.jpg",
+      "alt": "Photograph of Dolomite for identification",
+      "attribution": "Robert M. Lavinsky",
+      "license": "CC BY-SA 3.0",
+      "source_url": "https://upload.wikimedia.org/wikipedia/commons/5/51/Dolomite-213058.jpg"
+    },
+    {
+      "slug": "sphalerite",
+      "label": "Sphalerite",
+      "url": "/static/media/rocks-and-minerals/sphalerite.jpg",
+      "alt": "Photograph of Sphalerite for identification",
+      "attribution": "Ivar Leidus",
+      "license": "CC BY-SA 4.0",
+      "source_url": "https://upload.wikimedia.org/wikipedia/commons/thumb/d/d3/Sphalerite_-_Creede%2C_Mineral_County%2C_Colorado%2C_USA.jpg/3840px-Sphalerite_-_Creede%2C_Mineral_County%2C_Colorado%2C_USA.jpg"
+    },
+    {
+      "slug": "apatite",
+      "label": "Apatite",
+      "url": "/static/media/rocks-and-minerals/apatite.jpg",
+      "alt": "Photograph of Apatite for identification",
+      "attribution": "Thomas Spann",
+      "license": "CC BY 2.0",
+      "source_url": "https://upload.wikimedia.org/wikipedia/commons/9/91/Apatite_on_Siderite_%2813156440584%29.jpg"
+    },
+    {
+      "slug": "barite",
+      "label": "Barite",
+      "url": "/static/media/rocks-and-minerals/barite.jpg",
+      "alt": "Photograph of Barite for identification",
+      "attribution": "Ivar Leidus",
+      "license": "CC BY-SA 4.0",
+      "source_url": "https://upload.wikimedia.org/wikipedia/commons/thumb/5/5c/Barite_-_Cerro_Warihuyn%2C_Miraflores%2C_Huamalies%2C_Huanuco%2C_Peru.jpg/3840px-Barite_-_Cerro_Warihuyn%2C_Miraflores%2C_Huamalies%2C_Huanuco%2C_Peru.jpg"
+    },
+    {
+      "slug": "amethyst",
+      "label": "Amethyst",
+      "url": "/static/media/rocks-and-minerals/amethyst.jpg",
+      "alt": "Photograph of Amethyst for identification",
+      "attribution": "Gonzalo Devia",
+      "license": "CC BY-SA 4.0",
+      "source_url": "https://upload.wikimedia.org/wikipedia/commons/b/b5/Amatista_Laye_2.jpg"
+    },
+    {
+      "slug": "topaz",
+      "label": "Topaz",
+      "url": "/static/media/rocks-and-minerals/topaz.jpg",
+      "alt": "Photograph of Topaz for identification",
+      "attribution": "Parent G\u00e9ry",
+      "license": "CC BY-SA 3.0",
+      "source_url": "https://upload.wikimedia.org/wikipedia/commons/thumb/2/24/Topaze%2C_quartz_fum%C3%A9_1.jpg/3840px-Topaze%2C_quartz_fum%C3%A9_1.jpg"
+    },
+    {
+      "slug": "tourmaline",
+      "label": "Tourmaline",
+      "url": "/static/media/rocks-and-minerals/tourmaline.jpg",
+      "alt": "Photograph of Tourmaline for identification",
+      "attribution": "Robert M. Lavinsky",
+      "license": "CC BY-SA 3.0",
+      "source_url": "https://upload.wikimedia.org/wikipedia/commons/0/00/Tourmaline-121240.jpg"
+    },
+    {
+      "slug": "kyanite",
+      "label": "Kyanite",
+      "url": "/static/media/rocks-and-minerals/kyanite.jpg",
+      "alt": "Photograph of Kyanite for identification",
+      "attribution": "User:Aelwyn",
+      "license": "CC BY-SA 3.0",
+      "source_url": "https://upload.wikimedia.org/wikipedia/commons/0/00/Kyanite_crystals.jpg"
+    },
+    {
+      "slug": "rhodochrosite",
+      "label": "Rhodochrosite",
+      "url": "/static/media/rocks-and-minerals/rhodochrosite.jpg",
+      "alt": "Photograph of Rhodochrosite for identification",
+      "attribution": "JJ Harrison (https://www.jjharrison.com.au/)",
+      "license": "CC BY-SA 4.0",
+      "source_url": "https://upload.wikimedia.org/wikipedia/commons/thumb/2/23/Rhodochrosite_on_Matrix_-_Peru.jpg/3840px-Rhodochrosite_on_Matrix_-_Peru.jpg"
+    },
+    {
+      "slug": "bornite",
+      "label": "Bornite",
+      "url": "/static/media/rocks-and-minerals/bornite.jpg",
+      "alt": "Photograph of Bornite for identification",
+      "attribution": "Robert M. Lavinsky",
+      "license": "CC BY-SA 3.0",
+      "source_url": "https://upload.wikimedia.org/wikipedia/commons/9/95/Bornite-Quartz-135210.jpg"
+    },
+    {
+      "slug": "serpentine",
+      "label": "Serpentine",
+      "url": "/static/media/rocks-and-minerals/serpentine.jpg",
+      "alt": "Photograph of Serpentine for identification",
+      "attribution": "Tiia Monto",
+      "license": "CC BY-SA 3.0",
+      "source_url": "https://upload.wikimedia.org/wikipedia/commons/1/15/Talk_on_Serpentine.jpg"
+    },
+    {
+      "slug": "granite-igneous",
+      "label": "Granite (igneous)",
+      "url": "/static/media/rocks-and-minerals/granite-igneous.jpg",
+      "alt": "Photograph of Granite (igneous) for identification",
+      "attribution": "The stone gate",
+      "license": "CC BY-SA 4.0",
+      "source_url": "https://upload.wikimedia.org/wikipedia/commons/7/71/Bianco_Sardo_Granit_mit_polierter_Oberfl%C3%A4che.jpg"
+    },
+    {
+      "slug": "basalt-igneous",
+      "label": "Basalt (igneous)",
+      "url": "/static/media/rocks-and-minerals/basalt-igneous.jpg",
+      "alt": "Photograph of Basalt (igneous) for identification",
+      "attribution": "James St. John",
+      "license": "CC BY 2.0",
+      "source_url": "https://upload.wikimedia.org/wikipedia/commons/b/bb/Basalt_12_%2848674276333%29.jpg"
+    },
+    {
+      "slug": "obsidian-igneous",
+      "label": "Obsidian (igneous)",
+      "url": "/static/media/rocks-and-minerals/obsidian-igneous.jpg",
+      "alt": "Photograph of Obsidian (igneous) for identification",
+      "attribution": "Ji-Elle\n\nIt feels nice and warm\n\nIt feels like a love storm",
+      "license": "CC BY-SA 3.0",
+      "source_url": "https://upload.wikimedia.org/wikipedia/commons/1/17/Lipari-Obsidienne_%285%29.jpg"
+    },
+    {
+      "slug": "pumice-igneous",
+      "label": "Pumice (igneous)",
+      "url": "/static/media/rocks-and-minerals/pumice-igneous.jpg",
+      "alt": "Photograph of Pumice (igneous) for identification",
+      "attribution": "User MPF on en.wikipedia",
+      "license": "CC BY-SA 3.0",
+      "source_url": "https://upload.wikimedia.org/wikipedia/commons/7/7b/Teidepumice.jpg"
+    },
+    {
+      "slug": "sandstone-sedimentary",
+      "label": "Sandstone (sedimentary)",
+      "url": "/static/media/rocks-and-minerals/sandstone-sedimentary.jpg",
+      "alt": "Photograph of Sandstone (sedimentary) for identification",
+      "attribution": "Wikimedia Commons",
+      "license": "Public domain",
+      "source_url": "https://upload.wikimedia.org/wikipedia/commons/a/af/USDA_Mineral_Sandstone_93c3955.jpg"
+    },
+    {
+      "slug": "limestone-sedimentary",
+      "label": "Limestone (sedimentary)",
+      "url": "/static/media/rocks-and-minerals/limestone-sedimentary.jpg",
+      "alt": "Photograph of Limestone (sedimentary) for identification",
+      "attribution": "Fernando Dom\u00ednguez Cerejido",
+      "license": "CC BY-SA 4.0",
+      "source_url": "https://upload.wikimedia.org/wikipedia/commons/thumb/9/99/ElTorcal0408.jpg/3840px-ElTorcal0408.jpg"
+    },
+    {
+      "slug": "shale-sedimentary",
+      "label": "Shale (sedimentary)",
+      "url": "/static/media/rocks-and-minerals/shale-sedimentary.jpg",
+      "alt": "Photograph of Shale (sedimentary) for identification",
+      "attribution": "Chris Woodrich",
+      "license": "CC BY-SA 4.0",
+      "source_url": "https://upload.wikimedia.org/wikipedia/commons/thumb/9/98/Shale_formation%2C_Marble_Canyon%2C_Kootenay_National_Park%2C_British_Columbia%2C_2025-07-11.jpg/3840px-Shale_formation%2C_Marble_Canyon%2C_Kootenay_National_Park%2C_British_Columbia%2C_2025-07-11.jpg"
+    },
+    {
+      "slug": "conglomerate-sedimentary",
+      "label": "Conglomerate (sedimentary)",
+      "url": "/static/media/rocks-and-minerals/conglomerate-sedimentary.jpg",
+      "alt": "Photograph of Conglomerate (sedimentary) for identification",
+      "attribution": "James St. John",
+      "license": "CC BY 2.0",
+      "source_url": "https://upload.wikimedia.org/wikipedia/commons/f/fa/Ferruginous_quartz-pebble_conglomerate_%28derived_from_boulder_in_%22Sharon_Conglomerate%22%2C_Lower_Pennsylvanian%3B_Jackson_North_roadcut%2C_Ohio%2C_USA%29_30.jpg"
+    },
+    {
+      "slug": "marble-metamorphic",
+      "label": "Marble (metamorphic)",
+      "url": "/static/media/rocks-and-minerals/marble-metamorphic.jpg",
+      "alt": "Photograph of Marble (metamorphic) for identification",
+      "attribution": "Zyance",
+      "license": "CC BY-SA 2.5",
+      "source_url": "https://upload.wikimedia.org/wikipedia/commons/0/05/Marmo_z17.JPG"
+    },
+    {
+      "slug": "slate-metamorphic",
+      "label": "Slate (metamorphic)",
+      "url": "/static/media/rocks-and-minerals/slate-metamorphic.jpg",
+      "alt": "Photograph of Slate (metamorphic) for identification",
+      "attribution": "James St. John",
+      "license": "CC BY 2.0",
+      "source_url": "https://upload.wikimedia.org/wikipedia/commons/thumb/f/f4/Slate_%28Knife_Lake_Formation%2C_metamorphism_at_2.7_Ga%2C_Neoarchean%3B_Rt._135_roadcut%2C_Gilbert%2C_Minnesota%2C_USA%29_3_%2823140002749%29.jpg/3840px-Slate_%28Knife_Lake_Formation%2C_metamorphism_at_2.7_Ga%2C_Neoarchean%3B_Rt._135_roadcut%2C_Gilbert%2C_Minnesota%2C_USA%29_3_%2823140002749%29.jpg"
+    },
+    {
+      "slug": "gneiss-metamorphic",
+      "label": "Gneiss (metamorphic)",
+      "url": "/static/media/rocks-and-minerals/gneiss-metamorphic.jpg",
+      "alt": "Photograph of Gneiss (metamorphic) for identification",
+      "attribution": "No machine-readable author provided. Siim assumed (based on copyright claims).",
+      "license": "CC BY-SA 3.0",
+      "source_url": "https://upload.wikimedia.org/wikipedia/commons/6/60/Gneiss.jpg"
+    },
+    {
+      "slug": "schist-metamorphic",
+      "label": "Schist (metamorphic)",
+      "url": "/static/media/rocks-and-minerals/schist-metamorphic.jpg",
+      "alt": "Photograph of Schist (metamorphic) for identification",
+      "attribution": "Michael C. Rygel",
+      "license": "CC BY-SA 3.0",
+      "source_url": "https://upload.wikimedia.org/wikipedia/commons/6/6f/Schist_detail.jpg"
+    },
+    {
+      "slug": "rhyolite-igneous",
+      "label": "Rhyolite (igneous)",
+      "url": "/static/media/rocks-and-minerals/rhyolite-igneous.jpg",
+      "alt": "Photograph of Rhyolite (igneous) for identification",
+      "attribution": "Benhoff",
+      "license": "CC BY-SA 3.0",
+      "source_url": "https://upload.wikimedia.org/wikipedia/commons/thumb/8/8c/Loebejuener_porphyr_poliert.jpg/3840px-Loebejuener_porphyr_poliert.jpg"
+    },
+    {
+      "slug": "andesite-igneous",
+      "label": "Andesite (igneous)",
+      "url": "/static/media/rocks-and-minerals/andesite-igneous.jpg",
+      "alt": "Photograph of Andesite (igneous) for identification",
+      "attribution": "Photographer: Siim Sepp, 2005",
+      "license": "CC BY-SA 3.0",
+      "source_url": "https://upload.wikimedia.org/wikipedia/commons/1/1f/Amygdaloidal_andesite.jpg"
+    },
+    {
+      "slug": "phyllite-metamorphic",
+      "label": "Phyllite (metamorphic)",
+      "url": "/static/media/rocks-and-minerals/phyllite-metamorphic.jpg",
+      "alt": "Photograph of Phyllite (metamorphic) for identification",
+      "attribution": "EdwardEMeyer",
+      "license": "CC BY-SA 4.0",
+      "source_url": "https://upload.wikimedia.org/wikipedia/commons/thumb/f/fc/Phyllite_Cenulation.jpg/3840px-Phyllite_Cenulation.jpg"
+    },
+    {
+      "slug": "quartzite-metamorphic",
+      "label": "Quartzite (metamorphic)",
+      "url": "/static/media/rocks-and-minerals/quartzite-metamorphic.jpg",
+      "alt": "Photograph of Quartzite (metamorphic) for identification",
+      "attribution": "Gabriel Haute Maurienne",
+      "license": "CC BY-SA 4.0",
+      "source_url": "https://upload.wikimedia.org/wikipedia/commons/thumb/2/22/Quartzite_Solli%C3%A8res.jpg/3840px-Quartzite_Solli%C3%A8res.jpg"
+    },
+    {
+      "slug": "diorite-igneous",
+      "label": "Diorite (igneous)",
+      "url": "/static/media/rocks-and-minerals/diorite-igneous.jpg",
+      "alt": "Photograph of Diorite (igneous) for identification",
+      "attribution": "Michael C. Rygel",
+      "license": "CC BY-SA 3.0",
+      "source_url": "https://upload.wikimedia.org/wikipedia/commons/thumb/1/15/Diorite2.tif/lossy-page1-1920px-Diorite2.tif.jpg"
+    },
+    {
+      "slug": "gabbro-igneous",
+      "label": "Gabbro (igneous)",
+      "url": "/static/media/rocks-and-minerals/gabbro-igneous.jpg",
+      "alt": "Photograph of Gabbro (igneous) for identification",
+      "attribution": "Darla Sondrol",
+      "license": "CC0",
+      "source_url": "https://upload.wikimedia.org/wikipedia/commons/0/04/Gabbro_%28GeoDIL_number_-_94%29.jpg"
+    },
+    {
+      "slug": "almandine-garnet",
+      "label": "Almandine (Garnet)",
+      "url": "/static/media/rocks-and-minerals/almandine-garnet.jpg",
+      "alt": "Photograph of Almandine (Garnet) for identification",
+      "attribution": "Didier Descouens",
+      "license": "CC BY-SA 4.0",
+      "source_url": "https://upload.wikimedia.org/wikipedia/commons/thumb/c/c9/Almandin.jpg/3840px-Almandin.jpg"
+    },
+    {
+      "slug": "chrysocolla",
+      "label": "Chrysocolla",
+      "url": "/static/media/rocks-and-minerals/chrysocolla.jpg",
+      "alt": "Photograph of Chrysocolla for identification",
+      "attribution": "Robert M. Lavinsky",
+      "license": "CC BY-SA 3.0",
+      "source_url": "https://upload.wikimedia.org/wikipedia/commons/e/ee/Chrysocolla-230109.jpg"
+    },
+    {
+      "slug": "microcline-feldspar",
+      "label": "Microcline Feldspar",
+      "url": "/static/media/rocks-and-minerals/microcline-feldspar.jpg",
+      "alt": "Photograph of Microcline Feldspar for identification",
+      "attribution": "Robert M. Lavinsky",
+      "license": "CC BY-SA 3.0",
+      "source_url": "https://upload.wikimedia.org/wikipedia/commons/e/e6/Microcline-199473.jpg"
+    },
+    {
+      "slug": "chert-sedimentary",
+      "label": "Chert (sedimentary)",
+      "url": "/static/media/rocks-and-minerals/chert-sedimentary.jpg",
+      "alt": "Photograph of Chert (sedimentary) for identification",
+      "attribution": "Wikimedia Commons",
+      "license": "Public domain",
+      "source_url": "https://upload.wikimedia.org/wikipedia/commons/1/1c/ChertUSGOV.jpg"
+    },
+    {
+      "slug": "breccia-sedimentary",
+      "label": "Breccia (sedimentary)",
+      "url": "/static/media/rocks-and-minerals/breccia-sedimentary.jpg",
+      "alt": "Photograph of Breccia (sedimentary) for identification",
+      "attribution": "No machine-readable author provided. Siim assumed (based on copyright claims).",
+      "license": "CC BY-SA 3.0",
+      "source_url": "https://upload.wikimedia.org/wikipedia/commons/5/56/Basalt_breccia.jpg"
+    },
+    {
+      "slug": "rock-gypsum-sedimentary",
+      "label": "Rock Gypsum (sedimentary)",
+      "url": "/static/media/rocks-and-minerals/rock-gypsum-sedimentary.jpg",
+      "alt": "Photograph of Rock Gypsum (sedimentary) for identification",
+      "attribution": "James St. John",
+      "license": "CC BY 2.0",
+      "source_url": "https://upload.wikimedia.org/wikipedia/commons/8/88/Rock_gypsum_%28gyprock%29_2.jpg"
+    }
+  ],
+  "astronomy": [
+    {
+      "slug": "mercury",
+      "label": "Mercury",
+      "url": "/static/media/astronomy/mercury.jpg",
+      "alt": "Photograph of Mercury for identification",
+      "attribution": "NASA/Johns Hopkins University Applied Physics Laboratory/Arizona State University/Carnegie Institution of Washington",
+      "license": "Public domain",
+      "source_url": "https://upload.wikimedia.org/wikipedia/commons/4/4a/Mercury_in_true_color.jpg"
+    },
+    {
+      "slug": "venus",
+      "label": "Venus",
+      "url": "/static/media/astronomy/venus.jpg",
+      "alt": "Photograph of Venus for identification",
+      "attribution": "NASA/Johns Hopkins University Applied Physics Laboratory/Carnegie Institution of Washington",
+      "license": "Public domain",
+      "source_url": "https://upload.wikimedia.org/wikipedia/commons/b/b2/Venus_2_Approach_Image.jpg"
+    },
+    {
+      "slug": "mars",
+      "label": "Mars",
+      "url": "/static/media/astronomy/mars.png",
+      "alt": "Photograph of Mars for identification",
+      "attribution": "Kevin Gill from Los Angeles, CA, United States",
+      "license": "CC BY 2.0",
+      "source_url": "https://upload.wikimedia.org/wikipedia/commons/0/0c/Mars_-_August_30_2021_-_Flickr_-_Kevin_M._Gill.png"
+    },
+    {
+      "slug": "jupiter",
+      "label": "Jupiter",
+      "url": "/static/media/astronomy/jupiter.png",
+      "alt": "Photograph of Jupiter for identification",
+      "attribution": "NASA/STSCI (S.T.A.R.S)",
+      "license": "Public domain",
+      "source_url": "https://upload.wikimedia.org/wikipedia/commons/e/e2/Jupiter_OPAL_2024.png"
+    },
+    {
+      "slug": "orion-nebula",
+      "label": "Orion Nebula",
+      "url": "/static/media/astronomy/orion-nebula.jpg",
+      "alt": "Photograph of Orion Nebula for identification",
+      "attribution": "NASA, ESA, M. Robberto (Space Telescope Science Institute/ESA) and the Hubble Space Telescope Orion Treasury Project Team",
+      "license": "Public domain",
+      "source_url": "https://upload.wikimedia.org/wikipedia/commons/thumb/f/f3/Orion_Nebula_-_Hubble_2006_mosaic_18000.jpg/3840px-Orion_Nebula_-_Hubble_2006_mosaic_18000.jpg"
+    },
+    {
+      "slug": "andromeda-galaxy",
+      "label": "Andromeda Galaxy",
+      "url": "/static/media/astronomy/andromeda-galaxy.png",
+      "alt": "Photograph of Andromeda Galaxy for identification",
+      "attribution": "Brody Wesner",
+      "license": "CC0",
+      "source_url": "https://upload.wikimedia.org/wikipedia/commons/thumb/0/05/Andromeda_Galaxy_2025.png/3840px-Andromeda_Galaxy_2025.png"
+    },
+    {
+      "slug": "crab-nebula",
+      "label": "Crab Nebula",
+      "url": "/static/media/astronomy/crab-nebula.jpg",
+      "alt": "Photograph of Crab Nebula for identification",
+      "attribution": "NASA, ESA, J. Hester and A. Loll (Arizona State University)",
+      "license": "Public domain",
+      "source_url": "https://upload.wikimedia.org/wikipedia/commons/thumb/0/00/Crab_Nebula.jpg/3840px-Crab_Nebula.jpg"
+    },
+    {
+      "slug": "pleiades",
+      "label": "Pleiades",
+      "url": "/static/media/astronomy/pleiades.jpg",
+      "alt": "Photograph of Pleiades for identification",
+      "attribution": "NASA, ESA, AURA/Caltech, Palomar Observatory\n\nThe science team consists of: D. Soderblom and E. Nelan (STScI), F. Benedict and B. Arthur (U. Texas), and B. Jones (Lick Obs.)",
+      "license": "Public domain",
+      "source_url": "https://upload.wikimedia.org/wikipedia/commons/thumb/4/4e/Pleiades_large.jpg/3840px-Pleiades_large.jpg"
+    },
+    {
+      "slug": "ring-nebula",
+      "label": "Ring Nebula",
+      "url": "/static/media/astronomy/ring-nebula.jpg",
+      "alt": "Photograph of Ring Nebula for identification",
+      "attribution": "ESA/Webb, NASA, CSA, M. Barlow, N. Cox, R. Wesson",
+      "license": "CC BY 4.0",
+      "source_url": "https://upload.wikimedia.org/wikipedia/commons/thumb/8/8d/Webb_captures_detailed_beauty_of_Ring_Nebula_%28NIRCam_image%29_%28weic2320b%29.jpg/3840px-Webb_captures_detailed_beauty_of_Ring_Nebula_%28NIRCam_image%29_%28weic2320b%29.jpg"
+    },
+    {
+      "slug": "whirlpool-galaxy",
+      "label": "Whirlpool Galaxy",
+      "url": "/static/media/astronomy/whirlpool-galaxy.jpg",
+      "alt": "Photograph of Whirlpool Galaxy for identification",
+      "attribution": "NASA and European Space Agency",
+      "license": "Public domain",
+      "source_url": "https://upload.wikimedia.org/wikipedia/commons/thumb/d/db/Messier51_sRGB.jpg/3840px-Messier51_sRGB.jpg"
+    },
+    {
+      "slug": "sombrero-galaxy",
+      "label": "Sombrero Galaxy",
+      "url": "/static/media/astronomy/sombrero-galaxy.jpg",
+      "alt": "Photograph of Sombrero Galaxy for identification",
+      "attribution": "ESA/Hubble &amp; NASA, K. Noll",
+      "license": "CC BY 4.0",
+      "source_url": "https://upload.wikimedia.org/wikipedia/commons/thumb/c/cc/Sombrero_Galaxy_%28heic2506a%29.jpg/3840px-Sombrero_Galaxy_%28heic2506a%29.jpg"
+    },
+    {
+      "slug": "eagle-nebula",
+      "label": "Eagle Nebula",
+      "url": "/static/media/astronomy/eagle-nebula.jpg",
+      "alt": "Photograph of Eagle Nebula for identification",
+      "attribution": "ESO",
+      "license": "CC BY 4.0",
+      "source_url": "https://upload.wikimedia.org/wikipedia/commons/thumb/2/2b/Eagle_Nebula_from_ESO.jpg/3840px-Eagle_Nebula_from_ESO.jpg"
+    },
+    {
+      "slug": "horsehead-nebula",
+      "label": "Horsehead Nebula",
+      "url": "/static/media/astronomy/horsehead-nebula.jpg",
+      "alt": "Photograph of Horsehead Nebula for identification",
+      "attribution": "ESO",
+      "license": "CC BY 4.0",
+      "source_url": "https://upload.wikimedia.org/wikipedia/commons/6/6a/Nebulosa_testa_di_cavallo_con_SPECULOOS.jpg"
+    },
+    {
+      "slug": "helix-nebula",
+      "label": "Helix Nebula",
+      "url": "/static/media/astronomy/helix-nebula.jpg",
+      "alt": "Photograph of Helix Nebula for identification",
+      "attribution": "The HST data are from proposal 9700. Processed images may be obtained from the Helix MAST web site. The Hubble Helix Team includes M. Meixner, H.E. Bond, G. Chapman (STScI), Y.-H. Chu (U. Illinois, Ur",
+      "license": "Public domain",
+      "source_url": "https://upload.wikimedia.org/wikipedia/commons/thumb/b/b1/NGC7293_%282004%29.jpg/3840px-NGC7293_%282004%29.jpg"
+    },
+    {
+      "slug": "lagoon-nebula",
+      "label": "Lagoon Nebula",
+      "url": "/static/media/astronomy/lagoon-nebula.jpg",
+      "alt": "Photograph of Lagoon Nebula for identification",
+      "attribution": "ESO/VPHAS+ team",
+      "license": "CC BY 4.0",
+      "source_url": "https://upload.wikimedia.org/wikipedia/commons/thumb/a/a8/VST_images_the_Lagoon_Nebula.jpg/3840px-VST_images_the_Lagoon_Nebula.jpg"
+    },
+    {
+      "slug": "triangulum-galaxy",
+      "label": "Triangulum Galaxy",
+      "url": "/static/media/astronomy/triangulum-galaxy.jpg",
+      "alt": "Photograph of Triangulum Galaxy for identification",
+      "attribution": "ESO",
+      "license": "CC BY 4.0",
+      "source_url": "https://upload.wikimedia.org/wikipedia/commons/thumb/6/64/VST_snaps_a_very_detailed_view_of_the_Triangulum_Galaxy.jpg/3840px-VST_snaps_a_very_detailed_view_of_the_Triangulum_Galaxy.jpg"
+    },
+    {
+      "slug": "pinwheel-galaxy",
+      "label": "Pinwheel Galaxy",
+      "url": "/static/media/astronomy/pinwheel-galaxy.jpg",
+      "alt": "Photograph of Pinwheel Galaxy for identification",
+      "attribution": "Credit:\nImage: European Space Agency &amp; NASA\nAcknowledgements:\nProject Investigators for the original Hubble data: K.D. Kuntz (GSFC), F. Bresolin (University of Hawaii), J. Trauger (JPL), J. Mould ",
+      "license": "CC BY 4.0",
+      "source_url": "https://upload.wikimedia.org/wikipedia/commons/thumb/c/c5/M101_hires_STScI-PRC2006-10a.jpg/3840px-M101_hires_STScI-PRC2006-10a.jpg"
+    },
+    {
+      "slug": "cat-s-eye-nebula",
+      "label": "Cat's Eye Nebula",
+      "url": "/static/media/astronomy/cat-s-eye-nebula.jpg",
+      "alt": "Photograph of Cat's Eye Nebula for identification",
+      "attribution": "ESA/Hubble &amp; NASA, Z. Tsvetanov",
+      "license": "CC BY 4.0",
+      "source_url": "https://upload.wikimedia.org/wikipedia/commons/2/2c/Looking_at_the_Cat%E2%80%99s_Eye_Nebula_with_Hubble_%28potm2602b%29.jpg"
+    },
+    {
+      "slug": "tarantula-nebula",
+      "label": "Tarantula Nebula",
+      "url": "/static/media/astronomy/tarantula-nebula.jpg",
+      "alt": "Photograph of Tarantula Nebula for identification",
+      "attribution": "NASA, ESA, CSA, STScI, Webb ERO Production Team",
+      "license": "Public domain",
+      "source_url": "https://upload.wikimedia.org/wikipedia/commons/thumb/7/7e/Tarantula_Nebula_by_JWST.jpg/3840px-Tarantula_Nebula_by_JWST.jpg"
+    },
+    {
+      "slug": "veil-nebula",
+      "label": "Veil Nebula",
+      "url": "/static/media/astronomy/veil-nebula.jpg",
+      "alt": "Photograph of Veil Nebula for identification",
+      "attribution": "Ken Crawford",
+      "license": "CC BY-SA 3.0",
+      "source_url": "https://upload.wikimedia.org/wikipedia/commons/thumb/6/6e/Veil_Nebula_-_NGC6960.jpg/3840px-Veil_Nebula_-_NGC6960.jpg"
+    }
+  ],
+  "solar-system": [
+    {
+      "slug": "mercury",
+      "label": "Mercury",
+      "url": "/static/media/solar-system/mercury.jpg",
+      "alt": "Photograph of Mercury for identification",
+      "attribution": "NASA/Johns Hopkins University Applied Physics Laboratory/Arizona State University/Carnegie Institution of Washington",
+      "license": "Public domain",
+      "source_url": "https://upload.wikimedia.org/wikipedia/commons/4/4a/Mercury_in_true_color.jpg"
+    },
+    {
+      "slug": "venus",
+      "label": "Venus",
+      "url": "/static/media/solar-system/venus.jpg",
+      "alt": "Photograph of Venus for identification",
+      "attribution": "NASA/Johns Hopkins University Applied Physics Laboratory/Carnegie Institution of Washington",
+      "license": "Public domain",
+      "source_url": "https://upload.wikimedia.org/wikipedia/commons/b/b2/Venus_2_Approach_Image.jpg"
+    },
+    {
+      "slug": "mars",
+      "label": "Mars",
+      "url": "/static/media/solar-system/mars.png",
+      "alt": "Photograph of Mars for identification",
+      "attribution": "Kevin Gill from Los Angeles, CA, United States",
+      "license": "CC BY 2.0",
+      "source_url": "https://upload.wikimedia.org/wikipedia/commons/0/0c/Mars_-_August_30_2021_-_Flickr_-_Kevin_M._Gill.png"
+    },
+    {
+      "slug": "jupiter",
+      "label": "Jupiter",
+      "url": "/static/media/solar-system/jupiter.png",
+      "alt": "Photograph of Jupiter for identification",
+      "attribution": "NASA/STSCI (S.T.A.R.S)",
+      "license": "Public domain",
+      "source_url": "https://upload.wikimedia.org/wikipedia/commons/e/e2/Jupiter_OPAL_2024.png"
+    },
+    {
+      "slug": "saturn",
+      "label": "Saturn",
+      "url": "/static/media/solar-system/saturn.png",
+      "alt": "Photograph of Saturn for identification",
+      "attribution": "NASA / JPL-Caltech / SSI / color composite by Gordan Ugarkovic",
+      "license": "Public domain",
+      "source_url": "https://upload.wikimedia.org/wikipedia/commons/thumb/4/43/Saturn_global_view_from_Cassini%2C_rings_open_Better_Colour.png/3840px-Saturn_global_view_from_Cassini%2C_rings_open_Better_Colour.png"
+    },
+    {
+      "slug": "uranus",
+      "label": "Uranus",
+      "url": "/static/media/solar-system/uranus.png",
+      "alt": "Photograph of Uranus for identification",
+      "attribution": "Ardenau4",
+      "license": "CC0",
+      "source_url": "https://upload.wikimedia.org/wikipedia/commons/6/69/Uranus_Voyager2_color_calibrated.png"
+    },
+    {
+      "slug": "neptune",
+      "label": "Neptune",
+      "url": "/static/media/solar-system/neptune.png",
+      "alt": "Photograph of Neptune for identification",
+      "attribution": "NASA / Voyager 2 / PDS / OPUS / Ardenau4",
+      "license": "CC0",
+      "source_url": "https://upload.wikimedia.org/wikipedia/commons/b/b9/Neptune_Voyager2_color_calibrated.png"
+    },
+    {
+      "slug": "the-moon",
+      "label": "The Moon",
+      "url": "/static/media/solar-system/the-moon.jpg",
+      "alt": "Photograph of The Moon for identification",
+      "attribution": "Gregory H. Revera",
+      "license": "CC BY-SA 3.0",
+      "source_url": "https://upload.wikimedia.org/wikipedia/commons/e/e1/FullMoon2010.jpg"
+    },
+    {
+      "slug": "the-sun",
+      "label": "The Sun",
+      "url": "/static/media/solar-system/the-sun.jpg",
+      "alt": "Photograph of The Sun for identification",
+      "attribution": "Mat\u00fa\u0161 Motlo",
+      "license": "CC BY-SA 4.0",
+      "source_url": "https://upload.wikimedia.org/wikipedia/commons/8/83/The_Sun_in_white_light.jpg"
+    },
+    {
+      "slug": "europa",
+      "label": "Europa",
+      "url": "/static/media/solar-system/europa.png",
+      "alt": "Photograph of Europa for identification",
+      "attribution": "NASA/JPL-Caltech/SwRI/MSSS/Kevin M. Gill",
+      "license": "CC BY 2.0",
+      "source_url": "https://upload.wikimedia.org/wikipedia/commons/b/b3/Europa_-_Perijove_45_%28cropped%29.png"
+    },
+    {
+      "slug": "io",
+      "label": "Io",
+      "url": "/static/media/solar-system/io.jpg",
+      "alt": "Photograph of Io for identification",
+      "attribution": "NASA / JPL / University of Arizona",
+      "license": "Public domain",
+      "source_url": "https://upload.wikimedia.org/wikipedia/commons/7/7b/Io_highest_resolution_true_color.jpg"
+    },
+    {
+      "slug": "titan",
+      "label": "Titan",
+      "url": "/static/media/solar-system/titan.jpg",
+      "alt": "Photograph of Titan for identification",
+      "attribution": "NASA/JPL-Caltech/SSI/Kevin M. Gill",
+      "license": "CC BY 2.0",
+      "source_url": "https://upload.wikimedia.org/wikipedia/commons/f/fe/Titan_in_true_color_by_Kevin_M._Gill.jpg"
+    },
+    {
+      "slug": "ganymede",
+      "label": "Ganymede",
+      "url": "/static/media/solar-system/ganymede.png",
+      "alt": "Photograph of Ganymede for identification",
+      "attribution": "NASA/JPL-Caltech/SwRI/MSSS/Kevin M. Gill",
+      "license": "CC BY 2.0",
+      "source_url": "https://upload.wikimedia.org/wikipedia/commons/2/21/Ganymede_-_Perijove_34_Composite.png"
+    },
+    {
+      "slug": "enceladus",
+      "label": "Enceladus",
+      "url": "/static/media/solar-system/enceladus.jpg",
+      "alt": "Photograph of Enceladus for identification",
+      "attribution": "National Aeronautics and Space Administration (NASA) / Jet Propulsion Laboratory (JPL)",
+      "license": "Public domain",
+      "source_url": "https://upload.wikimedia.org/wikipedia/commons/8/83/PIA17202_-_Approaching_Enceladus.jpg"
+    },
+    {
+      "slug": "ceres",
+      "label": "Ceres",
+      "url": "/static/media/solar-system/ceres.jpg",
+      "alt": "Photograph of Ceres for identification",
+      "attribution": "Justin Cowart",
+      "license": "Public domain",
+      "source_url": "https://upload.wikimedia.org/wikipedia/commons/7/76/Ceres_-_RC3_-_Haulani_Crater_%2822381131691%29_%28cropped%29.jpg"
+    },
+    {
+      "slug": "pluto",
+      "label": "Pluto",
+      "url": "/static/media/solar-system/pluto.png",
+      "alt": "Photograph of Pluto for identification",
+      "attribution": "NASA/Johns Hopkins University Applied Physics Laboratory/Southwest Research Institute/Alex Parker",
+      "license": "Public domain",
+      "source_url": "https://upload.wikimedia.org/wikipedia/commons/thumb/c/ca/Pluto_in_True_Color_-_High-Res.png/3840px-Pluto_in_True_Color_-_High-Res.png"
+    },
+    {
+      "slug": "halley-s-comet",
+      "label": "Halley's Comet",
+      "url": "/static/media/solar-system/halley-s-comet.jpg",
+      "alt": "Photograph of Halley's Comet for identification",
+      "attribution": "NASA/W. Liller",
+      "license": "Public domain",
+      "source_url": "https://upload.wikimedia.org/wikipedia/commons/2/2a/Lspn_comet_halley.jpg"
+    }
+  ],
+  "entomology": [
+    {
+      "slug": "honey-bee-hymenoptera",
+      "label": "Honey Bee (Hymenoptera)",
+      "url": "/static/media/entomology/honey-bee-hymenoptera.jpg",
+      "alt": "Photograph of Honey Bee (Hymenoptera) for identification",
+      "attribution": "Andreas Trepte",
+      "license": "CC BY-SA 2.5",
+      "source_url": "https://upload.wikimedia.org/wikipedia/commons/4/4d/Apis_mellifera_Western_honey_bee.jpg"
+    },
+    {
+      "slug": "lady-beetle-coleoptera",
+      "label": "Lady Beetle (Coleoptera)",
+      "url": "/static/media/entomology/lady-beetle-coleoptera.jpg",
+      "alt": "Photograph of Lady Beetle (Coleoptera) for identification",
+      "attribution": "Francisco Welter-Schultes",
+      "license": "CC0",
+      "source_url": "https://upload.wikimedia.org/wikipedia/commons/7/77/Coccinella-septempunctata-15-fws.jpg"
+    },
+    {
+      "slug": "dragonfly-odonata",
+      "label": "Dragonfly (Odonata)",
+      "url": "/static/media/entomology/dragonfly-odonata.jpg",
+      "alt": "Photograph of Dragonfly (Odonata) for identification",
+      "attribution": "Charles J. Sharp",
+      "license": "CC BY-SA 4.0",
+      "source_url": "https://upload.wikimedia.org/wikipedia/commons/b/b4/Red_grasshawk_%28Neurothemis_fluctuans%29_male_Phuket_2.jpg"
+    },
+    {
+      "slug": "praying-mantis-mantodea",
+      "label": "Praying Mantis (Mantodea)",
+      "url": "/static/media/entomology/praying-mantis-mantodea.jpg",
+      "alt": "Photograph of Praying Mantis (Mantodea) for identification",
+      "attribution": "Mihai C. Popa",
+      "license": "CC BY-SA 4.0",
+      "source_url": "https://upload.wikimedia.org/wikipedia/commons/1/10/Mantis_%28European%29.jpg"
+    },
+    {
+      "slug": "grasshopper-orthoptera",
+      "label": "Grasshopper (Orthoptera)",
+      "url": "/static/media/entomology/grasshopper-orthoptera.jpg",
+      "alt": "Photograph of Grasshopper (Orthoptera) for identification",
+      "attribution": "http://www.birdphotos.com",
+      "license": "CC BY 3.0",
+      "source_url": "https://upload.wikimedia.org/wikipedia/commons/b/b7/American_Bird_Grasshopper.jpg"
+    },
+    {
+      "slug": "house-fly-diptera",
+      "label": "House Fly (Diptera)",
+      "url": "/static/media/entomology/house-fly-diptera.jpg",
+      "alt": "Photograph of House Fly (Diptera) for identification",
+      "attribution": "USDAgov",
+      "license": "CC BY 2.0",
+      "source_url": "https://upload.wikimedia.org/wikipedia/commons/1/14/Common_house_fly%2C_Musca_domestica.jpg"
+    },
+    {
+      "slug": "cicada-hemiptera",
+      "label": "Cicada (Hemiptera)",
+      "url": "/static/media/entomology/cicada-hemiptera.jpg",
+      "alt": "Photograph of Cicada (Hemiptera) for identification",
+      "attribution": "Judy Gallagher",
+      "license": "CC BY 2.0",
+      "source_url": "https://upload.wikimedia.org/wikipedia/commons/a/a1/Cicada_-_Neotibicen_linnei%2C_Woodbridge%2C_Virginia.jpg"
+    },
+    {
+      "slug": "ant-hymenoptera",
+      "label": "Ant (Hymenoptera)",
+      "url": "/static/media/entomology/ant-hymenoptera.jpg",
+      "alt": "Photograph of Ant (Hymenoptera) for identification",
+      "attribution": "Samantha Henneke from Seagrove, North Carolina, USA",
+      "license": "CC BY 2.0",
+      "source_url": "https://upload.wikimedia.org/wikipedia/commons/d/db/Red_Ant_-_March_2025.jpg"
+    },
+    {
+      "slug": "firefly-coleoptera",
+      "label": "Firefly (Coleoptera)",
+      "url": "/static/media/entomology/firefly-coleoptera.jpg",
+      "alt": "Photograph of Firefly (Coleoptera) for identification",
+      "attribution": "Bruce Marlin",
+      "license": "CC BY-SA 2.5",
+      "source_url": "https://upload.wikimedia.org/wikipedia/commons/5/52/Photuris_lucicrescens.jpg"
+    },
+    {
+      "slug": "damselfly-odonata",
+      "label": "Damselfly (Odonata)",
+      "url": "/static/media/entomology/damselfly-odonata.jpg",
+      "alt": "Photograph of Damselfly (Odonata) for identification",
+      "attribution": "Charles J. Sharp",
+      "license": "CC BY-SA 4.0",
+      "source_url": "https://upload.wikimedia.org/wikipedia/commons/0/0c/Beautiful_demoiselle_%28Calopteryx_virgo%29_male_3.jpg"
+    },
+    {
+      "slug": "cricket-orthoptera",
+      "label": "Cricket (Orthoptera)",
+      "url": "/static/media/entomology/cricket-orthoptera.jpg",
+      "alt": "Photograph of Cricket (Orthoptera) for identification",
+      "attribution": "Didier Descouens",
+      "license": "CC BY-SA 4.0",
+      "source_url": "https://upload.wikimedia.org/wikipedia/commons/1/10/Gryllus_campestris_MHNT.jpg"
+    },
+    {
+      "slug": "cockroach-blattodea",
+      "label": "Cockroach (Blattodea)",
+      "url": "/static/media/entomology/cockroach-blattodea.png",
+      "alt": "Photograph of Cockroach (Blattodea) for identification",
+      "attribution": "Wikimedia Commons",
+      "license": "Public domain",
+      "source_url": "https://upload.wikimedia.org/wikipedia/commons/7/72/Snodgrass_common_household_roaches.png"
+    },
+    {
+      "slug": "termite-blattodea",
+      "label": "Termite (Blattodea)",
+      "url": "/static/media/entomology/termite-blattodea.jpg",
+      "alt": "Photograph of Termite (Blattodea) for identification",
+      "attribution": "Photo by Scott Bauer.",
+      "license": "Public domain",
+      "source_url": "https://upload.wikimedia.org/wikipedia/commons/d/d3/Coptotermes_formosanus_shiraki_USGov_k8204-7.jpg"
+    },
+    {
+      "slug": "aphid-hemiptera",
+      "label": "Aphid (Hemiptera)",
+      "url": "/static/media/entomology/aphid-hemiptera.jpg",
+      "alt": "Photograph of Aphid (Hemiptera) for identification",
+      "attribution": "Alvesgaspar",
+      "license": "CC BY-SA 4.0",
+      "source_url": "https://upload.wikimedia.org/wikipedia/commons/5/51/Aphids_September_2008-1.jpg"
+    },
+    {
+      "slug": "weevil-coleoptera",
+      "label": "Weevil (Coleoptera)",
+      "url": "/static/media/entomology/weevil-coleoptera.jpg",
+      "alt": "Photograph of Weevil (Coleoptera) for identification",
+      "attribution": "Alvesgaspar",
+      "license": "CC BY-SA 4.0",
+      "source_url": "https://upload.wikimedia.org/wikipedia/commons/6/62/Weevil_September_2008-1.jpg"
+    },
+    {
+      "slug": "paper-wasp-hymenoptera",
+      "label": "Paper Wasp (Hymenoptera)",
+      "url": "/static/media/entomology/paper-wasp-hymenoptera.jpg",
+      "alt": "Photograph of Paper Wasp (Hymenoptera) for identification",
+      "attribution": "Alvesgaspar",
+      "license": "CC BY-SA 3.0",
+      "source_url": "https://upload.wikimedia.org/wikipedia/commons/1/1a/Wasp_colony.jpg"
+    },
+    {
+      "slug": "lacewing-neuroptera",
+      "label": "Lacewing (Neuroptera)",
+      "url": "/static/media/entomology/lacewing-neuroptera.jpg",
+      "alt": "Photograph of Lacewing (Neuroptera) for identification",
+      "attribution": "Mathias Krumbholz",
+      "license": "CC BY-SA 3.0",
+      "source_url": "https://upload.wikimedia.org/wikipedia/commons/thumb/5/57/Chrysopidae_01_%28MK%29.jpg/3840px-Chrysopidae_01_%28MK%29.jpg"
+    },
+    {
+      "slug": "stonefly-plecoptera",
+      "label": "Stonefly (Plecoptera)",
+      "url": "/static/media/entomology/stonefly-plecoptera.jpg",
+      "alt": "Photograph of Stonefly (Plecoptera) for identification",
+      "attribution": "JJ Harrison (https://www.jjharrison.com.au/)",
+      "license": "CC BY-SA 3.0",
+      "source_url": "https://upload.wikimedia.org/wikipedia/commons/4/4c/Eusthenia_sp.jpg"
+    },
+    {
+      "slug": "mayfly-ephemeroptera",
+      "label": "Mayfly (Ephemeroptera)",
+      "url": "/static/media/entomology/mayfly-ephemeroptera.jpg",
+      "alt": "Photograph of Mayfly (Ephemeroptera) for identification",
+      "attribution": "Richard Bartz, Munich aka Makro Freak Image:MFB.jpg",
+      "license": "CC BY-SA 2.5",
+      "source_url": "https://upload.wikimedia.org/wikipedia/commons/4/49/Rhithrogena_germanica_subimago_on_Equisetum_hyemale.jpg"
+    },
+    {
+      "slug": "walking-stick-phasmatodea",
+      "label": "Walking Stick (Phasmatodea)",
+      "url": "/static/media/entomology/walking-stick-phasmatodea.jpg",
+      "alt": "Photograph of Walking Stick (Phasmatodea) for identification",
+      "attribution": "Fonquebure",
+      "license": "CC BY-SA 3.0",
+      "source_url": "https://upload.wikimedia.org/wikipedia/commons/e/ef/Une_canne_de_marchand_Ch%C3%A2lus.jpg"
+    },
+    {
+      "slug": "ground-beetle-coleoptera",
+      "label": "Ground Beetle (Coleoptera)",
+      "url": "/static/media/entomology/ground-beetle-coleoptera.jpg",
+      "alt": "Photograph of Ground Beetle (Coleoptera) for identification",
+      "attribution": "Soebe",
+      "license": "CC BY-SA 3.0",
+      "source_url": "https://upload.wikimedia.org/wikipedia/commons/9/95/Carabus_auratus_with_prey.jpg"
+    }
+  ]
+}
