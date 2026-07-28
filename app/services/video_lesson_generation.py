@@ -55,8 +55,13 @@ def generate_video_lesson(db: Session, event: Event, source: Source, *, commit: 
     snapshot = _latest(db, source.id)
     if not snapshot or snapshot.metadata_json.get("kind") != "youtube_transcript":
         return None
+    existing = db.scalar(select(Lesson).where(Lesson.event_id == event.id, Lesson.slug.like(f"video-{source.id}-%")))
+    if existing:
+        return existing
     video = snapshot.metadata_json
-    transcript = snapshot.extracted_text[:18000]
+    # Keep enough contiguous context for grounding while avoiding model context
+    # bloat; the complete timestamped transcript remains in SourceSnapshot.
+    transcript = snapshot.extracted_text[:9000]
     provider = OpenAICompatibleProvider()
     if not provider.configured:
         raise ModelProviderError("External model provider is not configured")
