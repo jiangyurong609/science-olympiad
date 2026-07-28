@@ -15,6 +15,7 @@ const state = {
   coachDashboard: null,
   teams: [],
   lessons: [],
+  courseMap: null,
   featuredLessonId: null,
   currentLesson: null,
   lessonBlockIndex: 0,
@@ -242,6 +243,15 @@ function showView(id, updateHash = true) {
     history.replaceState(null, '', `#${route}${eventSuffix}`);
   }
   $(`${id === 'dashboard' ? 'welcome' : `${id}-title`}`)?.focus?.({ preventScroll: true });
+}
+
+function coursePath(event = activeEvent()) {
+  return event ? `/courses/${event.season}/${encodeURIComponent(event.slug)}` : '/';
+}
+
+function coursePathEvent() {
+  const match = location.pathname.match(/^\/courses\/(\d{4})\/([^/]+)\/?$/);
+  return match ? { season: Number(match[1]), slug: decodeURIComponent(match[2]) } : null;
 }
 
 function persistAuth(data, firebaseSession = null) {
@@ -938,7 +948,7 @@ function renderSubjectShell() {
   $('learn-title').textContent = `Learn ${event.name}`;
   $('learn-lede').textContent = experience.focus;
   $('learning-path-title').textContent = `${event.name} Course`;
-  $('learn-module-count').textContent = state.lessons.length;
+  $('learn-module-count').textContent = state.courseMap?.units?.length ?? state.lessons.length;
   $('learn-duration').textContent = totalMinutes >= 60 ? `${Math.round(totalMinutes / 6) / 10} hr` : `${totalMinutes} min`;
   $('learn-progress-value').textContent = `${progress}%`;
   state.featuredLessonId = nextLesson?.id || null;
@@ -978,12 +988,16 @@ async function selectSubject(slug, destination = 'learn') {
   setAppLoading(true);
   const subjectKey = subjectKeyOf(event.slug);
   try {
-    const [lessons, practiceSets, taxonomy, materials, dashboard] = await Promise.all([
+    const [lessons, practiceSets, taxonomy, materials, dashboard, courseMap] = await Promise.all([
       api(`/events/${event.id}/lessons`),
       api(`/events/${event.id}/practice-sets`).catch(() => []),
       subjectKey === 'entomology' ? api(`/events/${event.id}/taxonomy`).catch(() => null) : Promise.resolve(null),
       api(`/events/${event.id}/materials`).catch(() => ({ materials: [] })),
       api(`/student/dashboard?event_slug=${encodeURIComponent(event.slug)}`),
+      api(`/courses/${event.season}/${encodeURIComponent(event.slug)}`).catch(error => {
+        if (error.status === 404) return null;
+        throw error;
+      }),
     ]);
     if (requestId !== state.eventRequestId) return;
     state.activeEventSlug = event.slug;
@@ -994,6 +1008,7 @@ async function selectSubject(slug, destination = 'learn') {
     state.materials = materials;
     state.materialFilter = 'all';
     state.dashboard = dashboard;
+    state.courseMap = courseMap;
     updateDashboard();
     renderSubjectShell();
     renderMaterials();
@@ -1003,9 +1018,13 @@ async function selectSubject(slug, destination = 'learn') {
     $('practice-catalog').hidden = false;
     $('practice-runner').hidden = true;
     $('material-reader').hidden = true;
-    const route = destination === 'dashboard' ? 'overview' : destination;
-    const eventSuffix = ['learn', 'practice'].includes(destination) ? `?event=${encodeURIComponent(event.slug)}` : '';
-    history.replaceState(null, '', `#${route}${eventSuffix}`);
+    if (destination === 'learn' && courseMap) {
+      history.replaceState(null, '', coursePath(event));
+    } else {
+      const route = destination === 'dashboard' ? 'overview' : destination;
+      const eventSuffix = ['learn', 'practice'].includes(destination) ? `?event=${encodeURIComponent(event.slug)}` : '';
+      history.replaceState(null, '', `/#${route}${eventSuffix}`);
+    }
   } finally {
     if (requestId === state.eventRequestId) {
       renderEventSelectors();
@@ -1035,6 +1054,71 @@ function renderLessons() {
   $('course-scope').textContent = state.lessons.length
     ? `${done} of ${state.lessons.length} complete · ${totalMin >= 60 ? `~${Math.round(totalMin / 6) / 10} hr` : `${totalMin} min`}`
     : '';
+}
+
+function masteryLabel(level = 'not_started') {
+  return {
+    not_started: 'Not started',
+    attempted: 'Attempted',
+    familiar: 'Familiar',
+    proficient: 'Proficient',
+    mastered: 'Mastered',
+  }[level] || 'Not started';
+}
+
+function renderCourseMap() {
+  const course = state.courseMap;
+  const unitList = $('course-unit-list');
+  const legacyList = $('lesson-list');
+  if (!course?.units?.length) {
+    unitList.innerHTML = '';
+    unitList.hidden = true;
+    legacyList.hidden = false;
+    renderLessons();
+    return;
+  }
+
+  unitList.hidden = false;
+  legacyList.hidden = true;
+  $('lessons-empty').hidden = true;
+  $('learning-path-title').textContent = course.title;
+  $('course-scope').textContent = `${course.progress.mastered_skills} of ${course.progress.total_skills} skills mastered`;
+  $('learn-module-count').textContent = course.units.length;
+  $('learn-progress-value').textContent = `${course.progress.percent}%`;
+
+  unitList.innerHTML = course.units.map((unit, unitIndex) => {
+    const mastered = unit.skills.filter(skill => skill.mastery.level === 'mastered').length;
+    const skills = unit.skills.map(skill => {
+      const primaryLesson = skill.lessons.find(lesson => lesson.is_primary) || skill.lessons[0];
+      const lessonStatus = primaryLesson?.progress?.status || 'not_started';
+      const actionLabel = lessonStatus === 'in_progress' ? 'Resume'
+        : lessonStatus === 'completed' ? 'Review' : 'Learn';
+      const action = primaryLesson
+        ? `<button class="skill-action" type="button" data-start-lesson="${primaryLesson.id}" aria-label="${actionLabel} ${escapeHtml(primaryLesson.title)}">${actionLabel}<span aria-hidden="true">›</span></button>`
+        : '<span class="skill-coming-soon">Lesson in review</span>';
+      return `<li class="course-skill">
+        <span class="mastery-dot mastery-${escapeHtml(skill.mastery.level)}" aria-hidden="true"></span>
+        <div class="course-skill-copy">
+          <h4>${escapeHtml(skill.name)}</h4>
+          ${skill.description ? `<p>${escapeHtml(skill.description)}</p>` : ''}
+          <span class="mastery-label">${escapeHtml(masteryLabel(skill.mastery.level))}</span>
+        </div>
+        ${action}
+      </li>`;
+    }).join('');
+    const assessments = unit.assessments.length
+      ? `<div class="unit-assessments"><span>Unit check</span>${unit.assessments.map(item => `<button type="button" class="button button-secondary button-compact" data-practice-jump>${escapeHtml(item.title)}</button>`).join('')}</div>`
+      : '';
+    return `<article class="course-unit">
+      <header class="course-unit-header">
+        <span class="unit-number" aria-hidden="true">${unitIndex + 1}</span>
+        <div><span>Unit ${unitIndex + 1}</span><h3>${escapeHtml(unit.title)}</h3>${unit.summary ? `<p>${escapeHtml(unit.summary)}</p>` : ''}</div>
+        <strong>${mastered}/${unit.skills.length}<small> skills mastered</small></strong>
+      </header>
+      <ol class="course-skill-list">${skills}</ol>
+      ${assessments}
+    </article>`;
+  }).join('');
 }
 
 function renderExams() {
@@ -1187,7 +1271,7 @@ function updateDashboard() {
   renderOverviewEvent();
   renderEventCatalog();
   renderConcepts();
-  renderLessons();
+  renderCourseMap();
   renderExams();
   renderPracticeLab();
   renderNotebook();
@@ -1522,7 +1606,8 @@ async function loadApplication() {
     if (state.token) loadNotifications().catch(() => {});
   }, 60_000);
   const roleMode = configureRoleNavigation();
-  const initialRoute = location.hash.slice(1).split('?')[0];
+  const pathCourse = coursePathEvent();
+  const initialRoute = pathCourse ? 'learn' : location.hash.slice(1).split('?')[0];
   showView(roleMode === 'content' ? 'content' : roleMode === 'coach' ? 'coach' : initialRoute === 'learn' ? 'learn' : initialRoute === 'practice' ? 'practice' : initialRoute === 'errors' ? 'errors' : 'dashboard', false);
   if (roleMode === 'student') $('today-copy').textContent = 'Loading your study plan…';
   try {
@@ -1555,7 +1640,7 @@ async function loadApplication() {
       const hashParts = location.hash.slice(1).split('?');
       const hashParams = new URLSearchParams(hashParts[1] || '');
       const statefulParams = new URLSearchParams(location.hash.slice(1));
-      const explicitSlug = hashParams.get('event') || statefulParams.get('event');
+      const explicitSlug = pathCourse?.slug || hashParams.get('event') || statefulParams.get('event');
       // A URL explicitly naming a historical event is intentional. Remembered
       // state, however, should always roll forward to the current catalog.
       const requestedEvent = (explicitSlug
@@ -1565,7 +1650,7 @@ async function loadApplication() {
       if (requestedEvent) localStorage.setItem('activeEventSlug', requestedEvent.slug);
       const selectedEvent = activeEvent();
       if (selectedEvent) {
-        [state.lessons, state.practiceSets, state.activeTaxonomy, state.materials, state.dashboard] = await Promise.all([
+        [state.lessons, state.practiceSets, state.activeTaxonomy, state.materials, state.dashboard, state.courseMap] = await Promise.all([
           api(`/events/${selectedEvent.id}/lessons`),
           api(`/events/${selectedEvent.id}/practice-sets`),
           subjectKeyOf(state.activeEventSlug) === 'entomology'
@@ -1573,11 +1658,16 @@ async function loadApplication() {
             : Promise.resolve(null),
           api(`/events/${selectedEvent.id}/materials`).catch(() => ({ materials: [] })),
           api(`/student/dashboard?event_slug=${encodeURIComponent(selectedEvent.slug)}`),
+          api(`/courses/${selectedEvent.season}/${encodeURIComponent(selectedEvent.slug)}`).catch(error => {
+            if (error.status === 404) return null;
+            throw error;
+          }),
         ]);
       } else {
         state.lessons = [];
         state.practiceSets = [];
         state.materials = { materials: [] };
+        state.courseMap = null;
       }
       $('today-copy').textContent = 'Build confidence one focused session at a time.';
       updateDashboard();
@@ -1806,6 +1896,8 @@ document.addEventListener('click', event => {
   if (lessonButton) openLesson(Number(lessonButton.dataset.startLesson));
   const practiceButton = event.target.closest('[data-start-practice-set]');
   if (practiceButton) openPracticeLab(Number(practiceButton.dataset.startPracticeSet), practiceButton.dataset.practiceMode);
+  const practiceJump = event.target.closest('[data-practice-jump]');
+  if (practiceJump) showView('practice');
 });
 
 $('overview-event-select').addEventListener('change', event => {

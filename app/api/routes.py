@@ -13,10 +13,11 @@ from app.core.database import get_db
 from app.core.security import create_access_token, decode_access_token, hash_password, verify_password
 from app.models.entities import (
     AccommodationChange, AccommodationProfile, Assignment, Attempt, AttemptStatus, AuditLog,
-    Concept, ContentChallenge, ContentChallengeEvent, Event, Exam, ExamItem, GuardianConsent,
-    GenerationRun, Lesson, LessonProgress, LessonVersion, MasteryState, PracticeSession,
+    AssessmentBlueprint, Concept, ContentChallenge, ContentChallengeEvent, Course, CourseUnit,
+    CourseVersion, Event, Exam, ExamItem, GuardianConsent,
+    GenerationRun, Lesson, LessonProgress, LessonSkill, LessonVersion, MasteryState, PracticeSession,
     PracticeSet, PracticeSetVersion, Question, QuestionCalibration, QuestionReview, RemediationCase, Response, ResponseRevision, RightsStatus,
-    EventSourceMap, EventTaxonScope, RawArtifact, ScientificClaim, Source, SourceSnapshot, SpecimenAsset, Taxon,
+    EventSourceMap, EventTaxonScope, RawArtifact, ScientificClaim, Skill, Source, SourceSnapshot, SpecimenAsset, Taxon,
     Team, TeamMembership, TransferAttempt, TutorMessage, TutorSession, User, UserNotification,
 )
 from app.schemas.api import (
@@ -36,7 +37,6 @@ from app.services.generation import generate_questions
 from app.services.claim_extraction import extract_claims
 from app.services.scoring import finalize_attempt, score_response, is_gradeable, _question_from_snapshot
 from app.services.answer_grading import grade_attempt_overrides, grade_single
-from app.services.model_provider import ModelProviderError
 from app.services.mock_exam import assemble_mock_exam, event_question_pool
 from app.services.blueprint import blueprint_for
 from app.services.remediation import build_delayed_review, build_transfer_question, grade_delayed_review, grade_transfer
@@ -616,6 +616,204 @@ def list_event_lessons(
             "current_block": progress_by_lesson[lesson.id].current_block,
         } if lesson.id in progress_by_lesson else {"status": "not_started", "current_block": 0},
     } for lesson in lessons]
+
+
+def _mastery_level(probability: float, evidence_count: int) -> str:
+    if evidence_count <= 0:
+        return "not_started"
+    if probability < 0.5:
+        return "attempted"
+    if probability < 0.7:
+        return "familiar"
+    if probability < 0.9:
+        return "proficient"
+    return "mastered"
+
+
+@router.get("/courses")
+def list_courses(
+    db: Session = Depends(get_db),
+    user: User = Depends(current_user),
+):
+    courses = db.scalars(
+        select(Course).where(Course.status == "published").order_by(Course.title)
+    ).all()
+    events = {
+        row.id: row for row in db.scalars(
+            select(Event).where(Event.id.in_([course.event_id for course in courses]))
+        ).all()
+    } if courses else {}
+    units_by_course = dict(db.execute(
+        select(CourseUnit.course_id, func.count(CourseUnit.id))
+        .where(CourseUnit.status == "published")
+        .group_by(CourseUnit.course_id)
+    ).all())
+    skills_by_course = dict(db.execute(
+        select(Skill.course_id, func.count(Skill.id))
+        .where(Skill.status == "published")
+        .group_by(Skill.course_id)
+    ).all())
+    return [{
+        "id": course.id,
+        "slug": course.slug,
+        "title": course.title,
+        "summary": course.summary,
+        "status": course.status,
+        "version": course.current_version,
+        "event_id": course.event_id,
+        "event_slug": events[course.event_id].slug if course.event_id in events else "",
+        "season": events[course.event_id].season if course.event_id in events else None,
+        "division": events[course.event_id].division if course.event_id in events else "",
+        "unit_count": units_by_course.get(course.id, 0),
+        "skill_count": skills_by_course.get(course.id, 0),
+    } for course in courses if course.event_id in events and (
+        not user.division or events[course.event_id].division in {user.division, "B/C"}
+    )]
+
+
+@router.get("/courses/{season}/{event_slug}")
+def get_course_map(
+    season: int,
+    event_slug: str,
+    db: Session = Depends(get_db),
+    user: User = Depends(current_user),
+):
+    event = db.scalar(select(Event).where(Event.season == season, Event.slug == event_slug))
+    if not event:
+        raise HTTPException(status_code=404, detail="Course event not found")
+    course = db.scalar(select(Course).where(Course.event_id == event.id))
+    staff = user.role in {"admin", "editor", "sme", "calibrator"}
+    if not course or (course.status != "published" and not staff):
+        raise HTTPException(status_code=404, detail="Course map is not published")
+    course_version = db.scalar(select(CourseVersion).where(
+        CourseVersion.course_id == course.id,
+        CourseVersion.version == course.current_version,
+    ))
+    unit_query = select(CourseUnit).where(CourseUnit.course_id == course.id)
+    if not staff:
+        unit_query = unit_query.where(CourseUnit.status == "published")
+    units = db.scalars(unit_query.order_by(CourseUnit.sequence, CourseUnit.id)).all()
+    skills = db.scalars(select(Skill).where(
+        Skill.course_id == course.id,
+        Skill.unit_id.in_([unit.id for unit in units]),
+        *(tuple() if staff else (Skill.status == "published",)),
+    ).order_by(Skill.sequence, Skill.id)).all() if units else []
+    skill_ids = [skill.id for skill in skills]
+    lesson_links = db.scalars(select(LessonSkill).where(
+        LessonSkill.skill_id.in_(skill_ids)
+    )).all() if skill_ids else []
+    lesson_ids = list({link.lesson_id for link in lesson_links})
+    lessons = db.scalars(select(Lesson).where(
+        Lesson.id.in_(lesson_ids), Lesson.status == "published",
+    )).all() if lesson_ids else []
+    lessons_by_id = {lesson.id: lesson for lesson in lessons}
+    progress_rows = db.scalars(select(LessonProgress).where(
+        LessonProgress.user_id == user.id,
+        LessonProgress.lesson_id.in_(lesson_ids),
+    )).all() if lesson_ids else []
+    progress_by_lesson = {row.lesson_id: row for row in progress_rows}
+    links_by_skill: dict[int, list[LessonSkill]] = {}
+    for link in lesson_links:
+        if link.lesson_id in lessons_by_id:
+            links_by_skill.setdefault(link.skill_id, []).append(link)
+    concept_ids = [skill.concept_id for skill in skills if skill.concept_id]
+    mastery_rows = db.scalars(select(MasteryState).where(
+        MasteryState.user_id == user.id,
+        MasteryState.concept_id.in_(concept_ids),
+    )).all() if concept_ids else []
+    mastery_by_concept = {row.concept_id: row for row in mastery_rows}
+    blueprints = db.scalars(select(AssessmentBlueprint).where(
+        AssessmentBlueprint.course_id == course.id,
+        AssessmentBlueprint.status == "published",
+    )).all()
+    blueprints_by_unit: dict[int | None, list[AssessmentBlueprint]] = {}
+    for blueprint in blueprints:
+        blueprints_by_unit.setdefault(blueprint.unit_id, []).append(blueprint)
+
+    skill_payload = {}
+    for skill in skills:
+        mastery = mastery_by_concept.get(skill.concept_id)
+        probability = mastery.mastery_probability if mastery else 0.0
+        evidence_count = mastery.evidence_count if mastery else 0
+        linked_lessons = sorted(
+            links_by_skill.get(skill.id, []),
+            key=lambda link: (not link.is_primary, lessons_by_id[link.lesson_id].sequence, link.id),
+        )
+        skill_payload[skill.unit_id] = skill_payload.get(skill.unit_id, []) + [{
+            "id": skill.id,
+            "slug": skill.slug,
+            "name": skill.name,
+            "description": skill.description,
+            "sequence": skill.sequence,
+            "weight": skill.weight,
+            "prerequisites": skill.prerequisites,
+            "mastery": {
+                "level": _mastery_level(probability, evidence_count),
+                "probability": probability,
+                "evidence_count": evidence_count,
+                "next_review_at": mastery.next_review_at if mastery else None,
+            },
+            "lessons": [{
+                "id": lessons_by_id[link.lesson_id].id,
+                "slug": lessons_by_id[link.lesson_id].slug,
+                "title": lessons_by_id[link.lesson_id].title,
+                "summary": lessons_by_id[link.lesson_id].summary,
+                "estimated_minutes": lessons_by_id[link.lesson_id].estimated_minutes,
+                "is_primary": link.is_primary,
+                "progress": {
+                    "status": progress_by_lesson[link.lesson_id].status,
+                    "current_block": progress_by_lesson[link.lesson_id].current_block,
+                } if link.lesson_id in progress_by_lesson else {
+                    "status": "not_started", "current_block": 0,
+                },
+            } for link in linked_lessons],
+        }]
+
+    total_skills = len(skills)
+    mastered_skills = 0
+    for skill in skills:
+        mastery = mastery_by_concept.get(skill.concept_id)
+        if mastery and _mastery_level(
+            mastery.mastery_probability, mastery.evidence_count
+        ) == "mastered":
+            mastered_skills += 1
+    return {
+        "id": course.id,
+        "slug": course.slug,
+        "title": course.title,
+        "summary": course.summary,
+        "status": course.status,
+        "version": course.current_version,
+        "objectives": course_version.objectives if course_version else [],
+        "event": {
+            "id": event.id, "slug": event.slug, "name": event.name,
+            "season": event.season, "division": event.division,
+            "category": event.category, "official_url": event.official_url,
+        },
+        "progress": {
+            "mastered_skills": mastered_skills,
+            "total_skills": total_skills,
+            "percent": round(mastered_skills / total_skills * 100) if total_skills else 0,
+        },
+        "course_assessments": [{
+            "id": item.id, "type": item.assessment_type,
+            "title": item.title, "specification": item.specification,
+        } for item in blueprints_by_unit.get(None, [])],
+        "units": [{
+            "id": unit.id,
+            "slug": unit.slug,
+            "title": unit.title,
+            "summary": unit.summary,
+            "sequence": unit.sequence,
+            "objectives": unit.objectives,
+            "prerequisites": unit.prerequisites,
+            "skills": skill_payload.get(unit.id, []),
+            "assessments": [{
+                "id": item.id, "type": item.assessment_type,
+                "title": item.title, "specification": item.specification,
+            } for item in blueprints_by_unit.get(unit.id, [])],
+        } for unit in units],
+    }
 
 
 @router.get("/events/{event_id}/materials")

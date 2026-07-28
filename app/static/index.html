@@ -9,8 +9,8 @@
   <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='16' fill='%231f5a45'/%3E%3Ctext x='32' y='44' text-anchor='middle' font-size='38' fill='white'%3EF%3C/text%3E%3C/svg%3E">
   <link rel="preload" href="/static/fonts/Fraunces.woff2" as="font" type="font/woff2" crossorigin>
   <link rel="preload" href="/static/fonts/AtkinsonHyperlegibleNext.woff2" as="font" type="font/woff2" crossorigin>
-  <link rel="stylesheet" href="/static/styles.css?v=29">
-  <link rel="stylesheet" href="/static/theme.css?v=29">
+  <link rel="stylesheet" href="/static/styles.css?v=30">
+  <link rel="stylesheet" href="/static/theme.css?v=30">
 </head>
 <body>
   <a class="skip-link" href="#main-content">Skip to Main Content</a>
@@ -185,11 +185,11 @@
 
           <div class="course-overview">
             <div class="course-overview-main">
-              <p id="learn-kicker" class="kicker">Course Workspace</p>
+              <p id="learn-kicker" class="kicker">Your course</p>
               <h1 id="learn-title" tabindex="-1">Learn Your Event</h1>
               <p id="learn-lede" class="lede">Choose an event to load its current lessons and progress.</p>
               <dl class="course-metrics" aria-label="Course summary">
-                <div><dt>Modules</dt><dd id="learn-module-count">0</dd></div>
+                <div><dt>Units</dt><dd id="learn-module-count">0</dd></div>
                 <div><dt>Study Time</dt><dd id="learn-duration">0 min</dd></div>
                 <div><dt>Complete</dt><dd id="learn-progress-value">0%</dd></div>
               </dl>
@@ -204,8 +204,9 @@
           <div id="subject-scope-note" class="scope-note" role="note" hidden></div>
 
           <section class="learning-path section-block" aria-labelledby="learning-path-title">
-            <div class="section-heading"><div><p class="kicker">Learning Path</p><h2 id="learning-path-title">Course Modules</h2></div><p id="course-scope" class="queue-count"></p></div>
-            <div id="lesson-list" class="lesson-list"></div>
+            <div class="section-heading"><div><p class="kicker">Course map</p><h2 id="learning-path-title">Units and Skills</h2></div><p id="course-scope" class="queue-count"></p></div>
+            <div id="course-unit-list" class="course-unit-list" aria-live="polite"></div>
+            <div id="lesson-list" class="lesson-list" aria-live="polite"></div>
             <div id="lessons-empty" class="empty-state surface" hidden><span aria-hidden="true">◇</span><h3>Lessons Are in Review</h3><p>This event is available, but its learning path has not been published yet.</p><button id="learn-resources-button" class="button button-secondary" type="button">Browse Official Resources <span aria-hidden="true">→</span></button></div>
           </section>
           <section id="concepts-block" class="section-block" aria-labelledby="concepts-title" hidden><div class="section-heading"><div><p class="kicker">Mastery Map</p><h2 id="concepts-title">Skills You’re Building</h2></div></div><div id="concept-list" class="concept-list"></div></section>
@@ -424,6 +425,6 @@
       </div>
     </div>
   </div>
-  <script src="/static/app.js?v=34"></script>
+  <script src="/static/app.js?v=35"></script>
 </body>
 </html>

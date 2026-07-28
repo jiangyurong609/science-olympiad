@@ -26,3 +26,9 @@ def index():
         static_dir / "index.html",
         headers={"Cache-Control": "no-cache, must-revalidate"},
     )
+
+
+@app.get("/courses/{season}/{event_slug}", include_in_schema=False)
+def course_page(season: int, event_slug: str):
+    """Serve the SPA at a stable, shareable course URL."""
+    return index()

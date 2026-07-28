@@ -153,6 +153,64 @@ class Concept(Base):
     event: Mapped[Event] = relationship()
 
 
+class Course(Base):
+    __tablename__ = "courses"
+    __table_args__ = (UniqueConstraint("event_id", name="uq_course_event"),)
+    id: Mapped[int] = mapped_column(primary_key=True)
+    event_id: Mapped[int] = mapped_column(ForeignKey("events.id", ondelete="CASCADE"), index=True)
+    slug: Mapped[str] = mapped_column(String(140), unique=True, index=True)
+    title: Mapped[str] = mapped_column(String(255))
+    summary: Mapped[str] = mapped_column(Text, default="")
+    status: Mapped[str] = mapped_column(String(32), default="draft", index=True)
+    current_version: Mapped[int] = mapped_column(Integer, default=1)
+    created_at: Mapped[datetime] = mapped_column(DateTime(timezone=True), default=now_utc)
+    event: Mapped[Event] = relationship()
+
+
+class CourseVersion(Base):
+    __tablename__ = "course_versions"
+    __table_args__ = (UniqueConstraint("course_id", "version", name="uq_course_version"),)
+    id: Mapped[int] = mapped_column(primary_key=True)
+    course_id: Mapped[int] = mapped_column(ForeignKey("courses.id", ondelete="CASCADE"), index=True)
+    version: Mapped[int] = mapped_column(Integer)
+    objectives: Mapped[list] = mapped_column(JSON, default=list)
+    release_notes: Mapped[str] = mapped_column(Text, default="")
+    review_status: Mapped[str] = mapped_column(String(32), default="draft", index=True)
+    created_at: Mapped[datetime] = mapped_column(DateTime(timezone=True), default=now_utc)
+
+
+class CourseUnit(Base):
+    __tablename__ = "course_units"
+    __table_args__ = (UniqueConstraint("course_id", "slug", name="uq_course_unit_slug"),)
+    id: Mapped[int] = mapped_column(primary_key=True)
+    course_id: Mapped[int] = mapped_column(ForeignKey("courses.id", ondelete="CASCADE"), index=True)
+    slug: Mapped[str] = mapped_column(String(140))
+    title: Mapped[str] = mapped_column(String(255))
+    summary: Mapped[str] = mapped_column(Text, default="")
+    sequence: Mapped[int] = mapped_column(Integer, default=0)
+    status: Mapped[str] = mapped_column(String(32), default="draft", index=True)
+    objectives: Mapped[list] = mapped_column(JSON, default=list)
+    prerequisites: Mapped[list] = mapped_column(JSON, default=list)
+    created_at: Mapped[datetime] = mapped_column(DateTime(timezone=True), default=now_utc)
+
+
+class Skill(Base):
+    __tablename__ = "skills"
+    __table_args__ = (UniqueConstraint("course_id", "slug", name="uq_skill_course_slug"),)
+    id: Mapped[int] = mapped_column(primary_key=True)
+    course_id: Mapped[int] = mapped_column(ForeignKey("courses.id", ondelete="CASCADE"), index=True)
+    unit_id: Mapped[int] = mapped_column(ForeignKey("course_units.id", ondelete="CASCADE"), index=True)
+    concept_id: Mapped[int | None] = mapped_column(ForeignKey("concepts.id"), nullable=True, index=True)
+    slug: Mapped[str] = mapped_column(String(140))
+    name: Mapped[str] = mapped_column(String(255))
+    description: Mapped[str] = mapped_column(Text, default="")
+    sequence: Mapped[int] = mapped_column(Integer, default=0)
+    weight: Mapped[float] = mapped_column(Float, default=1.0)
+    status: Mapped[str] = mapped_column(String(32), default="draft", index=True)
+    prerequisites: Mapped[list] = mapped_column(JSON, default=list)
+    created_at: Mapped[datetime] = mapped_column(DateTime(timezone=True), default=now_utc)
+
+
 class Lesson(Base):
     __tablename__ = "lessons"
     __table_args__ = (UniqueConstraint("event_id", "slug", name="uq_lesson_event_slug"),)
@@ -169,6 +227,17 @@ class Lesson(Base):
     created_at: Mapped[datetime] = mapped_column(DateTime(timezone=True), default=now_utc)
     event: Mapped[Event] = relationship()
     concept: Mapped[Concept | None] = relationship()
+
+
+class LessonSkill(Base):
+    __tablename__ = "lesson_skills"
+    __table_args__ = (UniqueConstraint("lesson_id", "skill_id", name="uq_lesson_skill"),)
+    id: Mapped[int] = mapped_column(primary_key=True)
+    lesson_id: Mapped[int] = mapped_column(ForeignKey("lessons.id", ondelete="CASCADE"), index=True)
+    skill_id: Mapped[int] = mapped_column(ForeignKey("skills.id", ondelete="CASCADE"), index=True)
+    is_primary: Mapped[bool] = mapped_column(Boolean, default=False)
+    weight: Mapped[float] = mapped_column(Float, default=1.0)
+    created_at: Mapped[datetime] = mapped_column(DateTime(timezone=True), default=now_utc)
 
 
 class LessonVersion(Base):
@@ -295,6 +364,26 @@ class SourceSnapshot(Base):
     etag: Mapped[str] = mapped_column(String(500), default="")
     last_modified: Mapped[str] = mapped_column(String(500), default="")
     change_kind: Mapped[str] = mapped_column(String(32), default="initial")
+    created_at: Mapped[datetime] = mapped_column(DateTime(timezone=True), default=now_utc)
+
+
+class SourcePassage(Base):
+    __tablename__ = "source_passages"
+    __table_args__ = (
+        UniqueConstraint("source_snapshot_id", "locator", "content_hash", name="uq_source_passage_locator"),
+    )
+    id: Mapped[int] = mapped_column(primary_key=True)
+    source_id: Mapped[int] = mapped_column(ForeignKey("sources.id", ondelete="CASCADE"), index=True)
+    source_snapshot_id: Mapped[int] = mapped_column(
+        ForeignKey("source_snapshots.id", ondelete="CASCADE"), index=True
+    )
+    sequence: Mapped[int] = mapped_column(Integer, default=0)
+    locator: Mapped[str] = mapped_column(String(255))
+    heading: Mapped[str] = mapped_column(String(500), default="")
+    passage_type: Mapped[str] = mapped_column(String(64), default="text", index=True)
+    text: Mapped[str] = mapped_column(Text)
+    content_hash: Mapped[str] = mapped_column(String(64), index=True)
+    metadata_json: Mapped[dict] = mapped_column(JSON, default=dict)
     created_at: Mapped[datetime] = mapped_column(DateTime(timezone=True), default=now_utc)
 
 
@@ -559,6 +648,77 @@ class ExamItem(Base):
     question_version: Mapped[int] = mapped_column(Integer, default=1)
     position: Mapped[int] = mapped_column(Integer)
     snapshot: Mapped[dict] = mapped_column(JSON, default=dict)
+
+
+class AssessmentBlueprint(Base):
+    __tablename__ = "assessment_blueprints"
+    __table_args__ = (
+        UniqueConstraint(
+            "course_id", "unit_id", "assessment_type", "version",
+            name="uq_assessment_blueprint_version",
+        ),
+    )
+    id: Mapped[int] = mapped_column(primary_key=True)
+    course_id: Mapped[int] = mapped_column(ForeignKey("courses.id", ondelete="CASCADE"), index=True)
+    unit_id: Mapped[int | None] = mapped_column(
+        ForeignKey("course_units.id", ondelete="CASCADE"), nullable=True, index=True
+    )
+    assessment_type: Mapped[str] = mapped_column(String(64), index=True)
+    version: Mapped[int] = mapped_column(Integer, default=1)
+    title: Mapped[str] = mapped_column(String(255))
+    specification: Mapped[dict] = mapped_column(JSON, default=dict)
+    status: Mapped[str] = mapped_column(String(32), default="draft", index=True)
+    created_at: Mapped[datetime] = mapped_column(DateTime(timezone=True), default=now_utc)
+
+
+class ContentRelease(Base):
+    __tablename__ = "content_releases"
+    __table_args__ = (UniqueConstraint("course_id", "version", name="uq_content_release_version"),)
+    id: Mapped[int] = mapped_column(primary_key=True)
+    course_id: Mapped[int] = mapped_column(ForeignKey("courses.id", ondelete="CASCADE"), index=True)
+    version: Mapped[int] = mapped_column(Integer)
+    status: Mapped[str] = mapped_column(String(32), default="draft", index=True)
+    manifest: Mapped[dict] = mapped_column(JSON, default=dict)
+    release_notes: Mapped[str] = mapped_column(Text, default="")
+    published_by_user_id: Mapped[int | None] = mapped_column(
+        ForeignKey("users.id"), nullable=True, index=True
+    )
+    published_at: Mapped[datetime | None] = mapped_column(DateTime(timezone=True), nullable=True)
+    created_at: Mapped[datetime] = mapped_column(DateTime(timezone=True), default=now_utc)
+
+
+class ReviewDecision(Base):
+    __tablename__ = "review_decisions"
+    id: Mapped[int] = mapped_column(primary_key=True)
+    entity_type: Mapped[str] = mapped_column(String(64), index=True)
+    entity_id: Mapped[int] = mapped_column(Integer, index=True)
+    entity_version: Mapped[int] = mapped_column(Integer, default=1)
+    stage: Mapped[str] = mapped_column(String(32), index=True)
+    decision: Mapped[str] = mapped_column(String(32), index=True)
+    reviewer_user_id: Mapped[int] = mapped_column(ForeignKey("users.id"), index=True)
+    checklist: Mapped[dict] = mapped_column(JSON, default=dict)
+    notes: Mapped[str] = mapped_column(Text, default="")
+    created_at: Mapped[datetime] = mapped_column(DateTime(timezone=True), default=now_utc)
+
+
+class ContentMigrationMap(Base):
+    __tablename__ = "content_migration_maps"
+    __table_args__ = (
+        UniqueConstraint("legacy_type", "legacy_id", name="uq_content_migration_legacy"),
+    )
+    id: Mapped[int] = mapped_column(primary_key=True)
+    legacy_type: Mapped[str] = mapped_column(String(64), index=True)
+    legacy_id: Mapped[int] = mapped_column(Integer, index=True)
+    target_type: Mapped[str] = mapped_column(String(64), default="")
+    target_id: Mapped[int | None] = mapped_column(Integer, nullable=True, index=True)
+    migration_state: Mapped[str] = mapped_column(String(64), index=True)
+    redirect_path: Mapped[str] = mapped_column(String(1024), default="")
+    owner: Mapped[str] = mapped_column(String(160), default="content operations")
+    notes: Mapped[str] = mapped_column(Text, default="")
+    created_at: Mapped[datetime] = mapped_column(DateTime(timezone=True), default=now_utc)
+    updated_at: Mapped[datetime] = mapped_column(
+        DateTime(timezone=True), default=now_utc, onupdate=now_utc
+    )
 
 
 class Attempt(Base):

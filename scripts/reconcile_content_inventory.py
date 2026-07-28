@@ -18,14 +18,16 @@ from datetime import datetime, timezone
 from pathlib import Path
 from urllib.parse import urlparse
 
-from sqlalchemy import func, select
+from sqlalchemy import select
 
 from app.core.database import SessionLocal
 from app.models.entities import (
-    Attempt, Concept, Event, EventSourceMap, Exam, ExamItem, Lesson,
-    LessonProgress, LessonVersion, MasteryState, PracticeSet, Question,
-    QuestionCalibration, QuestionReview, RawArtifact, Response, ScientificClaim,
-    Source, SourceSnapshot, SpecimenAsset,
+    AssessmentBlueprint, Attempt, Concept, ContentMigrationMap, ContentRelease,
+    Course, CourseUnit, CourseVersion, Event, EventSourceMap, Exam, ExamItem,
+    Lesson, LessonProgress, LessonSkill, LessonVersion, MasteryState, PracticeSet,
+    Question, QuestionCalibration, QuestionReview, RawArtifact, Response,
+    ReviewDecision, ScientificClaim, Skill, Source, SourcePassage, SourceSnapshot,
+    SpecimenAsset,
 )
 
 
@@ -62,6 +64,16 @@ def build_report(db):
     reviews = db.scalars(select(QuestionReview)).all()
     calibrations = db.scalars(select(QuestionCalibration)).all()
     specimen_assets = db.scalars(select(SpecimenAsset)).all()
+    courses = db.scalars(select(Course)).all()
+    course_versions = db.scalars(select(CourseVersion)).all()
+    course_units = db.scalars(select(CourseUnit)).all()
+    skills = db.scalars(select(Skill)).all()
+    lesson_skills = db.scalars(select(LessonSkill)).all()
+    source_passages = db.scalars(select(SourcePassage)).all()
+    assessment_blueprints = db.scalars(select(AssessmentBlueprint)).all()
+    content_releases = db.scalars(select(ContentRelease)).all()
+    review_decisions = db.scalars(select(ReviewDecision)).all()
+    migration_maps = db.scalars(select(ContentMigrationMap)).all()
 
     events_by_id = _event_dict(events)
     snapshot_by_source = defaultdict(list)
@@ -200,6 +212,37 @@ def build_report(db):
         "raw_artifacts": len(artifacts), "event_source_maps": len(maps),
         "scientific_claims": len(claims), "question_reviews": len(reviews),
         "question_calibrations": len(calibrations), "specimen_assets": len(specimen_assets),
+        "courses": len(courses), "course_versions": len(course_versions),
+        "course_units": len(course_units), "skills": len(skills),
+        "lesson_skill_links": len(lesson_skills), "source_passages": len(source_passages),
+        "assessment_blueprints": len(assessment_blueprints),
+        "content_releases": len(content_releases),
+        "review_decisions": len(review_decisions),
+        "content_migration_maps": len(migration_maps),
+    }
+    course_by_event = {row.event_id: row for row in courses}
+    published_course_ids = {row.id for row in courses if row.status == "published"}
+    released_course_ids = {
+        row.course_id for row in content_releases if row.status == "published"
+    }
+    mapped_lesson_ids = {row.lesson_id for row in lesson_skills}
+    passage_snapshot_ids = {row.source_snapshot_id for row in source_passages}
+    text_snapshot_ids = {
+        row.id for row in snapshots if (row.extracted_text or "").strip()
+    }
+    release_gates = {
+        "events_without_course": sum(event.id not in course_by_event for event in events),
+        "published_courses_without_release_manifest": len(
+            published_course_ids - released_course_ids
+        ),
+        "lessons_without_skill_mapping": sum(
+            lesson.id not in mapped_lesson_ids for lesson in lessons
+        ),
+        "text_snapshots_without_passages": len(text_snapshot_ids - passage_snapshot_ids),
+        "questions_without_review": sum(reviews_by_question[row.id] == 0 for row in questions),
+        "questions_without_calibration": sum(
+            calibrations_by_question[row.id] == 0 for row in questions
+        ),
     }
     return {
         "generated_at": datetime.now(timezone.utc).isoformat(),
@@ -209,6 +252,10 @@ def build_report(db):
         "lesson_state_counts": dict(Counter(row["state"] for row in lesson_rows)),
         "question_state_counts": dict(Counter(row["state"] for row in question_rows)),
         "exam_state_counts": dict(Counter(row["state"] for row in exam_rows)),
+        "course_status_counts": dict(Counter(row.status for row in courses)),
+        "passage_type_counts": dict(Counter(row.passage_type for row in source_passages)),
+        "migration_state_counts": dict(Counter(row.migration_state for row in migration_maps)),
+        "release_gates": release_gates,
         "events": event_rows, "sources": source_rows,
         "lessons": lesson_rows, "questions": question_rows, "exams": exam_rows,
     }
@@ -222,6 +269,12 @@ def markdown(report: dict) -> str:
         lines.append(f"### {label.title()}")
         lines.extend(f"- {key}: {value}" for key, value in report[f"{label}_state_counts"].items())
         lines.append("")
+    lines += ["## Release gates", ""]
+    lines.extend(f"- {key}: {value}" for key, value in report["release_gates"].items())
+    lines += ["", "## Learning graph status", ""]
+    lines.extend(f"- course {key}: {value}" for key, value in report["course_status_counts"].items())
+    lines.extend(f"- passage {key}: {value}" for key, value in report["passage_type_counts"].items())
+    lines.append("")
     lines += ["## Events requiring reconciliation", "", "| Season | Division | Event | Lessons | Questions | Exams | Sources | State |", "|---:|:---:|---|---:|---:|---:|---:|---|"]
     for row in report["events"]:
         lines.append(f"| {row['season']} | {row['division']} | {row['slug']} | {row['lesson_count']} | {row['question_count']} | {row['published_exam_count']} | {row['source_count']} | {row['state']} |")

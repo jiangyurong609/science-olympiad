@@ -1,0 +1,227 @@
+from sqlalchemy import func, select
+
+from app.core.database import SessionLocal
+from app.core.security import create_access_token, hash_password
+from app.models.entities import (
+    AssessmentBlueprint, ContentMigrationMap, Course, CourseUnit, CourseVersion,
+    Event, Exam, ExamItem, Lesson, LessonProgress, LessonSkill, LessonVersion,
+    Question, Skill, Source, SourceSnapshot, User,
+)
+from app.services.source_passages import ensure_source_passages, extract_passage_payloads
+from scripts.migrate_legacy_learning_graph import migrate
+from scripts.reconcile_content_inventory import build_report
+
+
+def auth(token):
+    return {"Authorization": f"Bearer {token}"}
+
+
+def seed_course():
+    with SessionLocal() as db:
+        event = Event(
+            slug="rocks-b-2027", name="Rocks & Minerals",
+            division="B", season=2027, category="Earth Science",
+        )
+        db.add(event)
+        db.flush()
+        course = Course(
+            event_id=event.id, slug="rocks-b-2027",
+            title="Rocks & Minerals", summary="Identify specimens from evidence.",
+            status="published", current_version=1,
+        )
+        db.add(course)
+        db.flush()
+        db.add(CourseVersion(
+            course_id=course.id, version=1,
+            objectives=["Identify minerals from observable properties."],
+            review_status="sme_approved",
+        ))
+        unit = CourseUnit(
+            course_id=course.id, slug="physical-properties",
+            title="Physical Properties", summary="Use diagnostic observations.",
+            sequence=1, status="published",
+        )
+        db.add(unit)
+        db.flush()
+        skill = Skill(
+            course_id=course.id, unit_id=unit.id,
+            slug="hardness", name="Use the Mohs Scale",
+            description="Compare scratch resistance.", sequence=1,
+            status="published",
+        )
+        db.add(skill)
+        db.flush()
+        lesson = Lesson(
+            event_id=event.id, slug="hardness",
+            title="Measure Hardness", summary="Run a scratch test.",
+            status="published", current_version=1, sequence=1,
+            estimated_minutes=8,
+        )
+        db.add(lesson)
+        db.flush()
+        db.add(LessonVersion(
+            lesson_id=lesson.id, version=1,
+            review_status="sme_approved",
+            content=[{"type": "opening", "heading": "Hardness"}],
+        ))
+        db.add(LessonSkill(lesson_id=lesson.id, skill_id=skill.id, is_primary=True))
+        db.add(AssessmentBlueprint(
+            course_id=course.id, unit_id=unit.id,
+            assessment_type="unit_quiz", version=1,
+            title="Physical Properties Quiz",
+            specification={"question_count": 5}, status="published",
+        ))
+        user = User(
+            email="course@example.com", full_name="Course Student",
+            password_hash=hash_password("password123"), role="student", division="B",
+        )
+        db.add(user)
+        db.commit()
+        return (
+            event.season, event.slug, course.id, unit.id, skill.id, lesson.id,
+            create_access_token(str(user.id)),
+        )
+
+
+def test_course_map_has_units_skills_lessons_and_assessments(client):
+    season, event_slug, _, _, _, _, token = seed_course()
+    response = client.get(
+        f"/api/courses/{season}/{event_slug}",
+        headers=auth(token),
+    )
+    assert response.status_code == 200
+    body = response.json()
+    assert body["title"] == "Rocks & Minerals"
+    assert body["progress"] == {
+        "mastered_skills": 0, "total_skills": 1, "percent": 0,
+    }
+    assert body["units"][0]["title"] == "Physical Properties"
+    assert body["units"][0]["skills"][0]["mastery"]["level"] == "not_started"
+    assert body["units"][0]["skills"][0]["lessons"][0]["title"] == "Measure Hardness"
+    assert body["units"][0]["assessments"][0]["type"] == "unit_quiz"
+
+
+def test_course_page_has_stable_shareable_url(client):
+    response = client.get("/courses/2027/rocks-and-minerals-b-2027")
+    assert response.status_code == 200
+    assert response.headers["cache-control"] == "no-cache, must-revalidate"
+    assert "id=\"course-unit-list\"" in response.text
+
+
+def test_course_map_reports_mastery_and_lesson_resume(client):
+    season, event_slug, _, _, skill_id, lesson_id, token = seed_course()
+    with SessionLocal() as db:
+        user = db.scalar(select(User).where(User.email == "course@example.com"))
+        skill = db.get(Skill, skill_id)
+        skill.concept_id = None
+        db.add(LessonProgress(
+            user_id=user.id, lesson_id=lesson_id, lesson_version=1,
+            status="in_progress", current_block=1,
+        ))
+        db.commit()
+    response = client.get(
+        f"/api/courses/{season}/{event_slug}",
+        headers=auth(token),
+    )
+    lesson_payload = response.json()["units"][0]["skills"][0]["lessons"][0]
+    assert lesson_payload["progress"]["status"] == "in_progress"
+    assert lesson_payload["progress"]["current_block"] == 1
+
+
+def test_source_passages_cover_pdf_pages_and_video_timestamps():
+    with SessionLocal() as db:
+        source = Source(url="https://example.org/source.pdf", title="Source")
+        db.add(source)
+        db.flush()
+        pdf = SourceSnapshot(
+            source_id=source.id, final_url=source.url, content_hash="pdf",
+            content_type="application/pdf", byte_count=100,
+            extracted_text="[Page 1]\nFirst page evidence.\n\n[Page 2]\nSecond page evidence.",
+        )
+        db.add(pdf)
+        db.flush()
+        rows = ensure_source_passages(db, pdf, commit=False)
+        assert [row.locator for row in rows] == ["Page 1", "Page 2"]
+        assert "First page" in rows[0].text
+
+        video = SourceSnapshot(
+            source_id=source.id, final_url="https://youtu.be/abcdefghijk",
+            content_hash="video", content_type="text/vtt; profile=transcript",
+            byte_count=100,
+            extracted_text="[0.0s] Observe color.\n[15.2s] Test hardness.\n[95.0s] Record evidence.",
+            metadata_json={"kind": "youtube_transcript"},
+        )
+        payloads = extract_passage_payloads(video)
+        assert payloads[0]["passage_type"] == "video_transcript"
+        assert payloads[0]["locator"].startswith("Video 00:00")
+        assert "[01:35]" in payloads[0]["text"]
+
+
+def test_source_passages_preserve_and_bound_unstructured_text():
+    text = "A" * 5_100
+    snapshot = SourceSnapshot(
+        source_id=1, final_url="https://example.org/ocr.txt",
+        content_hash="ocr", content_type="text/plain", byte_count=len(text),
+        extracted_text=text,
+    )
+    payloads = extract_passage_payloads(snapshot)
+    assert "".join(row["text"] for row in payloads) == text
+    assert max(len(row["text"]) for row in payloads) <= 2_400
+
+
+def test_legacy_migration_preserves_exam_snapshot_and_student_history():
+    with SessionLocal() as db:
+        event = Event(slug="legacy-rocks", name="Legacy Rocks", division="B", season=2026)
+        db.add(event)
+        db.flush()
+        lesson = Lesson(
+            event_id=event.id, slug="legacy-lesson", title="Legacy Lesson",
+            status="published", current_version=1,
+        )
+        db.add(lesson)
+        db.flush()
+        db.add(LessonVersion(lesson_id=lesson.id, version=1, content=[]))
+        question = Question(
+            event_id=event.id, status="draft", stem="Legacy question?",
+            choices=["A", "B"], answer_spec={"correct_index": 0},
+        )
+        db.add(question)
+        db.flush()
+        exam = Exam(
+            event_id=event.id, title="Legacy Exam", duration_minutes=10,
+            question_ids=[question.id], published=True, release_class="past_test",
+        )
+        db.add(exam)
+        db.flush()
+        snapshot = {"stem": "Frozen legacy question?", "answer_spec": {"correct_index": 0}}
+        db.add(ExamItem(
+            exam_id=exam.id, question_id=question.id, question_version=1,
+            position=0, snapshot=snapshot,
+        ))
+        db.commit()
+        before = db.scalar(select(ExamItem).where(ExamItem.exam_id == exam.id)).snapshot.copy()
+        report = migrate(db, apply=True)
+        counts_before = {
+            "skills": db.scalar(select(func.count()).select_from(Skill)),
+            "links": db.scalar(select(func.count()).select_from(LessonSkill)),
+            "maps": db.scalar(select(func.count()).select_from(ContentMigrationMap)),
+        }
+        migrate(db, apply=True)
+        counts_after = {
+            "skills": db.scalar(select(func.count()).select_from(Skill)),
+            "links": db.scalar(select(func.count()).select_from(LessonSkill)),
+            "maps": db.scalar(select(func.count()).select_from(ContentMigrationMap)),
+        }
+        after = db.scalar(select(ExamItem).where(ExamItem.exam_id == exam.id)).snapshot
+        assert report["exam_snapshots_rewritten"] is False
+        assert counts_after == counts_before
+        assert before == after
+        assert db.scalar(select(Course).where(Course.event_id == event.id))
+        assert db.scalar(select(ContentMigrationMap).where(
+            ContentMigrationMap.legacy_type == "exam",
+            ContentMigrationMap.legacy_id == exam.id,
+        )).migration_state == "immutable_snapshot_preserve"
+        ledger = build_report(db)
+        assert ledger["release_gates"]["events_without_course"] == 0
+        assert ledger["counts"]["lesson_skill_links"] == 1
+        assert ledger["migration_state_counts"]["immutable_snapshot_preserve"] == 1
