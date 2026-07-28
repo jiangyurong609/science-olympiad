@@ -13,12 +13,13 @@ from app.core.database import get_db
 from app.core.security import create_access_token, decode_access_token, hash_password, verify_password
 from app.models.entities import (
     AccommodationChange, AccommodationProfile, Assignment, Attempt, AttemptStatus, AuditLog,
-    AssessmentBlueprint, Concept, ContentChallenge, ContentChallengeEvent, Course, CourseUnit,
-    CourseVersion, Event, Exam, ExamItem, GuardianConsent,
+    AssessmentBlueprint, Concept, ContentChallenge, ContentChallengeEvent, ContentGap, Course,
+    CourseSourceCoverage, CourseUnit, CourseVersion, Event, Exam, ExamItem, GuardianConsent,
     GenerationRun, Lesson, LessonProgress, LessonSkill, LessonVersion, MasteryState, PracticeSession,
     PracticeSet, PracticeSetVersion, Question, QuestionCalibration, QuestionReview, RemediationCase,
     Response, ResponseRevision, ReviewDecision, RightsStatus,
-    EventSourceMap, EventTaxonScope, RawArtifact, ScientificClaim, Skill, Source, SourceSnapshot, SpecimenAsset, Taxon,
+    EventSourceMap, EventTaxonScope, RawArtifact, ScientificClaim, Skill, Source,
+    SourceSnapshot, SpecimenAsset, Taxon,
     Team, TeamMembership, TransferAttempt, TutorMessage, TutorSession, User, UserNotification,
 )
 from app.schemas.api import (
@@ -860,6 +861,114 @@ def get_course_map(
                 "title": item.title, "specification": item.specification,
             } for item in blueprints_by_unit.get(unit.id, [])],
         } for unit in units],
+    }
+
+
+@router.get("/content/courses/{course_id}/coverage")
+def get_course_source_coverage(
+    course_id: int,
+    db: Session = Depends(get_db),
+    user: User = Depends(require_content_staff),
+):
+    course = db.get(Course, course_id)
+    if not course:
+        raise HTTPException(status_code=404, detail="Course not found")
+    event = db.get(Event, course.event_id)
+    rows = db.scalars(select(CourseSourceCoverage).where(
+        CourseSourceCoverage.course_id == course.id,
+    ).order_by(CourseSourceCoverage.id)).all()
+    source_ids = [row.source_id for row in rows]
+    sources = {
+        row.id: row for row in db.scalars(select(Source).where(
+            Source.id.in_(source_ids)
+        )).all()
+    } if source_ids else {}
+    skills = {
+        row.id: row for row in db.scalars(select(Skill).where(
+            Skill.course_id == course.id
+        )).all()
+    }
+    units = {
+        row.id: row for row in db.scalars(select(CourseUnit).where(
+            CourseUnit.course_id == course.id
+        )).all()
+    }
+    gaps = db.scalars(select(ContentGap).where(
+        ContentGap.course_id == course.id
+    ).order_by(ContentGap.status, ContentGap.id)).all()
+    unexplained_states = {"imported", "link_only", "extraction_failed", "unmapped"}
+    unexplained = [
+        row.id for row in rows
+        if (
+            row.extraction_status in unexplained_states
+            or not row.instructional_role
+            or (
+                not row.student_destination
+                and not row.withdrawal_reason
+                and row.instructional_role != "reference_only"
+            )
+        )
+    ]
+    return {
+        "course": {
+            "id": course.id, "title": course.title, "status": course.status,
+            "event_slug": event.slug if event else "",
+            "season": event.season if event else None,
+        },
+        "summary": {
+            "sources": len(rows),
+            "reviewed_sources": sum(row.review_status == "approved" for row in rows),
+            "passages": sum(row.passage_count for row in rows),
+            "claims": sum(row.claim_count for row in rows),
+            "open_gaps": sum(row.status == "open" for row in gaps),
+            "unexplained_source_ids": unexplained,
+            "release_ready": not unexplained
+            and not any(row.status == "open" for row in gaps)
+            and bool(rows),
+        },
+        "sources": [{
+            "coverage_id": row.id,
+            "source_id": row.source_id,
+            "title": sources[row.source_id].title if row.source_id in sources else "",
+            "url": sources[row.source_id].url if row.source_id in sources else "",
+            "snapshot_id": row.source_snapshot_id,
+            "sheet_row": row.sheet_row,
+            "source_type": row.source_type,
+            "authority_tier": row.authority_tier,
+            "instructional_role": row.instructional_role,
+            "extraction_status": row.extraction_status,
+            "rights_status": row.rights_status,
+            "passage_count": row.passage_count,
+            "claim_count": row.claim_count,
+            "units": [
+                {"id": unit_id, "title": units[unit_id].title}
+                for unit_id in row.mapped_unit_ids if unit_id in units
+            ],
+            "skills": [
+                {"id": skill_id, "name": skills[skill_id].name}
+                for skill_id in row.mapped_skill_ids if skill_id in skills
+            ],
+            "lesson_ids": row.lesson_ids,
+            "practice_set_ids": row.practice_set_ids,
+            "question_ids": row.question_ids,
+            "review_status": row.review_status,
+            "student_destination": row.student_destination,
+            "decision_reason": row.decision_reason,
+            "withdrawal_reason": row.withdrawal_reason,
+            "last_verified_at": row.last_verified_at,
+        } for row in rows],
+        "gaps": [{
+            "id": row.id,
+            "unit_id": row.unit_id,
+            "unit_title": units[row.unit_id].title if row.unit_id in units else "",
+            "skill_id": row.skill_id,
+            "skill_name": skills[row.skill_id].name if row.skill_id in skills else "",
+            "gap_type": row.gap_type,
+            "description": row.description,
+            "status": row.status,
+            "owner": row.owner,
+            "resolution_notes": row.resolution_notes,
+        } for row in gaps],
     }
 
 

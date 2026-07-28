@@ -556,6 +556,12 @@ class ScientificClaim(Base):
     source_snapshot_id: Mapped[int | None] = mapped_column(
         ForeignKey("source_snapshots.id", ondelete="RESTRICT"), nullable=True, index=True
     )
+    source_passage_id: Mapped[int | None] = mapped_column(
+        ForeignKey("source_passages.id", ondelete="RESTRICT"), nullable=True, index=True
+    )
+    skill_id: Mapped[int | None] = mapped_column(
+        ForeignKey("skills.id", ondelete="SET NULL"), nullable=True, index=True
+    )
     concept_id: Mapped[int | None] = mapped_column(ForeignKey("concepts.id"), nullable=True, index=True)
     claim_text: Mapped[str] = mapped_column(Text)
     evidence_excerpt: Mapped[str] = mapped_column(Text, default="")
@@ -718,6 +724,75 @@ class ContentMigrationMap(Base):
     created_at: Mapped[datetime] = mapped_column(DateTime(timezone=True), default=now_utc)
     updated_at: Mapped[datetime] = mapped_column(
         DateTime(timezone=True), default=now_utc, onupdate=now_utc
+    )
+
+
+class CourseSourceCoverage(Base):
+    """One auditable instructional disposition per source within a course."""
+    __tablename__ = "course_source_coverage"
+    __table_args__ = (
+        UniqueConstraint("course_id", "source_id", name="uq_course_source_coverage"),
+    )
+    id: Mapped[int] = mapped_column(primary_key=True)
+    course_id: Mapped[int] = mapped_column(
+        ForeignKey("courses.id", ondelete="CASCADE"), index=True
+    )
+    source_id: Mapped[int] = mapped_column(
+        ForeignKey("sources.id", ondelete="CASCADE"), index=True
+    )
+    source_snapshot_id: Mapped[int | None] = mapped_column(
+        ForeignKey("source_snapshots.id", ondelete="RESTRICT"), nullable=True, index=True
+    )
+    sheet_row: Mapped[str] = mapped_column(String(64), default="")
+    source_type: Mapped[str] = mapped_column(String(64), default="")
+    authority_tier: Mapped[int | None] = mapped_column(Integer, nullable=True)
+    instructional_role: Mapped[str] = mapped_column(String(64), index=True)
+    extraction_status: Mapped[str] = mapped_column(String(32), index=True)
+    rights_status: Mapped[str] = mapped_column(String(32), index=True)
+    passage_count: Mapped[int] = mapped_column(Integer, default=0)
+    claim_count: Mapped[int] = mapped_column(Integer, default=0)
+    mapped_unit_ids: Mapped[list] = mapped_column(JSON, default=list)
+    mapped_skill_ids: Mapped[list] = mapped_column(JSON, default=list)
+    lesson_ids: Mapped[list] = mapped_column(JSON, default=list)
+    practice_set_ids: Mapped[list] = mapped_column(JSON, default=list)
+    question_ids: Mapped[list] = mapped_column(JSON, default=list)
+    review_status: Mapped[str] = mapped_column(String(32), default="unreviewed", index=True)
+    student_destination: Mapped[str] = mapped_column(String(1024), default="")
+    decision_reason: Mapped[str] = mapped_column(Text, default="")
+    withdrawal_reason: Mapped[str] = mapped_column(Text, default="")
+    last_verified_at: Mapped[datetime | None] = mapped_column(
+        DateTime(timezone=True), nullable=True
+    )
+    created_at: Mapped[datetime] = mapped_column(DateTime(timezone=True), default=now_utc)
+    updated_at: Mapped[datetime] = mapped_column(
+        DateTime(timezone=True), default=now_utc, onupdate=now_utc
+    )
+
+
+class ContentGap(Base):
+    """Explicitly records why a skill cannot yet support a learning promise."""
+    __tablename__ = "content_gaps"
+    __table_args__ = (
+        UniqueConstraint("skill_id", "gap_type", name="uq_skill_content_gap"),
+    )
+    id: Mapped[int] = mapped_column(primary_key=True)
+    course_id: Mapped[int] = mapped_column(
+        ForeignKey("courses.id", ondelete="CASCADE"), index=True
+    )
+    unit_id: Mapped[int | None] = mapped_column(
+        ForeignKey("course_units.id", ondelete="CASCADE"), nullable=True, index=True
+    )
+    skill_id: Mapped[int] = mapped_column(
+        ForeignKey("skills.id", ondelete="CASCADE"), index=True
+    )
+    gap_type: Mapped[str] = mapped_column(String(64), index=True)
+    description: Mapped[str] = mapped_column(Text)
+    status: Mapped[str] = mapped_column(String(32), default="open", index=True)
+    owner: Mapped[str] = mapped_column(String(160), default="content operations")
+    resolution_notes: Mapped[str] = mapped_column(Text, default="")
+    created_at: Mapped[datetime] = mapped_column(DateTime(timezone=True), default=now_utc)
+    resolved_at: Mapped[datetime | None] = mapped_column(
+        DateTime(timezone=True), nullable=True
     )
 
 

@@ -22,8 +22,8 @@ from sqlalchemy import select
 
 from app.core.database import SessionLocal
 from app.models.entities import (
-    AssessmentBlueprint, Attempt, Concept, ContentMigrationMap, ContentRelease,
-    Course, CourseUnit, CourseVersion, Event, EventSourceMap, Exam, ExamItem,
+    AssessmentBlueprint, Attempt, Concept, ContentGap, ContentMigrationMap, ContentRelease,
+    Course, CourseSourceCoverage, CourseUnit, CourseVersion, Event, EventSourceMap, Exam, ExamItem,
     Lesson, LessonProgress, LessonSkill, LessonVersion, MasteryState, PracticeSet,
     Question, QuestionCalibration, QuestionReview, RawArtifact, Response,
     ReviewDecision, ScientificClaim, Skill, Source, SourcePassage, SourceSnapshot,
@@ -74,6 +74,8 @@ def build_report(db):
     content_releases = db.scalars(select(ContentRelease)).all()
     review_decisions = db.scalars(select(ReviewDecision)).all()
     migration_maps = db.scalars(select(ContentMigrationMap)).all()
+    source_coverage_rows = db.scalars(select(CourseSourceCoverage)).all()
+    content_gaps = db.scalars(select(ContentGap)).all()
 
     events_by_id = _event_dict(events)
     snapshot_by_source = defaultdict(list)
@@ -219,6 +221,8 @@ def build_report(db):
         "content_releases": len(content_releases),
         "review_decisions": len(review_decisions),
         "content_migration_maps": len(migration_maps),
+        "course_source_coverage": len(source_coverage_rows),
+        "content_gaps": len(content_gaps),
     }
     course_by_event = {row.event_id: row for row in courses}
     published_course_ids = {row.id for row in courses if row.status == "published"}
@@ -243,6 +247,17 @@ def build_report(db):
         "questions_without_calibration": sum(
             calibrations_by_question[row.id] == 0 for row in questions
         ),
+        "unexplained_course_sources": sum(
+            row.instructional_role in {"", "unmapped"}
+            or row.extraction_status in {"imported", "link_only", "extraction_failed", "unmapped"}
+            or (
+                not row.student_destination
+                and not row.withdrawal_reason
+                and row.instructional_role not in {"reference_only", "assessment_validation"}
+            )
+            for row in source_coverage_rows
+        ),
+        "open_content_gaps": sum(row.status == "open" for row in content_gaps),
     }
     return {
         "generated_at": datetime.now(timezone.utc).isoformat(),
@@ -255,6 +270,9 @@ def build_report(db):
         "course_status_counts": dict(Counter(row.status for row in courses)),
         "passage_type_counts": dict(Counter(row.passage_type for row in source_passages)),
         "migration_state_counts": dict(Counter(row.migration_state for row in migration_maps)),
+        "coverage_review_state_counts": dict(
+            Counter(row.review_status for row in source_coverage_rows)
+        ),
         "release_gates": release_gates,
         "events": event_rows, "sources": source_rows,
         "lessons": lesson_rows, "questions": question_rows, "exams": exam_rows,

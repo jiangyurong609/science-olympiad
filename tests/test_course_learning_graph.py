@@ -3,13 +3,15 @@ from sqlalchemy import delete, func, select
 from app.core.database import SessionLocal
 from app.core.security import create_access_token, hash_password
 from app.models.entities import (
-    AssessmentBlueprint, ContentMigrationMap, Course, CourseUnit, CourseVersion,
-    Event, Exam, ExamItem, Lesson, LessonProgress, LessonSkill, LessonVersion,
-    Question, ReviewDecision, Skill, Source, SourceSnapshot, User,
+    AssessmentBlueprint, ContentGap, ContentMigrationMap, Course, CourseSourceCoverage,
+    CourseUnit, CourseVersion, Event, EventSourceMap, Exam, ExamItem, Lesson,
+    LessonProgress, LessonSkill, LessonVersion, Question, ReviewDecision, Skill,
+    Source, SourcePassage, SourceSnapshot, User,
 )
 from app.services.source_passages import ensure_source_passages, extract_passage_payloads
 from scripts.migrate_legacy_learning_graph import migrate
 from scripts.reconcile_content_inventory import build_report
+from scripts.build_material_coverage_ledger import build as build_coverage
 
 
 def auth(token):
@@ -137,6 +139,76 @@ def test_current_season_lesson_is_hidden_without_both_review_decisions(client):
     assert client.post(
         f"/api/lessons/{lesson_id}/start", headers=auth(token),
     ).status_code == 404
+
+
+def test_content_staff_can_audit_source_coverage_and_open_gaps(client):
+    _, _, course_id, unit_id, skill_id, lesson_id, _ = seed_course()
+    with SessionLocal() as db:
+        source = Source(
+            url="https://example.org/rocks", title="Official Rocks Guide",
+            approved=True, rights_status="fact_grounding_allowed",
+        )
+        db.add(source)
+        db.flush()
+        snapshot = SourceSnapshot(
+            source_id=source.id, final_url=source.url, content_hash="coverage",
+            content_type="text/html", byte_count=20, extracted_text="Mineral evidence.",
+        )
+        db.add(snapshot)
+        db.flush()
+        db.add(SourcePassage(
+            source_id=source.id, source_snapshot_id=snapshot.id, sequence=1,
+            locator="Section 1", passage_type="html_section",
+            text="Mineral evidence.", content_hash="passage",
+        ))
+        db.add(CourseSourceCoverage(
+            course_id=course_id, source_id=source.id, source_snapshot_id=snapshot.id,
+            source_type="text/html", authority_tier=1, instructional_role="lesson_evidence",
+            extraction_status="extracted", rights_status="fact_grounding_allowed",
+            passage_count=1, claim_count=0, mapped_unit_ids=[unit_id],
+            mapped_skill_ids=[skill_id], lesson_ids=[lesson_id],
+            review_status="approved", student_destination=f"/lesson/{lesson_id}",
+        ))
+        db.add(ContentGap(
+            course_id=course_id, unit_id=unit_id, skill_id=skill_id,
+            gap_type="transfer_item", description="Needs an unseen transfer item.",
+        ))
+        reviewer = db.scalar(select(User).where(User.email == "reviewer@example.com"))
+        token = create_access_token(str(reviewer.id))
+        db.commit()
+    response = client.get(
+        f"/api/content/courses/{course_id}/coverage", headers=auth(token),
+    )
+    assert response.status_code == 200
+    body = response.json()
+    assert body["summary"]["sources"] == 1
+    assert body["summary"]["passages"] == 1
+    assert body["summary"]["open_gaps"] == 1
+    assert body["summary"]["release_ready"] is False
+    assert body["sources"][0]["skills"][0]["name"] == "Use the Mohs Scale"
+
+
+def test_material_coverage_builder_is_idempotent(client):
+    _, _, course_id, _, _, _, _ = seed_course()
+    with SessionLocal() as db:
+        course = db.get(Course, course_id)
+        source = Source(
+            url="https://example.org/reference", title="Reference",
+            approved=False, rights_status="link_only",
+        )
+        db.add(source)
+        db.flush()
+        db.add(EventSourceMap(
+            event_id=course.event_id, source_id=source.id,
+            purpose="reference_material", source_tier=2,
+            source_universe_version="test",
+        ))
+        db.commit()
+        first = build_coverage(db, apply=True, course_id=course_id)
+        second = build_coverage(db, apply=True, course_id=course_id)
+        assert first["rows_created"] == 1
+        assert second["rows_created"] == 0
+        assert db.scalar(select(func.count()).select_from(CourseSourceCoverage)) == 1
 
 
 def test_course_map_reports_mastery_and_lesson_resume(client):
