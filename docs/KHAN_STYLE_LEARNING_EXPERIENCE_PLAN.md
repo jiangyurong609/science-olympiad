@@ -138,6 +138,25 @@ Create one release-report row per source with: `source_id`, sheet row, event(s),
 
 No valid source may remain unexplained in `imported`, `link_only`, `extraction_failed`, or `unmapped` state at release.
 
+### 4.3 Existing content and exam migration
+
+The Google Sheet is only one input. The release inventory must also include every existing database and storage object:
+
+- Published and draft `Lesson`/`LessonVersion` records.
+- `PracticeSet`/`PracticeSetVersion` records.
+- `Question` records and their review/calibration history.
+- Published `Exam`/`ExamItem` immutable snapshots.
+- Imported past-test sources and answer keys.
+- PDF, HTML, image, and other `RawArtifact` objects in storage.
+- Existing event, concept, taxonomy, and blueprint records.
+- Student progress, attempts, mastery states, error-notebook records, and assignments.
+
+Existing published exams must not be rewritten in place. Preserve their immutable snapshots and audit them into one of these states: `verified legacy`, `needs review`, `withdrawn`, or `migrate to new blueprint`. Existing lessons and practice sets need the same treatment, with redirects from their current student URLs.
+
+Legacy past tests are assessment evidence and may remain available as clearly labeled past-test practice when rights permit. They must not be silently presented as newly authored course lessons, and their questions must not be mixed into a new competition-ready exam pool without an explicit release decision.
+
+Migration acceptance requires a reconciliation report: every pre-existing record is either linked to a new course/unit/skill, preserved as historical content, intentionally withdrawn, or assigned to an owner for remediation. No old student progress may disappear during the migration.
+
 ### Source pipeline
 
 For every PDF, web page, or video:
@@ -171,7 +190,7 @@ Every published lesson must have:
 - Citation for each substantive claim.
 - Author, editor, SME, source snapshot, and version.
 
-### 4.3 Minimum content volume
+### 4.4 Minimum content volume
 
 Before an event is called a complete vertical slice, counts must come from the skill blueprint:
 
@@ -250,6 +269,9 @@ Add or formalize:
 - Build the 77-row spreadsheet-to-source-to-artifact coverage ledger.
 - Correct the three malformed PDF references or quarantine them with an owner and resolution date.
 - Classify every source as instructional, assessment evidence, reference-only, season-wide, or rejected.
+- Export and reconcile the full legacy database/storage inventory before changing student routes.
+- Freeze direct publication of new generated content during migration; preserve existing exam snapshots and student attempts.
+- Assign every legacy lesson, practice set, question, exam, and artifact a migration state and owner.
 
 ### Phase 1 — One complete vertical slice
 
@@ -287,3 +309,4 @@ We do not call an event production-ready until:
 - The event meets the minimum lesson and question volume thresholds for every skill.
 - A teacher can trace every student-facing sentence and answer explanation to a page, heading, table, figure, or video timestamp.
 - A fresh source snapshot produces a reviewable diff and never silently overwrites published content.
+- Existing courses, exams, attempts, mastery records, and error-notebook entries survive migration with a traceable mapping or an explicit withdrawal record.
