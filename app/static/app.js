@@ -1025,6 +1025,8 @@ function renderLessons() {
   $('start-featured-lesson').disabled = state.lessons.length === 0;
   const featured = state.lessons.find(lesson => lesson.id === state.featuredLessonId);
   $('start-featured-lesson').textContent = featured?.progress.status === 'in_progress' ? 'Resume Lesson →' : featured?.progress.status === 'completed' ? 'Review Lesson →' : 'Start Lesson →';
+  const learnResources = $('learn-resources-button');
+  if (learnResources) learnResources.hidden = !(activeEvent()?.material_count > 0);
   const totalMin = state.lessons.reduce((sum, lesson) => sum + (lesson.estimated_minutes || 0), 0);
   const done = state.lessons.filter(lesson => lesson.progress.status === 'completed').length;
   $('course-scope').textContent = state.lessons.length
@@ -1831,6 +1833,11 @@ $('overview-learn-button').addEventListener('click', () => {
 });
 $('overview-practice-button').addEventListener('click', () => {
   selectSubject(state.activeEventSlug, 'practice').catch(error => toast(error.message));
+});
+$('learn-resources-button')?.addEventListener('click', () => {
+  selectSubject(state.activeEventSlug, 'practice').then(() => {
+    $('materials-block')?.scrollIntoView({ behavior: preferredScrollBehavior(), block: 'start' });
+  }).catch(error => toast(error.message));
 });
 $('dashboard-resources-button').addEventListener('click', () => {
   selectSubject(state.activeEventSlug, 'practice').then(() => {
