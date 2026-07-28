@@ -110,6 +110,34 @@ The student sees:
 
 ## 4. Content production standard
 
+### 4.0 Review verdict
+
+This plan is directionally correct but was not sufficient to prove that all imported materials would become useful instruction. The missing control is a measurable **material coverage ledger**. A course is not complete because sources were imported or because an LLM produced lessons; it is complete only when every usable source has a declared instructional role, extraction status, mapped skills, learner-facing destination, review status, and release decision.
+
+The current spreadsheet inventory is documented as 77 rows: 41 `soinc.org` links, 36 YouTube links, 9 global/season-wide resources, and 3 malformed PDF references requiring correction. The repository also contains crawled PDF and HTML artifacts outside the sheet. The plan must track both inventories so material cannot silently disappear between import, extraction, and course authoring.
+
+### 4.1 Material utilization matrix
+
+| Material | Required treatment | Student destination |
+|---|---|---|
+| Official rules/manuals | Extract headings, tables, page locators, constraints, terminology, and update dates | Rules reference plus linked lessons |
+| Study guides/handouts | Extract prose, tables, figures, captions, and page references; map to skills | Lessons, glossary, and reference |
+| YouTube teaching videos | Retrieve full transcript, timestamp segments, objectives, and misconceptions | Embedded lesson with transcript-grounded checks |
+| Web pages/articles | Snapshot the complete page with authority and freshness metadata | Reading lesson or cited explanation |
+| Practice tests | Use as blueprint evidence; do not reproduce protected questions | Original practice sets and simulations |
+| Answer keys/rubrics | Validate scoring and create feedback; preserve rights boundaries | Feedback and coach review tools |
+| Images/specimens/diagrams | Preserve attribution, dimensions, captions, rights, and alt text | Visual lessons and identification labs |
+| Season-wide resources | Map to multiple events or cross-event skills | Shared season fundamentals |
+| Rejected/malformed rows | Correct, replace, or quarantine with an owner | Operations queue only |
+
+“Reference-only” is allowed, but it must be an explicit editorial decision with a reason.
+
+### 4.2 Coverage ledger
+
+Create one release-report row per source with: `source_id`, sheet row, event(s), season, source type, authority tier, rights status, snapshot ID, extraction status, passage count, claim count, mapped units, mapped skills, lesson IDs, practice-set IDs, question IDs, review status, student destination, last verification, and withdrawal reason.
+
+No valid source may remain unexplained in `imported`, `link_only`, `extraction_failed`, or `unmapped` state at release.
+
 ### Source pipeline
 
 For every PDF, web page, or video:
@@ -127,6 +155,8 @@ For every PDF, web page, or video:
 
 LLMs may draft explanations, distractors, summaries, and lesson structure. They may not decide truth, publish content, or silently fill missing facts.
 
+Extraction must finish before generation begins. Do not truncate a transcript or PDF merely to fit a prompt; retrieve bounded passages, generate against each passage, then reconcile claims and citations deterministically.
+
 ### Lesson contract
 
 Every published lesson must have:
@@ -140,6 +170,18 @@ Every published lesson must have:
 - Explanations for every answer choice.
 - Citation for each substantive claim.
 - Author, editor, SME, source snapshot, and version.
+
+### 4.3 Minimum content volume
+
+Before an event is called a complete vertical slice, counts must come from the skill blueprint:
+
+- Every skill: one teach lesson and one formative check.
+- Every unit: 2–3 lessons, one 5–8 item quiz, and one unit-test blueprint.
+- Every high-weight skill: 8–12 approved items across recall, application, and transfer.
+- Course challenge: a coverage table showing the sample count for every skill.
+- Competition simulator: its own event-format, timing, scoring, and accommodation blueprint.
+
+If approved sources cannot support a skill, the course must label the gap and create an authoring task rather than imply mastery is possible.
 
 ### Question contract
 
@@ -205,10 +247,13 @@ Add or formalize:
 - Keep them in an internal review workspace.
 - Mark video-derived questions as candidates only.
 - Produce a source coverage report for every event.
+- Build the 77-row spreadsheet-to-source-to-artifact coverage ledger.
+- Correct the three malformed PDF references or quarantine them with an owner and resolution date.
+- Classify every source as instructional, assessment evidence, reference-only, season-wide, or rejected.
 
 ### Phase 1 — One complete vertical slice
 
-Choose Rocks & Minerals Division B. Build one complete unit end-to-end from the actual official materials: extraction, claims, lesson, practice, quiz, remediation, mastery, and review. Do not scale until a teacher can audit every claim and question.
+Choose Rocks & Minerals Division B. Build one complete unit end-to-end from the actual official materials: extraction, claims, lesson, practice, quiz, remediation, mastery, and review. The slice must include at least one PDF/manual section, one web source, one video transcript, one visual/specimen asset, and one practice-test blueprint. Do not scale until a teacher can audit every claim and question.
 
 ### Phase 2 — Course map and mastery UX
 
@@ -238,3 +283,7 @@ We do not call an event production-ready until:
 - A teacher can inspect why every claim and answer is present.
 - No empty state says content is “being prepared” when a source is available.
 - Desktop and mobile flows pass accessibility, keyboard, focus, and no-overflow checks.
+- The coverage ledger has no unexplained valid source; every source has a student destination or documented reference-only decision.
+- The event meets the minimum lesson and question volume thresholds for every skill.
+- A teacher can trace every student-facing sentence and answer explanation to a page, heading, table, figure, or video timestamp.
+- A fresh source snapshot produces a reviewable diff and never silently overwrites published content.
