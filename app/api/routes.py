@@ -636,9 +636,16 @@ def list_event_materials(
         version = db.scalar(select(LessonVersion).where(
             LessonVersion.lesson_id == lesson.id, LessonVersion.version == lesson.current_version,
         ))
-        for block in (version.content if version else []):
+        lesson_blocks = (version.content if version else [])
+        for block in lesson_blocks:
             if block.get("type") == "video" and block.get("transcript_source"):
-                guided_lessons[block["transcript_source"]] = {"id": lesson.id, "title": lesson.title}
+                guided_lessons[block["transcript_source"]] = {
+                    "id": lesson.id,
+                    "title": lesson.title,
+                    "summary": lesson.summary,
+                    "estimated_minutes": lesson.estimated_minutes,
+                    "checkpoint_count": sum(1 for item in lesson_blocks if item.get("type") == "checkpoint"),
+                }
     materials = []
     for mapping in mappings:
         if mapping.purpose in WITHHELD_MATERIAL_PURPOSES:

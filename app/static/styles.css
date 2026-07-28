@@ -755,11 +755,15 @@ textarea.answer-input { resize: vertical; min-height: 3.2rem; }
 .answer-key-item .ak-misconception { margin: .45rem 0 0; font-size: .9rem; color: #744d1a; }
 
 /* Event materials library */
-.materials-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(230px, 1fr)); gap: .85rem; margin-top: 1rem; }
-.material-card { padding: 1rem 1.05rem; display: flex; flex-direction: column; gap: .35rem; }
+.materials-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(285px, 1fr)); gap: 1rem; margin-top: 1rem; }
+.materials-grid.is-single { grid-template-columns: minmax(0, 1fr); }
+.material-card { padding: 1.25rem 1.3rem; display: flex; flex-direction: column; gap: .45rem; min-height: 190px; }
+.material-card-guided { border-color: rgba(31, 90, 69, .35); box-shadow: 0 10px 28px rgba(31, 90, 69, .08); }
 .material-card .material-type { font-size: .72rem; text-transform: uppercase; letter-spacing: .06em; color: var(--forest); font-weight: 700; }
 .material-card h3 { font-size: 1.02rem; line-height: 1.25; margin: .1rem 0; }
 .material-card .material-meta { font-size: .82rem; color: rgba(27, 43, 36, .6); }
+.material-card .material-plan { margin: .1rem 0 0; color: var(--forest); font-size: .9rem; }
+.material-card .material-summary { margin: 0; color: rgba(27, 43, 36, .72); line-height: 1.45; max-width: 70ch; }
 .material-card .material-actions { margin-top: auto; padding-top: .55rem; display: flex; gap: .5rem; flex-wrap: wrap; }
 .button-compact { padding: .4rem .7rem; font-size: .85rem; }
 

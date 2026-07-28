@@ -799,17 +799,17 @@ function renderMaterials() {
     const label = materialGroupLabels[group];
     return `<section class="material-group" aria-labelledby="material-group-${group}">
       <header><span class="material-group-icon" aria-hidden="true">${label.icon}</span><div><h3 id="material-group-${group}">${label.title}</h3><p>${label.description}</p></div><strong>${materials.length}</strong></header>
-      <div class="materials-grid">${materials.map(material => {
+      <div class="materials-grid ${materials.length === 1 ? 'is-single' : ''}">${materials.map(material => {
     const url = material.url || '';
     const isPdf = material.media_type?.includes('pdf') || new URL(safeUrl(url), location.origin).pathname.toLowerCase().endsWith('.pdf');
     const kind = group === 'video' ? 'Video' : isPdf ? 'PDF' : material.has_text ? 'Article' : 'Link';
     const size = material.has_text ? `${Math.round((material.text_chars || 0) / 1000)}k chars` : 'link only';
     const guided = material.guided_lesson;
-    return `<article class="material-card surface">
-      <div class="material-card-top"><span class="material-type">${escapeHtml((material.purpose || 'reference').replaceAll('_', ' '))}</span><span class="material-format">${kind}</span></div>
+    return `<article class="material-card surface${guided ? ' material-card-guided' : ''}">
+      <div class="material-card-top"><span class="material-type">${guided ? 'GUIDED LESSON' : escapeHtml((material.purpose || 'reference').replaceAll('_', ' '))}</span><span class="material-format">${kind}</span></div>
       <h3>${escapeHtml(material.title || 'Material')}</h3>
-      <p class="material-meta">${escapeHtml(material.publisher || 'Official resource')} · ${size}</p>
-      <div class="material-actions">${guided ? `<button type="button" class="button button-dark button-compact" data-start-guided-lesson="${guided.id}">Start Guided Lesson</button>` : material.has_text ? `<button type="button" class="button button-dark button-compact" data-open-material="${material.source_id}">Read Source Text</button>` : ''}${material.url ? `<a class="button ${guided || material.has_text ? 'button-secondary' : 'button-dark'} button-compact" href="${safeUrl(material.url)}" target="_blank" rel="noopener noreferrer">${group === 'video' ? 'Watch Video' : isPdf ? 'Open PDF' : 'Open Resource'} <span aria-hidden="true">↗</span></a>` : ''}</div>
+      ${guided ? `<p class="material-plan"><strong>${guided.estimated_minutes || 10} min</strong> lesson · ${guided.checkpoint_count || 0} quick checks</p><p class="material-summary">${escapeHtml(guided.summary || 'Watch the source, learn the key ideas, and check your understanding as you go.')}</p>` : `<p class="material-meta">${escapeHtml(material.publisher || 'Official resource')} · ${size}</p>`}
+      <div class="material-actions">${guided ? `<button type="button" class="button button-dark button-compact" data-start-guided-lesson="${guided.id}">Start Lesson <span aria-hidden="true">→</span></button>` : material.has_text ? `<button type="button" class="button button-dark button-compact" data-open-material="${material.source_id}">Open Transcript</button>` : ''}${material.url ? `<a class="button ${guided || material.has_text ? 'button-secondary' : 'button-dark'} button-compact" href="${safeUrl(material.url)}" target="_blank" rel="noopener noreferrer">${group === 'video' ? 'Watch Source Video' : isPdf ? 'Open PDF' : 'Open Resource'} <span aria-hidden="true">↗</span></a>` : ''}</div>
     </article>`;
       }).join('')}</div>
     </section>`;
@@ -951,11 +951,11 @@ function renderSubjectShell() {
   $('start-featured-lesson').textContent = nextLesson?.progress.status === 'in_progress' ? 'Resume Lesson →'
     : nextLesson?.progress.status === 'completed' ? 'Review Lesson →' : 'Start Lesson →';
 
-  $('practice-title').textContent = resourceOnly ? `${event.name} Library` : `${event.name} Practice`;
+  $('practice-title').textContent = resourceOnly ? `${event.name} Learning Path` : `${event.name} Practice`;
   $('practice-lede').textContent = resourceOnly
-    ? `Explore ${event.material_count} official resource${event.material_count === 1 ? '' : 's'} organized for quick access throughout the season.`
+    ? 'Start with a guided lesson, then use the source materials when you want to go deeper.'
     : event.material_count > 0
-    ? `Start with ${event.material_count} official resource${event.material_count === 1 ? '' : 's'}, then train ${experience.skill} with feedback and competition timing.`
+    ? `Learn the idea, check your understanding, then practice ${experience.skill} with feedback and competition timing.`
     : `Train ${experience.skill} with feedback, station timing, and full mock exams.`;
   $('practice-material-count').textContent = event.material_count || 0;
   $('practice-set-count').textContent = state.practiceSets.length;
