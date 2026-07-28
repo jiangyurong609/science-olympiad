@@ -27,6 +27,30 @@ def _latest(db: Session, source_id: int) -> SourceSnapshot | None:
     return db.scalar(select(SourceSnapshot).where(SourceSnapshot.source_id == source_id).order_by(SourceSnapshot.id.desc()))
 
 
+def normalize_blocks(blocks: list) -> list:
+    """Coerce common model variations into the lesson reader's typed blocks."""
+    out = []
+    for block in blocks:
+        if not isinstance(block, dict):
+            continue
+        kind = block.get("type")
+        if kind == "teaching":
+            if block.get("property_cards"):
+                cards = []
+                for card in block["property_cards"]:
+                    props = card.get("properties") or []
+                    cards.append({"name": str(card.get("name") or "Concept"), "cue": str(props[0] if props else ""), "detail": " ".join(map(str, props[1:]))})
+                out.append({"type": "property_cards", "heading": "Key ideas", "body": "", "cards": cards})
+            elif block.get("steps"):
+                out.append({"type": "steps", "heading": "Apply the routine", "steps": [{"label": str(s.get("name") or s.get("step") or f"Step {i+1}"), "detail": str(s.get("details") or s.get("detail") or s.get("work") or "")} for i, s in enumerate(block["steps"]) if isinstance(s, dict)]})
+            elif block.get("worked_example"):
+                example = block["worked_example"]
+                out.append({"type": "worked_example", "heading": str(example.get("title") or "Worked example"), "prompt": str(example.get("scenario") or ""), "steps": [str(s.get("work") or s) for s in example.get("steps", [])]})
+        elif kind in {"opening", "property_cards", "steps", "worked_example", "checkpoint", "summary", "video"}:
+            out.append(block)
+    return out
+
+
 def generate_video_lesson(db: Session, event: Event, source: Source, *, commit: bool = True) -> Lesson | None:
     snapshot = _latest(db, source.id)
     if not snapshot or snapshot.metadata_json.get("kind") != "youtube_transcript":
@@ -41,7 +65,7 @@ def generate_video_lesson(db: Session, event: Event, source: Source, *, commit: 
     payload = provider.generate_json(SYSTEM, prompt).payload
     if not isinstance(payload, dict):
         return None
-    blocks = [b for b in payload.get("blocks", []) if isinstance(b, dict)]
+    blocks = normalize_blocks(payload.get("blocks", []))
     if not blocks:
         return None
     for i, block in enumerate(blocks):
