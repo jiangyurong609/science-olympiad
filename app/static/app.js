@@ -880,11 +880,12 @@ function studentEvents() {
 
 function resolveEvent(slug) {
   const exact = state.events.find(event => event.slug === slug);
-  if (exact) return exact;
+  if (exact?.season_status === 'current') return exact;
   const base = subjectKeyOf(slug);
   const division = (state.user?.division || '').toLowerCase();
-  return state.events.find(event => event.slug === `${base}-${division}`)
-    || state.events.find(event => event.slug === base)
+  return state.events.find(event => event.slug === `${base}-${division}` && event.season_status === 'current')
+    || state.events.find(event => event.slug === base && event.season_status === 'current')
+    || exact
     || null;
 }
 
@@ -1549,8 +1550,12 @@ async function loadApplication() {
       const hashParts = location.hash.slice(1).split('?');
       const hashParams = new URLSearchParams(hashParts[1] || '');
       const statefulParams = new URLSearchParams(location.hash.slice(1));
-      const requestedSlug = hashParams.get('event') || statefulParams.get('event') || state.activeEventSlug;
-      const requestedEvent = resolveEvent(requestedSlug) || studentEvents()[0] || events[0];
+      const explicitSlug = hashParams.get('event') || statefulParams.get('event');
+      // A URL explicitly naming a historical event is intentional. Remembered
+      // state, however, should always roll forward to the current catalog.
+      const requestedEvent = (explicitSlug
+        ? (state.events.find(event => event.slug === explicitSlug) || resolveEvent(explicitSlug))
+        : resolveEvent(state.activeEventSlug)) || studentEvents()[0] || events[0];
       state.activeEventSlug = requestedEvent?.slug || '';
       if (requestedEvent) localStorage.setItem('activeEventSlug', requestedEvent.slug);
       const selectedEvent = activeEvent();
@@ -1828,7 +1833,9 @@ $('overview-practice-button').addEventListener('click', () => {
   selectSubject(state.activeEventSlug, 'practice').catch(error => toast(error.message));
 });
 $('dashboard-resources-button').addEventListener('click', () => {
-  selectSubject(state.activeEventSlug, 'practice').catch(error => toast(error.message));
+  selectSubject(state.activeEventSlug, 'practice').then(() => {
+    $('materials-block')?.scrollIntoView({ behavior: preferredScrollBehavior(), block: 'start' });
+  }).catch(error => toast(error.message));
 });
 
 async function openPracticeLab(id, mode = 'study') {
