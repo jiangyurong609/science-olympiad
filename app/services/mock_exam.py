@@ -18,7 +18,7 @@ from app.services.blueprint import blueprint_for, select_for_blueprint
 from app.services.scoring import is_servable
 
 
-POOL_IMPORT_KINDS = {"past_test", "generated_from_material"}
+POOL_IMPORT_KINDS = {"past_test", "generated_from_material", "video_transcript_approved"}
 
 
 def event_question_pool(db: Session, event: Event) -> list[Question]:

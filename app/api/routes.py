@@ -1503,6 +1503,11 @@ def review_question(question_id: int, payload: QuestionReviewRequest, db: Sessio
     )
     db.add(review)
     if payload.decision == "approved":
+        if payload.stage == "sme" and (question.generation_provenance or {}).get("import_kind") == "video_transcript_candidate":
+            source = db.get(Source, question.source_id) if question.source_id else None
+            if not (payload.checklist.get("source_rights_verified") and source and source.approved and source.rights_status == RightsStatus.DERIVATIVE_GENERATION_ALLOWED.value):
+                raise HTTPException(status_code=422, detail="Video-derived questions require verified source rights before SME approval")
+            question.generation_provenance = {**(question.generation_provenance or {}), "import_kind": "video_transcript_approved", "review_status": "approved"}
         question.status = "editor_reviewed" if payload.stage == "editor" else "sme_approved"
     else:
         question.status = "draft"
@@ -1522,6 +1527,8 @@ def publish_question(question_id: int, db: Session = Depends(get_db), actor: Use
     if question.status != "sme_approved":
         raise HTTPException(status_code=409, detail="Current question version requires editor and independent SME approval")
     blockers = []
+    if (question.generation_provenance or {}).get("import_kind") == "video_transcript_candidate":
+        blockers.append("video_source_rights_not_verified")
     if not (question.validation_report or {}).get("passed"):
         blockers.append("machine_validation_not_passed")
     if not question.citations:
