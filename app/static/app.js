@@ -2017,6 +2017,9 @@ async function openLesson(id) {
       state.currentLesson.progress.current_block || 0,
       state.currentLesson.content.length - 1,
     );
+    // A lesson can be launched from Practice & Resources. Move the learner
+    // into the lesson workspace so the reader never opens behind another view.
+    showView('learn', false);
     $('learn-catalog').hidden = true;
     $('lesson-reader').hidden = false;
     history.replaceState(null, '', `#lesson=${id}&event=${encodeURIComponent(state.activeEventSlug)}`);
