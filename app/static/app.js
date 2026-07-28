@@ -1,3 +1,9 @@
+// Pre-2027 builds stored unversioned slugs (for example, "rocks-and-minerals-b").
+// Ignore those legacy values so an existing student starts in the current catalog;
+// explicit #learn?event=… links still win during route resolution below.
+const storedActiveEventSlug = localStorage.getItem('activeEventSlug') || '';
+const initialActiveEventSlug = /-\d{4}$/.test(storedActiveEventSlug) ? storedActiveEventSlug : '';
+
 const state = {
   token: localStorage.getItem('token'),
   user: JSON.parse(localStorage.getItem('user') || 'null'),
@@ -15,7 +21,7 @@ const state = {
   practiceSets: [],
   practiceSession: null,
   materialFilter: 'all',
-  activeEventSlug: localStorage.getItem('activeEventSlug') || '',
+  activeEventSlug: initialActiveEventSlug,
   activeTaxonomy: null,
   accommodation: null,
   sourceCoverage: [],
