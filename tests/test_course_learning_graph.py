@@ -1,11 +1,11 @@
-from sqlalchemy import func, select
+from sqlalchemy import delete, func, select
 
 from app.core.database import SessionLocal
 from app.core.security import create_access_token, hash_password
 from app.models.entities import (
     AssessmentBlueprint, ContentMigrationMap, Course, CourseUnit, CourseVersion,
     Event, Exam, ExamItem, Lesson, LessonProgress, LessonSkill, LessonVersion,
-    Question, Skill, Source, SourceSnapshot, User,
+    Question, ReviewDecision, Skill, Source, SourceSnapshot, User,
 )
 from app.services.source_passages import ensure_source_passages, extract_passage_payloads
 from scripts.migrate_legacy_learning_graph import migrate
@@ -76,6 +76,19 @@ def seed_course():
             password_hash=hash_password("password123"), role="student", division="B",
         )
         db.add(user)
+        reviewer = User(
+            email="reviewer@example.com", full_name="Course Reviewer",
+            password_hash=hash_password("password123"), role="editor", division="B",
+        )
+        db.add(reviewer)
+        db.flush()
+        db.add_all([
+            ReviewDecision(
+                entity_type="lesson", entity_id=lesson.id, entity_version=1,
+                stage=stage, decision="approved", reviewer_user_id=reviewer.id,
+            )
+            for stage in ("editor", "sme")
+        ])
         db.commit()
         return (
             event.season, event.slug, course.id, unit.id, skill.id, lesson.id,
@@ -106,6 +119,24 @@ def test_course_page_has_stable_shareable_url(client):
     assert response.status_code == 200
     assert response.headers["cache-control"] == "no-cache, must-revalidate"
     assert "id=\"course-unit-list\"" in response.text
+
+
+def test_current_season_lesson_is_hidden_without_both_review_decisions(client):
+    _, _, _, _, _, lesson_id, token = seed_course()
+    with SessionLocal() as db:
+        db.execute(delete(ReviewDecision).where(
+            ReviewDecision.entity_type == "lesson",
+            ReviewDecision.entity_id == lesson_id,
+            ReviewDecision.stage == "sme",
+        ))
+        event_id = db.get(Lesson, lesson_id).event_id
+        db.commit()
+    listing = client.get(f"/api/events/{event_id}/lessons", headers=auth(token))
+    assert listing.status_code == 200
+    assert listing.json() == []
+    assert client.post(
+        f"/api/lessons/{lesson_id}/start", headers=auth(token),
+    ).status_code == 404
 
 
 def test_course_map_reports_mastery_and_lesson_resume(client):

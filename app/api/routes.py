@@ -16,7 +16,8 @@ from app.models.entities import (
     AssessmentBlueprint, Concept, ContentChallenge, ContentChallengeEvent, Course, CourseUnit,
     CourseVersion, Event, Exam, ExamItem, GuardianConsent,
     GenerationRun, Lesson, LessonProgress, LessonSkill, LessonVersion, MasteryState, PracticeSession,
-    PracticeSet, PracticeSetVersion, Question, QuestionCalibration, QuestionReview, RemediationCase, Response, ResponseRevision, RightsStatus,
+    PracticeSet, PracticeSetVersion, Question, QuestionCalibration, QuestionReview, RemediationCase,
+    Response, ResponseRevision, ReviewDecision, RightsStatus,
     EventSourceMap, EventTaxonScope, RawArtifact, ScientificClaim, Skill, Source, SourceSnapshot, SpecimenAsset, Taxon,
     Team, TeamMembership, TransferAttempt, TutorMessage, TutorSession, User, UserNotification,
 )
@@ -585,6 +586,36 @@ def _lesson_response(lesson: Lesson, version: LessonVersion, progress: LessonPro
     }
 
 
+def _lesson_is_student_visible(
+    db: Session,
+    user: User,
+    lesson: Lesson,
+    version: LessonVersion | None = None,
+) -> bool:
+    if user.role in {"admin", "editor", "sme", "calibrator"}:
+        return True
+    event = db.get(Event, lesson.event_id)
+    if event and event.season <= 2026:
+        return True
+    version = version or db.scalar(select(LessonVersion).where(
+        LessonVersion.lesson_id == lesson.id,
+        LessonVersion.version == lesson.current_version,
+    ))
+    if version is None:
+        return False
+    decisions = db.execute(select(
+        ReviewDecision.stage, ReviewDecision.decision,
+    ).where(
+        ReviewDecision.entity_type == "lesson",
+        ReviewDecision.entity_id == lesson.id,
+        ReviewDecision.entity_version == version.version,
+    )).all()
+    approved_stages = {
+        stage for stage, decision in decisions if decision == "approved"
+    }
+    return {"editor", "sme"}.issubset(approved_stages)
+
+
 @router.get("/events/{event_id}/lessons")
 def list_event_lessons(
     event_id: int,
@@ -597,6 +628,17 @@ def list_event_lessons(
         Lesson.event_id == event_id,
         Lesson.status == "published",
     ).order_by(Lesson.sequence, Lesson.id)).all()
+    current_versions = {lesson.id: lesson.current_version for lesson in lessons}
+    versions = {
+        row.lesson_id: row for row in db.scalars(select(LessonVersion).where(
+            LessonVersion.lesson_id.in_(current_versions),
+        )).all()
+        if row.version == current_versions[row.lesson_id]
+    } if lessons else {}
+    lessons = [
+        lesson for lesson in lessons
+        if _lesson_is_student_visible(db, user, lesson, versions.get(lesson.id))
+    ]
     progress_rows = db.scalars(select(LessonProgress).where(
         LessonProgress.user_id == user.id,
         LessonProgress.lesson_id.in_([lesson.id for lesson in lessons]),
@@ -706,6 +748,11 @@ def get_course_map(
     lessons = db.scalars(select(Lesson).where(
         Lesson.id.in_(lesson_ids), Lesson.status == "published",
     )).all() if lesson_ids else []
+    if not staff:
+        lessons = [
+            lesson for lesson in lessons
+            if _lesson_is_student_visible(db, user, lesson)
+        ]
     lessons_by_id = {lesson.id: lesson for lesson in lessons}
     progress_rows = db.scalars(select(LessonProgress).where(
         LessonProgress.user_id == user.id,
@@ -915,6 +962,8 @@ def start_lesson(lesson_id: int, db: Session = Depends(get_db), user: User = Dep
     if not lesson or lesson.status != "published":
         raise HTTPException(status_code=404, detail="Lesson not found")
     version, progress = _lesson_version_for_user(db, lesson, user)
+    if not _lesson_is_student_visible(db, user, lesson, version):
+        raise HTTPException(status_code=404, detail="Lesson not found")
     now = datetime.now(timezone.utc)
     if not progress:
         progress = LessonProgress(
@@ -948,6 +997,8 @@ def save_lesson_progress(
     if not lesson or lesson.status != "published":
         raise HTTPException(status_code=404, detail="Lesson not found")
     version, progress = _lesson_version_for_user(db, lesson, user)
+    if not _lesson_is_student_visible(db, user, lesson, version):
+        raise HTTPException(status_code=404, detail="Lesson not found")
     if not progress:
         raise HTTPException(status_code=409, detail="Start the lesson before saving progress")
     if payload.current_block >= len(version.content):
@@ -993,6 +1044,8 @@ def submit_lesson_checkpoint(
     if not lesson or lesson.status != "published":
         raise HTTPException(status_code=404, detail="Lesson not found")
     version, progress = _lesson_version_for_user(db, lesson, user)
+    if not _lesson_is_student_visible(db, user, lesson, version):
+        raise HTTPException(status_code=404, detail="Lesson not found")
     if not progress:
         raise HTTPException(status_code=409, detail="Start the lesson before answering checkpoints")
     checkpoint = next((block for block in version.content
