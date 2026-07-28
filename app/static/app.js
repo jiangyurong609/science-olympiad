@@ -674,6 +674,7 @@ function renderOverviewEvent() {
   $('overview-event-icon').textContent = experience.icon;
   $('overview-event-icon').className = `current-event-icon event-accent-${experience.accent}`;
   $('overview-event-category').textContent = `${experience.category} · Division ${event.division}`;
+  $('season-chip-label').textContent = `${event.season} Season`;
   $('current-event-title').textContent = event.name;
   $('overview-event-focus').textContent = event.topic_focus || event.description || `Build ${experience.skill}.`;
   $('overview-event-availability').textContent = `${event.material_count} resource${event.material_count === 1 ? '' : 's'} · ${state.lessons.length} lesson${state.lessons.length === 1 ? '' : 's'} · ${state.practiceSets.length} skill lab${state.practiceSets.length === 1 ? '' : 's'} · ${event.exam_count} exam${event.exam_count === 1 ? '' : 's'}`;
@@ -684,6 +685,8 @@ function renderOverviewEvent() {
   $('overview-practice-button').textContent = (
     state.practiceSets.length === 0 && event.exam_count === 0
   ) ? 'Browse Event Resources' : 'Practice This Event';
+  $('dashboard-resource-button').hidden = event.material_count === 0;
+  $('dashboard-resource-count').textContent = event.material_count;
   $('course-progress-label').textContent = `${percent}%`;
   $('course-progress-bar').style.width = `${percent}%`;
   $('course-progress-bar').parentElement.setAttribute('aria-valuenow', String(percent));
@@ -1816,6 +1819,9 @@ $('overview-learn-button').addEventListener('click', () => {
   selectSubject(state.activeEventSlug, 'learn').catch(error => toast(error.message));
 });
 $('overview-practice-button').addEventListener('click', () => {
+  selectSubject(state.activeEventSlug, 'practice').catch(error => toast(error.message));
+});
+$('dashboard-resources-button').addEventListener('click', () => {
   selectSubject(state.activeEventSlug, 'practice').catch(error => toast(error.message));
 });
 

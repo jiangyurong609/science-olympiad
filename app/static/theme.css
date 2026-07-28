@@ -460,6 +460,7 @@ details[open] summary { color: var(--forest); }
 .dashboard-hero { margin-bottom: 22px; }
 .dashboard-hero h1 { margin-bottom: 8px; }
 .dashboard-primary-action { min-width: 210px; }
+.dashboard-resource-action { min-width: 178px; }
 
 .dashboard-snapshot {
   margin: 0 0 18px;

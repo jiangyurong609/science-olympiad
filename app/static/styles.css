@@ -199,6 +199,7 @@ textarea { resize: vertical; }
 .view { max-width: 1240px; margin: 0 auto; }
 .dashboard-heading, .section-heading { display: flex; align-items: end; justify-content: space-between; gap: 24px; }
 .dashboard-heading { margin-bottom: 34px; }
+.dashboard-hero-actions { display: flex; flex-wrap: wrap; justify-content: flex-end; gap: 10px; }
 .dashboard-heading h1 { font-size: clamp(2.1rem, 4vw, 3.7rem); }
 .section-heading { margin-bottom: 18px; }
 .section-heading > p { max-width: 360px; color: var(--muted); font-size: .85rem; text-align: right; }

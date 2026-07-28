@@ -9,8 +9,8 @@
   <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='16' fill='%231f5a45'/%3E%3Ctext x='32' y='44' text-anchor='middle' font-size='38' fill='white'%3EF%3C/text%3E%3C/svg%3E">
   <link rel="preload" href="/static/fonts/Fraunces.woff2" as="font" type="font/woff2" crossorigin>
   <link rel="preload" href="/static/fonts/AtkinsonHyperlegibleNext.woff2" as="font" type="font/woff2" crossorigin>
-  <link rel="stylesheet" href="/static/styles.css?v=27">
-  <link rel="stylesheet" href="/static/theme.css?v=27">
+  <link rel="stylesheet" href="/static/styles.css?v=28">
+  <link rel="stylesheet" href="/static/theme.css?v=28">
 </head>
 <body>
   <a class="skip-link" href="#main-content">Skip to Main Content</a>
@@ -129,7 +129,7 @@
         <section id="dashboard" class="view" aria-labelledby="welcome">
           <div class="dashboard-heading dashboard-hero">
             <div><p class="kicker">Today at Fieldstone</p><h1 id="welcome" tabindex="-1">Ready for the next discovery?</h1><p id="today-copy" class="lede">One focused step at a time.</p></div>
-            <button id="continue-button" class="button button-primary dashboard-primary-action" type="button">Start Today’s Mission <span aria-hidden="true">→</span></button>
+            <div class="dashboard-hero-actions"><button id="continue-button" class="button button-primary dashboard-primary-action" type="button">Start Today’s Mission <span aria-hidden="true">→</span></button><button id="dashboard-resources-button" class="button button-secondary dashboard-resource-action" type="button" hidden>Browse Resources <span id="dashboard-resource-count">0</span> <span aria-hidden="true">→</span></button></div>
           </div>
 
           <dl class="dashboard-snapshot" aria-label="Learning snapshot">
@@ -161,7 +161,7 @@
           </section>
 
           <details class="event-browser section-block surface">
-            <summary><span><span class="kicker">2026 Official Slate</span><strong id="event-catalog-title">Browse All Events</strong></span><span class="event-browser-summary">Official links and content availability <span aria-hidden="true">＋</span></span></summary>
+            <summary><span><span class="kicker">Official Event Catalog</span><strong id="event-catalog-title">Browse All Events</strong></span><span class="event-browser-summary">Official links and content availability <span aria-hidden="true">＋</span></span></summary>
             <div class="event-browser-content">
               <div class="catalog-controls" role="group" aria-label="Filter events by division">
                 <button type="button" class="catalog-chip" data-catalog-division="all">All Events</button>
@@ -424,6 +424,6 @@
       </div>
     </div>
   </div>
-  <script src="/static/app.js?v=27"></script>
+  <script src="/static/app.js?v=28"></script>
 </body>
 </html>
