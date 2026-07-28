@@ -685,7 +685,7 @@ function renderOverviewEvent() {
   $('overview-practice-button').textContent = (
     state.practiceSets.length === 0 && event.exam_count === 0
   ) ? 'Browse Event Resources' : 'Practice This Event';
-  $('dashboard-resource-button').hidden = event.material_count === 0;
+  $('dashboard-resources-button').hidden = event.material_count === 0;
   $('dashboard-resource-count').textContent = event.material_count;
   $('course-progress-label').textContent = `${percent}%`;
   $('course-progress-bar').style.width = `${percent}%`;
