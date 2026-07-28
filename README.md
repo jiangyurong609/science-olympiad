@@ -330,6 +330,7 @@ only `--image` preserves the existing env vars, Secret Manager references, and C
 - `docs/PRODUCT_DESIGN.md` — product design
 - `docs/science_olympiad_platform_comprehensive_design.md` — comprehensive design reference
 - `docs/science-olympiad-material-catalog-2026/` — 2026 source material catalog and reports
+- `docs/MATERIAL_SHEET_IMPORT.md` — dry-run/apply workflow for the Google material sheet
 - `docs/history/` — capability history and test reports by version
 
 ---

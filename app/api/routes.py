@@ -437,6 +437,11 @@ def list_events(db: Session = Depends(get_db)):
         select(Exam.event_id, func.count(Exam.id))
         .where(Exam.published.is_(True)).group_by(Exam.event_id)
     ).all())
+    material_counts = dict(db.execute(
+        select(EventSourceMap.event_id, func.count(EventSourceMap.id))
+        .where(EventSourceMap.reviewed.is_(True))
+        .group_by(EventSourceMap.event_id)
+    ).all())
     return [{
         "id": e.id, "slug": e.slug, "name": e.name, "division": e.division,
         "season": e.season, "season_status": e.season_status,
@@ -445,6 +450,7 @@ def list_events(db: Session = Depends(get_db)):
         "official_url": e.official_url,
         "lesson_count": lesson_counts.get(e.id, 0),
         "exam_count": exam_counts.get(e.id, 0),
+        "material_count": material_counts.get(e.id, 0),
     } for e in events]
 
 

@@ -9,8 +9,8 @@
   <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='16' fill='%231f5a45'/%3E%3Ctext x='32' y='44' text-anchor='middle' font-size='38' fill='white'%3EF%3C/text%3E%3C/svg%3E">
   <link rel="preload" href="/static/fonts/Fraunces.woff2" as="font" type="font/woff2" crossorigin>
   <link rel="preload" href="/static/fonts/AtkinsonHyperlegibleNext.woff2" as="font" type="font/woff2" crossorigin>
-  <link rel="stylesheet" href="/static/styles.css?v=25">
-  <link rel="stylesheet" href="/static/theme.css?v=25">
+  <link rel="stylesheet" href="/static/styles.css?v=27">
+  <link rel="stylesheet" href="/static/theme.css?v=27">
 </head>
 <body>
   <a class="skip-link" href="#main-content">Skip to Main Content</a>
@@ -108,7 +108,7 @@
 
     <section id="app-shell" class="app-shell" hidden>
       <aside class="sidebar" aria-label="Primary navigation">
-        <div class="season-chip"><span class="status-dot" aria-hidden="true"></span><span>2026 Season</span></div>
+        <div class="season-chip"><span class="status-dot" aria-hidden="true"></span><span id="season-chip-label">Current Season</span></div>
         <nav>
           <a href="#overview" data-view-link="dashboard" data-student-nav class="active"><span aria-hidden="true">⌂</span>Overview</a>
           <a href="#learn" data-view-link="learn" data-student-nav><span aria-hidden="true">◇</span>Learn</a>
@@ -235,7 +235,20 @@
             <a id="practice-official-link" class="event-source-link" href="#" target="_blank" rel="noopener noreferrer" hidden>Official Event <span aria-hidden="true">↗</span></a>
           </header>
 
-          <div class="practice-heading"><div><p class="kicker">Practice Workspace</p><h1 id="practice-title" tabindex="-1">Practice Your Event</h1><p id="practice-lede" class="lede">Build accuracy, then add competition pressure when you’re ready.</p></div><dl class="practice-metrics" aria-label="Available practice"><div><dt>Skill Labs</dt><dd id="practice-set-count">0</dd></div><div><dt>Mock Exams</dt><dd id="practice-exam-count">0</dd></div></dl></div>
+          <div class="practice-heading"><div><p class="kicker">Event Workspace</p><h1 id="practice-title" tabindex="-1">Practice Your Event</h1><p id="practice-lede" class="lede">Use official resources, build accuracy, then add competition pressure.</p></div><dl class="practice-metrics" aria-label="Available event content"><div><dt>Resources</dt><dd id="practice-material-count">0</dd></div><div><dt>Skill Labs</dt><dd id="practice-set-count">0</dd></div><div><dt>Mock Exams</dt><dd id="practice-exam-count">0</dd></div></dl></div>
+
+          <section class="section-block resource-library" id="materials-block" aria-labelledby="materials-title" hidden>
+            <div class="section-heading"><div><p class="kicker">Official Resource Library</p><h2 id="materials-title">Learn From the Source</h2></div><p>Videos, workshop slides, handouts, tests, and official references for this event.</p></div>
+            <div id="materials-controls" class="material-filters" role="group" aria-label="Filter event materials">
+              <button type="button" data-material-filter="all" aria-pressed="true">All</button>
+              <button type="button" data-material-filter="video" aria-pressed="false">Videos</button>
+              <button type="button" data-material-filter="guide" aria-pressed="false">Guides &amp; Handouts</button>
+              <button type="button" data-material-filter="practice" aria-pressed="false">Tests &amp; Practice</button>
+              <span id="material-filter-count" aria-live="polite"></span>
+            </div>
+            <div id="materials-list" class="materials-groups" aria-live="polite"></div>
+            <div id="materials-filter-empty" class="empty-state surface" hidden><span aria-hidden="true">◇</span><h3>No Resources in This Category</h3><p>Choose another filter to see the rest of this event’s library.</p></div>
+          </section>
 
           <section id="practice-labs-block" class="section-block student-section" aria-labelledby="practice-labs-title"><div class="section-heading"><div><p class="kicker">Targeted Training</p><h2 id="practice-labs-title">Skill Labs</h2></div><p>Study with feedback or rehearse under station timing.</p></div><div id="practice-set-list" class="practice-set-grid"></div><div id="practice-sets-empty" class="empty-state surface" hidden><span aria-hidden="true">◇</span><h3>Labs Are in Review</h3><p>Use a mock exam while targeted practice is being prepared.</p></div></section>
 
@@ -245,9 +258,6 @@
           </section>
           <section class="section-block" id="results-history-block" aria-labelledby="results-history-title" hidden><div class="section-heading"><div><p class="kicker">Your progress</p><h2 id="results-history-title">Recent Results</h2></div></div>
           <div id="results-history-list" class="results-history" aria-live="polite"></div>
-          </section>
-          <section class="section-block" id="materials-block" aria-labelledby="materials-title" hidden><div class="section-heading"><div><p class="kicker">Reference library</p><h2 id="materials-title">Event Materials</h2></div><p>Official rules, handouts, and references collected for this event.</p></div>
-          <div id="materials-list" class="materials-grid" aria-live="polite"></div>
           </section>
           </div>
 
@@ -414,6 +424,6 @@
       </div>
     </div>
   </div>
-  <script src="/static/app.js?v=25"></script>
+  <script src="/static/app.js?v=27"></script>
 </body>
 </html>

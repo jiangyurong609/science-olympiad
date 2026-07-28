@@ -14,7 +14,8 @@ const state = {
   lessonBlockIndex: 0,
   practiceSets: [],
   practiceSession: null,
-  activeEventSlug: localStorage.getItem('activeEventSlug') || 'rocks-and-minerals',
+  materialFilter: 'all',
+  activeEventSlug: localStorage.getItem('activeEventSlug') || '',
   activeTaxonomy: null,
   accommodation: null,
   sourceCoverage: [],
@@ -66,6 +67,8 @@ const categoryProfiles = {
   'Physical Science & Chemistry': { icon: '◉', accent: 'amber', skill: 'measurement and analytical reasoning' },
   'Inquiry & Nature of Science': { icon: '◇', accent: 'violet', skill: 'experimental and problem-solving skills' },
   'Technology & Engineering Design': { icon: '⌘', accent: 'slate', skill: 'design and engineering judgment' },
+  'Featured Trial Events': { icon: '△', accent: 'violet', skill: 'emerging-event experimentation' },
+  'Season Resources': { icon: '☰', accent: 'forest', skill: 'season planning and orientation' },
 };
 
 function eventExperience(event = activeEvent()) {
@@ -91,7 +94,10 @@ function activeEvent() {
 // A subject's experience copy is keyed by the base slug (e.g. 'entomology'),
 // while the active event may be a division-specific catalog slug ('entomology-c').
 function subjectKeyOf(slug) {
-  return (slug || '').replace(/-(b|c)$/, '');
+  return (slug || '')
+    .replace(/-\d{4}$/, '')
+    .replace(/-trial$/, '')
+    .replace(/-(b|c)$/, '');
 }
 
 function escapeHtml(value = '') {
@@ -638,9 +644,14 @@ function initials(name = '') {
 function renderSubjects() {
   const division = state.user?.division;
   const subjects = [...state.events]
-    .filter(event => (event.lesson_count > 0 || event.exam_count > 0) && (event.division === division || event.division === 'B/C'))
+    .filter(event => (
+      event.lesson_count > 0 || event.exam_count > 0 || event.material_count > 0
+    ) && (event.division === division || event.division === 'B/C'))
     .sort((a, b) => Number(b.slug === state.activeEventSlug) - Number(a.slug === state.activeEventSlug)
-      || b.exam_count - a.exam_count || a.name.localeCompare(b.name))
+      || b.season - a.season
+      || (b.material_count + b.lesson_count + b.exam_count)
+        - (a.material_count + a.lesson_count + a.exam_count)
+      || a.name.localeCompare(b.name))
     .slice(0, 6);
   $('subject-list').innerHTML = subjects.map(event => {
     const experience = eventExperience(event);
@@ -648,8 +659,8 @@ function renderSubjects() {
     return `<article class="subject-card event-accent-${experience.accent} surface${active ? ' is-active' : ''}" data-available="true">
       <div class="subject-card-heading"><span class="subject-icon" aria-hidden="true">${experience.icon}</span>${active ? '<span class="subject-current">Current</span>' : ''}</div>
       <h3>${escapeHtml(event.name)}</h3><p>${escapeHtml(event.topic_focus || event.description || experience.skill)}</p>
-      <div class="subject-card-meta"><span>${event.lesson_count} module${event.lesson_count === 1 ? '' : 's'}</span><span>${event.exam_count} exam${event.exam_count === 1 ? '' : 's'}</span></div>
-      <footer>${event.lesson_count > 0 ? `<button class="subject-action-primary" type="button" data-subject="${escapeHtml(event.slug)}" data-subject-destination="learn">Learn</button>` : ''}${event.exam_count > 0 ? `<button type="button" data-subject="${escapeHtml(event.slug)}" data-subject-destination="practice">Practice</button>` : ''}</footer>
+      <div class="subject-card-meta"><span>${event.season}</span><span>${event.material_count} resource${event.material_count === 1 ? '' : 's'}</span><span>${event.lesson_count} module${event.lesson_count === 1 ? '' : 's'}</span><span>${event.exam_count} exam${event.exam_count === 1 ? '' : 's'}</span></div>
+      <footer>${event.lesson_count > 0 ? `<button class="subject-action-primary" type="button" data-subject="${escapeHtml(event.slug)}" data-subject-destination="learn">Learn</button>` : ''}${event.material_count > 0 || event.exam_count > 0 ? `<button type="button" data-subject="${escapeHtml(event.slug)}" data-subject-destination="practice">${event.exam_count > 0 ? 'Practice' : 'Resources'}</button>` : ''}</footer>
     </article>`;
   }).join('');
 }
@@ -665,9 +676,14 @@ function renderOverviewEvent() {
   $('overview-event-category').textContent = `${experience.category} · Division ${event.division}`;
   $('current-event-title').textContent = event.name;
   $('overview-event-focus').textContent = event.topic_focus || event.description || `Build ${experience.skill}.`;
-  $('overview-event-availability').textContent = `${state.lessons.length} lesson${state.lessons.length === 1 ? '' : 's'} · ${state.practiceSets.length} skill lab${state.practiceSets.length === 1 ? '' : 's'} · ${event.exam_count} exam${event.exam_count === 1 ? '' : 's'}`;
+  $('overview-event-availability').textContent = `${event.material_count} resource${event.material_count === 1 ? '' : 's'} · ${state.lessons.length} lesson${state.lessons.length === 1 ? '' : 's'} · ${state.practiceSets.length} skill lab${state.practiceSets.length === 1 ? '' : 's'} · ${event.exam_count} exam${event.exam_count === 1 ? '' : 's'}`;
   $('overview-learn-button').disabled = state.lessons.length === 0;
-  $('overview-practice-button').disabled = state.practiceSets.length === 0 && event.exam_count === 0;
+  $('overview-practice-button').disabled = (
+    state.practiceSets.length === 0 && event.exam_count === 0 && event.material_count === 0
+  );
+  $('overview-practice-button').textContent = (
+    state.practiceSets.length === 0 && event.exam_count === 0
+  ) ? 'Browse Event Resources' : 'Practice This Event';
   $('course-progress-label').textContent = `${percent}%`;
   $('course-progress-bar').style.width = `${percent}%`;
   $('course-progress-bar').parentElement.setAttribute('aria-valuenow', String(percent));
@@ -702,11 +718,11 @@ function renderEventCatalog() {
       <div class="catalog-grid">${events.map(event => {
         const actions = [];
         if (event.lesson_count > 0) actions.push(`<button type="button" data-open-course="${event.id}" data-course-slug="${escapeHtml(event.slug)}" class="catalog-course-link">Start Course</button>`);
-        if (event.exam_count > 0) actions.push(`<button type="button" data-open-exam-event="${escapeHtml(event.slug)}" data-event-name="${escapeHtml(event.name)}" class="catalog-exam-link">Practice & Exams</button>`);
+        if (event.exam_count > 0 || event.material_count > 0) actions.push(`<button type="button" data-open-exam-event="${escapeHtml(event.slug)}" data-event-name="${escapeHtml(event.name)}" class="catalog-exam-link">${event.exam_count > 0 ? 'Practice & Resources' : 'View Resources'}</button>`);
         return `<article class="catalog-event surface">
           <header><h4>${escapeHtml(event.name)}</h4><span class="division-badge">Div ${escapeHtml(event.division)}</span></header>
           ${event.topic_focus ? `<p>${escapeHtml(event.topic_focus)}</p>` : ''}
-          ${(event.lesson_count > 0 || event.exam_count > 0) ? `<div class="catalog-content-badge"><span aria-hidden="true">✦</span> Grounded course &amp; exam ready</div>` : ''}
+          ${(event.lesson_count > 0 || event.exam_count > 0 || event.material_count > 0) ? `<div class="catalog-content-badge"><span aria-hidden="true">✦</span> ${event.material_count} resource${event.material_count === 1 ? '' : 's'} · ${event.lesson_count} lesson${event.lesson_count === 1 ? '' : 's'} · ${event.exam_count} exam${event.exam_count === 1 ? '' : 's'}</div>` : ''}
           <footer>
             ${event.official_url ? `<a href="${safeUrl(event.official_url)}" target="_blank" rel="noopener noreferrer">Official Page <span aria-hidden="true">↗</span></a>` : '<span class="catalog-pending">Link pending review</span>'}
             <div class="catalog-actions">${actions.join('') || '<span class="catalog-pending">Content in review</span>'}</div>
@@ -734,21 +750,59 @@ async function openEventPractice(slug, eventName) {
   await selectSubject(slug, 'practice');
 }
 
+function materialGroup(material) {
+  const purpose = material.purpose || 'reference_material';
+  if (purpose === 'official_video') return 'video';
+  if ([
+    'sample_test', 'answer_key_and_rubric', 'tournament_results',
+  ].includes(purpose)) return 'practice';
+  return 'guide';
+}
+
+const materialGroupLabels = {
+  video: { title: 'Watch & Learn', description: 'Official introductions and demonstrations', icon: '▶' },
+  guide: { title: 'Guides & Handouts', description: 'Slides, worksheets, schedules, and reference material', icon: '▤' },
+  practice: { title: 'Tests & Practice', description: 'Sample tests, stations, answer resources, and past results', icon: '◎' },
+};
+
 function renderMaterials() {
   const block = $('materials-block');
   if (!block) return;
   const items = (state.materials && state.materials.materials) || [];
-  if (!items.length) { block.hidden = true; $('materials-list').innerHTML = ''; return; }
+  $('practice-material-count').textContent = items.length;
+  if (!items.length) {
+    block.hidden = true;
+    $('materials-list').innerHTML = '';
+    return;
+  }
   block.hidden = false;
-  $('materials-list').innerHTML = items.map(material => {
-    const kind = material.media_type && material.media_type.includes('pdf') ? 'PDF' : (material.media_type ? 'HTML' : '');
+  document.querySelectorAll('[data-material-filter]').forEach(button => {
+    button.setAttribute('aria-pressed', String(button.dataset.materialFilter === state.materialFilter));
+  });
+  const visible = state.materialFilter === 'all'
+    ? items : items.filter(material => materialGroup(material) === state.materialFilter);
+  $('material-filter-count').textContent = `${visible.length} of ${items.length}`;
+  $('materials-filter-empty').hidden = visible.length > 0;
+  const groups = ['video', 'guide', 'practice']
+    .map(group => [group, visible.filter(material => materialGroup(material) === group)])
+    .filter(([, materials]) => materials.length);
+  $('materials-list').innerHTML = groups.map(([group, materials]) => {
+    const label = materialGroupLabels[group];
+    return `<section class="material-group" aria-labelledby="material-group-${group}">
+      <header><span class="material-group-icon" aria-hidden="true">${label.icon}</span><div><h3 id="material-group-${group}">${label.title}</h3><p>${label.description}</p></div><strong>${materials.length}</strong></header>
+      <div class="materials-grid">${materials.map(material => {
+    const url = material.url || '';
+    const isPdf = material.media_type?.includes('pdf') || new URL(safeUrl(url), location.origin).pathname.toLowerCase().endsWith('.pdf');
+    const kind = group === 'video' ? 'Video' : isPdf ? 'PDF' : material.has_text ? 'Article' : 'Link';
     const size = material.has_text ? `${Math.round((material.text_chars || 0) / 1000)}k chars` : 'link only';
     return `<article class="material-card surface">
-      <span class="material-type">${escapeHtml((material.purpose || 'reference').replaceAll('_', ' '))}</span>
+      <div class="material-card-top"><span class="material-type">${escapeHtml((material.purpose || 'reference').replaceAll('_', ' '))}</span><span class="material-format">${kind}</span></div>
       <h3>${escapeHtml(material.title || 'Material')}</h3>
-      <p class="material-meta">${size}${kind ? ` · ${kind}` : ''}</p>
-      <div class="material-actions">${material.has_text ? `<button type="button" class="button button-dark button-compact" data-open-material="${material.source_id}">Read</button>` : ''}${material.url ? `<a class="button button-secondary button-compact" href="${safeUrl(material.url)}" target="_blank" rel="noopener noreferrer">Source ↗</a>` : ''}</div>
+      <p class="material-meta">${escapeHtml(material.publisher || 'Official resource')} · ${size}</p>
+      <div class="material-actions">${material.has_text ? `<button type="button" class="button button-dark button-compact" data-open-material="${material.source_id}">Read in Fieldstone</button>` : ''}${material.url ? `<a class="button ${material.has_text ? 'button-secondary' : 'button-dark'} button-compact" href="${safeUrl(material.url)}" target="_blank" rel="noopener noreferrer">${group === 'video' ? 'Watch Video' : isPdf ? 'Open PDF' : 'Open Resource'} <span aria-hidden="true">↗</span></a>` : ''}</div>
     </article>`;
+      }).join('')}</div>
+    </section>`;
   }).join('');
 }
 
@@ -771,6 +825,12 @@ async function openMaterial(sourceId) {
 $('materials-list')?.addEventListener('click', event => {
   const button = event.target.closest('[data-open-material]');
   if (button) openMaterial(Number(button.dataset.openMaterial));
+});
+$('materials-controls')?.addEventListener('click', event => {
+  const button = event.target.closest('[data-material-filter]');
+  if (!button) return;
+  state.materialFilter = button.dataset.materialFilter;
+  renderMaterials();
 });
 $('close-material')?.addEventListener('click', () => {
   $('material-reader').hidden = true;
@@ -796,12 +856,16 @@ function renderConcepts() {
 function studentEvents() {
   const division = state.user?.division;
   return [...state.events]
-    .filter(event => event.lesson_count > 0 || event.exam_count > 0)
+    .filter(event => event.lesson_count > 0 || event.exam_count > 0 || event.material_count > 0)
     .filter(event => !division || event.division === division || event.division === 'B/C' || event.slug === state.activeEventSlug)
     .sort((a, b) => {
       const aRank = a.division === division ? 0 : a.division === 'B/C' ? 1 : 2;
       const bRank = b.division === division ? 0 : b.division === 'B/C' ? 1 : 2;
-      return aRank - bRank || a.name.localeCompare(b.name) || a.division.localeCompare(b.division);
+      return Number(b.slug === state.activeEventSlug) - Number(a.slug === state.activeEventSlug)
+        || b.season - a.season
+        || aRank - bRank
+        || a.name.localeCompare(b.name)
+        || a.division.localeCompare(b.division);
     });
 }
 
@@ -817,7 +881,14 @@ function resolveEvent(slug) {
 
 function renderEventSelectors() {
   const event = activeEvent();
-  const options = studentEvents().map(item => `<option value="${escapeHtml(item.slug)}"${item.id === event?.id ? ' selected' : ''}>${escapeHtml(item.name)} · Div ${escapeHtml(item.division)}</option>`).join('');
+  const grouped = new Map();
+  studentEvents().forEach(item => {
+    if (!grouped.has(item.season)) grouped.set(item.season, []);
+    grouped.get(item.season).push(item);
+  });
+  const options = [...grouped.entries()].sort(([a], [b]) => b - a).map(([season, events]) => (
+    `<optgroup label="${season} Season">${events.map(item => `<option value="${escapeHtml(item.slug)}"${item.id === event?.id ? ' selected' : ''}>${escapeHtml(item.name)} · Div ${escapeHtml(item.division)}${item.season_status === 'trial' ? ' · Trial' : ''}</option>`).join('')}</optgroup>`
+  )).join('');
   for (const id of ['overview-event-select', 'learn-event-select', 'practice-event-select']) $(id).innerHTML = options;
 }
 
@@ -843,10 +914,14 @@ function renderSubjectShell() {
     || state.lessons.find(lesson => lesson.progress.status !== 'completed')
     || state.lessons[0];
   const eventExams = state.exams.filter(exam => exam.event_id ? exam.event_id === event.id : exam.event === event.name);
+  const resourceOnly = event.material_count > 0
+    && state.practiceSets.length === 0
+    && eventExams.length === 0;
 
   renderEventSelectors();
   renderEventContext('learn', event, experience);
   renderEventContext('practice', event, experience);
+  $('season-chip-label').textContent = `${event.season} Season`;
   $('learn-title').textContent = `Learn ${event.name}`;
   $('learn-lede').textContent = experience.focus;
   $('learning-path-title').textContent = `${event.name} Course`;
@@ -863,8 +938,13 @@ function renderSubjectShell() {
   $('start-featured-lesson').textContent = nextLesson?.progress.status === 'in_progress' ? 'Resume Lesson →'
     : nextLesson?.progress.status === 'completed' ? 'Review Lesson →' : 'Start Lesson →';
 
-  $('practice-title').textContent = `${event.name} Practice`;
-  $('practice-lede').textContent = `Train ${experience.skill} with feedback, station timing, and full mock exams.`;
+  $('practice-title').textContent = resourceOnly ? `${event.name} Library` : `${event.name} Practice`;
+  $('practice-lede').textContent = resourceOnly
+    ? `Explore ${event.material_count} official resource${event.material_count === 1 ? '' : 's'} organized for quick access throughout the season.`
+    : event.material_count > 0
+    ? `Start with ${event.material_count} official resource${event.material_count === 1 ? '' : 's'}, then train ${experience.skill} with feedback and competition timing.`
+    : `Train ${experience.skill} with feedback, station timing, and full mock exams.`;
+  $('practice-material-count').textContent = event.material_count || 0;
   $('practice-set-count').textContent = state.practiceSets.length;
   $('practice-exam-count').textContent = eventExams.length;
   const taxonomyReady = subjectKeyOf(state.activeEventSlug) === 'entomology'
@@ -899,6 +979,7 @@ async function selectSubject(slug, destination = 'learn') {
     state.practiceSets = practiceSets;
     state.activeTaxonomy = taxonomy;
     state.materials = materials;
+    state.materialFilter = 'all';
     state.dashboard = dashboard;
     updateDashboard();
     renderSubjectShell();
