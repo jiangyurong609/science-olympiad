@@ -2026,6 +2026,7 @@ function renderLessonBlock() {
     checkpoint: renderCheckpointBlock,
     steps: renderStepsBlock,
     image_gallery: renderImageGalleryBlock,
+    video: renderVideoBlock,
     summary: renderSummaryBlock,
   }[block.type];
   const node = $('lesson-block');
@@ -2058,6 +2059,13 @@ function renderStepsBlock(block) {
 
 function renderImageGalleryBlock(block) {
   return `<p class="kicker">${escapeHtml(block.kicker || 'Visual field guide')}</p><h1 id="lesson-reader-title">${escapeHtml(block.heading)}</h1>${block.body ? `<p class="block-lede">${escapeHtml(block.body)}</p>` : ''}<div class="image-gallery">${(block.images || []).map(img => `<figure><img src="${mediaUrl(img.url)}" alt="${escapeHtml(img.alt || img.label || 'Specimen')}" width="760" height="570" loading="lazy" decoding="async"><figcaption><strong>${escapeHtml(img.label || '')}</strong>${img.note ? `<span>${escapeHtml(img.note)}</span>` : ''}${img.attribution ? `<small>${escapeHtml(img.attribution)}${img.license ? ` · ${escapeHtml(img.license)}` : ''}</small>` : ''}</figcaption></figure>`).join('')}</div>`;
+}
+
+function renderVideoBlock(block) {
+  const id = /^[A-Za-z0-9_-]{11}$/.test(block.video_id || '') ? block.video_id : '';
+  if (!id) return '<p class="block-lede">This video is unavailable.</p>';
+  const watchUrl = `https://www.youtube.com/watch?v=${encodeURIComponent(id)}`;
+  return `<p class="kicker">Watch, then apply</p><h1 id="lesson-reader-title">${escapeHtml(block.title || 'Lesson video')}</h1><div class="lesson-video"><div class="lesson-video-frame"><iframe src="https://www.youtube-nocookie.com/embed/${encodeURIComponent(id)}?rel=0" title="${escapeHtml(block.title || 'Lesson video')}" loading="lazy" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen></iframe></div><div class="lesson-video-meta"><span>${escapeHtml(block.channel || 'YouTube')}</span>${block.duration ? `<span>${Math.round(block.duration / 60)} min</span>` : ''}<a href="${watchUrl}" target="_blank" rel="noopener noreferrer">Open on YouTube ↗</a></div><p class="lesson-video-note">${escapeHtml(block.transcript_excerpt || 'This video is paired with transcript-grounded notes and checkpoints in this lesson.')}</p></div>`;
 }
 
 function renderSummaryBlock(block) {
