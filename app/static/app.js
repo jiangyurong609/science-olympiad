@@ -804,11 +804,12 @@ function renderMaterials() {
     const isPdf = material.media_type?.includes('pdf') || new URL(safeUrl(url), location.origin).pathname.toLowerCase().endsWith('.pdf');
     const kind = group === 'video' ? 'Video' : isPdf ? 'PDF' : material.has_text ? 'Article' : 'Link';
     const size = material.has_text ? `${Math.round((material.text_chars || 0) / 1000)}k chars` : 'link only';
+    const guided = material.guided_lesson;
     return `<article class="material-card surface">
       <div class="material-card-top"><span class="material-type">${escapeHtml((material.purpose || 'reference').replaceAll('_', ' '))}</span><span class="material-format">${kind}</span></div>
       <h3>${escapeHtml(material.title || 'Material')}</h3>
       <p class="material-meta">${escapeHtml(material.publisher || 'Official resource')} · ${size}</p>
-      <div class="material-actions">${material.has_text ? `<button type="button" class="button button-dark button-compact" data-open-material="${material.source_id}">Read in Fieldstone</button>` : ''}${material.url ? `<a class="button ${material.has_text ? 'button-secondary' : 'button-dark'} button-compact" href="${safeUrl(material.url)}" target="_blank" rel="noopener noreferrer">${group === 'video' ? 'Watch Video' : isPdf ? 'Open PDF' : 'Open Resource'} <span aria-hidden="true">↗</span></a>` : ''}</div>
+      <div class="material-actions">${guided ? `<button type="button" class="button button-dark button-compact" data-start-guided-lesson="${guided.id}">Start Guided Lesson</button>` : material.has_text ? `<button type="button" class="button button-dark button-compact" data-open-material="${material.source_id}">Read Source Text</button>` : ''}${material.url ? `<a class="button ${guided || material.has_text ? 'button-secondary' : 'button-dark'} button-compact" href="${safeUrl(material.url)}" target="_blank" rel="noopener noreferrer">${group === 'video' ? 'Watch Video' : isPdf ? 'Open PDF' : 'Open Resource'} <span aria-hidden="true">↗</span></a>` : ''}</div>
     </article>`;
       }).join('')}</div>
     </section>`;
@@ -832,6 +833,8 @@ async function openMaterial(sourceId) {
 }
 
 $('materials-list')?.addEventListener('click', event => {
+  const guided = event.target.closest('[data-start-guided-lesson]');
+  if (guided) return openLesson(Number(guided.dataset.startGuidedLesson));
   const button = event.target.closest('[data-open-material]');
   if (button) openMaterial(Number(button.dataset.openMaterial));
 });

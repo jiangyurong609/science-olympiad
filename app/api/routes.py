@@ -631,6 +631,14 @@ def list_event_materials(
     mappings = db.scalars(select(EventSourceMap).where(
         EventSourceMap.event_id == event_id,
     ).order_by(EventSourceMap.purpose, EventSourceMap.id)).all()
+    guided_lessons = {}
+    for lesson in db.scalars(select(Lesson).where(Lesson.event_id == event_id, Lesson.status == "published")).all():
+        version = db.scalar(select(LessonVersion).where(
+            LessonVersion.lesson_id == lesson.id, LessonVersion.version == lesson.current_version,
+        ))
+        for block in (version.content if version else []):
+            if block.get("type") == "video" and block.get("transcript_source"):
+                guided_lessons[block["transcript_source"]] = {"id": lesson.id, "title": lesson.title}
     materials = []
     for mapping in mappings:
         if mapping.purpose in WITHHELD_MATERIAL_PURPOSES:
@@ -658,6 +666,7 @@ def list_event_materials(
             "excerpt": text[:1200],
             "has_text": bool(text.strip()),
             "fetched_at": source.last_successful_crawl_at,
+            "guided_lesson": guided_lessons.get(source.id),
         })
     return {
         "event_id": event_id,
