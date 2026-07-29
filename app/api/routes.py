@@ -54,7 +54,7 @@ from app.services.daily_plan import build_daily_plan
 from app.services.tutor import TutorAccessError, create_tutor_session, respond_to_tutor
 from app.services.course_quality import audit_course
 from app.services.artifacts import ArtifactError, read_raw_artifact, store_raw_artifact
-from app.services.jobs import enqueue_job
+from app.services.jobs import enqueue_job, run_next_job
 from app.services.video_transcripts import youtube_video_id
 
 router = APIRouter(prefix="/api")
@@ -1432,6 +1432,18 @@ def list_content_imports(
             "snapshot_id": snapshot.id if snapshot else None, "metadata": metadata,
         })
     return rows
+
+
+@router.post("/content/intake/process-next")
+def process_next_content_intake_job(
+    db: Session = Depends(get_db),
+    actor: User = Depends(require_content_staff),
+):
+    """Process one queued intake job when no separate worker is running."""
+    job = run_next_job(db)
+    if not job:
+        return {"ran": False}
+    return {"ran": True, "id": job.id, "status": job.status, "result": job.result, "error": job.error}
 
 
 @router.post("/content/intake/imports/{source_id}/review")

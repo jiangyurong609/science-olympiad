@@ -1744,6 +1744,13 @@ async function submitContentIntake(event) {
     if (!response.ok) throw new Error(data.detail || 'Upload failed');
     form.reset();
     $('intake-live-status').textContent = data.deduplicated ? 'Already received' : 'Received · private';
+    if (data.job_id && url) {
+      $('intake-live-status').textContent = 'Extracting captions…';
+      const processed = await api('/content/intake/process-next', { method: 'POST' });
+      $('intake-live-status').textContent = processed.ran
+        ? (processed.status === 'completed' ? 'Transcript ready · private' : `Extraction ${processed.status}`)
+        : 'Queued · awaiting worker';
+    }
     await loadContentIntake();
     toast('Material received. It remains private until staff review.');
   } catch (error) { $('intake-live-status').textContent = error.message; }
