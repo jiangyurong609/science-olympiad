@@ -19,6 +19,10 @@ IMAGE_REPO="us-central1-docker.pkg.dev/${PROJECT}/soplat/web"
 SUNRA_SECRET="SUNRA_KEY"                       # Secret Manager secret -> OPENAI_API_KEY
 LLM_BASE_URL="https://api-llm.sunra.ai/v1"
 LLM_MODEL="openai/gpt-5.5"
+# Optional streaming antivirus adapter. Set ANTIVIRUS_REQUIRED=true only after
+# provisioning the command in the image/runtime (for example clamdscan).
+ANTIVIRUS_COMMAND="${ANTIVIRUS_COMMAND:-}"
+ANTIVIRUS_REQUIRED="${ANTIVIRUS_REQUIRED:-false}"
 
 TAG=""
 SKIP_BUILD=false
@@ -47,7 +51,7 @@ echo "==> Deploying to Cloud Run…"
 gcloud run deploy "$SERVICE" \
   --project "$PROJECT" --region "$REGION" \
   --image "$IMAGE" \
-  --update-env-vars "OPENAI_COMPATIBLE_BASE_URL=${LLM_BASE_URL},OPENAI_MODEL=${LLM_MODEL},REDIS_URL=${REDIS_URL:-redis://10.226.253.171:6379},ARTIFACT_STORE_BACKEND=${ARTIFACT_STORE_BACKEND:-local},ARTIFACT_STORE_BUCKET=${ARTIFACT_STORE_BUCKET:-}" \
+  --update-env-vars "OPENAI_COMPATIBLE_BASE_URL=${LLM_BASE_URL},OPENAI_MODEL=${LLM_MODEL},REDIS_URL=${REDIS_URL:-redis://10.226.253.171:6379},ARTIFACT_STORE_BACKEND=${ARTIFACT_STORE_BACKEND:-local},ARTIFACT_STORE_BUCKET=${ARTIFACT_STORE_BUCKET:-},ANTIVIRUS_COMMAND=${ANTIVIRUS_COMMAND},ANTIVIRUS_REQUIRED=${ANTIVIRUS_REQUIRED}" \
   --update-secrets "OPENAI_API_KEY=${SUNRA_SECRET}:latest" \
   --vpc-connector "${VPC_CONNECTOR:-soplat-connector}" \
   --vpc-egress private-ranges-only \
