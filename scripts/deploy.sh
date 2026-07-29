@@ -27,6 +27,10 @@ ANTIVIRUS_REQUIRED="${ANTIVIRUS_REQUIRED:-true}"
 # rather than the ephemeral Cloud Run filesystem (override for local/staging).
 ARTIFACT_STORE_BACKEND="${ARTIFACT_STORE_BACKEND:-gcs}"
 ARTIFACT_STORE_BUCKET="${ARTIFACT_STORE_BUCKET:-soplat-artifacts-video-agent-493605}"
+# ClamAV loads a large signature database per scan process. Keep the scanner
+# fail-closed without allowing concurrent uploads to exhaust the instance.
+CLOUD_RUN_MEMORY="${CLOUD_RUN_MEMORY:-1Gi}"
+CLOUD_RUN_CONCURRENCY="${CLOUD_RUN_CONCURRENCY:-1}"
 
 TAG=""
 SKIP_BUILD=false
@@ -56,6 +60,8 @@ gcloud run deploy "$SERVICE" \
   --project "$PROJECT" --region "$REGION" \
   --image "$IMAGE" \
   --update-env-vars "OPENAI_COMPATIBLE_BASE_URL=${LLM_BASE_URL},OPENAI_MODEL=${LLM_MODEL},REDIS_URL=${REDIS_URL:-redis://10.226.253.171:6379},ARTIFACT_STORE_BACKEND=${ARTIFACT_STORE_BACKEND},ARTIFACT_STORE_BUCKET=${ARTIFACT_STORE_BUCKET},ANTIVIRUS_COMMAND=${ANTIVIRUS_COMMAND},ANTIVIRUS_REQUIRED=${ANTIVIRUS_REQUIRED}" \
+  --memory "${CLOUD_RUN_MEMORY}" \
+  --concurrency "${CLOUD_RUN_CONCURRENCY}" \
   --update-secrets "OPENAI_API_KEY=${SUNRA_SECRET}:latest" \
   --vpc-connector "${VPC_CONNECTOR:-soplat-connector}" \
   --vpc-egress private-ranges-only \
