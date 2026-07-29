@@ -353,6 +353,7 @@ The first vertical slice is implemented and verified in the application:
 
 - Content Studio intake is available to content staff at the existing content-operations workspace.
 - Staff can upload a PDF or UTF-8 text artifact with event mapping and a rights declaration.
+- Staff can use a persistent chunk session for large files; chunks are checksum-addressed, resumable out of order, and assembled only after every expected chunk is present.
 - Staff can also import a public HTTPS page or YouTube URL; the import is queued as a durable job, stores captions only for YouTube, and remains quarantined until review.
 - The upload is checksum-deduplicated, stored as an immutable artifact, and processed by a durable ingestion job.
 - PDF pages and text sections are persisted as `SourcePassage` records with page/section locators.
@@ -365,4 +366,4 @@ The first vertical slice is implemented and verified in the application:
 - An end-to-end integration test exercises upload → background extraction → passage persistence → quarantine visibility → admin acceptance → student visibility.
 - Real external-video validation has been run against Science Olympiad videos (`i22uB-vXXS8` and `7DLU4tfEIVY`): caption retrieval produced 620 and 766 timestamped segments, and one full transcript was persisted into 14 timestamped source passages while remaining quarantined.
 
-The following design items remain explicit follow-on work rather than hidden behavior: real antivirus scanning, resumable chunked uploads, parent-to-student/team relationship approval, a dedicated split-pane source editor, and production worker heartbeat updates during long-running model calls. DOCX/PPTX XML extraction, URL/YouTube import, Google Vision OCR, extraction diagnostics, stale-job recovery, and block-level passage IDs are now supported.
+The following design items remain explicit follow-on work rather than hidden behavior: real antivirus scanning, parent-to-student/team relationship approval, a dedicated split-pane source editor, and production worker heartbeat updates during long-running model calls. DOCX/PPTX XML extraction, URL/YouTube import, Google Vision OCR, resumable chunk sessions, extraction diagnostics, stale-job recovery, and block-level passage IDs are now supported.

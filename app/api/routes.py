@@ -21,7 +21,7 @@ from app.models.entities import (
     Response, ResponseRevision, ReviewDecision, RightsStatus,
     EventSourceMap, EventTaxonScope, ExtractionAsset, IngestionRun, RawArtifact, ScientificClaim, Skill, Source,
     SourcePassage, SourceSnapshot, SpecimenAsset, StudentContentFeedback, Taxon,
-    Team, TeamMembership, TransferAttempt, TutorMessage, TutorSession, UploadSubmission, User, UserNotification,
+    Team, TeamMembership, TransferAttempt, TutorMessage, TutorSession, UploadChunk, UploadSubmission, User, UserNotification,
 )
 from app.schemas.api import (
     AccommodationUpdateRequest, AdminUserUpdate, AnswerKeyUpdate, ClaimCreateRequest, ClaimExtractionRequest,
@@ -52,7 +52,7 @@ from app.services.notifications import create_notification
 from app.services.daily_plan import build_daily_plan
 from app.services.tutor import TutorAccessError, create_tutor_session, respond_to_tutor
 from app.services.course_quality import audit_course
-from app.services.artifacts import ArtifactError, store_raw_artifact
+from app.services.artifacts import ArtifactError, read_raw_artifact, store_raw_artifact
 from app.services.jobs import enqueue_job
 from app.services.video_transcripts import youtube_video_id
 
@@ -1265,6 +1265,105 @@ async def submit_content_upload(
     _audit(db, user, "content.upload.received", "upload_submission", upload.id, ingestion_run_id=run.id)
     db.commit()
     return {"upload_id": upload.id, "ingestion_run_id": run.id, "status": upload.status, "deduplicated": False}
+
+
+@router.post("/content/intake/uploads/resumable")
+def start_resumable_content_upload(
+    filename: str = Form(...),
+    media_type: str = Form(default="application/octet-stream"),
+    total_bytes: int = Form(...),
+    event_id: int | None = Form(default=None),
+    rights_attestation: str = Form(default=""),
+    db: Session = Depends(get_db),
+    user: User = Depends(require_content_staff),
+):
+    """Create a durable chunk session; chunks may be retried independently."""
+    if total_bytes <= 0 or total_bytes > 25_000_000:
+        raise HTTPException(status_code=422, detail="total_bytes must be between 1 byte and 25 MB")
+    if len(rights_attestation.strip()) < 10:
+        raise HTTPException(status_code=422, detail="Rights/ownership attestation is required")
+    if event_id is not None and not db.get(Event, event_id):
+        raise HTTPException(status_code=404, detail="Event not found")
+    upload = UploadSubmission(
+        uploader_user_id=user.id, event_id=event_id, filename=filename.strip() or "resumable-material",
+        declared_media_type=media_type, artifact_key="", sha256=f"pending-{secrets.token_hex(24)}",
+        byte_count=total_bytes, rights_attestation=rights_attestation.strip(), status="uploading",
+    )
+    db.add(upload)
+    db.commit()
+    db.refresh(upload)
+    chunk_size = 1_000_000
+    return {"upload_id": upload.id, "chunk_size": chunk_size, "total_chunks": math.ceil(total_bytes / chunk_size), "status": upload.status}
+
+
+@router.put("/content/intake/uploads/{upload_id}/chunks/{chunk_index}")
+async def upload_content_chunk(
+    upload_id: int,
+    chunk_index: int,
+    file: UploadFile = File(...),
+    db: Session = Depends(get_db),
+    user: User = Depends(require_content_staff),
+):
+    upload = db.get(UploadSubmission, upload_id)
+    if not upload or upload.uploader_user_id != user.id:
+        raise HTTPException(status_code=404, detail="Resumable upload not found")
+    if upload.status != "uploading":
+        raise HTTPException(status_code=409, detail="Upload is not accepting chunks")
+    if chunk_index < 0:
+        raise HTTPException(status_code=422, detail="chunk_index must be non-negative")
+    content = await file.read()
+    if not content or len(content) > 1_100_000:
+        raise HTTPException(status_code=413, detail="Chunk must be between 1 byte and 1.1 MB")
+    digest = hashlib.sha256(content).hexdigest()
+    existing = db.scalar(select(UploadChunk).where(UploadChunk.upload_id == upload.id, UploadChunk.chunk_index == chunk_index))
+    if existing:
+        if existing.content_hash != digest:
+            raise HTTPException(status_code=409, detail="Chunk index already exists with a different checksum")
+        return {"upload_id": upload.id, "chunk_index": chunk_index, "deduplicated": True, "byte_count": existing.byte_count}
+    try:
+        artifact = store_raw_artifact(content, "application/octet-stream")
+    except ArtifactError as exc:
+        raise HTTPException(status_code=422, detail=str(exc)) from exc
+    db.add(UploadChunk(upload_id=upload.id, chunk_index=chunk_index, artifact_key=artifact["storage_key"], content_hash=digest, byte_count=len(content)))
+    db.commit()
+    return {"upload_id": upload.id, "chunk_index": chunk_index, "deduplicated": False, "byte_count": len(content)}
+
+
+@router.post("/content/intake/uploads/{upload_id}/complete")
+def complete_resumable_content_upload(
+    upload_id: int,
+    db: Session = Depends(get_db),
+    user: User = Depends(require_content_staff),
+):
+    upload = db.get(UploadSubmission, upload_id)
+    if not upload or upload.uploader_user_id != user.id:
+        raise HTTPException(status_code=404, detail="Resumable upload not found")
+    if upload.status != "uploading":
+        run = db.scalar(select(IngestionRun).where(IngestionRun.upload_id == upload.id).order_by(IngestionRun.id.desc()))
+        if run:
+            return {"upload_id": upload.id, "ingestion_run_id": run.id, "status": upload.status, "byte_count": upload.byte_count, "deduplicated": True}
+        raise HTTPException(status_code=409, detail="Upload is not awaiting completion")
+    chunks = db.scalars(select(UploadChunk).where(UploadChunk.upload_id == upload.id).order_by(UploadChunk.chunk_index)).all()
+    expected = math.ceil(upload.byte_count / 1_000_000)
+    if len(chunks) != expected or [chunk.chunk_index for chunk in chunks] != list(range(expected)):
+        raise HTTPException(status_code=409, detail={"message": "Upload is missing chunks", "received": [chunk.chunk_index for chunk in chunks], "expected": expected})
+    try:
+        content = b"".join(read_raw_artifact(chunk.artifact_key) for chunk in chunks)
+        if len(content) != upload.byte_count:
+            raise ArtifactError("Assembled upload size does not match total_bytes")
+        artifact = store_raw_artifact(content, upload.declared_media_type)
+    except ArtifactError as exc:
+        raise HTTPException(status_code=422, detail=str(exc)) from exc
+    upload.artifact_key = artifact["storage_key"]
+    upload.sha256 = artifact["content_hash"]
+    upload.status = "received"
+    run = IngestionRun(upload_id=upload.id, stage="received", status="queued")
+    db.add(run)
+    db.flush()
+    job = enqueue_job(db, "ingest_upload", {"ingestion_run_id": run.id}, actor_user_id=user.id)
+    _audit(db, user, "content.upload.resumable_completed", "upload_submission", upload.id, ingestion_run_id=run.id, job_id=job.id)
+    db.commit()
+    return {"upload_id": upload.id, "ingestion_run_id": run.id, "job_id": job.id, "status": upload.status, "byte_count": upload.byte_count}
 
 
 @router.get("/content/intake/uploads")

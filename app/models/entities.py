@@ -511,6 +511,19 @@ class UploadSubmission(Base):
     updated_at: Mapped[datetime] = mapped_column(DateTime(timezone=True), default=now_utc, onupdate=now_utc)
 
 
+class UploadChunk(Base):
+    """Durable, checksum-addressed pieces for resumable staff uploads."""
+    __tablename__ = "upload_chunks"
+    __table_args__ = (UniqueConstraint("upload_id", "chunk_index", name="uq_upload_chunk_index"),)
+    id: Mapped[int] = mapped_column(primary_key=True)
+    upload_id: Mapped[int] = mapped_column(ForeignKey("upload_submissions.id", ondelete="CASCADE"), index=True)
+    chunk_index: Mapped[int] = mapped_column(Integer)
+    artifact_key: Mapped[str] = mapped_column(String(500))
+    content_hash: Mapped[str] = mapped_column(String(64))
+    byte_count: Mapped[int] = mapped_column(Integer, default=0)
+    created_at: Mapped[datetime] = mapped_column(DateTime(timezone=True), default=now_utc)
+
+
 class ParentMaterialShare(Base):
     """Private parent contribution scope; never grants staff/student access."""
     __tablename__ = "parent_material_shares"

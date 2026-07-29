@@ -5,7 +5,7 @@ from sqlalchemy import select
 
 from app.core.database import SessionLocal
 from app.core.security import create_access_token, hash_password
-from app.models.entities import Event, EventSourceMap, ExtractionAsset, Lesson, ParentMaterialShare, Source, SourcePassage, SourceSnapshot, User
+from app.models.entities import Event, EventSourceMap, ExtractionAsset, Lesson, ParentMaterialShare, Source, SourcePassage, SourceSnapshot, UploadSubmission, User
 
 
 def auth(token):
@@ -211,6 +211,38 @@ def test_scanned_image_uses_ocr_and_retains_confidence(client, admin_token, monk
         asset = db.scalar(select(ExtractionAsset).where(ExtractionAsset.upload_id == uploaded.json()["upload_id"]))
         assert asset and asset.diagnostics_json["extraction"] == "google-vision-ocr"
         assert asset.ocr_confidence == 0.93
+
+
+def test_resumable_upload_retries_chunks_and_ingests(client, admin_token):
+    with SessionLocal() as db:
+        event = Event(slug="chunk-ingestion-2027", name="Chunk Ingestion", division="B", season=2027)
+        db.add(event)
+        db.commit()
+        event_id = event.id
+    prefix = ("A durable chunked handout explains observation, evidence, and reasoning for students.\n\n")
+    content = (prefix * 20_000).encode()
+    split = 1_000_000
+    assert len(content) > split
+    started = client.post(
+        "/api/content/intake/uploads/resumable", headers=auth(admin_token),
+        data={"filename": "large-handout.txt", "media_type": "text/plain", "total_bytes": str(len(content)), "event_id": str(event_id), "rights_attestation": "Fieldstone owns this large handout."},
+    )
+    assert started.status_code == 200
+    upload_id = started.json()["upload_id"]
+    first, second = content[:split], content[split:]
+    # Chunks are resumable and may arrive out of order.
+    assert client.put(f"/api/content/intake/uploads/{upload_id}/chunks/1", headers=auth(admin_token), files={"file": ("chunk", second, "application/octet-stream")}).status_code == 200
+    missing = client.post(f"/api/content/intake/uploads/{upload_id}/complete", headers=auth(admin_token))
+    assert missing.status_code == 409
+    assert client.put(f"/api/content/intake/uploads/{upload_id}/chunks/0", headers=auth(admin_token), files={"file": ("chunk", first, "application/octet-stream")}).status_code == 200
+    completed = client.post(f"/api/content/intake/uploads/{upload_id}/complete", headers=auth(admin_token))
+    assert completed.status_code == 200
+    assert client.post(f"/api/content/intake/uploads/{upload_id}/complete", headers=auth(admin_token)).json()["deduplicated"] is True
+    ran = client.post("/api/jobs/run-next", headers=auth(admin_token))
+    assert ran.status_code == 200 and ran.json()["status"] == "completed"
+    with SessionLocal() as db:
+        upload = db.get(UploadSubmission, upload_id)
+        assert upload and upload.status == "needs_review"
 
 
 def test_parent_materials_are_private_and_staff_reviewed(client, admin_token):
