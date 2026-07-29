@@ -1666,17 +1666,23 @@ function renderIntakeEvents() {
 
 async function loadContentIntake() {
   try {
-    const rows = await api('/content/intake/uploads');
+    const [uploads, imports] = await Promise.all([api('/content/intake/uploads'), api('/content/intake/imports')]);
+    const rows = uploads.concat(imports.map(item => ({
+      ...item, id: `import-${item.source_id}`, filename: item.title || item.url,
+      byte_count: 0, created_at: null, is_import: true,
+      ingestion: { source_id: item.source_id, stage: item.snapshot_id ? 'ready_for_review' : 'queued',
+        status: item.snapshot_id ? 'completed' : 'queued', diagnostics: { text_chars: item.text_chars } },
+    })));
     $('content-intake-empty').hidden = rows.length > 0;
     $('content-intake-list').innerHTML = rows.map(row => {
       const ingestion = row.ingestion || {};
       const diagnostics = ingestion.diagnostics || {};
-      const canReview = state.user.role === 'admin' && ['needs_review', 'needs_human_review'].includes(row.status) && ingestion.source_id;
+      const canReview = state.user.role === 'admin' && (row.is_import ? row.status === 'needs_review' : ['needs_review', 'needs_human_review'].includes(row.status)) && ingestion.source_id;
       return `<article class="content-intake-row surface" data-intake-id="${row.id}">
-        <div><strong>${escapeHtml(row.filename)}</strong><small>${row.byte_count.toLocaleString()} bytes · ${escapeHtml(row.created_at ? formatDate(row.created_at) : '—')}</small></div>
+        <div><strong>${escapeHtml(row.filename)}</strong><small>${row.is_import ? 'URL / YouTube import' : `${row.byte_count.toLocaleString()} bytes · ${escapeHtml(row.created_at ? formatDate(row.created_at) : '—')}`}</small></div>
         <span class="status-pill intake-status-${escapeHtml(row.status)}">${escapeHtml(row.status.replaceAll('_', ' '))}</span>
         <div class="content-intake-detail"><span>${escapeHtml(ingestion.stage || 'queued')}</span>${diagnostics.text_chars ? `<span>${Number(diagnostics.text_chars).toLocaleString()} extracted chars</span>` : ''}${diagnostics.page_count ? `<span>${diagnostics.page_count} pages</span>` : ''}</div>
-        <div class="content-intake-actions">${ingestion.source_id ? `<button class="button button-secondary button-compact" type="button" data-intake-source="${ingestion.source_id}">View extracted text</button>` : ''}${canReview ? `<select class="intake-event-select" data-intake-event aria-label="Assign event"><option value="">Keep current event</option>${(state.events || []).map(event => `<option value="${event.id}"${String(row.event_id) === String(event.id) ? ' selected' : ''}>${escapeHtml(event.name)} · ${escapeHtml(event.season)}</option>`).join('')}</select><button class="button button-primary button-compact" type="button" data-intake-review="accepted" data-intake-id="${row.id}">Accept for authoring</button><button class="button button-quiet button-compact" type="button" data-intake-review="rejected" data-intake-id="${row.id}">Reject</button>` : ''}</div>
+        <div class="content-intake-actions">${ingestion.source_id ? `<button class="button button-secondary button-compact" type="button" data-intake-source="${ingestion.source_id}">View extracted text</button>` : ''}${canReview ? `<select class="intake-event-select" data-intake-event aria-label="Assign event"><option value="">Keep current event</option>${(state.events || []).map(event => `<option value="${event.id}"${String(row.event_id) === String(event.id) ? ' selected' : ''}>${escapeHtml(event.name)} · ${escapeHtml(event.season)}</option>`).join('')}</select><button class="button button-primary button-compact" type="button" data-intake-review="accepted" data-intake-id="${row.id}" data-intake-import="${row.is_import ? row.source_id : ''}">Accept for authoring</button><button class="button button-quiet button-compact" type="button" data-intake-review="rejected" data-intake-id="${row.id}" data-intake-import="${row.is_import ? row.source_id : ''}">Reject</button>` : ''}</div>
         ${ingestion.source_id ? `<pre class="content-intake-extracted" data-intake-extracted="${ingestion.source_id}" hidden></pre>` : ''}
       </article>`;
     }).join('');
@@ -1688,15 +1694,21 @@ async function submitContentIntake(event) {
   const form = event.currentTarget;
   const button = form.querySelector('button[type="submit"]');
   const file = $('content-intake-file').files[0];
-  if (!file) return;
+  const url = $('content-intake-url').value.trim();
+  if (!file && !url) { $('intake-live-status').textContent = 'Choose a file or enter a URL.'; return; }
+  if (file && url) { $('intake-live-status').textContent = 'Choose either a file or a URL, not both.'; return; }
   const payload = new FormData();
-  payload.append('file', file);
   if ($('content-intake-event').value) payload.append('event_id', $('content-intake-event').value);
   payload.append('rights_attestation', $('content-intake-rights').value.trim());
+  const endpoint = url ? '/api/content/intake/imports' : '/api/content/intake/uploads';
+  if (url) {
+    payload.append('url', url);
+    if ($('content-intake-title').value.trim()) payload.append('title', $('content-intake-title').value.trim());
+  } else payload.append('file', file);
   setBusy(button, true, 'Uploading…');
   try {
     const headers = state.token ? { Authorization: `Bearer ${state.token}` } : {};
-    const response = await fetch('/api/content/intake/uploads', { method: 'POST', headers, body: payload });
+    const response = await fetch(endpoint, { method: 'POST', headers, body: payload });
     const data = await response.json().catch(() => ({}));
     if (!response.ok) throw new Error(data.detail || 'Upload failed');
     form.reset();
@@ -1717,7 +1729,9 @@ async function reviewContentIntake(uploadId, decision, button) {
   setBusy(button, true, decision === 'accepted' ? 'Accepting…' : 'Rejecting…');
   try {
     const headers = state.token ? { Authorization: `Bearer ${state.token}` } : {};
-    const response = await fetch(`/api/content/intake/uploads/${uploadId}/review`, { method: 'POST', headers, body: form });
+    const importSource = button.dataset.intakeImport;
+    const endpoint = importSource ? `/api/content/intake/imports/${importSource}/review` : `/api/content/intake/uploads/${uploadId}/review`;
+    const response = await fetch(endpoint, { method: 'POST', headers, body: form });
     const data = await response.json().catch(() => ({}));
     if (!response.ok) throw new Error(data.detail || 'Review failed');
     await loadContentIntake();

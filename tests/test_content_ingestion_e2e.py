@@ -5,7 +5,7 @@ from sqlalchemy import select
 
 from app.core.database import SessionLocal
 from app.core.security import create_access_token, hash_password
-from app.models.entities import Event, ExtractionAsset, Lesson, ParentMaterialShare, Source, SourcePassage, User
+from app.models.entities import Event, EventSourceMap, ExtractionAsset, Lesson, ParentMaterialShare, Source, SourcePassage, SourceSnapshot, User
 
 
 def auth(token):
@@ -128,6 +128,62 @@ def test_office_formats_extract_into_reviewable_assets(client, admin_token):
         assets = db.query(ExtractionAsset).all()
         assert {asset.diagnostics_json["extraction"] for asset in assets} == {"docx-xml", "pptx-xml"}
         assert all(asset.text_chars > 40 for asset in assets)
+
+
+def test_staff_url_import_is_durable_and_quarantined(client, admin_token, monkeypatch):
+    with SessionLocal() as db:
+        event = Event(slug="url-ingestion-2027", name="URL Ingestion", division="B", season=2027)
+        db.add(event)
+        db.commit()
+        event_id = event.id
+
+    imported = client.post(
+        "/api/content/intake/imports", headers=auth(admin_token),
+        data={
+            "url": "https://example.com/fieldstone-handout",
+            "event_id": str(event_id),
+            "title": "Fieldstone URL Handout",
+            "rights_attestation": "Fieldstone has permission to use this educational page.",
+        },
+    )
+    assert imported.status_code == 200
+    source_id = imported.json()["source_id"]
+
+    def fake_crawl(db, source, *, allow_unapproved=False):
+        assert allow_unapproved is True
+        snapshot = SourceSnapshot(
+            source_id=source.id, final_url=source.url, content_hash="f" * 64,
+            content_type="text/html", byte_count=120,
+            extracted_text="A durable URL handout explains evidence and observation routines for students.",
+            metadata_json={"parser": "test"},
+        )
+        db.add(snapshot)
+        source.extracted_text = snapshot.extracted_text
+        source.content_hash = snapshot.content_hash
+        db.flush()
+        return source
+
+    monkeypatch.setattr("app.services.jobs.crawl_source", fake_crawl)
+    ran = client.post("/api/jobs/run-next", headers=auth(admin_token))
+    assert ran.status_code == 200 and ran.json()["status"] == "completed"
+    inbox = client.get("/api/content/intake/imports", headers=auth(admin_token))
+    assert inbox.status_code == 200 and any(row["source_id"] == source_id and row["text_chars"] > 40 for row in inbox.json())
+    with SessionLocal() as db:
+        source = db.get(Source, source_id)
+        assert source and source.approved is False
+        mapping = db.scalar(select(EventSourceMap).where(EventSourceMap.source_id == source_id))
+        assert mapping and mapping.reviewed is False
+    accepted = client.post(
+        f"/api/content/intake/imports/{source_id}/review", headers=auth(admin_token),
+        data={"decision": "accepted", "rights_status": "derivative_generation_allowed", "notes": "URL rights verified."},
+    )
+    assert accepted.status_code == 200 and accepted.json()["source_approved"] is True
+    # A second submission is URL-idempotent and only schedules a retry.
+    duplicate = client.post(
+        "/api/content/intake/imports", headers=auth(admin_token),
+        data={"url": "https://example.com/fieldstone-handout", "rights_attestation": "Permission is recorded for review."},
+    )
+    assert duplicate.status_code == 200 and duplicate.json()["deduplicated"] is True
 
 
 def test_parent_materials_are_private_and_staff_reviewed(client, admin_token):

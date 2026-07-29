@@ -353,6 +353,7 @@ The first vertical slice is implemented and verified in the application:
 
 - Content Studio intake is available to content staff at the existing content-operations workspace.
 - Staff can upload a PDF or UTF-8 text artifact with event mapping and a rights declaration.
+- Staff can also import a public HTTPS page or YouTube URL; the import is queued as a durable job, stores captions only for YouTube, and remains quarantined until review.
 - The upload is checksum-deduplicated, stored as an immutable artifact, and processed by a durable ingestion job.
 - PDF pages and text sections are persisted as `SourcePassage` records with page/section locators.
 - Quarantined upload sources are excluded from the student material library.
@@ -362,4 +363,4 @@ The first vertical slice is implemented and verified in the application:
 - Background jobs now carry leases/heartbeats and reclaim stale running jobs; ingestion is idempotent for completed runs.
 - An end-to-end integration test exercises upload → background extraction → passage persistence → quarantine visibility → admin acceptance → student visibility.
 
-The following design items remain explicit follow-on work rather than hidden behavior: image OCR extraction, real antivirus scanning, resumable chunked uploads, parent-to-student/team relationship approval, a dedicated split-pane source editor, and production worker heartbeat updates during long-running model calls. DOCX/PPTX XML extraction, extraction diagnostics, stale-job recovery, and block-level passage IDs are now supported; image uploads remain intentionally blocked pending an OCR engine and human review path.
+The following design items remain explicit follow-on work rather than hidden behavior: image OCR extraction, real antivirus scanning, resumable chunked uploads, parent-to-student/team relationship approval, a dedicated split-pane source editor, and production worker heartbeat updates during long-running model calls. DOCX/PPTX XML extraction, URL/YouTube import, extraction diagnostics, stale-job recovery, and block-level passage IDs are now supported; image uploads remain intentionally blocked pending an OCR engine and human review path.

@@ -4,13 +4,15 @@ import uuid
 from sqlalchemy import select
 from sqlalchemy.orm import Session
 from app.core.config import get_settings
-from app.models.entities import BackgroundJob, RemediationCase, Source
+from app.models.entities import BackgroundJob, RemediationCase, Source, SourceSnapshot
 from app.services.claim_extraction import extract_claims
 from app.services.crawler import check_source_metadata, crawl_source
 from app.services.discovery import discover_sitemap
 from app.services.crawl_schedule import mark_crawl_failure, schedule_due_sources
 from app.services.notifications import deliver_notification_outbox
 from app.services.content_ingestion import process_ingestion_run
+from app.services.source_passages import ensure_source_passages
+from app.services.video_transcripts import ingest_youtube_source, youtube_video_id
 from app.services.lesson_generation import generate_lessons_for_event
 
 
@@ -130,6 +132,26 @@ def run_next_job(db: Session) -> BackgroundJob | None:
         elif job.job_type == "ingest_upload":
             run = process_ingestion_run(db, int(job.payload["ingestion_run_id"]))
             job.result = {"ingestion_run_id": run.id, "source_id": run.source_id, "status": run.status}
+        elif job.job_type == "ingest_source":
+            source = db.get(Source, int(job.payload["source_id"]))
+            if not source:
+                raise ValueError("Source not found")
+            if youtube_video_id(source.url):
+                result = ingest_youtube_source(db, source)
+                snapshot = db.scalar(select(SourceSnapshot).where(
+                    SourceSnapshot.source_id == source.id,
+                ).order_by(SourceSnapshot.id.desc()))
+                if snapshot:
+                    ensure_source_passages(db, snapshot)
+            else:
+                source = crawl_source(db, source, allow_unapproved=True)
+                snapshot = db.scalar(select(SourceSnapshot).where(
+                    SourceSnapshot.source_id == source.id,
+                ).order_by(SourceSnapshot.id.desc()))
+                if snapshot:
+                    ensure_source_passages(db, snapshot)
+                result = {"source_id": source.id, "status": "extracted", "text_chars": len(source.extracted_text or "")}
+            job.result = result
         elif job.job_type == "author_event_lessons":
             from app.models.entities import Event
             event = db.get(Event, int(job.payload["event_id"]))

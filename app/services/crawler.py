@@ -103,9 +103,11 @@ def _stream_response(
         )
 
 
-def crawl_source(db: Session, source: Source) -> Source:
+def crawl_source(db: Session, source: Source, *, allow_unapproved: bool = False) -> Source:
     settings = get_settings()
-    if not can_fetch_full_text(source.rights_status) or not source.approved:
+    # Staff intake may extract a quarantined source for human review, but it
+    # must remain hidden from students until an administrator approves it.
+    if not allow_unapproved and (not can_fetch_full_text(source.rights_status) or not source.approved):
         raise CrawlError("Approved rights policy does not allow full-text crawling")
     user_agent = "FieldstoneStudyBot/0.4 (+rights-aware educational indexing)"
     headers = {"User-Agent": user_agent, "Accept": "text/html,application/xhtml+xml,application/pdf"}

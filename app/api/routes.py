@@ -4,6 +4,7 @@ import json
 import logging
 import math
 import secrets
+from urllib.parse import urlparse
 from fastapi import APIRouter, Depends, File, Form, Header, HTTPException, Query, UploadFile
 from jose import JWTError
 from sqlalchemy import func, or_, select
@@ -53,6 +54,7 @@ from app.services.tutor import TutorAccessError, create_tutor_session, respond_t
 from app.services.course_quality import audit_course
 from app.services.artifacts import ArtifactError, store_raw_artifact
 from app.services.jobs import enqueue_job
+from app.services.video_transcripts import youtube_video_id
 
 router = APIRouter(prefix="/api")
 _log = logging.getLogger("soplat.api")
@@ -1056,7 +1058,7 @@ def list_event_materials(
         # User-submitted sources remain private until an administrator accepts
         # rights and provenance; never leak quarantined intake into the student
         # resource library.
-        if (source.metadata_json or {}).get("origin_type") == "upload" and not source.approved:
+        if not source.approved:
             continue
         snapshot = db.scalar(select(SourceSnapshot).where(
             SourceSnapshot.source_id == source.id,
@@ -1085,6 +1087,142 @@ def list_event_materials(
         "material_count": len(materials),
         "materials": materials,
     }
+
+
+@router.post("/content/intake/imports")
+def submit_content_import(
+    url: str = Form(...),
+    event_id: int | None = Form(default=None),
+    rights_attestation: str = Form(default=""),
+    title: str = Form(default=""),
+    db: Session = Depends(get_db),
+    user: User = Depends(require_content_staff),
+):
+    """Queue a URL/YouTube transcript import into the same quarantined path.
+
+    Import extraction is allowed only for staff review; the source remains
+    unapproved and invisible to students until the normal review endpoint is
+    used. The worker fetches captions only for YouTube and never downloads the
+    video itself.
+    """
+    parsed = urlparse(url.strip())
+    if parsed.scheme != "https" or not parsed.hostname:
+        raise HTTPException(status_code=422, detail="Imports require a public HTTPS URL")
+    if len(rights_attestation.strip()) < 10:
+        raise HTTPException(status_code=422, detail="Rights/ownership attestation is required")
+    if event_id is not None and not db.get(Event, event_id):
+        raise HTTPException(status_code=404, detail="Event not found")
+    canonical = url.strip().rstrip("/")
+    source = db.scalar(select(Source).where(Source.url == canonical))
+    if source:
+        job = enqueue_job(db, "ingest_source", {"source_id": source.id}, actor_user_id=user.id)
+        return {"source_id": source.id, "job_id": job.id, "status": "queued", "deduplicated": True}
+    source = Source(
+        url=canonical,
+        title=title.strip() or canonical,
+        publisher=parsed.hostname or "",
+        rights_status=RightsStatus.QUARANTINED.value,
+        license_name="pending_review",
+        metadata_json={"origin_type": "url_import", "imported_by": user.id, "youtube": bool(youtube_video_id(canonical))},
+        approved=False,
+        crawl_status="queued",
+    )
+    db.add(source)
+    db.flush()
+    if event_id is not None:
+        db.add(EventSourceMap(
+            event_id=event_id, source_id=source.id, purpose="submitted_material",
+            source_tier=0, required=False, required_artifact_types=["youtube_transcript" if youtube_video_id(canonical) else "url"],
+            source_universe_version="import-v1", freshness_minutes=0, reviewed=False,
+            notes="Imported through Content Studio; pending extraction, rights, and topic review",
+        ))
+    source.metadata_json = {**(source.metadata_json or {}), "rights_attestation": rights_attestation.strip()}
+    job = enqueue_job(db, "ingest_source", {"source_id": source.id}, actor_user_id=user.id)
+    _audit(db, user, "content.import.received", "source", source.id, job_id=job.id, event_id=event_id)
+    db.commit()
+    return {"source_id": source.id, "job_id": job.id, "status": "queued", "deduplicated": False}
+
+
+@router.get("/content/intake/imports")
+def list_content_imports(
+    db: Session = Depends(get_db),
+    user: User = Depends(require_content_staff),
+):
+    """List URL/YouTube imports alongside file submissions in the staff inbox."""
+    sources = db.scalars(select(Source).where(
+        Source.metadata_json["origin_type"].as_string() == "url_import"
+    ).order_by(Source.created_at.desc()).limit(200)).all()
+    rows = []
+    for source in sources:
+        snapshot = db.scalar(select(SourceSnapshot).where(
+            SourceSnapshot.source_id == source.id,
+        ).order_by(SourceSnapshot.created_at.desc(), SourceSnapshot.id.desc()))
+        mapping = db.scalar(select(EventSourceMap).where(EventSourceMap.source_id == source.id).order_by(EventSourceMap.id.desc()))
+        metadata = source.metadata_json or {}
+        rows.append({
+            "id": source.id, "source_id": source.id, "url": source.url, "title": source.title,
+            "event_id": mapping.event_id if mapping else None, "status": "accepted" if source.approved else "needs_review",
+            "approved": source.approved, "text_chars": len(snapshot.extracted_text or "") if snapshot else 0,
+            "snapshot_id": snapshot.id if snapshot else None, "metadata": metadata,
+        })
+    return rows
+
+
+@router.post("/content/intake/imports/{source_id}/review")
+def review_content_import(
+    source_id: int,
+    decision: str = Form(...),
+    rights_status: str = Form(default=RightsStatus.DERIVATIVE_GENERATION_ALLOWED.value),
+    event_id: int | None = Form(default=None),
+    notes: str = Form(default=""),
+    db: Session = Depends(get_db),
+    actor: User = Depends(require_admin),
+):
+    source = db.get(Source, source_id)
+    if not source or (source.metadata_json or {}).get("origin_type") != "url_import":
+        raise HTTPException(status_code=404, detail="Imported source not found")
+    snapshot = db.scalar(select(SourceSnapshot).where(SourceSnapshot.source_id == source.id).order_by(SourceSnapshot.id.desc()))
+    if not snapshot:
+        raise HTTPException(status_code=409, detail="Import has not completed extraction")
+    if decision not in {"accepted", "rejected"}:
+        raise HTTPException(status_code=422, detail="Decision must be accepted or rejected")
+    if decision == "accepted":
+        valid_rights = {status.value for status in RightsStatus}
+        if rights_status not in valid_rights or rights_status in {RightsStatus.BLOCKED.value, RightsStatus.QUARANTINED.value}:
+            raise HTTPException(status_code=422, detail="Accepted imports require a non-quarantined rights status")
+        source.rights_status = rights_status
+        source.license_name = "staff-reviewed import"
+        source.approved = True
+        if event_id is not None:
+            if not db.get(Event, event_id):
+                raise HTTPException(status_code=404, detail="Event not found")
+            mapping = db.scalar(select(EventSourceMap).where(
+                EventSourceMap.source_id == source.id, EventSourceMap.purpose == "submitted_material",
+            ))
+            if mapping:
+                mapping.event_id = event_id
+                mapping.reviewed = True
+                mapping.reviewed_by_user_id = actor.id
+                mapping.notes = notes.strip() or "Accepted in Content Studio"
+            else:
+                db.add(EventSourceMap(
+                    event_id=event_id, source_id=source.id, purpose="submitted_material", source_tier=0,
+                    required=False, required_artifact_types=["url"], source_universe_version="import-v1",
+                    freshness_minutes=0, reviewed=True, reviewed_by_user_id=actor.id,
+                    notes=notes.strip() or "Accepted in Content Studio",
+                ))
+        else:
+            mapping = db.scalar(select(EventSourceMap).where(EventSourceMap.source_id == source.id).order_by(EventSourceMap.id.desc()))
+            if mapping:
+                mapping.reviewed = True
+                mapping.reviewed_by_user_id = actor.id
+    else:
+        source.rights_status = RightsStatus.BLOCKED.value
+        source.approved = False
+    source.metadata_json = {**(source.metadata_json or {}), "review_decision": decision, "review_notes": notes.strip(), "reviewed_by": actor.id}
+    _audit(db, actor, f"content.import.{decision}", "source", source.id, notes=notes.strip())
+    db.commit()
+    return {"source_id": source.id, "status": decision, "source_approved": source.approved}
 
 
 @router.post("/content/intake/uploads")
