@@ -10,6 +10,7 @@ from app.services.discovery import discover_sitemap
 from app.services.crawl_schedule import mark_crawl_failure, schedule_due_sources
 from app.services.notifications import deliver_notification_outbox
 from app.services.content_ingestion import process_ingestion_run
+from app.services.lesson_generation import generate_lessons_for_event
 
 
 def enqueue_job(db: Session, job_type: str, payload: dict, actor_user_id: int | None = None, scheduled_at=None) -> BackgroundJob:
@@ -105,6 +106,13 @@ def run_next_job(db: Session) -> BackgroundJob | None:
         elif job.job_type == "ingest_upload":
             run = process_ingestion_run(db, int(job.payload["ingestion_run_id"]))
             job.result = {"ingestion_run_id": run.id, "source_id": run.source_id, "status": run.status}
+        elif job.job_type == "author_event_lessons":
+            from app.models.entities import Event
+            event = db.get(Event, int(job.payload["event_id"]))
+            if not event:
+                raise ValueError("Event not found")
+            lessons = generate_lessons_for_event(db, event, publish=False)
+            job.result = {"event_id": event.id, "lesson_ids": [lesson.id for lesson in lessons], "status": "draft"}
         else:
             raise ValueError(f"Unsupported job type: {job.job_type}")
         job.status = "completed"

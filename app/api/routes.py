@@ -1141,6 +1141,21 @@ def list_content_uploads(
     } for row in rows]
 
 
+@router.post("/content/authoring/events/{event_id}/lessons")
+def queue_event_lesson_authoring(
+    event_id: int,
+    db: Session = Depends(get_db),
+    user: User = Depends(require_content_staff),
+):
+    """Queue a grounded lesson-course draft; drafts are never student-visible."""
+    if not db.get(Event, event_id):
+        raise HTTPException(status_code=404, detail="Event not found")
+    job = enqueue_job(db, "author_event_lessons", {"event_id": event_id}, actor_user_id=user.id)
+    _audit(db, user, "content.authoring.queued", "event", event_id, job_id=job.id, output_status="draft")
+    db.commit()
+    return {"job_id": job.id, "event_id": event_id, "status": "queued", "output_status": "draft"}
+
+
 @router.get("/materials/{source_id}")
 def get_material_text(
     source_id: int,

@@ -134,7 +134,9 @@ def _generate_lesson(provider, event: Event, entry: dict, material: str) -> dict
     return payload if isinstance(payload, dict) else None
 
 
-def generate_lessons_for_event(db: Session, event: Event, commit: bool = True) -> list[Lesson]:
+def generate_lessons_for_event(
+    db: Session, event: Event, commit: bool = True, *, publish: bool = False,
+) -> list[Lesson]:
     picked = _course_material(db, event)
     if not picked:
         raise ValueError(f"Event {event.slug} has no material with enough text for lessons")
@@ -186,13 +188,13 @@ def generate_lessons_for_event(db: Session, event: Event, commit: bool = True) -
         lesson = Lesson(
             event_id=event.id, slug=f"{SLUG_PREFIX}{_slugify(title)}-{index + 1}",
             title=title, summary=str(raw.get("summary") or entry.get("focus") or ""),
-            status="published", current_version=1, sequence=index + 1, estimated_minutes=minutes,
+            status="published" if publish else "draft", current_version=1, sequence=index + 1, estimated_minutes=minutes,
         )
         db.add(lesson)
         db.flush()
         db.add(LessonVersion(
             lesson_id=lesson.id, version=1, content=blocks,
-            citations=citations, review_status="published",
+            citations=citations, review_status="published" if publish else "editor_review",
         ))
         lessons.append(lesson)
     if commit:
