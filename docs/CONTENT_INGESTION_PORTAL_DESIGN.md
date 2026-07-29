@@ -363,5 +363,6 @@ The first vertical slice is implemented and verified in the application:
 - A parent role has a separate private materials view and upload endpoint; parent submissions have an `intake_only` share scope and cannot access staff queues or approve content.
 - Background jobs now carry leases/heartbeats and reclaim stale running jobs; ingestion is idempotent for completed runs.
 - An end-to-end integration test exercises upload → background extraction → passage persistence → quarantine visibility → admin acceptance → student visibility.
+- Real external-video validation has been run against Science Olympiad videos (`i22uB-vXXS8` and `7DLU4tfEIVY`): caption retrieval produced 620 and 766 timestamped segments, and one full transcript was persisted into 14 timestamped source passages while remaining quarantined.
 
 The following design items remain explicit follow-on work rather than hidden behavior: real antivirus scanning, resumable chunked uploads, parent-to-student/team relationship approval, a dedicated split-pane source editor, and production worker heartbeat updates during long-running model calls. DOCX/PPTX XML extraction, URL/YouTube import, Google Vision OCR, extraction diagnostics, stale-job recovery, and block-level passage IDs are now supported.
