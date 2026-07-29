@@ -1228,8 +1228,21 @@ $('generate-mock')?.addEventListener('click', generateMockExam);
 
 function renderPracticeLab() {
   const experience = eventExperience();
+  const event = activeEvent();
+  const hasPublishedExam = Boolean(event?.exam_count);
   $('practice-set-count').textContent = state.practiceSets.length;
   $('practice-sets-empty').hidden = state.practiceSets.length > 0;
+  if (!state.practiceSets.length) {
+    const title = $('practice-sets-empty').querySelector('h3');
+    const copy = $('practice-sets-empty').querySelector('p');
+    title.textContent = event?.material_count ? 'Guided practice is being calibrated' : 'Labs are in review';
+    copy.textContent = event?.material_count
+      ? `Start with the ${event.material_count} official resources above. Preview practice will be added after the first review pass.`
+      : 'Targeted practice will appear here after the course content is reviewed.';
+  }
+  const mockButton = $('generate-mock');
+  mockButton.disabled = !hasPublishedExam;
+  mockButton.textContent = hasPublishedExam ? 'Generate Mock Exam ✦' : 'Mock Exam In Review';
   const multiplier = state.accommodation?.time_multiplier || 1;
   const stationSeconds = Math.ceil(45 * multiplier);
   $('practice-set-list').innerHTML = state.practiceSets.map((practiceSet, index) => {
