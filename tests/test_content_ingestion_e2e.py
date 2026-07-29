@@ -5,7 +5,7 @@ from sqlalchemy import select
 
 from app.core.database import SessionLocal
 from app.core.security import create_access_token, hash_password
-from app.models.entities import Event, EventSourceMap, ExtractionAsset, Lesson, ParentMaterialShare, ParentStudentLink, Source, SourcePassage, SourceSnapshot, UploadSubmission, User
+from app.models.entities import Event, EventSourceMap, ExtractionAsset, Lesson, Organization, ParentMaterialShare, ParentStudentLink, Source, SourcePassage, SourceSnapshot, Team, TeamMembership, UploadSubmission, User
 
 
 def auth(token):
@@ -252,13 +252,24 @@ def test_parent_materials_are_private_and_staff_reviewed(client, admin_token):
         parent = User(email="parent@example.com", full_name="Parent", password_hash=hash_password("password123"), role="parent")
         student = User(email="child@example.com", full_name="Child", password_hash=hash_password("password123"), role="student", division="B")
         event = Event(slug="parent-event-2027", name="Parent Event", division="B", season=2027)
-        db.add_all([parent, student, event])
+        organization = Organization(name="Parent Test Org", slug="parent-test-org")
+        db.add_all([parent, student, event, organization])
+        db.flush()
+        parent.organization_id = organization.id
+        student.organization_id = organization.id
+        team = Team(organization_id=organization.id, name="Parent Test Team", division="B", season=2027, created_by_user_id=parent.id)
+        db.add(team)
+        db.flush()
+        db.add_all([
+            TeamMembership(team_id=team.id, user_id=parent.id, membership_role="parent"),
+            TeamMembership(team_id=team.id, user_id=student.id, membership_role="student"),
+        ])
         db.commit()
-        parent_token, student_id, event_id = create_access_token(str(parent.id)), student.id, event.id
+        parent_token, student_id, event_id, team_id = create_access_token(str(parent.id)), student.id, event.id, team.id
 
     relationship = client.post(
         "/api/parent/relationships", headers=auth(parent_token),
-        data={"student_email": "child@example.com", "notes": "Guardian relationship submitted for review."},
+        data={"student_email": "child@example.com", "team_id": str(team_id), "notes": "Guardian relationship submitted for review."},
     )
     assert relationship.status_code == 200 and relationship.json()["status"] == "pending"
     relationship_id = relationship.json()["relationship_id"]
@@ -270,7 +281,7 @@ def test_parent_materials_are_private_and_staff_reviewed(client, admin_token):
 
     response = client.post(
         "/api/parent/materials", headers=auth(parent_token),
-        data={"rights_attestation": "I created and own this handout."},
+        data={"rights_attestation": "I created and own this handout.", "team_id": str(team_id)},
         files={"file": ("family-notes.txt", BytesIO(b"A private family contribution with enough educational detail for extraction and review."), "text/plain")},
     )
     assert response.status_code == 200
@@ -282,11 +293,11 @@ def test_parent_materials_are_private_and_staff_reviewed(client, admin_token):
     assert client.post("/api/jobs/run-next", headers=auth(admin_token)).json()["status"] == "completed"
     accepted = client.post(
         f"/api/content/intake/uploads/{upload_id}/review", headers=auth(admin_token),
-        data={"decision": "accepted", "event_id": str(event_id), "student_user_id": str(student_id), "notes": "Parent ownership verified and event assigned."},
+        data={"decision": "accepted", "event_id": str(event_id), "student_user_id": str(student_id), "team_id": str(team_id), "notes": "Parent ownership verified and event assigned."},
     )
     assert accepted.status_code == 200
     with SessionLocal() as db:
         share = db.scalar(select(ParentMaterialShare).where(ParentMaterialShare.upload_id == upload_id))
-        assert share and share.student_user_id == student_id
+        assert share and share.student_user_id == student_id and share.team_id == team_id
         link = db.scalar(select(ParentStudentLink).where(ParentStudentLink.id == relationship_id))
-        assert link and link.status == "approved"
+        assert link and link.status == "approved" and link.team_id == team_id

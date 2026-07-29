@@ -419,6 +419,7 @@
             <div class="section-heading"><div><p class="kicker">Private intake</p><h2 id="parent-upload-title">Upload a PDF, DOCX, PPTX, or handout</h2><p>Do not upload student records or materials you do not have permission to share.</p></div><span class="status-pill">Staff review required</span></div>
             <form id="parent-intake-form" class="content-intake-form">
               <label>Material file<input id="parent-intake-file" name="file" type="file" accept=".pdf,.docx,.pptx,.txt,.md,.csv,application/pdf" required></label>
+              <label>Team ID <span class="label-note">optional; staff still approves</span><input id="parent-intake-team" name="team_id" type="number" min="1" inputmode="numeric"></label>
               <label class="content-intake-rights">Rights / ownership declaration<textarea id="parent-intake-rights" name="rights_attestation" rows="2" minlength="10" required placeholder="I own this material or have permission to share it because…"></textarea></label>
               <button class="button button-primary" type="submit">Submit private material</button>
             </form>
@@ -431,6 +432,7 @@
             <div class="section-heading"><div><p class="kicker">Access relationship</p><h2 id="parent-link-title">Link your student</h2><p>Staff must approve this relationship before a contribution can be assigned to a student.</p></div></div>
             <form id="parent-relationship-form" class="content-intake-form">
               <label>Student email<input id="parent-student-email" type="email" required autocomplete="email"></label>
+              <label>Team ID <span class="label-note">required for team-scoped consent</span><input id="parent-relationship-team" type="number" min="1" inputmode="numeric"></label>
               <label>Note <span class="label-note">optional</span><input id="parent-relationship-note" type="text" maxlength="500"></label>
               <button class="button button-secondary" type="submit">Request relationship</button>
             </form>

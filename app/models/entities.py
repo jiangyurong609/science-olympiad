@@ -544,6 +544,7 @@ class ParentStudentLink(Base):
     id: Mapped[int] = mapped_column(primary_key=True)
     parent_user_id: Mapped[int] = mapped_column(ForeignKey("users.id", ondelete="CASCADE"), index=True)
     student_user_id: Mapped[int] = mapped_column(ForeignKey("users.id", ondelete="CASCADE"), index=True)
+    team_id: Mapped[int | None] = mapped_column(ForeignKey("teams.id", ondelete="SET NULL"), nullable=True, index=True)
     status: Mapped[str] = mapped_column(String(32), default="pending", index=True)
     consent_scope: Mapped[str] = mapped_column(String(80), default="materials_intake")
     approved_by_user_id: Mapped[int | None] = mapped_column(ForeignKey("users.id"), nullable=True)

@@ -1791,6 +1791,7 @@ async function submitParentRelationship(event) {
   const payload = new FormData();
   payload.append('student_email', $('parent-student-email').value.trim());
   payload.append('notes', $('parent-relationship-note').value.trim());
+  if ($('parent-relationship-team').value) payload.append('team_id', $('parent-relationship-team').value);
   setBusy(button, true, 'Requesting…');
   try {
     const headers = state.token ? { Authorization: `Bearer ${state.token}` } : {};
@@ -1813,6 +1814,7 @@ async function submitParentMaterial(event) {
   const payload = new FormData();
   payload.append('file', file);
   payload.append('rights_attestation', $('parent-intake-rights').value.trim());
+  if ($('parent-intake-team').value) payload.append('team_id', $('parent-intake-team').value);
   setBusy(button, true, 'Submitting…');
   try {
     const headers = state.token ? { Authorization: `Bearer ${state.token}` } : {};

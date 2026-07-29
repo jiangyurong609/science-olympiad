@@ -1595,6 +1595,7 @@ def review_content_upload(
     notes: str = Form(default=""),
     event_id: int | None = Form(default=None),
     student_user_id: int | None = Form(default=None),
+    team_id: int | None = Form(default=None),
     db: Session = Depends(get_db),
     actor: User = Depends(require_admin),
 ):
@@ -1626,14 +1627,27 @@ def review_content_upload(
                 raise HTTPException(status_code=422, detail="student_user_id must reference an active student")
             share = db.scalar(select(ParentMaterialShare).where(ParentMaterialShare.upload_id == upload.id))
             if share:
+                if team_id is not None:
+                    team = db.get(Team, team_id)
+                    if not team:
+                        raise HTTPException(status_code=404, detail="Team not found")
+                    student_membership = db.scalar(select(TeamMembership).where(
+                        TeamMembership.team_id == team.id,
+                        TeamMembership.user_id == student.id,
+                        TeamMembership.membership_role == "student",
+                    ))
+                    if not student_membership:
+                        raise HTTPException(status_code=422, detail="Student is not a member of the selected team")
                 relationship = db.scalar(select(ParentStudentLink).where(
                     ParentStudentLink.parent_user_id == share.parent_user_id,
                     ParentStudentLink.student_user_id == student.id,
                     ParentStudentLink.status == "approved",
+                    *(tuple() if team_id is None else (ParentStudentLink.team_id == team_id,)),
                 ))
                 if not relationship:
-                    raise HTTPException(status_code=403, detail="Parent/student relationship must be approved before assignment")
+                    raise HTTPException(status_code=403, detail="Parent/student relationship must be approved for the selected team before assignment")
                 share.student_user_id = student.id
+                share.team_id = team_id or relationship.team_id
         if upload.event_id:
             mapping = db.scalar(select(EventSourceMap).where(
                 EventSourceMap.event_id == upload.event_id,
@@ -1666,12 +1680,22 @@ def review_content_upload(
 async def parent_submit_material(
     file: UploadFile = File(...),
     rights_attestation: str = Form(default=""),
+    team_id: int | None = Form(default=None),
     db: Session = Depends(get_db),
     parent: User = Depends(require_parent),
 ):
     """Parent contribution endpoint: no event assignment and no publication authority."""
     if len(rights_attestation.strip()) < 10:
         raise HTTPException(status_code=422, detail="Rights/ownership attestation is required")
+    if team_id is not None:
+        team = db.get(Team, team_id)
+        membership = db.scalar(select(TeamMembership).where(
+            TeamMembership.team_id == team_id,
+            TeamMembership.user_id == parent.id,
+            TeamMembership.membership_role == "parent",
+        )) if team else None
+        if not team or not membership:
+            raise HTTPException(status_code=403, detail="Parent must be an approved member of the selected team")
     content = await file.read()
     if len(content) > 25_000_000:
         raise HTTPException(status_code=413, detail="Upload exceeds the 25 MB safety limit")
@@ -1693,7 +1717,7 @@ async def parent_submit_material(
     )
     db.add(upload)
     db.flush()
-    db.add(ParentMaterialShare(upload_id=upload.id, parent_user_id=parent.id))
+    db.add(ParentMaterialShare(upload_id=upload.id, parent_user_id=parent.id, team_id=team_id))
     db.add(IngestionRun(upload_id=upload.id, stage="received", status="queued"))
     db.commit()
     db.refresh(upload)
@@ -1724,6 +1748,7 @@ def parent_list_materials(
 def parent_request_relationship(
     student_email: str = Form(...),
     notes: str = Form(default=""),
+    team_id: int | None = Form(default=None),
     db: Session = Depends(get_db),
     parent: User = Depends(require_parent),
 ):
@@ -1732,15 +1757,26 @@ def parent_request_relationship(
         raise HTTPException(status_code=404, detail="Student account not found")
     if student.id == parent.id:
         raise HTTPException(status_code=422, detail="A parent account cannot link to itself")
+    if team_id is not None:
+        parent_membership = db.scalar(select(TeamMembership).where(
+            TeamMembership.team_id == team_id, TeamMembership.user_id == parent.id,
+            TeamMembership.membership_role == "parent",
+        ))
+        student_membership = db.scalar(select(TeamMembership).where(
+            TeamMembership.team_id == team_id, TeamMembership.user_id == student.id,
+            TeamMembership.membership_role == "student",
+        ))
+        if not parent_membership or not student_membership:
+            raise HTTPException(status_code=403, detail="Both parent and student must belong to the selected team")
     link = db.scalar(select(ParentStudentLink).where(
         ParentStudentLink.parent_user_id == parent.id, ParentStudentLink.student_user_id == student.id,
     ))
     if link:
         return {"relationship_id": link.id, "status": link.status, "deduplicated": True}
-    link = ParentStudentLink(parent_user_id=parent.id, student_user_id=student.id, notes=notes.strip())
+    link = ParentStudentLink(parent_user_id=parent.id, student_user_id=student.id, team_id=team_id, notes=notes.strip())
     db.add(link)
     db.flush()
-    _audit(db, parent, "parent.relationship.requested", "parent_student_link", link.id, student_user_id=student.id)
+    _audit(db, parent, "parent.relationship.requested", "parent_student_link", link.id, student_user_id=student.id, team_id=team_id)
     db.commit()
     return {"relationship_id": link.id, "status": link.status, "deduplicated": False}
 
@@ -1751,7 +1787,7 @@ def parent_list_relationships(
     parent: User = Depends(require_parent),
 ):
     links = db.scalars(select(ParentStudentLink).where(ParentStudentLink.parent_user_id == parent.id).order_by(ParentStudentLink.created_at.desc())).all()
-    return [{"id": link.id, "student_user_id": link.student_user_id, "status": link.status, "scope": link.consent_scope, "notes": link.notes} for link in links]
+    return [{"id": link.id, "student_user_id": link.student_user_id, "team_id": link.team_id, "status": link.status, "scope": link.consent_scope, "notes": link.notes} for link in links]
 
 
 @router.get("/content/parent-relationships")
@@ -1764,7 +1800,7 @@ def list_parent_relationships(
     if status:
         query = query.where(ParentStudentLink.status == status)
     links = db.scalars(query.limit(200)).all()
-    return [{"id": link.id, "parent_user_id": link.parent_user_id, "student_user_id": link.student_user_id, "status": link.status, "notes": link.notes, "created_at": link.created_at} for link in links]
+    return [{"id": link.id, "parent_user_id": link.parent_user_id, "student_user_id": link.student_user_id, "team_id": link.team_id, "status": link.status, "notes": link.notes, "created_at": link.created_at} for link in links]
 
 
 @router.post("/content/parent-relationships/{relationship_id}/review")
