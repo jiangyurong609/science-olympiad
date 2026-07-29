@@ -693,6 +693,21 @@ class ContentRelease(Base):
     created_at: Mapped[datetime] = mapped_column(DateTime(timezone=True), default=now_utc)
 
 
+class StudentContentFeedback(Base):
+    __tablename__ = "student_content_feedback"
+    id: Mapped[int] = mapped_column(primary_key=True)
+    user_id: Mapped[int] = mapped_column(ForeignKey("users.id", ondelete="CASCADE"), index=True)
+    event_id: Mapped[int] = mapped_column(ForeignKey("events.id", ondelete="CASCADE"), index=True)
+    course_id: Mapped[int | None] = mapped_column(ForeignKey("courses.id", ondelete="SET NULL"), nullable=True, index=True)
+    entity_type: Mapped[str] = mapped_column(String(32), index=True)
+    entity_id: Mapped[int] = mapped_column(Integer, index=True)
+    content_version: Mapped[int] = mapped_column(Integer, default=1)
+    rating: Mapped[int] = mapped_column(Integer)
+    category: Mapped[str] = mapped_column(String(32), default="general")
+    feedback: Mapped[str] = mapped_column(Text, default="")
+    created_at: Mapped[datetime] = mapped_column(DateTime(timezone=True), default=now_utc, index=True)
+
+
 class ReviewDecision(Base):
     __tablename__ = "review_decisions"
     id: Mapped[int] = mapped_column(primary_key=True)

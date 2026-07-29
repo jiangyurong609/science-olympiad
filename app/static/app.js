@@ -2469,6 +2469,20 @@ $('lesson-finish').addEventListener('click', async () => {
   closeLesson();
   loadApplication();
 });
+$('lesson-feedback').addEventListener('click', async () => {
+  const lesson = state.currentLesson;
+  if (!lesson) return;
+  const rating = Number(window.prompt('How useful was this preview? Enter a rating from 1 (not useful) to 5 (very useful).', '5'));
+  if (!Number.isInteger(rating) || rating < 1 || rating > 5) return;
+  const feedback = window.prompt('What should we improve? (optional)', '') || '';
+  try {
+    await api('/content/feedback', {
+      method: 'POST',
+      body: JSON.stringify({ entity_type: 'lesson', entity_id: lesson.id, rating, feedback }),
+    });
+    toast('Thanks — your feedback was saved for the course team.');
+  } catch (error) { toast(error.message); }
+});
 $('close-lesson').addEventListener('click', closeLesson);
 
 function closeLesson() {

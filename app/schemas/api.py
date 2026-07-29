@@ -73,6 +73,14 @@ class LessonReviewRequest(BaseModel):
     notes: str = Field(default="", max_length=4000)
 
 
+class StudentContentFeedbackRequest(BaseModel):
+    entity_type: str = Field(pattern="^(lesson|assessment)$")
+    entity_id: int = Field(gt=0)
+    rating: int = Field(ge=1, le=5)
+    category: str = Field(default="general", pattern="^(general|clarity|accuracy|difficulty|technical)$")
+    feedback: str = Field(default="", max_length=2000)
+
+
 class QuestionCalibrationRequest(BaseModel):
     decision: str = Field(pattern="^(accepted|rejected)$")
     notes: str = Field(min_length=10, max_length=4000)

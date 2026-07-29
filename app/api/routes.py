@@ -19,7 +19,7 @@ from app.models.entities import (
     PracticeSet, PracticeSetVersion, Question, QuestionCalibration, QuestionReview, RemediationCase,
     Response, ResponseRevision, ReviewDecision, RightsStatus,
     EventSourceMap, EventTaxonScope, RawArtifact, ScientificClaim, Skill, Source,
-    SourcePassage, SourceSnapshot, SpecimenAsset, Taxon,
+    SourcePassage, SourceSnapshot, SpecimenAsset, StudentContentFeedback, Taxon,
     Team, TeamMembership, TransferAttempt, TutorMessage, TutorSession, User, UserNotification,
 )
 from app.schemas.api import (
@@ -31,7 +31,7 @@ from app.schemas.api import (
     LessonCheckpointRequest, LessonProgressRequest, LessonReviewRequest, MockExamRequest, PracticeAnswerRequest,
     PracticeStartRequest, QuestionCalibrationRequest, QuestionGenerateRequest, QuestionReviewRequest, ReflectionRequest, RegisterRequest,
     ResponseSaveRequest,
-    SourceCreate, TeamCreateRequest, TeamMemberRequest, TransferAnswerRequest,
+    SourceCreate, StudentContentFeedbackRequest, TeamCreateRequest, TeamMemberRequest, TransferAnswerRequest,
     TutorMessageRequest, TutorSessionCreateRequest,
 )
 from app.services.crawler import CrawlError, crawl_source
@@ -599,6 +599,9 @@ def _lesson_is_student_visible(
     event = db.get(Event, lesson.event_id)
     if event and event.season <= 2026:
         return True
+    course = db.scalar(select(Course).where(Course.event_id == lesson.event_id))
+    if course and course.status == "student_preview":
+        return True
     version = version or db.scalar(select(LessonVersion).where(
         LessonVersion.lesson_id == lesson.id,
         LessonVersion.version == lesson.current_version,
@@ -628,7 +631,11 @@ def list_event_lessons(
         raise HTTPException(status_code=404, detail="Event not found")
     lesson_query = select(Lesson).where(Lesson.event_id == event_id)
     if user.role not in {"admin", "editor", "sme", "calibrator"}:
-        lesson_query = lesson_query.where(Lesson.status == "published")
+        course = db.scalar(select(Course).where(Course.event_id == event_id))
+        if not course or course.status != "student_preview":
+            lesson_query = lesson_query.where(Lesson.status == "published")
+        else:
+            lesson_query = lesson_query.where(Lesson.status != "withdrawn")
     lessons = db.scalars(lesson_query.order_by(Lesson.sequence, Lesson.id)).all()
     current_versions = {lesson.id: lesson.current_version for lesson in lessons}
     versions = {
@@ -727,7 +734,7 @@ def get_course_map(
         raise HTTPException(status_code=404, detail="Course event not found")
     course = db.scalar(select(Course).where(Course.event_id == event.id))
     staff = user.role in {"admin", "editor", "sme", "calibrator"}
-    if not course or (course.status != "published" and not staff):
+    if not course or (course.status not in {"published", "student_preview"} and not staff):
         raise HTTPException(status_code=404, detail="Course map is not published")
     course_version = db.scalar(select(CourseVersion).where(
         CourseVersion.course_id == course.id,
@@ -737,7 +744,8 @@ def get_course_map(
         CourseUnit.course_id == course.id,
         CourseUnit.status != "withdrawn",
     )
-    if not staff:
+    preview = course.status == "student_preview" and not staff
+    if not staff and not preview:
         unit_query = unit_query.where(CourseUnit.status == "published")
     units = db.scalars(unit_query.order_by(CourseUnit.sequence, CourseUnit.id)).all()
     skills = db.scalars(select(Skill).where(
@@ -752,8 +760,10 @@ def get_course_map(
     )).all() if skill_ids else []
     lesson_ids = list({link.lesson_id for link in lesson_links})
     lesson_query = select(Lesson).where(Lesson.id.in_(lesson_ids))
-    if not staff:
+    if not staff and not preview:
         lesson_query = lesson_query.where(Lesson.status == "published")
+    elif preview:
+        lesson_query = lesson_query.where(Lesson.status != "withdrawn")
     lessons = db.scalars(lesson_query).all() if lesson_ids else []
     if not staff:
         lessons = [
@@ -1087,11 +1097,69 @@ def get_material_text(
     }
 
 
+@router.post("/content/feedback")
+def submit_student_content_feedback(
+    payload: StudentContentFeedbackRequest,
+    db: Session = Depends(get_db),
+    user: User = Depends(current_user),
+):
+    """Collect preview feedback without making it graded or mastery-bearing."""
+    if user.role != "student":
+        raise HTTPException(status_code=403, detail="Student feedback is only available to students")
+    entity = db.get(Lesson, payload.entity_id) if payload.entity_type == "lesson" else db.get(AssessmentBlueprint, payload.entity_id)
+    if not entity:
+        raise HTTPException(status_code=404, detail="Preview content not found")
+    if payload.entity_type == "lesson":
+        event_id = entity.event_id
+        course = db.scalar(select(Course).where(Course.event_id == event_id))
+        version = db.scalar(select(LessonVersion).where(
+            LessonVersion.lesson_id == entity.id,
+            LessonVersion.version == entity.current_version,
+        ))
+        content_version = version.version if version else entity.current_version
+    else:
+        course = db.get(Course, entity.course_id)
+        event_id = course.event_id if course else None
+        content_version = entity.version
+    if not course or course.status != "student_preview" or not event_id:
+        raise HTTPException(status_code=409, detail="Feedback is only available for student preview content")
+    row = StudentContentFeedback(
+        user_id=user.id, event_id=event_id, course_id=course.id,
+        entity_type=payload.entity_type, entity_id=payload.entity_id,
+        content_version=content_version, rating=payload.rating,
+        category=payload.category, feedback=payload.feedback.strip(),
+    )
+    db.add(row)
+    db.commit()
+    return {"saved": True, "feedback_id": row.id, "message": "Thanks — your feedback will help improve this preview."}
+
+
+@router.get("/content/feedback")
+def list_student_content_feedback(
+    event_id: int | None = None,
+    db: Session = Depends(get_db),
+    user: User = Depends(require_content_staff),
+):
+    query = select(StudentContentFeedback).order_by(StudentContentFeedback.created_at.desc())
+    if event_id:
+        query = query.where(StudentContentFeedback.event_id == event_id)
+    rows = db.scalars(query.limit(500)).all()
+    return [{
+        "id": row.id, "event_id": row.event_id, "course_id": row.course_id,
+        "entity_type": row.entity_type, "entity_id": row.entity_id,
+        "content_version": row.content_version, "rating": row.rating,
+        "category": row.category, "feedback": row.feedback,
+        "created_at": row.created_at,
+    } for row in rows]
+
+
 @router.post("/lessons/{lesson_id}/start")
 def start_lesson(lesson_id: int, db: Session = Depends(get_db), user: User = Depends(current_user)):
     lesson = db.get(Lesson, lesson_id)
+    preview_course = db.scalar(select(Course).where(Course.event_id == lesson.event_id)) if lesson else None
     if not lesson or (
         lesson.status != "published"
+        and not (preview_course and preview_course.status == "student_preview")
         and user.role not in {"admin", "editor", "sme", "calibrator"}
     ):
         raise HTTPException(status_code=404, detail="Lesson not found")
@@ -1128,8 +1196,10 @@ def save_lesson_progress(
     user: User = Depends(current_user),
 ):
     lesson = db.get(Lesson, lesson_id)
+    preview_course = db.scalar(select(Course).where(Course.event_id == lesson.event_id)) if lesson else None
     if not lesson or (
         lesson.status != "published"
+        and not (preview_course and preview_course.status == "student_preview")
         and user.role not in {"admin", "editor", "sme", "calibrator"}
     ):
         raise HTTPException(status_code=404, detail="Lesson not found")
@@ -1178,8 +1248,10 @@ def submit_lesson_checkpoint(
     user: User = Depends(current_user),
 ):
     lesson = db.get(Lesson, lesson_id)
+    preview_course = db.scalar(select(Course).where(Course.event_id == lesson.event_id)) if lesson else None
     if not lesson or (
         lesson.status != "published"
+        and not (preview_course and preview_course.status == "student_preview")
         and user.role not in {"admin", "editor", "sme", "calibrator"}
     ):
         raise HTTPException(status_code=404, detail="Lesson not found")
