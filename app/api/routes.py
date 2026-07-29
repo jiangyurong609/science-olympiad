@@ -15,7 +15,7 @@ from app.core.security import create_access_token, decode_access_token, hash_pas
 from app.models.entities import (
     AccommodationChange, AccommodationProfile, Assignment, Attempt, AttemptStatus, AuditLog,
     AssessmentBlueprint, Concept, ContentChallenge, ContentChallengeEvent, ContentGap, Course,
-    CourseSourceCoverage, CourseUnit, CourseVersion, Event, Exam, ExamItem, GuardianConsent, ParentMaterialShare, ParentStudentLink,
+    CourseSourceCoverage, CourseUnit, CourseVersion, ContentRelease, Event, Exam, ExamItem, GuardianConsent, ParentMaterialShare, ParentStudentLink,
     GenerationRun, Lesson, LessonProgress, LessonSkill, LessonVersion, MasteryState, PracticeSession,
     PracticeSet, PracticeSetVersion, Question, QuestionCalibration, QuestionReview, RemediationCase,
     Response, ResponseRevision, ReviewDecision, RightsStatus,
@@ -1082,6 +1082,53 @@ def list_content_releases(
             "blockers": blockers,
         })
     return rows
+
+
+@router.get("/content/releases/{course_id}/history")
+def content_release_history(
+    course_id: int,
+    db: Session = Depends(get_db),
+    actor: User = Depends(require_content_staff),
+):
+    """Return the immutable release transitions for one course.
+
+    The course's mutable status is only the current pointer.  This history is
+    the operational record used to explain who released, withdrew, or rolled
+    back a version and why.
+    """
+    course = db.get(Course, course_id)
+    if not course:
+        raise HTTPException(status_code=404, detail="Course not found")
+    releases = db.scalars(select(ContentRelease).where(
+        ContentRelease.course_id == course.id,
+    ).order_by(ContentRelease.created_at.desc(), ContentRelease.id.desc())).all()
+    transitions = db.scalars(select(AuditLog).where(
+        AuditLog.entity_type == "course",
+        AuditLog.entity_id == str(course.id),
+        AuditLog.action.like("course.release.%"),
+    ).order_by(AuditLog.created_at.desc(), AuditLog.id.desc())).all()
+    return {
+        "course_id": course.id,
+        "current_version": course.current_version,
+        "current_status": course.status,
+        "releases": [{
+            "id": release.id,
+            "version": release.version,
+            "status": release.status,
+            "release_notes": release.release_notes,
+            "manifest": release.manifest,
+            "published_by_user_id": release.published_by_user_id,
+            "published_at": release.published_at,
+            "created_at": release.created_at,
+        } for release in releases],
+        "transitions": [{
+            "id": transition.id,
+            "decision": transition.action.removeprefix("course.release."),
+            "actor_user_id": transition.actor_user_id,
+            "details": transition.details,
+            "created_at": transition.created_at,
+        } for transition in transitions],
+    }
 
 
 @router.post("/content/releases/{course_id}")

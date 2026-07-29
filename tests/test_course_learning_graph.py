@@ -357,6 +357,35 @@ def test_release_manager_surfaces_blockers_and_version_diff(client):
     )
     assert blocked.status_code == 409
     assert "blockers" in blocked.json()["detail"]
+
+
+def test_release_manager_keeps_transition_history(client, monkeypatch):
+    _, _, course_id, _, _, _, _ = seed_course()
+    with SessionLocal() as db:
+        admin = User(
+            email="history-admin@example.com", full_name="History Admin",
+            password_hash=hash_password("password123"), role="admin", division="B",
+        )
+        db.add(admin)
+        db.commit()
+        token = create_access_token(str(admin.id))
+
+    # Use a complete release fixture without weakening the production route;
+    # the quality gate itself is covered by the preceding test.
+    import app.api.routes as routes_module
+    monkeypatch.setattr(routes_module, "_course_release_blockers", lambda db, course: [])
+    released = client.post(
+        f"/api/content/releases/{course_id}",
+        data={"decision": "preview", "notes": "Preview for student feedback"},
+        headers=auth(token),
+    )
+    assert released.status_code == 200
+    history = client.get(f"/api/content/releases/{course_id}/history", headers=auth(token))
+    assert history.status_code == 200
+    body = history.json()
+    assert body["current_status"] == "student_preview"
+    assert body["transitions"][0]["decision"] == "preview"
+    assert body["transitions"][0]["details"]["notes"] == "Preview for student feedback"
 def test_content_staff_can_audit_source_coverage_and_open_gaps(client):
     _, _, course_id, unit_id, skill_id, lesson_id, _ = seed_course()
     with SessionLocal() as db:
