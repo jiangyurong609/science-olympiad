@@ -36,8 +36,30 @@ def validate_raw_artifact(content: bytes, media_type: str) -> str:
 def store_raw_artifact(content: bytes, media_type: str) -> dict:
     scan_status = validate_raw_artifact(content, media_type)
     digest = hashlib.sha256(content).hexdigest()
-    root = Path(get_settings().artifact_store_path).expanduser().resolve()
     relative = Path(digest[:2]) / f"{digest}{_extension(media_type)}"
+    settings = get_settings()
+    if settings.artifact_store_backend == "gcs":
+        if not settings.artifact_store_bucket:
+            raise ArtifactError("GCS artifact bucket is not configured")
+        try:
+            from google.cloud import storage
+
+            client = storage.Client()
+            bucket = client.bucket(settings.artifact_store_bucket)
+            blob = bucket.blob(relative.as_posix())
+            if not blob.exists(client):
+                blob.upload_from_string(content, content_type=media_type or "application/octet-stream")
+        except Exception as error:  # noqa: BLE001 — normalize provider failures
+            raise ArtifactError(f"GCS artifact upload failed: {error}") from error
+        return {
+            "storage_key": relative.as_posix(),
+            "content_hash": digest,
+            "byte_count": len(content),
+            "detected_media_type": media_type,
+            "scan_status": scan_status,
+        }
+
+    root = Path(settings.artifact_store_path).expanduser().resolve()
     destination = root / relative
     destination.parent.mkdir(parents=True, exist_ok=True)
     if not destination.exists():

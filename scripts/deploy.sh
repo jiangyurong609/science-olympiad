@@ -47,7 +47,7 @@ echo "==> Deploying to Cloud Run…"
 gcloud run deploy "$SERVICE" \
   --project "$PROJECT" --region "$REGION" \
   --image "$IMAGE" \
-  --update-env-vars "OPENAI_COMPATIBLE_BASE_URL=${LLM_BASE_URL},OPENAI_MODEL=${LLM_MODEL},REDIS_URL=${REDIS_URL:-redis://10.226.253.171:6379}" \
+  --update-env-vars "OPENAI_COMPATIBLE_BASE_URL=${LLM_BASE_URL},OPENAI_MODEL=${LLM_MODEL},REDIS_URL=${REDIS_URL:-redis://10.226.253.171:6379},ARTIFACT_STORE_BACKEND=${ARTIFACT_STORE_BACKEND:-local},ARTIFACT_STORE_BUCKET=${ARTIFACT_STORE_BUCKET:-}" \
   --update-secrets "OPENAI_API_KEY=${SUNRA_SECRET}:latest" \
   --vpc-connector "${VPC_CONNECTOR:-soplat-connector}" \
   --vpc-egress private-ranges-only \

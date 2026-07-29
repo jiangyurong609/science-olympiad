@@ -17,6 +17,8 @@ class Settings(BaseSettings):
     allowed_crawl_domains: str = "nasa.gov,noaa.gov,usgs.gov,nih.gov,cdc.gov,epa.gov,nist.gov"
     crawl_max_bytes: int = 5_000_000
     artifact_store_path: str = "./data/artifacts"
+    artifact_store_backend: str = "local"
+    artifact_store_bucket: str | None = None
     openai_compatible_base_url: str | None = None
     openai_api_key: str | None = None
     openai_model: str = "gpt-4.1-mini"
@@ -47,6 +49,10 @@ class Settings(BaseSettings):
             raise ValueError("AUTH_PROVIDER=firebase is required in production")
         if self.environment.lower() == "production" and not self.artifact_store_path:
             raise ValueError("ARTIFACT_STORE_PATH is required in production")
+        if self.artifact_store_backend not in {"local", "gcs"}:
+            raise ValueError("ARTIFACT_STORE_BACKEND must be local or gcs")
+        if self.environment.lower() == "production" and self.artifact_store_backend == "gcs" and not self.artifact_store_bucket:
+            raise ValueError("ARTIFACT_STORE_BUCKET is required when using GCS artifacts")
         if self.auth_provider == "firebase" and not self.firebase_project_id:
             raise ValueError("FIREBASE_PROJECT_ID is required when Firebase authentication is enabled")
         if self.auth_provider == "firebase" and not self.firebase_web_api_key:
