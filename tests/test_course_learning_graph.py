@@ -180,6 +180,149 @@ def test_staff_can_preview_draft_lesson_while_students_cannot(client):
     ).status_code == 200
 
 
+def test_lesson_review_queue_requires_complete_independent_editor_and_sme_reviews(client):
+    _, _, _, _, _, lesson_id, _ = seed_course()
+    with SessionLocal() as db:
+        lesson = db.get(Lesson, lesson_id)
+        lesson.status = "draft"
+        course = db.scalar(select(Course).where(Course.event_id == lesson.event_id))
+        course.status = "review_required"
+        version = db.scalar(select(LessonVersion).where(
+            LessonVersion.lesson_id == lesson.id,
+            LessonVersion.version == lesson.current_version,
+        ))
+        version.review_status = "ai_draft"
+        source = Source(
+            url="https://example.org/review-guide",
+            title="Review Guide",
+            publisher="Science Source",
+        )
+        db.add(source)
+        db.flush()
+        snapshot = SourceSnapshot(
+            source_id=source.id,
+            final_url=source.url,
+            content_hash="lesson-review-snapshot",
+            content_type="text/html",
+            byte_count=50,
+            extracted_text="Hardness is resistance to scratching.",
+        )
+        db.add(snapshot)
+        db.flush()
+        passage = SourcePassage(
+            source_id=source.id,
+            source_snapshot_id=snapshot.id,
+            sequence=1,
+            locator="Hardness section",
+            passage_type="html_section",
+            text="Hardness is resistance to scratching.",
+            content_hash="lesson-review-passage",
+        )
+        db.add(passage)
+        db.flush()
+        version.content = [{
+            "id": "hardness-teach",
+            "type": "steps",
+            "heading": "Measure hardness",
+            "passage_ids": [passage.id],
+        }]
+        version.citations = [{
+            "source_id": source.id,
+            "source_snapshot_id": snapshot.id,
+            "source_passage_id": passage.id,
+        }]
+        db.execute(delete(ReviewDecision).where(
+            ReviewDecision.entity_type == "lesson",
+            ReviewDecision.entity_id == lesson.id,
+        ))
+        editor = db.scalar(select(User).where(User.email == "reviewer@example.com"))
+        sme = User(
+            email="lesson-sme@example.com",
+            full_name="Independent Lesson SME",
+            password_hash=hash_password("password123"),
+            role="sme",
+            division="B",
+        )
+        db.add(sme)
+        db.flush()
+        editor_token = create_access_token(str(editor.id))
+        sme_token = create_access_token(str(sme.id))
+        db.commit()
+
+    queue = client.get(
+        "/api/content/lessons/review-queue",
+        headers=auth(editor_token),
+    )
+    assert queue.status_code == 200
+    assert queue.json()[0]["next_stage"] == "editor"
+    assert queue.json()[0]["preview_url"].endswith("/lesson/hardness")
+    assert queue.json()[0]["evidence"][0]["text"] == (
+        "Hardness is resistance to scratching."
+    )
+
+    incomplete = client.post(
+        f"/api/content/lessons/{lesson_id}/reviews",
+        headers=auth(editor_token),
+        json={
+            "stage": "editor",
+            "decision": "approved",
+            "checklist": {"objective_measurable": True},
+            "notes": "",
+        },
+    )
+    assert incomplete.status_code == 422
+
+    editor_checks = {
+        "objective_measurable": True,
+        "sequence_coherent": True,
+        "reading_level_appropriate": True,
+        "interactions_useful": True,
+        "feedback_actionable": True,
+        "no_ai_filler": True,
+    }
+    approved = client.post(
+        f"/api/content/lessons/{lesson_id}/reviews",
+        headers=auth(editor_token),
+        json={
+            "stage": "editor",
+            "decision": "approved",
+            "checklist": editor_checks,
+            "notes": "The lesson sequence and feedback are clear.",
+        },
+    )
+    assert approved.status_code == 200
+    assert approved.json()["review_status"] == "editor_reviewed"
+    assert approved.json()["student_visible"] is False
+
+    sme_checks = {
+        "claims_supported": True,
+        "citations_verified": True,
+        "examples_accurate": True,
+        "answer_keys_verified": True,
+        "misconceptions_accurate": True,
+        "competition_alignment": True,
+    }
+    approved = client.post(
+        f"/api/content/lessons/{lesson_id}/reviews",
+        headers=auth(sme_token),
+        json={
+            "stage": "sme",
+            "decision": "approved",
+            "checklist": sme_checks,
+            "notes": "The scientific content and competition alignment are sound.",
+        },
+    )
+    assert approved.status_code == 200
+    assert approved.json()["review_status"] == "sme_approved"
+    assert approved.json()["student_visible"] is False
+
+    queue = client.get(
+        "/api/content/lessons/review-queue",
+        headers=auth(sme_token),
+    )
+    assert queue.json()[0]["next_stage"] == "complete"
+
+
 def test_content_staff_can_audit_source_coverage_and_open_gaps(client):
     _, _, course_id, unit_id, skill_id, lesson_id, _ = seed_course()
     with SessionLocal() as db:

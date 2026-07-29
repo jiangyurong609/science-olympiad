@@ -26,6 +26,7 @@ const state = {
   activeTaxonomy: null,
   accommodation: null,
   sourceCoverage: [],
+  lessonReviewQueue: [],
   questionReviewQueue: [],
   calibrationQueue: [],
   contentChallenges: [],
@@ -121,7 +122,11 @@ function safeUrl(value = '') {
 }
 
 function safeActionUrl(value = '') {
-  if (value.startsWith('/#') || value.startsWith('#')) return value;
+  if (
+    value.startsWith('/#')
+    || value.startsWith('#')
+    || value.startsWith('/courses/')
+  ) return value;
   return safeUrl(value);
 }
 
@@ -1438,6 +1443,90 @@ const reviewChecks = {
   sme: ['factually_supported', 'answer_key_verified', 'citations_verified', 'no_material_ambiguity'],
 };
 
+const lessonReviewChecks = {
+  editor: [
+    'objective_measurable',
+    'sequence_coherent',
+    'reading_level_appropriate',
+    'interactions_useful',
+    'feedback_actionable',
+    'no_ai_filler',
+  ],
+  sme: [
+    'claims_supported',
+    'citations_verified',
+    'examples_accurate',
+    'answer_keys_verified',
+    'misconceptions_accurate',
+    'competition_alignment',
+  ],
+};
+
+function renderLessonReviewQueue() {
+  const lessons = state.lessonReviewQueue;
+  const waiting = lessons.filter(lesson => !['complete', 'revision_required'].includes(lesson.next_stage));
+  $('lesson-editorial-count').textContent = `${waiting.length} waiting · ${lessons.length} total`;
+  $('lesson-review-empty').hidden = lessons.length > 0;
+  $('lesson-review-queue').innerHTML = lessons.map(lesson => {
+    const stage = lesson.next_stage;
+    const sameEditor = stage === 'sme' && lesson.decisions.some(
+      decision => decision.stage === 'editor'
+        && decision.decision === 'approved'
+        && decision.reviewer_user_id === state.user.id,
+    );
+    const canReview = stage === 'editor'
+      ? ['editor', 'admin'].includes(state.user.role)
+      : stage === 'sme'
+        ? ['sme', 'admin'].includes(state.user.role) && !sameEditor
+        : false;
+    const stageLabel = {
+      editor: 'Needs editorial review',
+      sme: 'Needs scientific review',
+      complete: 'Human review complete',
+      revision_required: 'Revision required',
+    }[stage] || stage.replaceAll('_', ' ');
+    const lessonBlocks = lesson.blocks.map((block, index) => (
+      `<li><span>${index + 1}</span><div><strong>${escapeHtml(block.heading || block.type.replaceAll('_', ' '))}</strong><small>${escapeHtml(block.type.replaceAll('_', ' '))}${block.checkpoint ? ` · ${escapeHtml(block.checkpoint)}` : ''}</small></div></li>`
+    )).join('');
+    const evidence = lesson.evidence.length ? lesson.evidence.map(item => {
+      const use = item.blocks.length
+        ? item.blocks.map(block => block.heading || block.type).filter(Boolean).join(' · ')
+        : 'Lesson citation';
+      return `<details class="lesson-evidence">
+        <summary><span><strong>${escapeHtml(item.source_title)}</strong><small>${escapeHtml(item.locator)} · ${escapeHtml(use)}</small></span><span>View passage</span></summary>
+        <blockquote>${escapeHtml(item.text || 'The retained passage is missing.')}</blockquote>
+        <footer><span translate="no">Snapshot ${escapeHtml((item.snapshot_hash || 'missing').slice(0, 12))}</span>${item.source_url ? `<a href="${safeUrl(item.source_url)}" target="_blank" rel="noopener noreferrer">Open source ↗</a>` : ''}</footer>
+      </details>`;
+    }).join('') : '<p class="citation-missing">No retained source passages are attached. Approval must remain blocked.</p>';
+    const decisionHistory = lesson.decisions.length
+      ? `<ul class="lesson-review-history">${lesson.decisions.map(decision => `<li><strong>${escapeHtml(decision.stage)}</strong> · ${escapeHtml(decision.decision.replaceAll('_', ' '))}${decision.notes ? `<span>${escapeHtml(decision.notes)}</span>` : ''}</li>`).join('')}</ul>`
+      : '<p class="review-waiting">No human decision has been recorded for this version.</p>';
+    let actions = '';
+    if (canReview) {
+      const checks = lessonReviewChecks[stage].map(check => `<label class="review-check"><input type="checkbox" name="${escapeHtml(check)}"><span>${escapeHtml(check.replaceAll('_', ' '))}</span></label>`).join('');
+      actions = `<fieldset class="review-checklist"><legend>${stage === 'editor' ? 'Editorial lesson checklist' : 'Scientific lesson checklist'}</legend>${checks}</fieldset>
+        <label class="review-notes">Review notes<textarea name="lesson-review-notes" rows="3" maxlength="4000" placeholder="Record specific evidence or actionable revision guidance…"></textarea></label>
+        <div class="review-actions"><button class="button button-secondary" type="button" data-lesson-review-decision="rewrite_required" data-lesson-id="${lesson.id}" data-lesson-review-stage="${stage}">Request revision</button><button class="button button-primary" type="button" data-lesson-review-decision="approved" data-lesson-id="${lesson.id}" data-lesson-review-stage="${stage}">Approve ${stage === 'editor' ? 'editorial' : 'scientific'} review</button></div>`;
+    } else if (sameEditor) {
+      actions = '<p class="review-waiting">A different person must complete the scientific review.</p>';
+    } else if (stage === 'complete') {
+      actions = '<p class="lesson-review-complete">Editor and independent SME approvals are recorded. Release remains blocked until claims, sources, assessments, and course gates pass.</p>';
+    } else if (stage === 'revision_required') {
+      actions = '<p class="citation-missing">This exact version cannot be approved again. Revise the lesson and create a new version.</p>';
+    } else {
+      actions = `<p class="review-waiting">Waiting for a ${escapeHtml(stage)} reviewer.</p>`;
+    }
+    return `<article class="lesson-review-card surface" data-lesson-review-card="${lesson.id}">
+      <header><div><span class="coverage-season">${escapeHtml(lesson.event.name)} · ${escapeHtml(lesson.unit?.title || 'Course')} · Version ${lesson.version}</span><h3>${escapeHtml(lesson.title)}</h3><p>${escapeHtml(lesson.summary)}</p></div><span class="coverage-release ${stage === 'complete' ? 'ready' : 'blocked'}">${escapeHtml(stageLabel)}</span></header>
+      <div class="lesson-review-actions"><a class="button button-secondary button-compact" href="${escapeHtml(safeActionUrl(lesson.preview_url))}" target="_blank" rel="noopener">Preview lesson ↗</a><span>${lesson.estimated_minutes} min · ${lesson.blocks.length} sections · ${lesson.evidence.length} source passages</span></div>
+      <details class="lesson-review-detail"><summary>Inspect lesson sequence</summary><ol class="lesson-review-blocks">${lessonBlocks}</ol></details>
+      <details class="lesson-review-detail"><summary>Inspect exact source evidence (${lesson.evidence.length})</summary><div class="lesson-evidence-list">${evidence}</div></details>
+      <details class="lesson-review-detail"><summary>Decision history (${lesson.decisions.length})</summary>${decisionHistory}</details>
+      ${actions}<div class="review-status" role="status" aria-live="polite"></div>
+    </article>`;
+  }).join('');
+}
+
 function renderQuestionReviewQueue() {
   const questions = state.questionReviewQueue;
   $('editorial-count').textContent = `${questions.length} Item${questions.length === 1 ? '' : 's'}`;
@@ -1492,12 +1581,14 @@ function renderContentChallengeQueue() {
 async function loadContentOperations(button = null) {
   setBusy(button, true, 'Refreshing Workspace…');
   try {
-    const [coverage, queue, calibration, challenges] = await Promise.all([api('/content/source-coverage'), api('/content/questions/review-queue'), api('/content/questions/calibration-queue'), api('/content/challenges')]);
+    const [coverage, lessons, queue, calibration, challenges] = await Promise.all([api('/content/source-coverage'), api('/content/lessons/review-queue'), api('/content/questions/review-queue'), api('/content/questions/calibration-queue'), api('/content/challenges')]);
     state.sourceCoverage = coverage.scorecards;
+    state.lessonReviewQueue = lessons;
     state.questionReviewQueue = queue;
     state.calibrationQueue = calibration;
     state.contentChallenges = challenges;
     renderSourceCoverage();
+    renderLessonReviewQueue();
     renderQuestionReviewQueue();
     renderCalibrationQueue();
     renderContentChallengeQueue();
@@ -1641,13 +1732,15 @@ async function loadApplication() {
   if (roleMode === 'student') $('today-copy').textContent = 'Loading your study plan…';
   try {
     if (roleMode === 'content' && !contentPreview) {
-      const [events, coverage, queue, calibration, challenges] = await Promise.all([api('/events'), api('/content/source-coverage'), api('/content/questions/review-queue'), api('/content/questions/calibration-queue'), api('/content/challenges')]);
+      const [events, coverage, lessons, queue, calibration, challenges] = await Promise.all([api('/events'), api('/content/source-coverage'), api('/content/lessons/review-queue'), api('/content/questions/review-queue'), api('/content/questions/calibration-queue'), api('/content/challenges')]);
       state.events = events;
       state.sourceCoverage = coverage.scorecards;
+      state.lessonReviewQueue = lessons;
       state.questionReviewQueue = queue;
       state.calibrationQueue = calibration;
       state.contentChallenges = challenges;
       renderSourceCoverage();
+      renderLessonReviewQueue();
       renderQuestionReviewQueue();
       renderCalibrationQueue();
       renderContentChallengeQueue();
@@ -1742,6 +1835,39 @@ $('show-assignment-form').addEventListener('click', () => {
 });
 
 $('refresh-content-operations').addEventListener('click', event => loadContentOperations(event.currentTarget));
+$('lesson-review-queue').addEventListener('click', async event => {
+  const button = event.target.closest('[data-lesson-review-decision]');
+  if (!button) return;
+  const card = button.closest('[data-lesson-review-card]');
+  const status = card.querySelector('.review-status');
+  const checklist = Object.fromEntries(
+    [...card.querySelectorAll('.review-check input')].map(input => [
+      input.name,
+      input.checked,
+    ]),
+  );
+  const notes = card.querySelector('[name="lesson-review-notes"]')?.value || '';
+  setBusy(button, true, 'Saving lesson review…');
+  status.textContent = '';
+  try {
+    await api(`/content/lessons/${button.dataset.lessonId}/reviews`, {
+      method: 'POST',
+      body: JSON.stringify({
+        stage: button.dataset.lessonReviewStage,
+        decision: button.dataset.lessonReviewDecision,
+        checklist,
+        notes,
+      }),
+    });
+    state.lessonReviewQueue = await api('/content/lessons/review-queue');
+    renderLessonReviewQueue();
+    toast('Lesson review decision saved.');
+  } catch (error) {
+    status.textContent = error.message;
+  } finally {
+    setBusy(button, false);
+  }
+});
 $('question-review-queue').addEventListener('click', async event => {
   const button = event.target.closest('[data-review-decision], [data-publish-question]');
   if (!button) return;

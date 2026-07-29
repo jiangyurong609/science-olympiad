@@ -66,6 +66,13 @@ class QuestionReviewRequest(BaseModel):
     notes: str = Field(default="", max_length=4000)
 
 
+class LessonReviewRequest(BaseModel):
+    stage: str = Field(pattern="^(editor|sme)$")
+    decision: str = Field(pattern="^(approved|rewrite_required|rejected)$")
+    checklist: dict[str, bool] = Field(default_factory=dict)
+    notes: str = Field(default="", max_length=4000)
+
+
 class QuestionCalibrationRequest(BaseModel):
     decision: str = Field(pattern="^(accepted|rejected)$")
     notes: str = Field(min_length=10, max_length=4000)

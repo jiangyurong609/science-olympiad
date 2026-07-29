@@ -19,7 +19,7 @@ from app.models.entities import (
     PracticeSet, PracticeSetVersion, Question, QuestionCalibration, QuestionReview, RemediationCase,
     Response, ResponseRevision, ReviewDecision, RightsStatus,
     EventSourceMap, EventTaxonScope, RawArtifact, ScientificClaim, Skill, Source,
-    SourceSnapshot, SpecimenAsset, Taxon,
+    SourcePassage, SourceSnapshot, SpecimenAsset, Taxon,
     Team, TeamMembership, TransferAttempt, TutorMessage, TutorSession, User, UserNotification,
 )
 from app.schemas.api import (
@@ -28,7 +28,7 @@ from app.schemas.api import (
     ExamCreateRequest,
     FirebaseBootstrapRequest,
     GuardianConsentRequest, LoginRequest,
-    LessonCheckpointRequest, LessonProgressRequest, MockExamRequest, PracticeAnswerRequest,
+    LessonCheckpointRequest, LessonProgressRequest, LessonReviewRequest, MockExamRequest, PracticeAnswerRequest,
     PracticeStartRequest, QuestionCalibrationRequest, QuestionGenerateRequest, QuestionReviewRequest, ReflectionRequest, RegisterRequest,
     ResponseSaveRequest,
     SourceCreate, TeamCreateRequest, TeamMemberRequest, TransferAnswerRequest,
@@ -1841,6 +1841,273 @@ REVIEW_CHECKS = {
     "editor": {"clear_language", "single_best_answer", "distractors_plausible", "age_appropriate", "original_wording"},
     "sme": {"factually_supported", "answer_key_verified", "citations_verified", "no_material_ambiguity"},
 }
+
+
+LESSON_REVIEW_CHECKS = {
+    "editor": {
+        "objective_measurable",
+        "sequence_coherent",
+        "reading_level_appropriate",
+        "interactions_useful",
+        "feedback_actionable",
+        "no_ai_filler",
+    },
+    "sme": {
+        "claims_supported",
+        "citations_verified",
+        "examples_accurate",
+        "answer_keys_verified",
+        "misconceptions_accurate",
+        "competition_alignment",
+    },
+}
+
+
+def _lesson_citation_evidence(
+    db: Session,
+    version: LessonVersion,
+) -> list[dict]:
+    evidence = []
+    seen = set()
+    for citation in version.citations or []:
+        passage_id = citation.get("source_passage_id")
+        if not passage_id or passage_id in seen:
+            continue
+        seen.add(passage_id)
+        passage = db.get(SourcePassage, passage_id)
+        source = db.get(Source, passage.source_id) if passage else None
+        snapshot = db.get(
+            SourceSnapshot,
+            passage.source_snapshot_id,
+        ) if passage else None
+        evidence.append({
+            "passage_id": passage.id if passage else passage_id,
+            "text": passage.text if passage else "",
+            "locator": passage.locator if passage else "Missing passage",
+            "passage_type": passage.passage_type if passage else "",
+            "source_id": source.id if source else citation.get("source_id"),
+            "source_title": source.title if source else "Missing source",
+            "source_url": source.url if source else "",
+            "publisher": source.publisher if source else "",
+            "snapshot_id": snapshot.id if snapshot else None,
+            "snapshot_hash": snapshot.content_hash if snapshot else "",
+            "blocks": [
+                {
+                    "type": block.get("type", ""),
+                    "heading": block.get("heading") or block.get("title") or "",
+                }
+                for block in version.content or []
+                if passage_id in (block.get("passage_ids") or [])
+            ],
+        })
+    return evidence
+
+
+@router.get("/content/lessons/review-queue")
+def lesson_review_queue(
+    db: Session = Depends(get_db),
+    actor: User = Depends(require_content_staff),
+):
+    versions = db.scalars(select(LessonVersion).where(
+        LessonVersion.review_status != "published",
+    ).order_by(LessonVersion.lesson_id, LessonVersion.version)).all()
+    queue = []
+    for version in versions:
+        lesson = db.get(Lesson, version.lesson_id)
+        if (
+            not lesson
+            or lesson.status == "withdrawn"
+            or version.version != lesson.current_version
+        ):
+            continue
+        links = db.scalars(select(LessonSkill).where(
+            LessonSkill.lesson_id == lesson.id,
+        ).order_by(LessonSkill.is_primary.desc(), LessonSkill.id)).all()
+        skill = db.get(Skill, links[0].skill_id) if links else None
+        unit = db.get(CourseUnit, skill.unit_id) if skill else None
+        course = db.get(Course, skill.course_id) if skill else None
+        if not course or course.status == "published":
+            continue
+        event = db.get(Event, course.event_id)
+        decisions = db.scalars(select(ReviewDecision).where(
+            ReviewDecision.entity_type == "lesson",
+            ReviewDecision.entity_id == lesson.id,
+            ReviewDecision.entity_version == version.version,
+        ).order_by(ReviewDecision.created_at, ReviewDecision.id)).all()
+        latest_by_stage = {}
+        for decision in decisions:
+            latest_by_stage[decision.stage] = decision
+        editor = latest_by_stage.get("editor")
+        sme = latest_by_stage.get("sme")
+        blocked = next((
+            decision for decision in (editor, sme)
+            if decision and decision.decision != "approved"
+        ), None)
+        if blocked:
+            next_stage = "revision_required"
+        elif not editor or editor.decision != "approved":
+            next_stage = "editor"
+        elif not sme or sme.decision != "approved":
+            next_stage = "sme"
+        else:
+            next_stage = "complete"
+        queue.append({
+            "id": lesson.id,
+            "slug": lesson.slug,
+            "version": version.version,
+            "status": lesson.status,
+            "review_status": version.review_status,
+            "next_stage": next_stage,
+            "title": lesson.title,
+            "summary": lesson.summary,
+            "estimated_minutes": lesson.estimated_minutes,
+            "event": {
+                "id": event.id,
+                "name": event.name,
+                "slug": event.slug,
+                "season": event.season,
+                "division": event.division,
+            },
+            "course": {
+                "id": course.id,
+                "title": course.title,
+                "slug": course.slug,
+            },
+            "unit": {
+                "id": unit.id,
+                "title": unit.title,
+                "slug": unit.slug,
+            } if unit else None,
+            "skill": {
+                "id": skill.id,
+                "name": skill.name,
+                "slug": skill.slug,
+            } if skill else None,
+            "blocks": [{
+                "type": block.get("type", ""),
+                "heading": block.get("heading") or block.get("title") or "",
+                "checkpoint": block.get("question", ""),
+            } for block in version.content or []],
+            "evidence": _lesson_citation_evidence(db, version),
+            "decisions": [{
+                "stage": decision.stage,
+                "decision": decision.decision,
+                "reviewer_user_id": decision.reviewer_user_id,
+                "notes": decision.notes,
+                "created_at": decision.created_at,
+            } for decision in decisions],
+            "preview_url": (
+                f"/courses/{event.season}/{event.slug}/lesson/{lesson.slug}"
+            ),
+        })
+    return queue
+
+
+@router.post("/content/lessons/{lesson_id}/reviews")
+def review_lesson(
+    lesson_id: int,
+    payload: LessonReviewRequest,
+    db: Session = Depends(get_db),
+    actor: User = Depends(require_content_staff),
+):
+    lesson = db.get(Lesson, lesson_id)
+    if not lesson:
+        raise HTTPException(status_code=404, detail="Lesson not found")
+    version = db.scalar(select(LessonVersion).where(
+        LessonVersion.lesson_id == lesson.id,
+        LessonVersion.version == lesson.current_version,
+    ))
+    if not version:
+        raise HTTPException(status_code=409, detail="Current lesson version is missing")
+    if payload.stage == "editor" and actor.role not in {"editor", "admin"}:
+        raise HTTPException(status_code=403, detail="Editor or administrator role required")
+    if payload.stage == "sme" and actor.role not in {"sme", "admin"}:
+        raise HTTPException(status_code=403, detail="SME or administrator role required")
+    decisions = db.scalars(select(ReviewDecision).where(
+        ReviewDecision.entity_type == "lesson",
+        ReviewDecision.entity_id == lesson.id,
+        ReviewDecision.entity_version == version.version,
+    ).order_by(ReviewDecision.created_at, ReviewDecision.id)).all()
+    if any(row.decision != "approved" for row in decisions):
+        raise HTTPException(
+            status_code=409,
+            detail="This version requires revision; create a new version before reviewing again",
+        )
+    existing = next((
+        row for row in reversed(decisions)
+        if row.stage == payload.stage and row.decision == "approved"
+    ), None)
+    if existing:
+        raise HTTPException(
+            status_code=409,
+            detail=f"{payload.stage} already approved this lesson version",
+        )
+    missing = sorted(
+        LESSON_REVIEW_CHECKS[payload.stage]
+        - {key for key, passed in payload.checklist.items() if passed}
+    )
+    if payload.decision == "approved" and missing:
+        raise HTTPException(status_code=422, detail={
+            "message": "Required lesson review checks are incomplete",
+            "missing_checks": missing,
+        })
+    if payload.decision != "approved" and len(payload.notes.strip()) < 10:
+        raise HTTPException(
+            status_code=422,
+            detail="Revision and rejection decisions require actionable notes",
+        )
+    if payload.stage == "sme":
+        editor = next((
+            row for row in reversed(decisions)
+            if row.stage == "editor" and row.decision == "approved"
+        ), None)
+        if not editor:
+            raise HTTPException(
+                status_code=409,
+                detail="An editor approval for this version is required",
+            )
+        if editor.reviewer_user_id == actor.id:
+            raise HTTPException(
+                status_code=409,
+                detail="SME approval must be independent from editor approval",
+            )
+    decision = ReviewDecision(
+        entity_type="lesson",
+        entity_id=lesson.id,
+        entity_version=version.version,
+        stage=payload.stage,
+        decision=payload.decision,
+        reviewer_user_id=actor.id,
+        checklist=payload.checklist,
+        notes=payload.notes.strip(),
+    )
+    db.add(decision)
+    if payload.decision == "approved":
+        version.review_status = (
+            "editor_reviewed" if payload.stage == "editor" else "sme_approved"
+        )
+    else:
+        version.review_status = "revision_required"
+        lesson.status = "draft"
+    _audit(
+        db,
+        actor,
+        "lesson.review",
+        "lesson",
+        lesson.id,
+        stage=payload.stage,
+        decision=payload.decision,
+        version=version.version,
+    )
+    db.commit()
+    db.refresh(decision)
+    return {
+        "review_id": decision.id,
+        "lesson_id": lesson.id,
+        "version": version.version,
+        "review_status": version.review_status,
+        "student_visible": False,
+    }
 
 
 def _citation_evidence(db: Session, question: Question) -> list[dict]:

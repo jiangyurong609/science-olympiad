@@ -115,7 +115,7 @@
           <a href="#practice" data-view-link="practice" data-student-nav><span aria-hidden="true">◎</span>Practice</a>
           <a href="#errors" data-view-link="errors" data-student-nav><span aria-hidden="true">↻</span>Review <span id="nav-error-count" class="nav-count">0</span></a>
           <a href="#coach" data-view-link="coach" data-coach-nav hidden><span aria-hidden="true">⌂</span>Coach Overview</a>
-          <a href="#content" data-view-link="content" data-content-nav hidden><span aria-hidden="true">◫</span>Source Operations</a>
+          <a href="#content" data-view-link="content" data-content-nav hidden><span aria-hidden="true">◫</span>Content Review</a>
         </nav>
         <div class="sidebar-footer">
           <div class="avatar" id="user-initials" aria-hidden="true">SO</div>
@@ -342,7 +342,7 @@
         </section>
 
         <section id="content" class="view" aria-labelledby="content-title" hidden>
-          <div class="dashboard-heading"><div><p class="kicker">Content operations</p><h1 id="content-title" tabindex="-1">Release Only Evidence-Ready Material</h1><p class="lede">Review generated questions, then verify that the crawler has grounded the full event source map.</p></div><button id="refresh-content-operations" class="button button-primary" type="button">Refresh Workspace</button></div>
+          <div class="dashboard-heading"><div><p class="kicker">Content operations</p><h1 id="content-title" tabindex="-1">Review and Release Courses</h1><p class="lede">Review lessons and questions against retained sources. Nothing reaches students until every required approval and release gate passes.</p></div><button id="refresh-content-operations" class="button button-primary" type="button">Refresh Workspace</button></div>
           <section id="people-workspace" class="people-workspace" aria-labelledby="people-title" hidden>
             <div class="section-heading"><div><p class="kicker">Platform administration</p><h2 id="people-title">People &amp; Roles</h2><p>Assign staff roles and manage account access. Changes take effect immediately.</p></div><p id="people-count" class="queue-count">0 Users</p></div>
             <div class="people-controls">
@@ -356,6 +356,11 @@
             <div class="section-heading"><div><p class="kicker">Content repair</p><h2 id="answerkey-title">Answer Keys to Fix</h2><p>Short-answer questions with no reference answer — students can’t be graded on these until a key is added.</p></div><p id="answerkey-count" class="queue-count">0 Items</p></div>
             <div id="answerkey-list" class="answerkey-list" aria-live="polite"></div>
             <div id="answerkey-empty" class="empty-state surface" hidden><span aria-hidden="true">✓</span><h3>All keyed</h3><p>No short-answer questions are missing a reference answer.</p></div>
+          </section>
+          <section class="lesson-editorial-workspace" aria-labelledby="lesson-editorial-title">
+            <div class="section-heading"><div><p class="kicker">Course authoring gate</p><h2 id="lesson-editorial-title">Lesson Review Queue</h2><p>Read each lesson in context, verify its retained source passages, and record independent editorial and scientific decisions.</p></div><p id="lesson-editorial-count" class="queue-count">0 Lessons</p></div>
+            <div id="lesson-review-queue" class="lesson-review-queue" aria-live="polite"></div>
+            <div id="lesson-review-empty" class="empty-state surface" hidden><span aria-hidden="true">✓</span><h3>Lesson Queue Clear</h3><p>No current lesson version is waiting for review.</p></div>
           </section>
           <section class="editorial-workspace" aria-labelledby="editorial-title">
             <div class="section-heading"><div><p class="kicker">Human quality gate</p><h2 id="editorial-title">Question Review Queue</h2></div><p id="editorial-count" class="queue-count">0 Items</p></div>
