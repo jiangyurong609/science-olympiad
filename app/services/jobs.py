@@ -1,5 +1,6 @@
 from __future__ import annotations
 from datetime import datetime, timedelta, timezone
+import uuid
 from sqlalchemy import select
 from sqlalchemy.orm import Session
 from app.core.config import get_settings
@@ -28,6 +29,7 @@ def enqueue_job(db: Session, job_type: str, payload: dict, actor_user_id: int | 
 
 def run_next_job(db: Session) -> BackgroundJob | None:
     now = datetime.now(timezone.utc)
+    stale_before = now - timedelta(minutes=15)
     job = db.scalar(
         select(BackgroundJob)
         .where(BackgroundJob.status == "queued", BackgroundJob.scheduled_at <= now)
@@ -35,9 +37,31 @@ def run_next_job(db: Session) -> BackgroundJob | None:
         .with_for_update(skip_locked=True)
     )
     if not job:
+        # Recover a worker that died after claiming a job. A new worker may
+        # safely retry because ingestion and authoring operations are idempotent.
+        job = db.scalar(
+            select(BackgroundJob)
+            .where(
+                BackgroundJob.status == "running",
+                ((BackgroundJob.heartbeat_at.is_(None) & (BackgroundJob.started_at < stale_before))
+                 | (BackgroundJob.heartbeat_at < stale_before)),
+            )
+            .order_by(BackgroundJob.started_at, BackgroundJob.id)
+            .with_for_update(skip_locked=True)
+        )
+        if job:
+            job.status = "queued"
+            job.lease_token = None
+            job.leased_at = None
+            job.heartbeat_at = None
+            db.commit()
+    if not job:
         return None
     job.status = "running"
     job.started_at = now
+    job.leased_at = now
+    job.heartbeat_at = now
+    job.lease_token = uuid.uuid4().hex
     job.attempts += 1
     db.commit()
     source = None
@@ -117,6 +141,7 @@ def run_next_job(db: Session) -> BackgroundJob | None:
             raise ValueError(f"Unsupported job type: {job.job_type}")
         job.status = "completed"
         job.completed_at = datetime.now(timezone.utc)
+        job.heartbeat_at = job.completed_at
         job.error = ""
     except Exception as exc:
         job.error = str(exc)
@@ -133,6 +158,9 @@ def run_next_job(db: Session) -> BackgroundJob | None:
             job.scheduled_at = datetime.now(timezone.utc) + timedelta(seconds=delay_seconds)
         else:
             job.completed_at = datetime.now(timezone.utc)
+        job.lease_token = None
+        job.leased_at = None
+        job.heartbeat_at = datetime.now(timezone.utc)
     db.add(job)
     db.commit()
     db.refresh(job)
