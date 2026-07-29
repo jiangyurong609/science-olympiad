@@ -5,7 +5,7 @@ from sqlalchemy import select
 
 from app.core.database import SessionLocal
 from app.core.security import create_access_token, hash_password
-from app.models.entities import Event, ExtractionAsset, Lesson, Source, SourcePassage, User
+from app.models.entities import Event, ExtractionAsset, Lesson, ParentMaterialShare, Source, SourcePassage, User
 
 
 def auth(token):
@@ -130,12 +130,14 @@ def test_office_formats_extract_into_reviewable_assets(client, admin_token):
         assert all(asset.text_chars > 40 for asset in assets)
 
 
-def test_parent_materials_are_private_and_staff_reviewed(client):
+def test_parent_materials_are_private_and_staff_reviewed(client, admin_token):
     with SessionLocal() as db:
         parent = User(email="parent@example.com", full_name="Parent", password_hash=hash_password("password123"), role="parent")
-        db.add(parent)
+        student = User(email="child@example.com", full_name="Child", password_hash=hash_password("password123"), role="student", division="B")
+        event = Event(slug="parent-event-2027", name="Parent Event", division="B", season=2027)
+        db.add_all([parent, student, event])
         db.commit()
-        parent_token = create_access_token(str(parent.id))
+        parent_token, student_id, event_id = create_access_token(str(parent.id)), student.id, event.id
 
     response = client.post(
         "/api/parent/materials", headers=auth(parent_token),
@@ -143,7 +145,17 @@ def test_parent_materials_are_private_and_staff_reviewed(client):
         files={"file": ("family-notes.txt", BytesIO(b"A private family contribution with enough educational detail for extraction and review."), "text/plain")},
     )
     assert response.status_code == 200
+    upload_id = response.json()["upload_id"]
     listed = client.get("/api/parent/materials", headers=auth(parent_token))
     assert listed.status_code == 200 and len(listed.json()) == 1
     # The parent cannot inspect staff intake or trigger review decisions.
     assert client.get("/api/content/intake/uploads", headers=auth(parent_token)).status_code == 403
+    assert client.post("/api/jobs/run-next", headers=auth(admin_token)).json()["status"] == "completed"
+    accepted = client.post(
+        f"/api/content/intake/uploads/{upload_id}/review", headers=auth(admin_token),
+        data={"decision": "accepted", "event_id": str(event_id), "student_user_id": str(student_id), "notes": "Parent ownership verified and event assigned."},
+    )
+    assert accepted.status_code == 200
+    with SessionLocal() as db:
+        share = db.scalar(select(ParentMaterialShare).where(ParentMaterialShare.upload_id == upload_id))
+        assert share and share.student_user_id == student_id

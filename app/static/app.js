@@ -1676,7 +1676,7 @@ async function loadContentIntake() {
         <div><strong>${escapeHtml(row.filename)}</strong><small>${row.byte_count.toLocaleString()} bytes · ${escapeHtml(row.created_at ? formatDate(row.created_at) : '—')}</small></div>
         <span class="status-pill intake-status-${escapeHtml(row.status)}">${escapeHtml(row.status.replaceAll('_', ' '))}</span>
         <div class="content-intake-detail"><span>${escapeHtml(ingestion.stage || 'queued')}</span>${diagnostics.text_chars ? `<span>${Number(diagnostics.text_chars).toLocaleString()} extracted chars</span>` : ''}${diagnostics.page_count ? `<span>${diagnostics.page_count} pages</span>` : ''}</div>
-        <div class="content-intake-actions">${ingestion.source_id ? `<button class="button button-secondary button-compact" type="button" data-intake-source="${ingestion.source_id}">View extracted text</button>` : ''}${canReview ? `<button class="button button-primary button-compact" type="button" data-intake-review="accepted" data-intake-id="${row.id}">Accept for authoring</button><button class="button button-quiet button-compact" type="button" data-intake-review="rejected" data-intake-id="${row.id}">Reject</button>` : ''}</div>
+        <div class="content-intake-actions">${ingestion.source_id ? `<button class="button button-secondary button-compact" type="button" data-intake-source="${ingestion.source_id}">View extracted text</button>` : ''}${canReview ? `<select class="intake-event-select" data-intake-event aria-label="Assign event"><option value="">Keep current event</option>${(state.events || []).map(event => `<option value="${event.id}"${String(row.event_id) === String(event.id) ? ' selected' : ''}>${escapeHtml(event.name)} · ${escapeHtml(event.season)}</option>`).join('')}</select><button class="button button-primary button-compact" type="button" data-intake-review="accepted" data-intake-id="${row.id}">Accept for authoring</button><button class="button button-quiet button-compact" type="button" data-intake-review="rejected" data-intake-id="${row.id}">Reject</button>` : ''}</div>
         ${ingestion.source_id ? `<pre class="content-intake-extracted" data-intake-extracted="${ingestion.source_id}" hidden></pre>` : ''}
       </article>`;
     }).join('');
@@ -1711,6 +1711,8 @@ async function reviewContentIntake(uploadId, decision, button) {
   const form = new FormData();
   form.append('decision', decision);
   if (decision === 'accepted') form.append('rights_status', 'derivative_generation_allowed');
+  const eventSelect = button.closest('[data-intake-id]')?.querySelector('[data-intake-event]');
+  if (eventSelect?.value) form.append('event_id', eventSelect.value);
   form.append('notes', decision === 'accepted' ? 'Reviewed in Content Studio; rights attestation accepted.' : 'Rejected in Content Studio.');
   setBusy(button, true, decision === 'accepted' ? 'Accepting…' : 'Rejecting…');
   try {

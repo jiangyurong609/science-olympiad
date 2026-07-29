@@ -1165,6 +1165,8 @@ def review_content_upload(
     decision: str = Form(...),
     rights_status: str = Form(default=RightsStatus.DERIVATIVE_GENERATION_ALLOWED.value),
     notes: str = Form(default=""),
+    event_id: int | None = Form(default=None),
+    student_user_id: int | None = Form(default=None),
     db: Session = Depends(get_db),
     actor: User = Depends(require_admin),
 ):
@@ -1186,6 +1188,17 @@ def review_content_upload(
         source.license_name = "staff-reviewed upload"
         source.approved = True
         upload.status = "accepted"
+        if event_id is not None:
+            if not db.get(Event, event_id):
+                raise HTTPException(status_code=404, detail="Event not found")
+            upload.event_id = event_id
+        if student_user_id is not None:
+            student = db.get(User, student_user_id)
+            if not student or student.role != "student":
+                raise HTTPException(status_code=422, detail="student_user_id must reference an active student")
+            share = db.scalar(select(ParentMaterialShare).where(ParentMaterialShare.upload_id == upload.id))
+            if share:
+                share.student_user_id = student.id
         if upload.event_id:
             mapping = db.scalar(select(EventSourceMap).where(
                 EventSourceMap.event_id == upload.event_id,
@@ -1196,6 +1209,13 @@ def review_content_upload(
                 mapping.reviewed = True
                 mapping.reviewed_by_user_id = actor.id
                 mapping.notes = notes.strip() or "Accepted in Content Studio"
+            else:
+                db.add(EventSourceMap(
+                    event_id=upload.event_id, source_id=source.id, purpose="submitted_material",
+                    source_tier=0, required=False, required_artifact_types=[upload.declared_media_type],
+                    source_universe_version="upload-v1", freshness_minutes=0, reviewed=True,
+                    reviewed_by_user_id=actor.id, notes=notes.strip() or "Accepted in Content Studio",
+                ))
     else:
         source.rights_status = RightsStatus.BLOCKED.value
         source.approved = False
