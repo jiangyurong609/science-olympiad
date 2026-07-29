@@ -20,6 +20,36 @@ from app.models.entities import EventSourceMap, ExtractionAsset, IngestionRun, R
 from app.services.artifacts import read_raw_artifact
 
 
+def _ocr_image(content: bytes) -> tuple[str, dict]:
+    """Extract text from a scanned page using the configured GCP Vision client."""
+    try:
+        from google.cloud import vision
+    except ImportError as exc:  # pragma: no cover - dependency is installed in production
+        raise ValueError("OCR engine is not installed; image requires human review") from exc
+    try:
+        response = vision.ImageAnnotatorClient().document_text_detection(
+            image=vision.Image(content=content),
+        )
+    except Exception as exc:  # noqa: BLE001 — normalize provider failures for the job UI
+        raise ValueError(f"OCR engine unavailable: {str(exc)[:240]}") from exc
+    if getattr(response, "error", None) and response.error.message:
+        raise ValueError(f"OCR failed: {response.error.message[:240]}")
+    text = (getattr(getattr(response, "full_text_annotation", None), "text", "") or "").strip()
+    if not text:
+        raise ValueError("OCR produced no readable text; human review is required")
+    confidence_values = []
+    for page in getattr(getattr(response, "full_text_annotation", None), "pages", []) or []:
+        for block in getattr(page, "blocks", []) or []:
+            confidence = getattr(block, "confidence", None)
+            if confidence is not None:
+                confidence_values.append(float(confidence))
+    return text, {
+        "page_count": len(getattr(getattr(response, "full_text_annotation", None), "pages", []) or []),
+        "extraction": "google-vision-ocr",
+        "ocr_confidence": round(sum(confidence_values) / len(confidence_values), 4) if confidence_values else None,
+    }
+
+
 def _extract(content: bytes, media_type: str, filename: str) -> tuple[str, dict]:
     kind = (media_type or "").lower()
     if "pdf" in kind or filename.lower().endswith(".pdf"):
@@ -52,7 +82,7 @@ def _extract(content: bytes, media_type: str, filename: str) -> tuple[str, dict]
                 slides.append(f"[Slide {number}]\n{unescape(xml).strip()}")
         return "\n\n".join(slides).strip(), {"page_count": len(slides), "extraction": "pptx-xml"}
     if kind.startswith("image/") or suffix.endswith((".png", ".jpg", ".jpeg", ".webp")):
-        raise ValueError("Image upload requires OCR review; no OCR engine is configured for this worker")
+        return _ocr_image(content)
     raise ValueError("Unsupported upload type; use PDF, DOCX, PPTX, or UTF-8 text")
 
 
@@ -94,7 +124,7 @@ def process_ingestion_run(db: Session, run_id: int) -> IngestionRun:
             extraction = ExtractionAsset(
                 upload_id=upload.id, page_count=int(diagnostics.get("page_count", 0)),
                 text_chars=len(text), extraction_version="v2", artifact_key=upload.artifact_key,
-                status="completed", diagnostics_json=diagnostics,
+                ocr_confidence=diagnostics.get("ocr_confidence"), status="completed", diagnostics_json=diagnostics,
             )
             db.add(extraction)
             db.flush()

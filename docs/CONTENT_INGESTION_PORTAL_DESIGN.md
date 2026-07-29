@@ -356,6 +356,7 @@ The first vertical slice is implemented and verified in the application:
 - Staff can also import a public HTTPS page or YouTube URL; the import is queued as a durable job, stores captions only for YouTube, and remains quarantined until review.
 - The upload is checksum-deduplicated, stored as an immutable artifact, and processed by a durable ingestion job.
 - PDF pages and text sections are persisted as `SourcePassage` records with page/section locators.
+- Scanned image uploads use Google Cloud Vision document OCR; page count and average block confidence are retained in `ExtractionAsset`, and provider/empty-text failures remain `needs_human_review`.
 - Quarantined upload sources are excluded from the student material library.
 - An admin can accept or reject an extracted upload; acceptance records rights status, approves the source, and marks the event mapping reviewed.
 - Accepted sources can be sent to grounded authoring, which creates draft/editor-review lessons and never publishes automatically.
@@ -363,4 +364,4 @@ The first vertical slice is implemented and verified in the application:
 - Background jobs now carry leases/heartbeats and reclaim stale running jobs; ingestion is idempotent for completed runs.
 - An end-to-end integration test exercises upload → background extraction → passage persistence → quarantine visibility → admin acceptance → student visibility.
 
-The following design items remain explicit follow-on work rather than hidden behavior: image OCR extraction, real antivirus scanning, resumable chunked uploads, parent-to-student/team relationship approval, a dedicated split-pane source editor, and production worker heartbeat updates during long-running model calls. DOCX/PPTX XML extraction, URL/YouTube import, extraction diagnostics, stale-job recovery, and block-level passage IDs are now supported; image uploads remain intentionally blocked pending an OCR engine and human review path.
+The following design items remain explicit follow-on work rather than hidden behavior: real antivirus scanning, resumable chunked uploads, parent-to-student/team relationship approval, a dedicated split-pane source editor, and production worker heartbeat updates during long-running model calls. DOCX/PPTX XML extraction, URL/YouTube import, Google Vision OCR, extraction diagnostics, stale-job recovery, and block-level passage IDs are now supported.

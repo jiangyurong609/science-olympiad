@@ -25,6 +25,12 @@ def _extension(media_type: str) -> str:
         return ".docx"
     if "presentationml.presentation" in media_type:
         return ".pptx"
+    if media_type == "image/png":
+        return ".png"
+    if media_type in {"image/jpeg", "image/jpg"}:
+        return ".jpg"
+    if media_type == "image/webp":
+        return ".webp"
     return ".bin"
 
 

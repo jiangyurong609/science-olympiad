@@ -186,6 +186,33 @@ def test_staff_url_import_is_durable_and_quarantined(client, admin_token, monkey
     assert duplicate.status_code == 200 and duplicate.json()["deduplicated"] is True
 
 
+def test_scanned_image_uses_ocr_and_retains_confidence(client, admin_token, monkeypatch):
+    with SessionLocal() as db:
+        event = Event(slug="ocr-ingestion-2027", name="OCR Ingestion", division="B", season=2027)
+        db.add(event)
+        db.commit()
+        event_id = event.id
+
+    monkeypatch.setattr(
+        "app.services.content_ingestion._ocr_image",
+        lambda content: ("A scanned handout explains mineral hardness and streak for evidence-based identification.", {
+            "page_count": 1, "extraction": "google-vision-ocr", "ocr_confidence": 0.93,
+        }),
+    )
+    uploaded = client.post(
+        "/api/content/intake/uploads", headers=auth(admin_token),
+        data={"event_id": str(event_id), "rights_attestation": "Fieldstone has permission to process this scan."},
+        files={"file": ("scan.png", BytesIO(b"not-a-real-png-but-the-ocr-adapter-is-real"), "image/png")},
+    )
+    assert uploaded.status_code == 200
+    ran = client.post("/api/jobs/run-next", headers=auth(admin_token))
+    assert ran.status_code == 200 and ran.json()["status"] == "completed"
+    with SessionLocal() as db:
+        asset = db.scalar(select(ExtractionAsset).where(ExtractionAsset.upload_id == uploaded.json()["upload_id"]))
+        assert asset and asset.diagnostics_json["extraction"] == "google-vision-ocr"
+        assert asset.ocr_confidence == 0.93
+
+
 def test_parent_materials_are_private_and_staff_reviewed(client, admin_token):
     with SessionLocal() as db:
         parent = User(email="parent@example.com", full_name="Parent", password_hash=hash_password("password123"), role="parent")
