@@ -256,6 +256,56 @@ class CamoufoxFetcher:
             page.close()
 
 
+class DirectFetcher:
+    """HTTP fetcher for explicitly selected official files and static pages."""
+
+    def __enter__(self):
+        self.client = httpx.Client(
+            headers={"User-Agent": USER_AGENT},
+            follow_redirects=True,
+            timeout=45,
+        )
+        return self
+
+    def __exit__(self, *exc):
+        self.client.close()
+
+    def fetch(self, url: str) -> dict:
+        response = self.client.get(url)
+        raw = response.content
+        content_type = response.headers.get("content-type", "").lower()
+        if raw[:5] == b"%PDF-":
+            text = _pdf_text(raw)
+            media_type = "application/pdf"
+            title = ""
+            links = []
+        else:
+            from bs4 import BeautifulSoup
+
+            soup = BeautifulSoup(raw, "html.parser")
+            text = soup.get_text("\n", strip=True)
+            media_type = "text/html"
+            title = soup.title.get_text(" ", strip=True) if soup.title else ""
+            links = [{
+                "href": node.get("href", ""),
+                "text": node.get_text(" ", strip=True)[:120],
+            } for node in soup.select("a[href]")]
+        return {
+            "status": response.status_code,
+            "final_url": str(response.url),
+            "title": title,
+            "content_type": content_type,
+            "media_type": media_type,
+            "raw_bytes": raw,
+            "text": text,
+            "byte_count": len(raw),
+            "content_hash": hashlib.sha256(raw).hexdigest(),
+            "last_modified": response.headers.get("last-modified", ""),
+            "etag": response.headers.get("etag", ""),
+            "links": links,
+        }
+
+
 def _domain_delays(db) -> dict[str, float]:
     return {policy.domain: policy.crawl_delay_seconds
             for policy in db.scalars(select(CrawlDomainPolicy)).all()}
@@ -460,6 +510,30 @@ def crawl(db, limit: int | None = None) -> None:
           f"{totals['failed']} failed, {totals['discovered']} material links recorded.")
 
 
+def crawl_sources(db, source_ids: list[int]) -> None:
+    """Retain explicitly reviewed source records by ID using the same safety path."""
+    sources = db.scalars(select(Source).where(
+        Source.id.in_(source_ids)
+    ).order_by(Source.id)).all()
+    found_ids = {source.id for source in sources}
+    missing = sorted(set(source_ids) - found_ids)
+    if missing:
+        raise ValueError(f"Unknown source IDs: {missing}")
+    robots = RobotsGate()
+    delays = _domain_delays(db)
+    totals = {"verified": 0, "failed": 0, "blocked": 0, "retained": 0, "discovered": 0}
+    last_fetch_at: dict[str, float] = {}
+    with DirectFetcher() as fetcher:
+        for index, source in enumerate(sources, start=1):
+            outcome = _verify_and_retain(
+                db, fetcher, robots, delays, last_fetch_at, source,
+                f"[{index}/{len(sources)}]", discover_links=False,
+            )
+            for key in totals:
+                totals[key] += outcome[key]
+    print(json.dumps({"source_ids": source_ids, **totals}, indent=2))
+
+
 def ingest_discovered(db, limit: int | None = None, pdf_only: bool = True) -> None:
     """Promote discovered frontier links to Sources and download + retain them."""
     robots = RobotsGate()
@@ -517,6 +591,11 @@ def main() -> None:
             ingest_discovered(db, limit=limit, pdf_only="--all" not in sys.argv)
         if command == "link-materials":
             link_ingested_to_events(db)
+        if command == "crawl-source":
+            if "--source-id" not in sys.argv:
+                raise ValueError("crawl-source requires --source-id ID[,ID...]")
+            raw_ids = sys.argv[sys.argv.index("--source-id") + 1]
+            crawl_sources(db, [int(value) for value in raw_ids.split(",")])
 
 
 if __name__ == "__main__":

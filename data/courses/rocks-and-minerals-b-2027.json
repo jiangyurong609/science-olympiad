@@ -1,0 +1,158 @@
+{
+  "event_slug": "rocks-and-minerals-b-2027",
+  "season": 2027,
+  "title": "Rocks and Minerals",
+  "summary": "Identify rocks and minerals from observable evidence, explain how rocks form, and make defensible decisions under station timing.",
+  "objectives": [
+    "Distinguish observations from inferences and select diagnostic tests.",
+    "Identify minerals using physical properties and an evidence-first workflow.",
+    "Classify igneous, sedimentary, and metamorphic rocks from texture and formation evidence.",
+    "Document an identification so another competitor can follow the reasoning."
+  ],
+  "units": [
+    {
+      "slug": "observe-like-a-geologist",
+      "title": "Observe Like a Geologist",
+      "summary": "Build the evidence habits that make every later identification more reliable.",
+      "objectives": ["Separate a rock, mineral, and manufactured material.", "Record observations before naming a specimen."],
+      "lessons": [
+        {
+          "slug": "rocks-minerals-and-evidence",
+          "title": "Rocks, Minerals, and Evidence",
+          "objective": "Distinguish a mineral from a rock and justify the distinction with observable or structural evidence.",
+          "keywords": ["mineral definition", "rock aggregate", "naturally occurring", "inorganic", "crystalline", "chemical composition"],
+          "high_weight": true
+        },
+        {
+          "slug": "observation-before-identification",
+          "title": "Observe Before You Identify",
+          "objective": "Separate observation from inference and record a repeatable evidence profile.",
+          "keywords": ["observation", "identification", "physical properties", "evidence", "test", "describe"],
+          "video": true
+        }
+      ]
+    },
+    {
+      "slug": "mineral-properties",
+      "title": "Mineral Properties",
+      "summary": "Use diagnostic physical properties instead of relying on color or first impressions.",
+      "objectives": ["Perform common property tests safely.", "Choose the next test that best separates remaining candidates."],
+      "lessons": [
+        {
+          "slug": "color-streak-and-luster",
+          "title": "Color, Streak, and Luster",
+          "objective": "Compare surface color, powdered streak, and luster and explain which observations are most diagnostic.",
+          "keywords": ["color", "streak", "luster", "metallic", "nonmetallic", "powder"],
+          "high_weight": true
+        },
+        {
+          "slug": "hardness-and-mohs-scale",
+          "title": "Hardness and the Mohs Scale",
+          "objective": "Bracket an unknown mineral's hardness with scratch tests and state the result without overclaiming.",
+          "keywords": ["hardness", "Mohs", "scratch", "fingernail", "glass", "copper"],
+          "high_weight": true
+        },
+        {
+          "slug": "breakage-density-and-special-properties",
+          "title": "Breakage, Density, and Special Properties",
+          "objective": "Use cleavage, fracture, density, magnetism, and acid reaction to narrow an identification.",
+          "keywords": ["cleavage", "fracture", "density", "specific gravity", "magnetism", "acid", "reaction", "habit"],
+          "high_weight": true
+        }
+      ]
+    },
+    {
+      "slug": "rock-cycle",
+      "title": "The Rock Cycle",
+      "summary": "Explain rock change as a set of processes rather than a single circular path.",
+      "objectives": ["Connect processes to rock-type changes.", "Interpret more than one valid path through the rock cycle."],
+      "lessons": [
+        {
+          "slug": "processes-that-change-rock",
+          "title": "Processes That Change Rock",
+          "objective": "Connect melting, cooling, weathering, erosion, deposition, lithification, heat, and pressure to rock change.",
+          "keywords": ["rock cycle", "melting", "cooling", "weathering", "erosion", "deposition", "lithification", "heat", "pressure"],
+          "high_weight": true
+        },
+        {
+          "slug": "reason-through-rock-cycle-paths",
+          "title": "Reason Through Rock-Cycle Paths",
+          "objective": "Trace and defend multiple possible transformations between rock types.",
+          "keywords": ["rock cycle", "path", "transform", "igneous", "sedimentary", "metamorphic", "magma", "sediment"]
+        }
+      ]
+    },
+    {
+      "slug": "igneous-rocks",
+      "title": "Igneous Rocks",
+      "summary": "Read cooling history from texture and connect mineral composition to classification.",
+      "objectives": ["Infer cooling conditions from texture.", "Classify common igneous specimens with texture and composition together."],
+      "lessons": [
+        {
+          "slug": "cooling-history-and-texture",
+          "title": "Cooling History and Igneous Texture",
+          "objective": "Infer intrusive or extrusive cooling history from crystal size and texture.",
+          "keywords": ["igneous", "intrusive", "extrusive", "cooling", "crystal size", "texture", "aphanitic", "phaneritic", "vesicular", "glassy"],
+          "high_weight": true
+        },
+        {
+          "slug": "composition-and-bowen-series",
+          "title": "Composition and Bowen's Reaction Series",
+          "objective": "Use mineral composition and Bowen's reaction series as supporting evidence in igneous classification.",
+          "keywords": ["Bowen", "reaction series", "felsic", "intermediate", "mafic", "ultramafic", "composition", "silica"]
+        }
+      ]
+    },
+    {
+      "slug": "sedimentary-and-metamorphic-rocks",
+      "title": "Sedimentary and Metamorphic Rocks",
+      "summary": "Connect texture and structures to the processes that produced a rock.",
+      "objectives": ["Classify sedimentary rocks by material and texture.", "Use foliation, grain change, and composition to classify metamorphic rocks."],
+      "lessons": [
+        {
+          "slug": "sedimentary-evidence",
+          "title": "Sedimentary Evidence",
+          "objective": "Classify clastic, chemical, and biochemical sedimentary rocks from grains, structures, and composition.",
+          "keywords": ["sedimentary", "clastic", "chemical", "biochemical", "grain size", "bedding", "fossil", "cementation"],
+          "high_weight": true
+        },
+        {
+          "slug": "metamorphic-evidence",
+          "title": "Metamorphic Evidence",
+          "objective": "Distinguish foliated and nonfoliated metamorphic rocks and connect texture to heat, pressure, and parent material.",
+          "keywords": ["metamorphic", "foliated", "nonfoliated", "heat", "pressure", "parent rock", "grade", "banding"],
+          "high_weight": true
+        }
+      ]
+    },
+    {
+      "slug": "identification-and-competition",
+      "title": "Identification and Competition",
+      "summary": "Turn property knowledge into an efficient, documented station workflow.",
+      "objectives": ["Navigate a mineral flowchart without guessing.", "Use an elimination workflow under time pressure.", "Write evidence-based station answers."],
+      "lessons": [
+        {
+          "slug": "use-an-identification-flowchart",
+          "title": "Use an Identification Flowchart",
+          "objective": "Navigate a mineral flowchart by making and verifying one evidence-based split at a time.",
+          "keywords": ["flow chart", "identification", "metallic", "streak", "hardness", "cleavage", "decision"],
+          "high_weight": true
+        },
+        {
+          "slug": "identify-an-unknown-specimen",
+          "title": "Identify an Unknown Specimen",
+          "objective": "Choose an efficient sequence of tests, eliminate alternatives, and state a defensible identification.",
+          "keywords": ["identify", "unknown", "specimen", "properties", "eliminate", "list of specimens", "diagnostic"],
+          "high_weight": true
+        },
+        {
+          "slug": "station-strategy-and-documentation",
+          "title": "Station Strategy and Documentation",
+          "objective": "Allocate station time, record evidence compactly, and recover when an initial hypothesis fails.",
+          "keywords": ["station", "test", "time", "answer sheet", "specimen", "evidence", "competition"],
+          "video": true
+        }
+      ]
+    }
+  ]
+}

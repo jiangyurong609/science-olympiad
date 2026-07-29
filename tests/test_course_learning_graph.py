@@ -141,6 +141,32 @@ def test_current_season_lesson_is_hidden_without_both_review_decisions(client):
     ).status_code == 404
 
 
+def test_staff_can_preview_draft_lesson_while_students_cannot(client):
+    season, event_slug, _, _, _, lesson_id, student_token = seed_course()
+    with SessionLocal() as db:
+        lesson = db.get(Lesson, lesson_id)
+        lesson.status = "draft"
+        course = db.scalar(select(Course).where(Course.event_id == lesson.event_id))
+        course.status = "review_required"
+        reviewer = db.scalar(select(User).where(User.email == "reviewer@example.com"))
+        reviewer_token = create_access_token(str(reviewer.id))
+        db.commit()
+    assert client.get(
+        f"/api/courses/{season}/{event_slug}", headers=auth(student_token),
+    ).status_code == 404
+    staff_course = client.get(
+        f"/api/courses/{season}/{event_slug}", headers=auth(reviewer_token),
+    )
+    assert staff_course.status_code == 200
+    assert staff_course.json()["units"][0]["skills"][0]["lessons"][0]["id"] == lesson_id
+    assert client.post(
+        f"/api/lessons/{lesson_id}/start", headers=auth(student_token),
+    ).status_code == 404
+    assert client.post(
+        f"/api/lessons/{lesson_id}/start", headers=auth(reviewer_token),
+    ).status_code == 200
+
+
 def test_content_staff_can_audit_source_coverage_and_open_gaps(client):
     _, _, course_id, unit_id, skill_id, lesson_id, _ = seed_course()
     with SessionLocal() as db:
@@ -186,6 +212,13 @@ def test_content_staff_can_audit_source_coverage_and_open_gaps(client):
     assert body["summary"]["open_gaps"] == 1
     assert body["summary"]["release_ready"] is False
     assert body["sources"][0]["skills"][0]["name"] == "Use the Mohs Scale"
+    quality = client.get(
+        f"/api/content/courses/{course_id}/quality", headers=auth(token),
+    )
+    assert quality.status_code == 200
+    assert quality.json()["release_ready"] is False
+    assert quality.json()["blocker_counts"]["question_volume"] == 1
+    assert quality.json()["blocker_counts"]["release_missing"] == 1
 
 
 def test_material_coverage_builder_is_idempotent(client):

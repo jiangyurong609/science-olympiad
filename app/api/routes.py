@@ -50,6 +50,7 @@ from app.services.content_corrections import apply_score_correction
 from app.services.notifications import create_notification
 from app.services.daily_plan import build_daily_plan
 from app.services.tutor import TutorAccessError, create_tutor_session, respond_to_tutor
+from app.services.course_quality import audit_course
 
 router = APIRouter(prefix="/api")
 _log = logging.getLogger("soplat.api")
@@ -625,10 +626,10 @@ def list_event_lessons(
 ):
     if not db.get(Event, event_id):
         raise HTTPException(status_code=404, detail="Event not found")
-    lessons = db.scalars(select(Lesson).where(
-        Lesson.event_id == event_id,
-        Lesson.status == "published",
-    ).order_by(Lesson.sequence, Lesson.id)).all()
+    lesson_query = select(Lesson).where(Lesson.event_id == event_id)
+    if user.role not in {"admin", "editor", "sme", "calibrator"}:
+        lesson_query = lesson_query.where(Lesson.status == "published")
+    lessons = db.scalars(lesson_query.order_by(Lesson.sequence, Lesson.id)).all()
     current_versions = {lesson.id: lesson.current_version for lesson in lessons}
     versions = {
         row.lesson_id: row for row in db.scalars(select(LessonVersion).where(
@@ -746,9 +747,10 @@ def get_course_map(
         LessonSkill.skill_id.in_(skill_ids)
     )).all() if skill_ids else []
     lesson_ids = list({link.lesson_id for link in lesson_links})
-    lessons = db.scalars(select(Lesson).where(
-        Lesson.id.in_(lesson_ids), Lesson.status == "published",
-    )).all() if lesson_ids else []
+    lesson_query = select(Lesson).where(Lesson.id.in_(lesson_ids))
+    if not staff:
+        lesson_query = lesson_query.where(Lesson.status == "published")
+    lessons = db.scalars(lesson_query).all() if lesson_ids else []
     if not staff:
         lessons = [
             lesson for lesson in lessons
@@ -972,6 +974,18 @@ def get_course_source_coverage(
     }
 
 
+@router.get("/content/courses/{course_id}/quality")
+def get_course_quality_report(
+    course_id: int,
+    db: Session = Depends(get_db),
+    user: User = Depends(require_content_staff),
+):
+    try:
+        return audit_course(db, course_id)
+    except ValueError as exc:
+        raise HTTPException(status_code=404, detail=str(exc)) from exc
+
+
 @router.get("/events/{event_id}/materials")
 def list_event_materials(
     event_id: int,
@@ -1068,7 +1082,10 @@ def get_material_text(
 @router.post("/lessons/{lesson_id}/start")
 def start_lesson(lesson_id: int, db: Session = Depends(get_db), user: User = Depends(current_user)):
     lesson = db.get(Lesson, lesson_id)
-    if not lesson or lesson.status != "published":
+    if not lesson or (
+        lesson.status != "published"
+        and user.role not in {"admin", "editor", "sme", "calibrator"}
+    ):
         raise HTTPException(status_code=404, detail="Lesson not found")
     version, progress = _lesson_version_for_user(db, lesson, user)
     if not _lesson_is_student_visible(db, user, lesson, version):
@@ -1103,7 +1120,10 @@ def save_lesson_progress(
     user: User = Depends(current_user),
 ):
     lesson = db.get(Lesson, lesson_id)
-    if not lesson or lesson.status != "published":
+    if not lesson or (
+        lesson.status != "published"
+        and user.role not in {"admin", "editor", "sme", "calibrator"}
+    ):
         raise HTTPException(status_code=404, detail="Lesson not found")
     version, progress = _lesson_version_for_user(db, lesson, user)
     if not _lesson_is_student_visible(db, user, lesson, version):
@@ -1150,7 +1170,10 @@ def submit_lesson_checkpoint(
     user: User = Depends(current_user),
 ):
     lesson = db.get(Lesson, lesson_id)
-    if not lesson or lesson.status != "published":
+    if not lesson or (
+        lesson.status != "published"
+        and user.role not in {"admin", "editor", "sme", "calibrator"}
+    ):
         raise HTTPException(status_code=404, detail="Lesson not found")
     version, progress = _lesson_version_for_user(db, lesson, user)
     if not _lesson_is_student_visible(db, user, lesson, version):
