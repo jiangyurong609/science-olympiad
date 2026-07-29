@@ -19,10 +19,10 @@ IMAGE_REPO="us-central1-docker.pkg.dev/${PROJECT}/soplat/web"
 SUNRA_SECRET="SUNRA_KEY"                       # Secret Manager secret -> OPENAI_API_KEY
 LLM_BASE_URL="https://api-llm.sunra.ai/v1"
 LLM_MODEL="openai/gpt-5.5"
-# Optional streaming antivirus adapter. Set ANTIVIRUS_REQUIRED=true only after
-# provisioning the command in the image/runtime (for example clamdscan).
-ANTIVIRUS_COMMAND="${ANTIVIRUS_COMMAND:-}"
-ANTIVIRUS_REQUIRED="${ANTIVIRUS_REQUIRED:-false}"
+# The image bundles ClamAV and refreshes signatures during the build. Override
+# these only when using a separately provisioned scanner service.
+ANTIVIRUS_COMMAND="${ANTIVIRUS_COMMAND:-clamscan --no-summary -}"
+ANTIVIRUS_REQUIRED="${ANTIVIRUS_REQUIRED:-true}"
 
 TAG=""
 SKIP_BUILD=false
