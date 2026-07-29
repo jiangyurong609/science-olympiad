@@ -344,6 +344,18 @@
 
         <section id="content" class="view" aria-labelledby="content-title" hidden>
           <div class="dashboard-heading"><div><p class="kicker">Content operations</p><h1 id="content-title" tabindex="-1">Review and Release Courses</h1><p class="lede">Review lessons and questions against retained sources. Nothing reaches students until every required approval and release gate passes.</p></div><button id="refresh-content-operations" class="button button-primary" type="button">Refresh Workspace</button></div>
+          <section class="content-studio-intake surface" aria-labelledby="content-studio-title">
+            <div class="section-heading"><div><p class="kicker">Content Studio</p><h2 id="content-studio-title">Intake and ground new material</h2><p>Upload a source, inspect extraction, then approve it before generating any student content.</p></div><span id="intake-live-status" class="status-pill" role="status" aria-live="polite">Private until reviewed</span></div>
+            <form id="content-intake-form" class="content-intake-form">
+              <label>Material file<input id="content-intake-file" name="file" type="file" accept=".pdf,.txt,.md,.csv,application/pdf,text/plain,text/csv" required></label>
+              <label>Event<select id="content-intake-event" name="event_id"><option value="">Choose an event (triage later)</option></select></label>
+              <label class="content-intake-rights">Rights / ownership declaration<textarea id="content-intake-rights" name="rights_attestation" rows="2" minlength="10" required placeholder="Explain why Fieldstone may retain and transform this material."></textarea></label>
+              <button class="button button-primary" type="submit">Upload to private intake</button>
+            </form>
+            <div class="content-intake-toolbar"><strong>Inbox</strong><button id="refresh-content-intake" class="button button-secondary button-compact" type="button">Refresh intake</button></div>
+            <div id="content-intake-list" class="content-intake-list" aria-live="polite"></div>
+            <div id="content-intake-empty" class="table-empty" hidden>No submitted materials yet.</div>
+          </section>
           <section id="people-workspace" class="people-workspace" aria-labelledby="people-title" hidden>
             <div class="section-heading"><div><p class="kicker">Platform administration</p><h2 id="people-title">People &amp; Roles</h2><p>Assign staff roles and manage account access. Changes take effect immediately.</p></div><p id="people-count" class="queue-count">0 Users</p></div>
             <div class="people-controls">

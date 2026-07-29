@@ -346,3 +346,18 @@ Content Studio can use a denser operations layout than students:
 - Never hide the primary lesson action below a large card or decorative footer.
 
 This visual system should be implemented as a small token/component pass before adding more portal screens; otherwise the ingestion portal will inherit the current visual noise and students will continue to experience the product as an AI dashboard rather than a focused learning environment.
+
+## Implementation status (2026-07-29)
+
+The first vertical slice is implemented and verified in the application:
+
+- Content Studio intake is available to content staff at the existing content-operations workspace.
+- Staff can upload a PDF or UTF-8 text artifact with event mapping and a rights declaration.
+- The upload is checksum-deduplicated, stored as an immutable artifact, and processed by a durable ingestion job.
+- PDF pages and text sections are persisted as `SourcePassage` records with page/section locators.
+- Quarantined upload sources are excluded from the student material library.
+- An admin can accept or reject an extracted upload; acceptance records rights status, approves the source, and marks the event mapping reviewed.
+- Accepted sources can be sent to grounded authoring, which creates draft/editor-review lessons and never publishes automatically.
+- An end-to-end integration test exercises upload → background extraction → passage persistence → quarantine visibility → admin acceptance → student visibility.
+
+The following design items remain explicit follow-on work rather than hidden behavior: DOCX/PPTX/image OCR extraction, real antivirus scanning, resumable chunked uploads, parent/guardian-scoped accounts, a dedicated split-pane source editor, distributed worker leases, and full lesson/question provenance at block level. Until those are implemented, the UI labels the supported intake scope and keeps publication behind the existing human review gates.

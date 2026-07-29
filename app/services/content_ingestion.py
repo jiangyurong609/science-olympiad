@@ -6,13 +6,15 @@ not generate or publish lessons; authoring is a later, explicit staff action.
 from __future__ import annotations
 
 import io
+import hashlib
+import re
 from datetime import datetime, timezone
 
 from pypdf import PdfReader
 from sqlalchemy import select
 from sqlalchemy.orm import Session
 
-from app.models.entities import EventSourceMap, IngestionRun, RawArtifact, Source, SourceSnapshot, UploadSubmission
+from app.models.entities import EventSourceMap, IngestionRun, RawArtifact, Source, SourcePassage, SourceSnapshot, UploadSubmission
 from app.services.artifacts import read_raw_artifact
 
 
@@ -28,6 +30,20 @@ def _extract(content: bytes, media_type: str, filename: str) -> tuple[str, dict]
     if kind.startswith("text/") or filename.lower().endswith((".txt", ".md", ".csv")):
         return content.decode("utf-8", errors="replace").strip(), {"page_count": 0, "extraction": "utf8"}
     raise ValueError("Unsupported upload type; use PDF or UTF-8 text for this ingestion worker")
+
+
+def _passages(text: str, diagnostics: dict) -> list[dict]:
+    """Create stable, human-reviewable chunks with page/section locators."""
+    chunks = []
+    for index, raw in enumerate(re.split(r"\n\s*\n", text), start=1):
+        body = re.sub(r"\s+", " ", raw).strip()
+        if len(body) < 30:
+            continue
+        page = re.search(r"\[Page (\d+)\]", raw)
+        locator = f"page:{page.group(1)}" if page else f"section:{index}"
+        digest = hashlib.sha256(body.encode("utf-8")).hexdigest()
+        chunks.append({"sequence": index, "locator": locator, "text": body, "content_hash": digest})
+    return chunks
 
 
 def process_ingestion_run(db: Session, run_id: int) -> IngestionRun:
@@ -75,6 +91,13 @@ def process_ingestion_run(db: Session, run_id: int) -> IngestionRun:
                 content_hash=upload.sha256, byte_count=upload.byte_count,
                 detected_media_type=upload.declared_media_type, scan_status="basic_pass",
             ))
+            for passage in _passages(text, diagnostics):
+                db.add(SourcePassage(
+                    source_id=source.id, source_snapshot_id=snapshot.id,
+                    sequence=passage["sequence"], locator=passage["locator"],
+                    text=passage["text"], content_hash=passage["content_hash"],
+                    metadata_json={"extraction": diagnostics.get("extraction", "unknown")},
+                ))
         if upload.event_id and not db.scalar(select(EventSourceMap).where(
             EventSourceMap.event_id == upload.event_id, EventSourceMap.source_id == source.id,
             EventSourceMap.purpose == "submitted_material",

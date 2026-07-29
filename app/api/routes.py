@@ -1047,6 +1047,11 @@ def list_event_materials(
         source = db.get(Source, mapping.source_id)
         if source is None:
             continue
+        # User-submitted sources remain private until an administrator accepts
+        # rights and provenance; never leak quarantined intake into the student
+        # resource library.
+        if (source.metadata_json or {}).get("origin_type") == "upload" and not source.approved:
+            continue
         snapshot = db.scalar(select(SourceSnapshot).where(
             SourceSnapshot.source_id == source.id,
         ).order_by(SourceSnapshot.created_at.desc(), SourceSnapshot.id.desc()))
@@ -1139,6 +1144,54 @@ def list_content_uploads(
                        "status": runs[row.id].status, "diagnostics": runs[row.id].diagnostics_json,
                        "source_id": runs[row.id].source_id} if row.id in runs else None),
     } for row in rows]
+
+
+@router.post("/content/intake/uploads/{upload_id}/review")
+def review_content_upload(
+    upload_id: int,
+    decision: str = Form(...),
+    rights_status: str = Form(default=RightsStatus.DERIVATIVE_GENERATION_ALLOWED.value),
+    notes: str = Form(default=""),
+    db: Session = Depends(get_db),
+    actor: User = Depends(require_admin),
+):
+    """Accept or reject an extracted upload before any grounded authoring."""
+    upload = db.get(UploadSubmission, upload_id)
+    if not upload:
+        raise HTTPException(status_code=404, detail="Upload not found")
+    run = db.scalar(select(IngestionRun).where(IngestionRun.upload_id == upload.id).order_by(IngestionRun.id.desc()))
+    if not run or not run.source_id:
+        raise HTTPException(status_code=409, detail="Upload has not completed extraction")
+    if decision not in {"accepted", "rejected"}:
+        raise HTTPException(status_code=422, detail="Decision must be accepted or rejected")
+    source = db.get(Source, run.source_id)
+    if decision == "accepted":
+        valid_rights = {status.value for status in RightsStatus}
+        if rights_status not in valid_rights or rights_status in {RightsStatus.BLOCKED.value, RightsStatus.QUARANTINED.value}:
+            raise HTTPException(status_code=422, detail="Accepted uploads require a non-quarantined rights status")
+        source.rights_status = rights_status
+        source.license_name = "staff-reviewed upload"
+        source.approved = True
+        upload.status = "accepted"
+        if upload.event_id:
+            mapping = db.scalar(select(EventSourceMap).where(
+                EventSourceMap.event_id == upload.event_id,
+                EventSourceMap.source_id == source.id,
+                EventSourceMap.purpose == "submitted_material",
+            ))
+            if mapping:
+                mapping.reviewed = True
+                mapping.reviewed_by_user_id = actor.id
+                mapping.notes = notes.strip() or "Accepted in Content Studio"
+    else:
+        source.rights_status = RightsStatus.BLOCKED.value
+        source.approved = False
+        upload.status = "rejected"
+    run.stage = "ready_for_authoring" if decision == "accepted" else "withdrawn"
+    run.diagnostics_json = {**(run.diagnostics_json or {}), "review_decision": decision, "review_notes": notes.strip(), "reviewed_by": actor.id}
+    _audit(db, actor, f"content.upload.{decision}", "upload_submission", upload.id, source_id=source.id, notes=notes.strip())
+    db.commit()
+    return {"upload_id": upload.id, "source_id": source.id, "status": upload.status, "source_approved": source.approved, "rights_status": source.rights_status}
 
 
 @router.post("/content/authoring/events/{event_id}/lessons")

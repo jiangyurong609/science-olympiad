@@ -1645,10 +1645,81 @@ async function loadContentOperations(button = null) {
     renderQuestionReviewQueue();
     renderCalibrationQueue();
     renderContentChallengeQueue();
+    renderIntakeEvents();
+    await loadContentIntake();
   } catch (error) { toast(error.message); }
   finally { setBusy(button, false); }
   if (state.user.role === 'admin') { $('people-workspace').hidden = false; loadPeople(); }
   $('answerkey-workspace').hidden = false; loadAnswerKeys();
+}
+
+function renderIntakeEvents() {
+  const select = $('content-intake-event');
+  if (!select) return;
+  const current = select.value;
+  select.innerHTML = '<option value="">Choose an event (triage later)</option>' + (state.events || []).map(event =>
+    `<option value="${event.id}">${escapeHtml(event.season)} · ${escapeHtml(event.name)} · Div ${escapeHtml(event.division)}</option>`
+  ).join('');
+  select.value = current;
+}
+
+async function loadContentIntake() {
+  try {
+    const rows = await api('/content/intake/uploads');
+    $('content-intake-empty').hidden = rows.length > 0;
+    $('content-intake-list').innerHTML = rows.map(row => {
+      const ingestion = row.ingestion || {};
+      const diagnostics = ingestion.diagnostics || {};
+      const canReview = state.user.role === 'admin' && ['needs_review', 'needs_human_review'].includes(row.status) && ingestion.source_id;
+      return `<article class="content-intake-row surface" data-intake-id="${row.id}">
+        <div><strong>${escapeHtml(row.filename)}</strong><small>${row.byte_count.toLocaleString()} bytes · ${escapeHtml(row.created_at ? formatDate(row.created_at) : '—')}</small></div>
+        <span class="status-pill intake-status-${escapeHtml(row.status)}">${escapeHtml(row.status.replaceAll('_', ' '))}</span>
+        <div class="content-intake-detail"><span>${escapeHtml(ingestion.stage || 'queued')}</span>${diagnostics.text_chars ? `<span>${Number(diagnostics.text_chars).toLocaleString()} extracted chars</span>` : ''}${diagnostics.page_count ? `<span>${diagnostics.page_count} pages</span>` : ''}</div>
+        <div class="content-intake-actions">${ingestion.source_id ? `<button class="button button-secondary button-compact" type="button" data-intake-source="${ingestion.source_id}">View extracted text</button>` : ''}${canReview ? `<button class="button button-primary button-compact" type="button" data-intake-review="accepted" data-intake-id="${row.id}">Accept for authoring</button><button class="button button-quiet button-compact" type="button" data-intake-review="rejected" data-intake-id="${row.id}">Reject</button>` : ''}</div>
+        ${ingestion.source_id ? `<pre class="content-intake-extracted" data-intake-extracted="${ingestion.source_id}" hidden></pre>` : ''}
+      </article>`;
+    }).join('');
+  } catch (error) { toast(`Intake could not load. ${error.message}`); }
+}
+
+async function submitContentIntake(event) {
+  event.preventDefault();
+  const form = event.currentTarget;
+  const button = form.querySelector('button[type="submit"]');
+  const file = $('content-intake-file').files[0];
+  if (!file) return;
+  const payload = new FormData();
+  payload.append('file', file);
+  if ($('content-intake-event').value) payload.append('event_id', $('content-intake-event').value);
+  payload.append('rights_attestation', $('content-intake-rights').value.trim());
+  setBusy(button, true, 'Uploading…');
+  try {
+    const headers = state.token ? { Authorization: `Bearer ${state.token}` } : {};
+    const response = await fetch('/api/content/intake/uploads', { method: 'POST', headers, body: payload });
+    const data = await response.json().catch(() => ({}));
+    if (!response.ok) throw new Error(data.detail || 'Upload failed');
+    form.reset();
+    $('intake-live-status').textContent = data.deduplicated ? 'Already received' : 'Received · private';
+    await loadContentIntake();
+    toast('Material received. It remains private until staff review.');
+  } catch (error) { $('intake-live-status').textContent = error.message; }
+  finally { setBusy(button, false); }
+}
+
+async function reviewContentIntake(uploadId, decision, button) {
+  const form = new FormData();
+  form.append('decision', decision);
+  if (decision === 'accepted') form.append('rights_status', 'derivative_generation_allowed');
+  form.append('notes', decision === 'accepted' ? 'Reviewed in Content Studio; rights attestation accepted.' : 'Rejected in Content Studio.');
+  setBusy(button, true, decision === 'accepted' ? 'Accepting…' : 'Rejecting…');
+  try {
+    const headers = state.token ? { Authorization: `Bearer ${state.token}` } : {};
+    const response = await fetch(`/api/content/intake/uploads/${uploadId}/review`, { method: 'POST', headers, body: form });
+    const data = await response.json().catch(() => ({}));
+    if (!response.ok) throw new Error(data.detail || 'Review failed');
+    await loadContentIntake();
+    toast(decision === 'accepted' ? 'Source approved for grounded authoring.' : 'Upload rejected and withheld.');
+  } catch (error) { toast(error.message); setBusy(button, false); }
 }
 
 async function loadAnswerKeys() {
@@ -1888,6 +1959,22 @@ $('show-assignment-form').addEventListener('click', () => {
 });
 
 $('refresh-content-operations').addEventListener('click', event => loadContentOperations(event.currentTarget));
+$('content-intake-form').addEventListener('submit', submitContentIntake);
+$('refresh-content-intake').addEventListener('click', event => { setBusy(event.currentTarget, true, 'Refreshing…'); loadContentIntake().finally(() => setBusy(event.currentTarget, false)); });
+$('content-intake-list').addEventListener('click', event => {
+  const button = event.target.closest('[data-intake-review]');
+  if (button) return reviewContentIntake(Number(button.dataset.intakeId), button.dataset.intakeReview, button);
+  const sourceButton = event.target.closest('[data-intake-source]');
+  if (!sourceButton) return;
+  const panel = sourceButton.closest('[data-intake-id]').querySelector('[data-intake-extracted]');
+  if (!panel.hidden) { panel.hidden = true; sourceButton.textContent = 'View extracted text'; return; }
+  sourceButton.textContent = 'Loading…';
+  api(`/materials/${sourceButton.dataset.intakeSource}`).then(data => {
+    panel.textContent = data.extracted_text || 'No extracted text retained.';
+    panel.hidden = false;
+    sourceButton.textContent = 'Hide extracted text';
+  }).catch(error => { panel.textContent = error.message; panel.hidden = false; sourceButton.textContent = 'View extracted text'; });
+});
 $('lesson-review-queue').addEventListener('click', async event => {
   const button = event.target.closest('[data-lesson-review-decision]');
   if (!button) return;
