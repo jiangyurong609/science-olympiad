@@ -1978,6 +1978,11 @@ async function loadApplication() {
       renderQuestionReviewQueue();
       renderCalibrationQueue();
       renderContentChallengeQueue();
+      // Content Studio has its own event picker and inbox. Populate these
+      // before the first paint; previously they were only refreshed after an
+      // admin clicked the workspace refresh button.
+      renderIntakeEvents();
+      await loadContentIntake();
     } else if (roleMode === 'coach') {
       const [events, exams, coachDashboard, teams] = await Promise.all([api('/events'), api('/exams'), api('/coach/dashboard'), api('/teams')]);
       state.events = events;
