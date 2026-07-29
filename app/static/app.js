@@ -61,7 +61,7 @@ const state = {
 sessionStorage.setItem('fieldstoneExamClientSession', state.examClientSession);
 
 const $ = id => document.getElementById(id);
-const appViews = ['dashboard', 'learn', 'practice', 'errors', 'coach', 'content'];
+const appViews = ['dashboard', 'learn', 'practice', 'errors', 'coach', 'content', 'parent'];
 const mainSections = ['auth', 'app-shell', 'exam', 'review'];
 const prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)');
 
@@ -1449,13 +1449,14 @@ async function sendTutorMessage(message, button) {
 
 function configureRoleNavigation() {
   const mode = ['admin', 'editor', 'sme', 'calibrator'].includes(state.user.role) ? 'content'
-    : state.user.role === 'coach' ? 'coach' : 'student';
+    : state.user.role === 'coach' ? 'coach' : state.user.role === 'parent' ? 'parent' : 'student';
   document.querySelectorAll('[data-student-nav]').forEach(item => { item.hidden = mode !== 'student'; });
   document.querySelectorAll('[data-coach-nav]').forEach(item => { item.hidden = mode !== 'coach'; });
   document.querySelectorAll('[data-content-nav]').forEach(item => { item.hidden = mode !== 'content'; });
+  document.querySelectorAll('[data-parent-nav]').forEach(item => { item.hidden = mode !== 'parent'; });
   $('sidebar-name').textContent = state.user.full_name;
   $('sidebar-division').textContent = mode === 'content' ? 'Content operations'
-    : mode === 'coach' ? 'Coach workspace' : `Division ${state.user.division || 'B'}`;
+    : mode === 'coach' ? 'Coach workspace' : mode === 'parent' ? 'Family workspace' : `Division ${state.user.division || 'B'}`;
   $('user-initials').textContent = initials(state.user.full_name);
   return mode;
 }
@@ -1722,6 +1723,36 @@ async function reviewContentIntake(uploadId, decision, button) {
   } catch (error) { toast(error.message); setBusy(button, false); }
 }
 
+async function loadParentMaterials() {
+  try {
+    const rows = await api('/parent/materials');
+    $('parent-material-empty').hidden = rows.length > 0;
+    $('parent-material-list').innerHTML = rows.map(row => `<article class="content-intake-row surface"><div><strong>${escapeHtml(row.filename)}</strong><small>${escapeHtml(row.message)}</small></div><span class="status-pill intake-status-${escapeHtml(row.status)}">${escapeHtml(row.status.replaceAll('_', ' '))}</span><div class="content-intake-detail"><span>${escapeHtml(row.ingestion_stage)}</span><span>${escapeHtml(row.created_at ? formatDate(row.created_at) : '—')}</span></div></article>`).join('');
+  } catch (error) { $('parent-intake-status').textContent = error.message; }
+}
+
+async function submitParentMaterial(event) {
+  event.preventDefault();
+  const form = event.currentTarget;
+  const button = form.querySelector('button[type="submit"]');
+  const file = $('parent-intake-file').files[0];
+  if (!file) return;
+  const payload = new FormData();
+  payload.append('file', file);
+  payload.append('rights_attestation', $('parent-intake-rights').value.trim());
+  setBusy(button, true, 'Submitting…');
+  try {
+    const headers = state.token ? { Authorization: `Bearer ${state.token}` } : {};
+    const response = await fetch('/api/parent/materials', { method: 'POST', headers, body: payload });
+    const data = await response.json().catch(() => ({}));
+    if (!response.ok) throw new Error(data.detail || 'Submission failed');
+    form.reset();
+    $('parent-intake-status').textContent = 'Received privately. Staff review is required before it can influence a course.';
+    await loadParentMaterials();
+  } catch (error) { $('parent-intake-status').textContent = error.message; }
+  finally { setBusy(button, false); }
+}
+
 async function loadAnswerKeys() {
   try {
     const data = await api('/content/questions/needs-key?limit=50');
@@ -1763,7 +1794,7 @@ $('answerkey-list').addEventListener('click', event => {
   if (save) saveAnswerKey(Number(save.dataset.akSave), save);
 });
 
-const ROLE_OPTIONS = ['student', 'coach', 'editor', 'sme', 'calibrator', 'admin'];
+const ROLE_OPTIONS = ['student', 'parent', 'coach', 'editor', 'sme', 'calibrator', 'admin'];
 
 async function loadPeople() {
   const q = $('people-search').value.trim();
@@ -1852,10 +1883,12 @@ async function loadApplication() {
   const pathCourse = coursePathEvent();
   const contentPreview = roleMode === 'content' && Boolean(pathCourse);
   const initialRoute = pathCourse ? 'learn' : location.hash.slice(1).split('?')[0];
-  showView(contentPreview ? 'learn' : roleMode === 'content' ? 'content' : roleMode === 'coach' ? 'coach' : initialRoute === 'learn' ? 'learn' : initialRoute === 'practice' ? 'practice' : initialRoute === 'errors' ? 'errors' : 'dashboard', false);
+  showView(contentPreview ? 'learn' : roleMode === 'content' ? 'content' : roleMode === 'coach' ? 'coach' : roleMode === 'parent' ? 'parent' : initialRoute === 'learn' ? 'learn' : initialRoute === 'practice' ? 'practice' : initialRoute === 'errors' ? 'errors' : 'dashboard', false);
   if (roleMode === 'student') $('today-copy').textContent = 'Loading your study plan…';
   try {
-    if (roleMode === 'content' && !contentPreview) {
+    if (roleMode === 'parent') {
+      await loadParentMaterials();
+    } else if (roleMode === 'content' && !contentPreview) {
       const [events, coverage, lessons, queue, calibration, challenges] = await Promise.all([api('/events'), api('/content/source-coverage'), api('/content/lessons/review-queue'), api('/content/questions/review-queue'), api('/content/questions/calibration-queue'), api('/content/challenges')]);
       state.events = events;
       state.sourceCoverage = coverage.scorecards;
@@ -1975,6 +2008,8 @@ $('content-intake-list').addEventListener('click', event => {
     sourceButton.textContent = 'Hide extracted text';
   }).catch(error => { panel.textContent = error.message; panel.hidden = false; sourceButton.textContent = 'View extracted text'; });
 });
+$('parent-intake-form').addEventListener('submit', submitParentMaterial);
+$('refresh-parent-materials').addEventListener('click', loadParentMaterials);
 $('lesson-review-queue').addEventListener('click', async event => {
   const button = event.target.closest('[data-lesson-review-decision]');
   if (!button) return;
@@ -3243,8 +3278,8 @@ window.addEventListener('hashchange', () => {
   // Non-student roles have no student dashboard, so #overview (the brand logo)
   // must land them on their own home instead of an empty student view.
   const roleHome = ['admin', 'editor', 'sme', 'calibrator'].includes(state.user.role)
-    ? 'content' : state.user.role === 'coach' ? 'coach' : 'dashboard';
-  const view = { '#learn': 'learn', '#practice': 'practice', '#errors': 'errors', '#coach': 'coach', '#content': 'content' }[hashRoute] || roleHome;
+    ? 'content' : state.user.role === 'coach' ? 'coach' : state.user.role === 'parent' ? 'parent' : 'dashboard';
+  const view = { '#learn': 'learn', '#practice': 'practice', '#errors': 'errors', '#coach': 'coach', '#content': 'content', '#parent': 'parent' }[hashRoute] || roleHome;
   showView(view, false);
 });
 

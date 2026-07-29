@@ -17,6 +17,7 @@ class Role(str, Enum):
     EDITOR = "editor"
     SME = "sme"
     CALIBRATOR = "calibrator"
+    PARENT = "parent"
 
 
 class RightsStatus(str, Enum):
@@ -508,6 +509,19 @@ class UploadSubmission(Base):
     status: Mapped[str] = mapped_column(String(40), default="received", index=True)
     created_at: Mapped[datetime] = mapped_column(DateTime(timezone=True), default=now_utc)
     updated_at: Mapped[datetime] = mapped_column(DateTime(timezone=True), default=now_utc, onupdate=now_utc)
+
+
+class ParentMaterialShare(Base):
+    """Private parent contribution scope; never grants staff/student access."""
+    __tablename__ = "parent_material_shares"
+    id: Mapped[int] = mapped_column(primary_key=True)
+    upload_id: Mapped[int] = mapped_column(ForeignKey("upload_submissions.id", ondelete="CASCADE"), unique=True, index=True)
+    parent_user_id: Mapped[int] = mapped_column(ForeignKey("users.id", ondelete="CASCADE"), index=True)
+    student_user_id: Mapped[int | None] = mapped_column(ForeignKey("users.id", ondelete="SET NULL"), nullable=True, index=True)
+    team_id: Mapped[int | None] = mapped_column(ForeignKey("teams.id", ondelete="SET NULL"), nullable=True, index=True)
+    consent_scope: Mapped[str] = mapped_column(String(80), default="intake_only")
+    expires_at: Mapped[datetime | None] = mapped_column(DateTime(timezone=True), nullable=True)
+    created_at: Mapped[datetime] = mapped_column(DateTime(timezone=True), default=now_utc)
 
 
 class IngestionRun(Base):

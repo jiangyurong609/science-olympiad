@@ -4,7 +4,8 @@ from zipfile import ZIP_DEFLATED, ZipFile
 from sqlalchemy import select
 
 from app.core.database import SessionLocal
-from app.models.entities import Event, ExtractionAsset, Lesson, Source, SourcePassage
+from app.core.security import create_access_token, hash_password
+from app.models.entities import Event, ExtractionAsset, Lesson, Source, SourcePassage, User
 
 
 def auth(token):
@@ -127,3 +128,22 @@ def test_office_formats_extract_into_reviewable_assets(client, admin_token):
         assets = db.query(ExtractionAsset).all()
         assert {asset.diagnostics_json["extraction"] for asset in assets} == {"docx-xml", "pptx-xml"}
         assert all(asset.text_chars > 40 for asset in assets)
+
+
+def test_parent_materials_are_private_and_staff_reviewed(client):
+    with SessionLocal() as db:
+        parent = User(email="parent@example.com", full_name="Parent", password_hash=hash_password("password123"), role="parent")
+        db.add(parent)
+        db.commit()
+        parent_token = create_access_token(str(parent.id))
+
+    response = client.post(
+        "/api/parent/materials", headers=auth(parent_token),
+        data={"rights_attestation": "I created and own this handout."},
+        files={"file": ("family-notes.txt", BytesIO(b"A private family contribution with enough educational detail for extraction and review."), "text/plain")},
+    )
+    assert response.status_code == 200
+    listed = client.get("/api/parent/materials", headers=auth(parent_token))
+    assert listed.status_code == 200 and len(listed.json()) == 1
+    # The parent cannot inspect staff intake or trigger review decisions.
+    assert client.get("/api/content/intake/uploads", headers=auth(parent_token)).status_code == 403

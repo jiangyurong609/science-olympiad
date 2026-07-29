@@ -116,6 +116,7 @@
           <a href="#errors" data-view-link="errors" data-student-nav><span aria-hidden="true">↻</span>Review <span id="nav-error-count" class="nav-count">0</span></a>
           <a href="#coach" data-view-link="coach" data-coach-nav hidden><span aria-hidden="true">⌂</span>Coach Overview</a>
           <a href="#content" data-view-link="content" data-content-nav hidden><span aria-hidden="true">◫</span>Content Review</a>
+          <a href="#parent" data-view-link="parent" data-parent-nav hidden><span aria-hidden="true">⇧</span>Materials</a>
         </nav>
         <div class="sidebar-footer">
           <div class="avatar" id="user-initials" aria-hidden="true">SO</div>
@@ -401,10 +402,26 @@
           <div id="coverage-scorecards" class="coverage-scorecards" aria-live="polite"></div>
           <div id="coverage-empty" class="empty-state surface" hidden><span aria-hidden="true">◇</span><h2>No Reviewed Source Maps</h2><p>Add an event source universe before claiming comprehensive coverage.</p></div>
         </section>
+        <section id="parent" class="view" aria-labelledby="parent-title" hidden>
+          <div class="dashboard-heading"><div><p class="kicker">Family materials</p><h1 id="parent-title" tabindex="-1">Share a source with the coaching team</h1><p class="lede">Your upload stays private until staff verifies rights, extracts the content, and decides whether it belongs in a course.</p></div></div>
+          <section class="content-studio-intake surface" aria-labelledby="parent-upload-title">
+            <div class="section-heading"><div><p class="kicker">Private intake</p><h2 id="parent-upload-title">Upload a PDF, DOCX, PPTX, or handout</h2><p>Do not upload student records or materials you do not have permission to share.</p></div><span class="status-pill">Staff review required</span></div>
+            <form id="parent-intake-form" class="content-intake-form">
+              <label>Material file<input id="parent-intake-file" name="file" type="file" accept=".pdf,.docx,.pptx,.txt,.md,.csv,application/pdf" required></label>
+              <label class="content-intake-rights">Rights / ownership declaration<textarea id="parent-intake-rights" name="rights_attestation" rows="2" minlength="10" required placeholder="I own this material or have permission to share it because…"></textarea></label>
+              <button class="button button-primary" type="submit">Submit private material</button>
+            </form>
+            <p id="parent-intake-status" class="form-message" role="status" aria-live="polite"></p>
+            <div class="content-intake-toolbar"><strong>Your submissions</strong><button id="refresh-parent-materials" class="button button-secondary button-compact" type="button">Refresh</button></div>
+            <div id="parent-material-list" class="content-intake-list" aria-live="polite"></div>
+            <div id="parent-material-empty" class="table-empty" hidden>No submissions yet.</div>
+          </section>
+        </section>
       </div>
-    </section>
 
-    <section id="exam" class="exam-mode" aria-labelledby="exam-title" hidden>
+      </section>
+
+        <section id="exam" class="exam-mode" aria-labelledby="exam-title" hidden>
       <header class="exam-header surface">
         <div><p class="kicker">Timed simulation · <span id="exam-release-label">Reviewed Practice</span></p><h1 id="exam-title">Mock Exam</h1></div>
         <div class="exam-status"><span id="exam-save-state" class="exam-save-state" role="status" aria-live="polite">All answers synced</span><span id="exam-accommodation" class="accommodation-badge" hidden>Extended Time</span><span id="answered-count">0 of 0 answered</span><div id="timer" class="timer" role="timer" aria-label="Time remaining">00:00</div><button id="exit-exam" class="button button-secondary exam-exit" type="button">Save &amp; Exit</button></div>
@@ -457,6 +474,6 @@
       </div>
     </div>
   </div>
-  <script src="/static/app.js?v=36"></script>
+  <script src="/static/app.js?v=37"></script>
 </body>
 </html>

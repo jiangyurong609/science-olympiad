@@ -14,7 +14,7 @@ from app.core.security import create_access_token, decode_access_token, hash_pas
 from app.models.entities import (
     AccommodationChange, AccommodationProfile, Assignment, Attempt, AttemptStatus, AuditLog,
     AssessmentBlueprint, Concept, ContentChallenge, ContentChallengeEvent, ContentGap, Course,
-    CourseSourceCoverage, CourseUnit, CourseVersion, Event, Exam, ExamItem, GuardianConsent,
+    CourseSourceCoverage, CourseUnit, CourseVersion, Event, Exam, ExamItem, GuardianConsent, ParentMaterialShare,
     GenerationRun, Lesson, LessonProgress, LessonSkill, LessonVersion, MasteryState, PracticeSession,
     PracticeSet, PracticeSetVersion, Question, QuestionCalibration, QuestionReview, RemediationCase,
     Response, ResponseRevision, ReviewDecision, RightsStatus,
@@ -139,6 +139,12 @@ def current_user(authorization: str | None = Header(default=None), db: Session =
 def require_content_staff(user: User = Depends(current_user)) -> User:
     if user.role not in {"admin", "editor", "sme", "calibrator"}:
         raise HTTPException(status_code=403, detail="Content staff role required")
+    return user
+
+
+def require_parent(user: User = Depends(current_user)) -> User:
+    if user.role != "parent":
+        raise HTTPException(status_code=403, detail="Parent role required")
     return user
 
 
@@ -1199,6 +1205,64 @@ def review_content_upload(
     _audit(db, actor, f"content.upload.{decision}", "upload_submission", upload.id, source_id=source.id, notes=notes.strip())
     db.commit()
     return {"upload_id": upload.id, "source_id": source.id, "status": upload.status, "source_approved": source.approved, "rights_status": source.rights_status}
+
+
+@router.post("/parent/materials")
+async def parent_submit_material(
+    file: UploadFile = File(...),
+    rights_attestation: str = Form(default=""),
+    db: Session = Depends(get_db),
+    parent: User = Depends(require_parent),
+):
+    """Parent contribution endpoint: no event assignment and no publication authority."""
+    if len(rights_attestation.strip()) < 10:
+        raise HTTPException(status_code=422, detail="Rights/ownership attestation is required")
+    content = await file.read()
+    if len(content) > 25_000_000:
+        raise HTTPException(status_code=413, detail="Upload exceeds the 25 MB safety limit")
+    try:
+        artifact = store_raw_artifact(content, file.content_type or "application/octet-stream")
+    except ArtifactError as exc:
+        raise HTTPException(status_code=422, detail=str(exc)) from exc
+    existing = db.scalar(select(UploadSubmission).where(
+        UploadSubmission.sha256 == artifact["content_hash"],
+        UploadSubmission.uploader_user_id == parent.id,
+    ))
+    if existing:
+        return {"upload_id": existing.id, "status": existing.status, "deduplicated": True}
+    upload = UploadSubmission(
+        uploader_user_id=parent.id, filename=file.filename or "parent-material",
+        declared_media_type=artifact["detected_media_type"], artifact_key=artifact["storage_key"],
+        sha256=artifact["content_hash"], byte_count=artifact["byte_count"],
+        rights_attestation=rights_attestation.strip(), status="received",
+    )
+    db.add(upload)
+    db.flush()
+    db.add(ParentMaterialShare(upload_id=upload.id, parent_user_id=parent.id))
+    db.add(IngestionRun(upload_id=upload.id, stage="received", status="queued"))
+    db.commit()
+    db.refresh(upload)
+    run = db.scalar(select(IngestionRun).where(IngestionRun.upload_id == upload.id).order_by(IngestionRun.id.desc()))
+    enqueue_job(db, "ingest_upload", {"ingestion_run_id": run.id}, actor_user_id=parent.id)
+    _audit(db, parent, "parent.material.received", "upload_submission", upload.id, private_scope="parent")
+    db.commit()
+    return {"upload_id": upload.id, "ingestion_run_id": run.id, "status": upload.status, "deduplicated": False}
+
+
+@router.get("/parent/materials")
+def parent_list_materials(
+    db: Session = Depends(get_db),
+    parent: User = Depends(require_parent),
+):
+    rows = db.scalars(select(UploadSubmission).join(
+        ParentMaterialShare, ParentMaterialShare.upload_id == UploadSubmission.id,
+    ).where(ParentMaterialShare.parent_user_id == parent.id).order_by(UploadSubmission.created_at.desc())).all()
+    runs = {run.upload_id: run for run in db.scalars(select(IngestionRun).where(
+        IngestionRun.upload_id.in_([row.id for row in rows])
+    )).all()} if rows else {}
+    return [{"id": row.id, "filename": row.filename, "status": row.status,
+             "created_at": row.created_at, "ingestion_stage": runs[row.id].stage if row.id in runs else "received",
+             "message": "Private contribution; staff review is required."} for row in rows]
 
 
 @router.post("/content/authoring/events/{event_id}/lessons")

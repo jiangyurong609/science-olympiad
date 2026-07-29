@@ -358,6 +358,7 @@ The first vertical slice is implemented and verified in the application:
 - Quarantined upload sources are excluded from the student material library.
 - An admin can accept or reject an extracted upload; acceptance records rights status, approves the source, and marks the event mapping reviewed.
 - Accepted sources can be sent to grounded authoring, which creates draft/editor-review lessons and never publishes automatically.
+- A parent role has a separate private materials view and upload endpoint; parent submissions have an `intake_only` share scope and cannot access staff queues or approve content.
 - An end-to-end integration test exercises upload → background extraction → passage persistence → quarantine visibility → admin acceptance → student visibility.
 
-The following design items remain explicit follow-on work rather than hidden behavior: DOCX/PPTX/image OCR extraction, real antivirus scanning, resumable chunked uploads, parent/guardian-scoped accounts, a dedicated split-pane source editor, distributed worker leases, and full lesson/question provenance at block level. Until those are implemented, the UI labels the supported intake scope and keeps publication behind the existing human review gates.
+The following design items remain explicit follow-on work rather than hidden behavior: image OCR extraction, real antivirus scanning, resumable chunked uploads, parent-to-student/team relationship approval, a dedicated split-pane source editor, distributed worker leases, and full lesson/question provenance at block level. DOCX/PPTX XML extraction and extraction diagnostics are now supported; image uploads remain intentionally blocked pending an OCR engine and human review path.
