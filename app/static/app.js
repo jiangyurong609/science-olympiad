@@ -971,7 +971,15 @@ function renderSubjectShell() {
   $('learn-duration').textContent = totalMinutes >= 60 ? `${Math.round(totalMinutes / 6) / 10} hr` : `${totalMinutes} min`;
   $('learn-progress-value').textContent = `${progress}%`;
   const preview = $('course-preview-banner');
-  preview.hidden = !state.courseMap || state.courseMap.status === 'published';
+  const previewMode = state.courseMap?.status;
+  preview.hidden = !state.courseMap || previewMode === 'published';
+  if (previewMode === 'student_preview') {
+    $('course-preview-label').textContent = 'Student preview';
+    $('course-preview-copy').textContent = 'This early course preview is not graded and does not affect mastery. Use Give feedback in any lesson to help us improve it.';
+  } else if (previewMode && previewMode !== 'published') {
+    $('course-preview-label').textContent = 'Staff preview';
+    $('course-preview-copy').textContent = 'This draft is not visible to students. Review its teaching, evidence, and checks before release.';
+  }
   state.featuredLessonId = nextLesson?.id || null;
   $('featured-event-kicker').textContent = nextLesson?.progress.status === 'completed' ? 'Review Anytime' : 'Up Next';
   $('featured-lesson-title').textContent = nextLesson?.title || 'Lessons Are Being Prepared';
