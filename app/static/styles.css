@@ -68,6 +68,13 @@ p { line-height: 1.65; text-wrap: pretty; }
 .release-blockers { margin: 0; padding: 10px 10px 10px 28px; border: 1px solid #ead7ac; border-radius: 9px; background: #fffaf0; color: #744d1a; font-size: .78rem; }
 .release-ready-note { margin: 0; color: #315a37; font-size: .78rem; }
 .release-actions { display: flex; flex-wrap: wrap; gap: 8px; }
+.release-history { border-top: 1px solid var(--line); padding-top: 10px; }
+.release-history summary { cursor: pointer; color: var(--forest); font-size: .78rem; font-weight: 700; }
+.release-history-list { display: grid; gap: 8px; margin: 10px 0 0; padding: 0; list-style: none; }
+.release-history-list li { padding: 9px 11px; border: 1px solid var(--line); border-radius: 8px; background: #fafbf9; }
+.release-history-list li div { display: flex; justify-content: space-between; gap: 12px; font-size: .76rem; }
+.release-history-list li div span, .release-history-list li p { color: var(--muted); }
+.release-history-list li p { margin: 4px 0 0; font-size: .76rem; }
 .content-source-inspector { display: grid; grid-template-columns: minmax(0, 1.2fr) minmax(260px, .8fr); gap: 16px; margin-top: 18px; padding: 16px; border: 1px solid var(--line); border-radius: 12px; background: #fff; }
 .content-source-pane { min-width: 0; }
 .content-source-meta { color: var(--muted); font-size: .82rem; }

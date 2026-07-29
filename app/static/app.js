@@ -1611,11 +1611,12 @@ function renderContentReleases() {
       <button class="button button-secondary button-compact" type="button" data-release-decision="preview" data-course-id="${course.id}" ${canRelease ? '' : 'disabled'}>Preview for students</button>
       <button class="button button-primary button-compact" type="button" data-release-decision="published" data-course-id="${course.id}" ${canRelease ? '' : 'disabled'}>Publish</button>
       ${['student_preview', 'published'].includes(course.status) ? `<button class="button button-quiet button-compact" type="button" data-release-decision="withdrawn" data-course-id="${course.id}">Withdraw</button>` : ''}
+      <button class="button button-quiet button-compact" type="button" data-release-history="${course.id}">View release history</button>
     </div>`;
     return `<article class="content-release-row surface" data-release-row="${course.id}">
       <header><div><span class="coverage-season">${escapeHtml(course.event ? `${course.event.season} · ${course.event.division}` : 'Unmapped event')} · Version ${course.version}</span><h3>${escapeHtml(course.title)}</h3><p>${escapeHtml(course.release_notes || 'No release notes recorded.')}</p></div><span class="coverage-release ${course.release_ready ? 'ready' : 'blocked'}">${escapeHtml(course.status.replaceAll('_', ' '))}</span></header>
       <div class="release-gate-summary"><strong>${course.release_ready ? 'Release ready' : 'Release blocked'}</strong><span>${course.blockers.length} blocker${course.blockers.length === 1 ? '' : 's'}</span></div>
-      ${blockers}${actions}<p class="review-status" role="status" aria-live="polite"></p>
+      ${blockers}${actions}<details class="release-history" data-release-history-panel hidden><summary>Release history</summary><div class="release-history-body"><p class="review-waiting">Loading history…</p></div></details><p class="review-status" role="status" aria-live="polite"></p>
     </article>`;
   }).join('');
 }
@@ -2095,6 +2096,22 @@ $('parent-intake-form').addEventListener('submit', submitParentMaterial);
 $('refresh-parent-materials').addEventListener('click', loadParentMaterials);
 $('parent-relationship-form').addEventListener('submit', submitParentRelationship);
 $('content-release-list').addEventListener('click', async event => {
+  const historyButton = event.target.closest('[data-release-history]');
+  if (historyButton) {
+    const row = historyButton.closest('[data-release-row]');
+    const panel = row?.querySelector('[data-release-history-panel]');
+    const body = panel?.querySelector('.release-history-body');
+    if (!panel || !body) return;
+    panel.hidden = false;
+    historyButton.disabled = true;
+    try {
+      const data = await api(`/content/releases/${historyButton.dataset.releaseHistory}/history`);
+      const entries = data.transitions || [];
+      body.innerHTML = entries.length ? `<ol class="release-history-list">${entries.map(entry => `<li><div><strong>${escapeHtml(entry.decision.replaceAll('_', ' '))}</strong><span>${escapeHtml(new Date(entry.created_at).toLocaleString())}</span></div><p>${escapeHtml(entry.details?.notes || 'No release note recorded.')}</p></li>`).join('')}</ol>` : '<p class="review-waiting">No release transitions recorded yet.</p>';
+    } catch (error) { body.innerHTML = `<p class="citation-missing">${escapeHtml(error.message)}</p>`; }
+    finally { historyButton.disabled = false; }
+    return;
+  }
   const button = event.target.closest('[data-release-decision]');
   if (!button || button.disabled) return;
   const notes = window.prompt('Release note (optional):', '') ?? '';
