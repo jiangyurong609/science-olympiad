@@ -358,6 +358,10 @@
             <div class="content-intake-toolbar"><strong>Inbox</strong><button id="refresh-content-intake" class="button button-secondary button-compact" type="button">Refresh intake</button></div>
             <div id="content-intake-list" class="content-intake-list" aria-live="polite"></div>
             <div id="content-intake-empty" class="table-empty" hidden>No submitted materials yet.</div>
+            <section id="content-source-inspector" class="content-source-inspector" hidden aria-labelledby="content-source-inspector-title">
+              <div class="content-source-pane"><p class="kicker">Source snapshot</p><h3 id="content-source-inspector-title">Select a source</h3><p id="content-source-inspector-meta" class="content-source-meta"></p><div id="content-source-passages" class="content-source-passages"></div></div>
+              <div class="content-source-pane content-source-preview"><p class="kicker">Grounding notes</p><p>Review passages on the left before approving authoring. Every generated block must cite one or more passage IDs.</p><pre id="content-source-json" class="content-intake-extracted"></pre></div>
+            </section>
           </section>
           <section id="people-workspace" class="people-workspace" aria-labelledby="people-title" hidden>
             <div class="section-heading"><div><p class="kicker">Platform administration</p><h2 id="people-title">People &amp; Roles</h2><p>Assign staff roles and manage account access. Changes take effect immediately.</p></div><p id="people-count" class="queue-count">0 Users</p></div>
@@ -417,6 +421,16 @@
             <div class="content-intake-toolbar"><strong>Your submissions</strong><button id="refresh-parent-materials" class="button button-secondary button-compact" type="button">Refresh</button></div>
             <div id="parent-material-list" class="content-intake-list" aria-live="polite"></div>
             <div id="parent-material-empty" class="table-empty" hidden>No submissions yet.</div>
+          </section>
+          <section class="content-studio-intake surface" aria-labelledby="parent-link-title">
+            <div class="section-heading"><div><p class="kicker">Access relationship</p><h2 id="parent-link-title">Link your student</h2><p>Staff must approve this relationship before a contribution can be assigned to a student.</p></div></div>
+            <form id="parent-relationship-form" class="content-intake-form">
+              <label>Student email<input id="parent-student-email" type="email" required autocomplete="email"></label>
+              <label>Note <span class="label-note">optional</span><input id="parent-relationship-note" type="text" maxlength="500"></label>
+              <button class="button button-secondary" type="submit">Request relationship</button>
+            </form>
+            <p id="parent-relationship-status" class="form-message" role="status" aria-live="polite"></p>
+            <div id="parent-relationship-list" class="content-intake-list" aria-live="polite"></div>
           </section>
         </section>
       </div>

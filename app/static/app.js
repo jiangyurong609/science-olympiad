@@ -1747,6 +1747,33 @@ async function loadParentMaterials() {
   } catch (error) { $('parent-intake-status').textContent = error.message; }
 }
 
+async function loadParentRelationships() {
+  try {
+    const rows = await api('/parent/relationships');
+    $('parent-relationship-list').innerHTML = rows.map(row => `<article class="content-intake-row surface"><div><strong>Student #${row.student_user_id}</strong><small>${escapeHtml(row.scope)}</small></div><span class="status-pill intake-status-${escapeHtml(row.status)}">${escapeHtml(row.status)}</span><div class="content-intake-detail">${escapeHtml(row.notes || '')}</div></article>`).join('');
+  } catch (error) { $('parent-relationship-status').textContent = error.message; }
+}
+
+async function submitParentRelationship(event) {
+  event.preventDefault();
+  const form = event.currentTarget;
+  const button = form.querySelector('button[type="submit"]');
+  const payload = new FormData();
+  payload.append('student_email', $('parent-student-email').value.trim());
+  payload.append('notes', $('parent-relationship-note').value.trim());
+  setBusy(button, true, 'Requesting…');
+  try {
+    const headers = state.token ? { Authorization: `Bearer ${state.token}` } : {};
+    const response = await fetch('/api/parent/relationships', { method: 'POST', headers, body: payload });
+    const data = await response.json().catch(() => ({}));
+    if (!response.ok) throw new Error(data.detail || 'Relationship request failed');
+    $('parent-relationship-status').textContent = 'Request submitted for staff approval.';
+    form.reset();
+    await loadParentRelationships();
+  } catch (error) { $('parent-relationship-status').textContent = error.message; }
+  finally { setBusy(button, false); }
+}
+
 async function submitParentMaterial(event) {
   event.preventDefault();
   const form = event.currentTarget;
@@ -1904,6 +1931,7 @@ async function loadApplication() {
   try {
     if (roleMode === 'parent') {
       await loadParentMaterials();
+      await loadParentRelationships();
     } else if (roleMode === 'content' && !contentPreview) {
       const [events, coverage, lessons, queue, calibration, challenges] = await Promise.all([api('/events'), api('/content/source-coverage'), api('/content/lessons/review-queue'), api('/content/questions/review-queue'), api('/content/questions/calibration-queue'), api('/content/challenges')]);
       state.events = events;
@@ -2018,14 +2046,21 @@ $('content-intake-list').addEventListener('click', event => {
   const panel = sourceButton.closest('[data-intake-id]').querySelector('[data-intake-extracted]');
   if (!panel.hidden) { panel.hidden = true; sourceButton.textContent = 'View extracted text'; return; }
   sourceButton.textContent = 'Loading…';
-  api(`/materials/${sourceButton.dataset.intakeSource}`).then(data => {
-    panel.textContent = data.extracted_text || 'No extracted text retained.';
-    panel.hidden = false;
-    sourceButton.textContent = 'Hide extracted text';
+  api(`/content/intake/sources/${sourceButton.dataset.intakeSource}`).then(data => {
+    const source = data.source || {};
+    const snapshot = data.snapshot || {};
+    $('content-source-inspector').hidden = false;
+    $('content-source-inspector-title').textContent = source.title || 'Source snapshot';
+    $('content-source-inspector-meta').textContent = `${source.approved ? 'Approved' : 'Quarantined'} · ${source.rights_status || 'rights pending'} · ${data.passages.length} passages · ${snapshot.content_hash || 'no snapshot'}`;
+    $('content-source-passages').innerHTML = data.passages.map(passage => `<article class="content-source-passage"><small>Passage ${passage.id} · ${escapeHtml(passage.locator)} · ${escapeHtml(passage.passage_type)}</small><p>${escapeHtml(passage.text)}</p></article>`).join('') || '<p>No extracted passages retained.</p>';
+    $('content-source-json').textContent = JSON.stringify({source, snapshot, mappings: data.mappings}, null, 2);
+    panel.hidden = true;
+    sourceButton.textContent = 'Opened below';
   }).catch(error => { panel.textContent = error.message; panel.hidden = false; sourceButton.textContent = 'View extracted text'; });
 });
 $('parent-intake-form').addEventListener('submit', submitParentMaterial);
 $('refresh-parent-materials').addEventListener('click', loadParentMaterials);
+$('parent-relationship-form').addEventListener('submit', submitParentRelationship);
 $('lesson-review-queue').addEventListener('click', async event => {
   const button = event.target.closest('[data-lesson-review-decision]');
   if (!button) return;

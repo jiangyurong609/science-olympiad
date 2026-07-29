@@ -15,6 +15,7 @@ from __future__ import annotations
 import json
 import re
 from concurrent.futures import ThreadPoolExecutor
+from collections.abc import Callable
 
 from sqlalchemy import delete, select
 from sqlalchemy.orm import Session
@@ -180,6 +181,7 @@ def _generate_lesson(provider, event: Event, entry: dict, material: str) -> dict
 
 def generate_lessons_for_event(
     db: Session, event: Event, commit: bool = True, *, publish: bool = False,
+    heartbeat: Callable[[], None] | None = None,
 ) -> list[Lesson]:
     picked = _course_material(db, event)
     if not picked:
@@ -189,7 +191,11 @@ def generate_lessons_for_event(
     if not provider.configured:
         raise ModelProviderError("External model provider is not configured")
 
+    if heartbeat:
+        heartbeat()
     syllabus = _generate_syllabus(provider, event, material)
+    if heartbeat:
+        heartbeat()
     if not syllabus:
         raise ModelProviderError("Model returned no syllabus")
 
@@ -206,7 +212,12 @@ def generate_lessons_for_event(
     # stay on this thread afterward since the SQLAlchemy session isn't thread-safe.
     def _safe_generate(entry):
         try:
-            return _generate_lesson(provider, event, entry, material)
+            if heartbeat:
+                heartbeat()
+            result = _generate_lesson(provider, event, entry, material)
+            if heartbeat:
+                heartbeat()
+            return result
         except Exception:  # noqa: BLE001 — one bad lesson shouldn't sink the course
             return None
 

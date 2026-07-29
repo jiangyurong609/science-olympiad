@@ -15,7 +15,7 @@ from app.core.security import create_access_token, decode_access_token, hash_pas
 from app.models.entities import (
     AccommodationChange, AccommodationProfile, Assignment, Attempt, AttemptStatus, AuditLog,
     AssessmentBlueprint, Concept, ContentChallenge, ContentChallengeEvent, ContentGap, Course,
-    CourseSourceCoverage, CourseUnit, CourseVersion, Event, Exam, ExamItem, GuardianConsent, ParentMaterialShare,
+    CourseSourceCoverage, CourseUnit, CourseVersion, Event, Exam, ExamItem, GuardianConsent, ParentMaterialShare, ParentStudentLink,
     GenerationRun, Lesson, LessonProgress, LessonSkill, LessonVersion, MasteryState, PracticeSession,
     PracticeSet, PracticeSetVersion, Question, QuestionCalibration, QuestionReview, RemediationCase,
     Response, ResponseRevision, ReviewDecision, RightsStatus,
@@ -1396,6 +1396,31 @@ def list_content_uploads(
     } for row in rows]
 
 
+@router.get("/content/intake/sources/{source_id}")
+def get_intake_source_detail(
+    source_id: int,
+    db: Session = Depends(get_db),
+    user: User = Depends(require_content_staff),
+):
+    """Source-review payload with stable passage locators for the split-pane editor."""
+    source = db.get(Source, source_id)
+    if not source:
+        raise HTTPException(status_code=404, detail="Source not found")
+    snapshots = db.scalars(select(SourceSnapshot).where(SourceSnapshot.source_id == source.id).order_by(SourceSnapshot.created_at.desc(), SourceSnapshot.id.desc())).all()
+    snapshot = snapshots[0] if snapshots else None
+    passages = db.scalars(select(SourcePassage).where(
+        SourcePassage.source_id == source.id,
+        SourcePassage.source_snapshot_id == snapshot.id if snapshot else False,
+    ).order_by(SourcePassage.sequence, SourcePassage.id)).all() if snapshot else []
+    mappings = db.scalars(select(EventSourceMap).where(EventSourceMap.source_id == source.id)).all()
+    return {
+        "source": {"id": source.id, "title": source.title, "url": source.url, "publisher": source.publisher, "approved": source.approved, "rights_status": source.rights_status, "metadata": source.metadata_json},
+        "snapshot": {"id": snapshot.id, "content_hash": snapshot.content_hash, "content_type": snapshot.content_type, "created_at": snapshot.created_at, "metadata": snapshot.metadata_json} if snapshot else None,
+        "passages": [{"id": passage.id, "sequence": passage.sequence, "locator": passage.locator, "heading": passage.heading, "passage_type": passage.passage_type, "text": passage.text, "content_hash": passage.content_hash} for passage in passages],
+        "mappings": [{"event_id": mapping.event_id, "purpose": mapping.purpose, "reviewed": mapping.reviewed, "notes": mapping.notes} for mapping in mappings],
+    }
+
+
 @router.post("/content/intake/uploads/{upload_id}/review")
 def review_content_upload(
     upload_id: int,
@@ -1435,6 +1460,13 @@ def review_content_upload(
                 raise HTTPException(status_code=422, detail="student_user_id must reference an active student")
             share = db.scalar(select(ParentMaterialShare).where(ParentMaterialShare.upload_id == upload.id))
             if share:
+                relationship = db.scalar(select(ParentStudentLink).where(
+                    ParentStudentLink.parent_user_id == share.parent_user_id,
+                    ParentStudentLink.student_user_id == student.id,
+                    ParentStudentLink.status == "approved",
+                ))
+                if not relationship:
+                    raise HTTPException(status_code=403, detail="Parent/student relationship must be approved before assignment")
                 share.student_user_id = student.id
         if upload.event_id:
             mapping = db.scalar(select(EventSourceMap).where(
@@ -1520,6 +1552,75 @@ def parent_list_materials(
     return [{"id": row.id, "filename": row.filename, "status": row.status,
              "created_at": row.created_at, "ingestion_stage": runs[row.id].stage if row.id in runs else "received",
              "message": "Private contribution; staff review is required."} for row in rows]
+
+
+@router.post("/parent/relationships")
+def parent_request_relationship(
+    student_email: str = Form(...),
+    notes: str = Form(default=""),
+    db: Session = Depends(get_db),
+    parent: User = Depends(require_parent),
+):
+    student = db.scalar(select(User).where(User.email == student_email.strip().lower(), User.role == "student"))
+    if not student:
+        raise HTTPException(status_code=404, detail="Student account not found")
+    if student.id == parent.id:
+        raise HTTPException(status_code=422, detail="A parent account cannot link to itself")
+    link = db.scalar(select(ParentStudentLink).where(
+        ParentStudentLink.parent_user_id == parent.id, ParentStudentLink.student_user_id == student.id,
+    ))
+    if link:
+        return {"relationship_id": link.id, "status": link.status, "deduplicated": True}
+    link = ParentStudentLink(parent_user_id=parent.id, student_user_id=student.id, notes=notes.strip())
+    db.add(link)
+    db.flush()
+    _audit(db, parent, "parent.relationship.requested", "parent_student_link", link.id, student_user_id=student.id)
+    db.commit()
+    return {"relationship_id": link.id, "status": link.status, "deduplicated": False}
+
+
+@router.get("/parent/relationships")
+def parent_list_relationships(
+    db: Session = Depends(get_db),
+    parent: User = Depends(require_parent),
+):
+    links = db.scalars(select(ParentStudentLink).where(ParentStudentLink.parent_user_id == parent.id).order_by(ParentStudentLink.created_at.desc())).all()
+    return [{"id": link.id, "student_user_id": link.student_user_id, "status": link.status, "scope": link.consent_scope, "notes": link.notes} for link in links]
+
+
+@router.get("/content/parent-relationships")
+def list_parent_relationships(
+    status: str | None = Query(default="pending"),
+    db: Session = Depends(get_db),
+    actor: User = Depends(require_admin),
+):
+    query = select(ParentStudentLink).order_by(ParentStudentLink.created_at.desc())
+    if status:
+        query = query.where(ParentStudentLink.status == status)
+    links = db.scalars(query.limit(200)).all()
+    return [{"id": link.id, "parent_user_id": link.parent_user_id, "student_user_id": link.student_user_id, "status": link.status, "notes": link.notes, "created_at": link.created_at} for link in links]
+
+
+@router.post("/content/parent-relationships/{relationship_id}/review")
+def review_parent_relationship(
+    relationship_id: int,
+    decision: str = Form(...),
+    notes: str = Form(default=""),
+    db: Session = Depends(get_db),
+    actor: User = Depends(require_admin),
+):
+    link = db.get(ParentStudentLink, relationship_id)
+    if not link:
+        raise HTTPException(status_code=404, detail="Relationship request not found")
+    if decision not in {"approved", "rejected", "revoked"}:
+        raise HTTPException(status_code=422, detail="Decision must be approved, rejected, or revoked")
+    link.status = decision
+    link.approved_by_user_id = actor.id if decision == "approved" else None
+    link.approved_at = datetime.now(timezone.utc) if decision == "approved" else None
+    link.notes = notes.strip()
+    _audit(db, actor, f"parent.relationship.{decision}", "parent_student_link", link.id, student_user_id=link.student_user_id)
+    db.commit()
+    return {"relationship_id": link.id, "status": link.status}
 
 
 @router.post("/content/authoring/events/{event_id}/lessons")

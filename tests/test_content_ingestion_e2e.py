@@ -5,7 +5,7 @@ from sqlalchemy import select
 
 from app.core.database import SessionLocal
 from app.core.security import create_access_token, hash_password
-from app.models.entities import Event, EventSourceMap, ExtractionAsset, Lesson, ParentMaterialShare, Source, SourcePassage, SourceSnapshot, UploadSubmission, User
+from app.models.entities import Event, EventSourceMap, ExtractionAsset, Lesson, ParentMaterialShare, ParentStudentLink, Source, SourcePassage, SourceSnapshot, UploadSubmission, User
 
 
 def auth(token):
@@ -42,6 +42,8 @@ def test_upload_extract_review_and_student_visibility(client, admin_token, stude
     row = next(item for item in listed.json() if item["id"] == upload_id)
     assert row["status"] == "needs_review"
     assert row["ingestion"]["stage"] == "ready_for_review"
+    source_detail = client.get(f"/api/content/intake/sources/{row['ingestion']['source_id']}", headers=auth(admin_token))
+    assert source_detail.status_code == 200 and source_detail.json()["passages"]
 
     with SessionLocal() as db:
         source = db.scalar(select(Source).where(Source.content_hash == row["sha256"]))
@@ -254,6 +256,18 @@ def test_parent_materials_are_private_and_staff_reviewed(client, admin_token):
         db.commit()
         parent_token, student_id, event_id = create_access_token(str(parent.id)), student.id, event.id
 
+    relationship = client.post(
+        "/api/parent/relationships", headers=auth(parent_token),
+        data={"student_email": "child@example.com", "notes": "Guardian relationship submitted for review."},
+    )
+    assert relationship.status_code == 200 and relationship.json()["status"] == "pending"
+    relationship_id = relationship.json()["relationship_id"]
+    approved_relationship = client.post(
+        f"/api/content/parent-relationships/{relationship_id}/review", headers=auth(admin_token),
+        data={"decision": "approved", "notes": "Verified by the school administrator."},
+    )
+    assert approved_relationship.status_code == 200 and approved_relationship.json()["status"] == "approved"
+
     response = client.post(
         "/api/parent/materials", headers=auth(parent_token),
         data={"rights_attestation": "I created and own this handout."},
@@ -274,3 +288,5 @@ def test_parent_materials_are_private_and_staff_reviewed(client, admin_token):
     with SessionLocal() as db:
         share = db.scalar(select(ParentMaterialShare).where(ParentMaterialShare.upload_id == upload_id))
         assert share and share.student_user_id == student_id
+        link = db.scalar(select(ParentStudentLink).where(ParentStudentLink.id == relationship_id))
+        assert link and link.status == "approved"

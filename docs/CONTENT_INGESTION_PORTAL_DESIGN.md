@@ -358,6 +358,8 @@ The first vertical slice is implemented and verified in the application:
 - The upload is checksum-deduplicated, stored as an immutable artifact, and processed by a durable ingestion job.
 - PDF pages and text sections are persisted as `SourcePassage` records with page/section locators.
 - Scanned image uploads use Google Cloud Vision document OCR; page count and average block confidence are retained in `ExtractionAsset`, and provider/empty-text failures remain `needs_human_review`.
+- Staff have a split-pane source inspector with immutable snapshot metadata and passage IDs; parent/student relationships are explicit pending/approved/rejected records, and material assignment requires an approved relationship.
+- Artifact storage has a configurable streaming antivirus adapter (`ANTIVIRUS_COMMAND`, fail-closed with `ANTIVIRUS_REQUIRED=true`); deterministic ZIP/macro checks remain active even when the optional scanner is unavailable.
 - Quarantined upload sources are excluded from the student material library.
 - An admin can accept or reject an extracted upload; acceptance records rights status, approves the source, and marks the event mapping reviewed.
 - Accepted sources can be sent to grounded authoring, which creates draft/editor-review lessons and never publishes automatically.
@@ -366,4 +368,4 @@ The first vertical slice is implemented and verified in the application:
 - An end-to-end integration test exercises upload → background extraction → passage persistence → quarantine visibility → admin acceptance → student visibility.
 - Real external-video validation has been run against Science Olympiad videos (`i22uB-vXXS8` and `7DLU4tfEIVY`): caption retrieval produced 620 and 766 timestamped segments, and one full transcript was persisted into 14 timestamped source passages while remaining quarantined.
 
-The following design items remain explicit follow-on work rather than hidden behavior: real antivirus scanning, parent-to-student/team relationship approval, a dedicated split-pane source editor, and production worker heartbeat updates during long-running model calls. DOCX/PPTX XML extraction, URL/YouTube import, Google Vision OCR, resumable chunk sessions, extraction diagnostics, stale-job recovery, and block-level passage IDs are now supported.
+The following design items remain explicit follow-on work rather than hidden behavior: configuring a production AV service/command on Cloud Run, team-level parent relationship approval, and release-manager/version-diff screens beyond the source inspector. DOCX/PPTX XML extraction, URL/YouTube import, Google Vision OCR, resumable chunk sessions, extraction diagnostics, stale-job recovery, session-isolated worker heartbeats during model calls, and block-level passage IDs are now supported.

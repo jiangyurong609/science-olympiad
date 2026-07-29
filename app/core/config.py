@@ -19,6 +19,8 @@ class Settings(BaseSettings):
     artifact_store_path: str = "./data/artifacts"
     artifact_store_backend: str = "local"
     artifact_store_bucket: str | None = None
+    antivirus_command: str | None = None
+    antivirus_required: bool = False
     openai_compatible_base_url: str | None = None
     openai_api_key: str | None = None
     openai_model: str = "gpt-4.1-mini"

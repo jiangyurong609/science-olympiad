@@ -4,6 +4,7 @@ import uuid
 from sqlalchemy import select
 from sqlalchemy.orm import Session
 from app.core.config import get_settings
+from app.core.database import SessionLocal
 from app.models.entities import BackgroundJob, RemediationCase, Source, SourceSnapshot
 from app.services.claim_extraction import extract_claims
 from app.services.crawler import check_source_metadata, crawl_source
@@ -27,6 +28,21 @@ def enqueue_job(db: Session, job_type: str, payload: dict, actor_user_id: int | 
     db.commit()
     db.refresh(job)
     return job
+
+
+def _heartbeat_factory(job: BackgroundJob):
+    """Return a session-isolated heartbeat callback safe for concurrent model calls."""
+    token = job.lease_token
+    job_id = job.id
+
+    def heartbeat() -> None:
+        with SessionLocal() as heartbeat_db:
+            current = heartbeat_db.get(BackgroundJob, job_id)
+            if current and current.status == "running" and current.lease_token == token:
+                current.heartbeat_at = datetime.now(timezone.utc)
+                heartbeat_db.commit()
+
+    return heartbeat
 
 
 def run_next_job(db: Session) -> BackgroundJob | None:
@@ -157,7 +173,7 @@ def run_next_job(db: Session) -> BackgroundJob | None:
             event = db.get(Event, int(job.payload["event_id"]))
             if not event:
                 raise ValueError("Event not found")
-            lessons = generate_lessons_for_event(db, event, publish=False)
+            lessons = generate_lessons_for_event(db, event, publish=False, heartbeat=_heartbeat_factory(job))
             job.result = {"event_id": event.id, "lesson_ids": [lesson.id for lesson in lessons], "status": "draft"}
         else:
             raise ValueError(f"Unsupported job type: {job.job_type}")

@@ -5,6 +5,9 @@ import os
 import uuid
 import io
 import zipfile
+import shlex
+import shutil
+import subprocess
 from pathlib import Path
 
 from app.core.config import get_settings
@@ -12,6 +15,35 @@ from app.core.config import get_settings
 
 class ArtifactError(ValueError):
     pass
+
+
+def scan_artifact_bytes(content: bytes) -> str:
+    """Run the configured streaming AV scanner before an artifact is stored.
+
+    The command is administrator-configured (for example
+    ``clamdscan --stream``). A missing optional scanner preserves the legacy
+    ``basic_pass`` status; production can set ``ANTIVIRUS_REQUIRED=true`` to fail closed.
+    """
+    settings = get_settings()
+    command = (settings.antivirus_command or "").strip()
+    if not command:
+        if settings.antivirus_required:
+            raise ArtifactError("Antivirus scanner is required but not configured")
+        return "basic_pass"
+    argv = shlex.split(command)
+    if not argv or shutil.which(argv[0]) is None:
+        if settings.antivirus_required:
+            raise ArtifactError("Configured antivirus scanner is unavailable")
+        return "basic_pass"
+    try:
+        result = subprocess.run(argv, input=content, stdout=subprocess.PIPE, stderr=subprocess.PIPE, timeout=30, check=False)
+    except subprocess.TimeoutExpired as exc:
+        raise ArtifactError("Antivirus scan timed out") from exc
+    if result.returncode == 1:
+        raise ArtifactError("Antivirus scanner rejected the artifact")
+    if result.returncode != 0:
+        raise ArtifactError(f"Antivirus scanner failed with exit code {result.returncode}")
+    return "antivirus_pass"
 
 
 def _extension(media_type: str) -> str:
@@ -60,6 +92,7 @@ def validate_raw_artifact(content: bytes, media_type: str) -> str:
 
 def store_raw_artifact(content: bytes, media_type: str) -> dict:
     scan_status = validate_raw_artifact(content, media_type)
+    scan_status = scan_artifact_bytes(content)
     digest = hashlib.sha256(content).hexdigest()
     relative = Path(digest[:2]) / f"{digest}{_extension(media_type)}"
     settings = get_settings()

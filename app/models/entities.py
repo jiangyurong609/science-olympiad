@@ -537,6 +537,21 @@ class ParentMaterialShare(Base):
     created_at: Mapped[datetime] = mapped_column(DateTime(timezone=True), default=now_utc)
 
 
+class ParentStudentLink(Base):
+    """Explicit, auditable parent/guardian relationship approval."""
+    __tablename__ = "parent_student_links"
+    __table_args__ = (UniqueConstraint("parent_user_id", "student_user_id", name="uq_parent_student_link"),)
+    id: Mapped[int] = mapped_column(primary_key=True)
+    parent_user_id: Mapped[int] = mapped_column(ForeignKey("users.id", ondelete="CASCADE"), index=True)
+    student_user_id: Mapped[int] = mapped_column(ForeignKey("users.id", ondelete="CASCADE"), index=True)
+    status: Mapped[str] = mapped_column(String(32), default="pending", index=True)
+    consent_scope: Mapped[str] = mapped_column(String(80), default="materials_intake")
+    approved_by_user_id: Mapped[int | None] = mapped_column(ForeignKey("users.id"), nullable=True)
+    approved_at: Mapped[datetime | None] = mapped_column(DateTime(timezone=True), nullable=True)
+    notes: Mapped[str] = mapped_column(Text, default="")
+    created_at: Mapped[datetime] = mapped_column(DateTime(timezone=True), default=now_utc)
+
+
 class IngestionRun(Base):
     """Auditable, retryable state for extraction and source creation."""
     __tablename__ = "ingestion_runs"
