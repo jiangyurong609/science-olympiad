@@ -1014,6 +1014,172 @@ def get_course_quality_report(
         raise HTTPException(status_code=404, detail=str(exc)) from exc
 
 
+def _course_release_blockers(db: Session, course: Course) -> list[str]:
+    """Return deterministic blockers before a course can enter student preview."""
+    quality = audit_course(db, course.id)
+    blockers: list[str] = [
+        str(row["code"]) for row in quality.get("blockers", [])
+        if row.get("code") != "release_missing"
+    ]
+    lessons = db.scalars(select(Lesson).join(LessonSkill, LessonSkill.lesson_id == Lesson.id)
+                         .join(Skill, Skill.id == LessonSkill.skill_id)
+                         .where(Skill.course_id == course.id).distinct()).all()
+    if not lessons and "no_lessons" not in blockers:
+        blockers.append("no_lessons")
+        return blockers
+    for lesson in lessons:
+        if lesson.status == "withdrawn":
+            continue
+        version = db.scalar(select(LessonVersion).where(
+            LessonVersion.lesson_id == lesson.id,
+            LessonVersion.version == lesson.current_version,
+        ))
+        if not version:
+            blockers.append(f"lesson_{lesson.id}_missing_current_version")
+            continue
+        decisions = db.scalars(select(ReviewDecision).where(
+            ReviewDecision.entity_type == "lesson",
+            ReviewDecision.entity_id == lesson.id,
+            ReviewDecision.entity_version == version.version,
+            ReviewDecision.decision == "approved",
+        )).all()
+        stages = {row.stage for row in decisions}
+        if "editor" not in stages:
+            blockers.append(f"lesson_{lesson.id}_editor_review")
+        if "sme" not in stages:
+            blockers.append(f"lesson_{lesson.id}_sme_review")
+    return blockers
+
+
+@router.get("/content/releases")
+def list_content_releases(
+    db: Session = Depends(get_db),
+    actor: User = Depends(require_content_staff),
+):
+    """Release-manager inbox: every course, its current version, and blockers."""
+    courses = db.scalars(select(Course).order_by(Course.created_at.desc(), Course.id.desc())).all()
+    rows = []
+    for course in courses:
+        event = db.get(Event, course.event_id)
+        version = db.scalar(select(CourseVersion).where(
+            CourseVersion.course_id == course.id,
+            CourseVersion.version == course.current_version,
+        ))
+        blockers = _course_release_blockers(db, course)
+        rows.append({
+            "id": course.id,
+            "title": course.title,
+            "slug": course.slug,
+            "status": course.status,
+            "version": course.current_version,
+            "review_status": version.review_status if version else "missing",
+            "release_notes": version.release_notes if version else "",
+            "event": {
+                "id": event.id, "name": event.name, "slug": event.slug,
+                "season": event.season, "division": event.division,
+            } if event else None,
+            "release_ready": not blockers,
+            "blockers": blockers,
+        })
+    return rows
+
+
+@router.post("/content/releases/{course_id}")
+def decide_content_release(
+    course_id: int,
+    decision: str = Form(...),
+    notes: str = Form(""),
+    db: Session = Depends(get_db),
+    actor: User = Depends(require_content_staff),
+):
+    """Move a course through preview, published, withdrawn, or rollback states."""
+    course = db.get(Course, course_id)
+    if not course:
+        raise HTTPException(status_code=404, detail="Course not found")
+    decision = decision.strip().lower()
+    if decision not in {"preview", "published", "withdrawn", "rollback"}:
+        raise HTTPException(status_code=422, detail="Unsupported release decision")
+    if decision in {"preview", "published"}:
+        blockers = _course_release_blockers(db, course)
+        if blockers:
+            raise HTTPException(status_code=409, detail={
+                "message": "Course is not release-ready",
+                "blockers": blockers,
+            })
+    if decision == "preview":
+        course.status = "student_preview"
+    elif decision == "published":
+        course.status = "published"
+    elif decision == "withdrawn":
+        course.status = "withdrawn"
+    else:
+        previous = db.scalar(select(CourseVersion).where(
+            CourseVersion.course_id == course.id,
+            CourseVersion.version < course.current_version,
+        ).order_by(CourseVersion.version.desc()))
+        if not previous:
+            raise HTTPException(status_code=409, detail="No prior course version is available for rollback")
+        course.current_version = previous.version
+        course.status = "student_preview"
+    version = db.scalar(select(CourseVersion).where(
+        CourseVersion.course_id == course.id,
+        CourseVersion.version == course.current_version,
+    ))
+    if version:
+        version.review_status = "released" if decision in {"preview", "published"} else decision
+    _audit(db, actor, f"course.release.{decision}", "course", course.id,
+           version=course.current_version, notes=notes.strip())
+    db.commit()
+    return {
+        "course_id": course.id,
+        "status": course.status,
+        "version": course.current_version,
+        "decision": decision,
+        "blockers": _course_release_blockers(db, course) if course.status not in {"published", "student_preview"} else [],
+    }
+
+
+@router.get("/content/lessons/{lesson_id}/versions/diff")
+def lesson_version_diff(
+    lesson_id: int,
+    from_version: int = Query(..., ge=1),
+    to_version: int = Query(..., ge=1),
+    db: Session = Depends(get_db),
+    actor: User = Depends(require_content_staff),
+):
+    """Return a review-friendly, immutable diff between two lesson versions."""
+    lesson = db.get(Lesson, lesson_id)
+    if not lesson:
+        raise HTTPException(status_code=404, detail="Lesson not found")
+    versions = db.scalars(select(LessonVersion).where(
+        LessonVersion.lesson_id == lesson.id,
+        LessonVersion.version.in_([from_version, to_version]),
+    )).all()
+    by_version = {row.version: row for row in versions}
+    if from_version not in by_version or to_version not in by_version:
+        raise HTTPException(status_code=404, detail="Requested lesson version not found")
+    before, after = by_version[from_version], by_version[to_version]
+    before_blocks = before.content or []
+    after_blocks = after.content or []
+    changed = []
+    for index in range(max(len(before_blocks), len(after_blocks))):
+        old = before_blocks[index] if index < len(before_blocks) else None
+        new = after_blocks[index] if index < len(after_blocks) else None
+        if old != new:
+            changed.append({"position": index + 1, "before": old, "after": new})
+    return {
+        "lesson_id": lesson.id,
+        "title": lesson.title,
+        "from_version": from_version,
+        "to_version": to_version,
+        "changed_blocks": changed,
+        "citations_added": [item for item in (after.citations or []) if item not in (before.citations or [])],
+        "citations_removed": [item for item in (before.citations or []) if item not in (after.citations or [])],
+        "claim_ids_added": [item for item in (after.claim_ids or []) if item not in (before.claim_ids or [])],
+        "claim_ids_removed": [item for item in (before.claim_ids or []) if item not in (after.claim_ids or [])],
+    }
+
+
 @router.get("/events/{event_id}/materials")
 def list_event_materials(
     event_id: int,

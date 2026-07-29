@@ -30,6 +30,7 @@ const state = {
   questionReviewQueue: [],
   calibrationQueue: [],
   contentChallenges: [],
+  contentReleases: [],
   reviewAttemptId: null,
   notifications: [],
   unreadNotifications: 0,
@@ -1598,6 +1599,34 @@ function renderQuestionReviewQueue() {
   }).join('');
 }
 
+function renderContentReleases() {
+  const rows = state.contentReleases || [];
+  $('content-release-empty').hidden = rows.length > 0;
+  $('content-release-list').innerHTML = rows.map(course => {
+    const blockers = course.blockers.length
+      ? `<ul class="release-blockers">${course.blockers.slice(0, 8).map(blocker => `<li>${escapeHtml(blocker.replaceAll('_', ' '))}</li>`).join('')}</ul>`
+      : '<p class="release-ready-note">All machine and human gates are satisfied.</p>';
+    const canRelease = course.release_ready;
+    const actions = `<div class="release-actions">
+      <button class="button button-secondary button-compact" type="button" data-release-decision="preview" data-course-id="${course.id}" ${canRelease ? '' : 'disabled'}>Preview for students</button>
+      <button class="button button-primary button-compact" type="button" data-release-decision="published" data-course-id="${course.id}" ${canRelease ? '' : 'disabled'}>Publish</button>
+      ${['student_preview', 'published'].includes(course.status) ? `<button class="button button-quiet button-compact" type="button" data-release-decision="withdrawn" data-course-id="${course.id}">Withdraw</button>` : ''}
+    </div>`;
+    return `<article class="content-release-row surface" data-release-row="${course.id}">
+      <header><div><span class="coverage-season">${escapeHtml(course.event ? `${course.event.season} · ${course.event.division}` : 'Unmapped event')} · Version ${course.version}</span><h3>${escapeHtml(course.title)}</h3><p>${escapeHtml(course.release_notes || 'No release notes recorded.')}</p></div><span class="coverage-release ${course.release_ready ? 'ready' : 'blocked'}">${escapeHtml(course.status.replaceAll('_', ' '))}</span></header>
+      <div class="release-gate-summary"><strong>${course.release_ready ? 'Release ready' : 'Release blocked'}</strong><span>${course.blockers.length} blocker${course.blockers.length === 1 ? '' : 's'}</span></div>
+      ${blockers}${actions}<p class="review-status" role="status" aria-live="polite"></p>
+    </article>`;
+  }).join('');
+}
+
+async function loadContentReleases() {
+  try {
+    state.contentReleases = await api('/content/releases');
+    renderContentReleases();
+  } catch (error) { toast(`Releases could not load. ${error.message}`); }
+}
+
 const percentFormatter = new Intl.NumberFormat(navigator.language, { style: 'percent', maximumFractionDigits: 1 });
 const decimalFormatter = new Intl.NumberFormat(navigator.language, { maximumFractionDigits: 2 });
 
@@ -1646,6 +1675,7 @@ async function loadContentOperations(button = null) {
     renderQuestionReviewQueue();
     renderCalibrationQueue();
     renderContentChallengeQueue();
+    await loadContentReleases();
     renderIntakeEvents();
     await loadContentIntake();
   } catch (error) { toast(error.message); }
@@ -2036,6 +2066,7 @@ $('show-assignment-form').addEventListener('click', () => {
 });
 
 $('refresh-content-operations').addEventListener('click', event => loadContentOperations(event.currentTarget));
+$('refresh-content-releases').addEventListener('click', event => { setBusy(event.currentTarget, true, 'Refreshing…'); loadContentReleases().finally(() => setBusy(event.currentTarget, false)); });
 $('content-intake-form').addEventListener('submit', submitContentIntake);
 $('refresh-content-intake').addEventListener('click', event => { setBusy(event.currentTarget, true, 'Refreshing…'); loadContentIntake().finally(() => setBusy(event.currentTarget, false)); });
 $('content-intake-list').addEventListener('click', event => {
@@ -2061,6 +2092,25 @@ $('content-intake-list').addEventListener('click', event => {
 $('parent-intake-form').addEventListener('submit', submitParentMaterial);
 $('refresh-parent-materials').addEventListener('click', loadParentMaterials);
 $('parent-relationship-form').addEventListener('submit', submitParentRelationship);
+$('content-release-list').addEventListener('click', async event => {
+  const button = event.target.closest('[data-release-decision]');
+  if (!button || button.disabled) return;
+  const notes = window.prompt('Release note (optional):', '') ?? '';
+  const form = new FormData();
+  form.append('decision', button.dataset.releaseDecision);
+  form.append('notes', notes);
+  const status = button.closest('[data-release-row]')?.querySelector('.review-status');
+  setBusy(button, true, 'Saving…');
+  try {
+    const headers = state.token ? { Authorization: `Bearer ${state.token}` } : {};
+    const response = await fetch(`/api/content/releases/${button.dataset.courseId}`, { method: 'POST', headers, body: form });
+    const data = await response.json().catch(() => ({}));
+    if (!response.ok) throw new Error(data.detail?.message || data.detail || 'Release decision was not saved.');
+    await loadContentReleases();
+    toast(`Course ${button.dataset.releaseDecision.replaceAll('_', ' ')}.`);
+  } catch (error) { if (status) status.textContent = error.message; }
+  finally { setBusy(button, false); }
+});
 $('lesson-review-queue').addEventListener('click', async event => {
   const button = event.target.closest('[data-lesson-review-decision]');
   if (!button) return;

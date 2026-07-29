@@ -363,6 +363,11 @@
               <div class="content-source-pane content-source-preview"><p class="kicker">Grounding notes</p><p>Review passages on the left before approving authoring. Every generated block must cite one or more passage IDs.</p><pre id="content-source-json" class="content-intake-extracted"></pre></div>
             </section>
           </section>
+          <section class="release-manager-workspace" aria-labelledby="release-manager-title">
+            <div class="section-heading"><div><p class="kicker">Release control</p><h2 id="release-manager-title">Preview and publish courses</h2><p>Every action below is gated by source coverage and independent lesson review. A blocked course cannot be made visible by accident.</p></div><button id="refresh-content-releases" class="button button-secondary button-compact" type="button">Refresh releases</button></div>
+            <div id="content-release-list" class="content-release-list" aria-live="polite"></div>
+            <div id="content-release-empty" class="empty-state surface" hidden><span aria-hidden="true">✓</span><h3>No courses in release control</h3><p>Courses will appear here after they have been created.</p></div>
+          </section>
           <section id="people-workspace" class="people-workspace" aria-labelledby="people-title" hidden>
             <div class="section-heading"><div><p class="kicker">Platform administration</p><h2 id="people-title">People &amp; Roles</h2><p>Assign staff roles and manage account access. Changes take effect immediately.</p></div><p id="people-count" class="queue-count">0 Users</p></div>
             <div class="people-controls">

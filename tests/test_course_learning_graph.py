@@ -323,6 +323,40 @@ def test_lesson_review_queue_requires_complete_independent_editor_and_sme_review
     assert queue.json()[0]["next_stage"] == "complete"
 
 
+def test_release_manager_surfaces_blockers_and_version_diff(client):
+    _, _, course_id, _, _, lesson_id, _ = seed_course()
+    with SessionLocal() as db:
+        admin = User(
+            email="release-admin@example.com", full_name="Release Admin",
+            password_hash=hash_password("password123"), role="admin", division="B",
+        )
+        db.add(admin)
+        db.flush()
+        lesson = db.get(Lesson, lesson_id)
+        db.add(LessonVersion(
+            lesson_id=lesson.id, version=2, review_status="draft",
+            content=[{"type": "opening", "heading": "Hardness updated"}],
+        ))
+        db.commit()
+        token = create_access_token(str(admin.id))
+    response = client.get("/api/content/releases", headers=auth(token))
+    assert response.status_code == 200
+    row = next(item for item in response.json() if item["id"] == course_id)
+    assert row["release_ready"] is False
+    assert row["blockers"]
+    diff = client.get(
+        f"/api/content/lessons/{lesson_id}/versions/diff?from_version=1&to_version=2",
+        headers=auth(token),
+    )
+    assert diff.status_code == 200
+    assert diff.json()["changed_blocks"][0]["position"] == 1
+    blocked = client.post(
+        f"/api/content/releases/{course_id}",
+        data={"decision": "preview", "notes": "Try preview"},
+        headers=auth(token),
+    )
+    assert blocked.status_code == 409
+    assert "blockers" in blocked.json()["detail"]
 def test_content_staff_can_audit_source_coverage_and_open_gaps(client):
     _, _, course_id, unit_id, skill_id, lesson_id, _ = seed_course()
     with SessionLocal() as db:
