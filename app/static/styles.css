@@ -279,6 +279,7 @@ textarea { resize: vertical; }
 .property-card h3 { margin: 0; font-family: inherit; font-size: 1rem; }
 .property-card strong { display: block; margin: 5px 0; color: var(--forest); font-size: .75rem; }
 .property-card p { margin: 0; color: var(--muted); font-size: .78rem; }
+.property-card-empty { min-height: 96px; grid-column: 1 / -1; background: #f5f8f5; }
 .worked-prompt { margin: 28px 0; padding: 22px; border-left: 5px solid var(--amber); background: #fff8e9; font-family: Georgia, serif; font-size: 1.2rem; line-height: 1.5; }
 .worked-steps, .routine-steps { display: grid; gap: 11px; padding: 0; list-style: none; counter-reset: lesson-step; }
 .worked-steps li, .routine-steps li { position: relative; padding: 15px 16px 15px 54px; border: 1px solid var(--line); border-radius: 11px; }

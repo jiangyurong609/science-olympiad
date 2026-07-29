@@ -983,7 +983,9 @@ function renderSubjectShell() {
   state.featuredLessonId = nextLesson?.id || null;
   $('featured-event-kicker').textContent = nextLesson?.progress.status === 'completed' ? 'Review Anytime' : 'Up Next';
   $('featured-lesson-title').textContent = nextLesson?.title || 'Lessons Are Being Prepared';
-  $('featured-lesson-summary').textContent = nextLesson?.summary || `The ${event.name} course is currently in editorial review.`;
+  $('featured-lesson-summary').textContent = nextLesson?.summary || (event.material_count > 0
+    ? `${event.name} has official resources ready to explore while the guided course is being authored.`
+    : `The ${event.name} learning path is being authored and will appear here after review.`);
   $('featured-lesson-status').textContent = nextLesson ? nextLesson.progress.status.replaceAll('_', ' ') : 'In Review';
   $('featured-lesson-status').classList.toggle('attention', nextLesson?.progress.status === 'in_progress');
   $('start-featured-lesson').disabled = !nextLesson;
@@ -1065,6 +1067,15 @@ async function selectSubject(slug, destination = 'learn') {
 
 function renderLessons() {
   $('lessons-empty').hidden = state.lessons.length > 0;
+  if (!state.lessons.length) {
+    const event = activeEvent();
+    const heading = $('lessons-empty')?.querySelector('h3');
+    const copy = $('lessons-empty')?.querySelector('p');
+    if (heading) heading.textContent = event?.material_count > 0 ? 'Start with official resources' : 'Course is being prepared';
+    if (copy) copy.textContent = event?.material_count > 0
+      ? `${event.name} does not have a guided course yet. Explore ${event.material_count} official resources while lessons are authored.`
+      : `The ${event?.name || 'event'} learning path is being authored and will appear here after review.`;
+  }
   $('lesson-list').innerHTML = state.lessons.map((lesson, index) => {
     const statusLabel = lesson.progress.status === 'completed' ? 'Completed' : lesson.progress.status === 'in_progress' ? 'Resume' : 'Start';
     return `<article class="lesson-catalog-card surface">
@@ -2384,7 +2395,15 @@ function renderOpeningBlock(block) {
 }
 
 function renderPropertyCardsBlock(block) {
-  return `<p class="kicker">Concept toolkit</p><h1 id="lesson-reader-title">${escapeHtml(block.heading)}</h1><p class="block-lede">${escapeHtml(block.body)}</p><div class="property-grid">${block.cards.map(card => `<article class="property-card"><h3>${escapeHtml(card.name)}</h3><strong>${escapeHtml(card.cue)}</strong><p>${escapeHtml(card.detail)}</p></article>`).join('')}</div>`;
+  const cards = Array.isArray(block.cards) ? block.cards : (Array.isArray(block.items) ? block.items : []);
+  const cardMarkup = cards.map(card => {
+    const name = card?.name || card?.title || card?.label || 'Key idea';
+    const cue = card?.cue || card?.summary || card?.subtitle || '';
+    const detail = card?.detail || card?.body || card?.description || '';
+    return `<article class="property-card"><h3>${escapeHtml(name)}</h3>${cue ? `<strong>${escapeHtml(cue)}</strong>` : ''}${detail ? `<p>${escapeHtml(detail)}</p>` : ''}</article>`;
+  }).join('');
+  const fallback = !cardMarkup ? `<div class="property-card property-card-empty"><h3>Concept notes</h3><p>${escapeHtml(block.body || 'This concept is being prepared for review.')}</p></div>` : '';
+  return `<p class="kicker">Concept toolkit</p><h1 id="lesson-reader-title">${escapeHtml(block.heading || 'Key concepts')}</h1>${block.body ? `<p class="block-lede">${escapeHtml(block.body)}</p>` : ''}<div class="property-grid">${cardMarkup || fallback}</div>`;
 }
 
 function renderWorkedExampleBlock(block) {
