@@ -733,13 +733,17 @@ def get_course_map(
         CourseVersion.course_id == course.id,
         CourseVersion.version == course.current_version,
     ))
-    unit_query = select(CourseUnit).where(CourseUnit.course_id == course.id)
+    unit_query = select(CourseUnit).where(
+        CourseUnit.course_id == course.id,
+        CourseUnit.status != "withdrawn",
+    )
     if not staff:
         unit_query = unit_query.where(CourseUnit.status == "published")
     units = db.scalars(unit_query.order_by(CourseUnit.sequence, CourseUnit.id)).all()
     skills = db.scalars(select(Skill).where(
         Skill.course_id == course.id,
         Skill.unit_id.in_([unit.id for unit in units]),
+        Skill.status != "withdrawn",
         *(tuple() if staff else (Skill.status == "published",)),
     ).order_by(Skill.sequence, Skill.id)).all() if units else []
     skill_ids = [skill.id for skill in skills]
@@ -772,10 +776,14 @@ def get_course_map(
         MasteryState.concept_id.in_(concept_ids),
     )).all() if concept_ids else []
     mastery_by_concept = {row.concept_id: row for row in mastery_rows}
-    blueprints = db.scalars(select(AssessmentBlueprint).where(
+    blueprint_query = select(AssessmentBlueprint).where(
         AssessmentBlueprint.course_id == course.id,
-        AssessmentBlueprint.status == "published",
-    )).all()
+    )
+    if not staff:
+        blueprint_query = blueprint_query.where(
+            AssessmentBlueprint.status == "published",
+        )
+    blueprints = db.scalars(blueprint_query).all()
     blueprints_by_unit: dict[int | None, list[AssessmentBlueprint]] = {}
     for blueprint in blueprints:
         blueprints_by_unit.setdefault(blueprint.unit_id, []).append(blueprint)

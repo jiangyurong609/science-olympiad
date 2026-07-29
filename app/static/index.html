@@ -9,8 +9,8 @@
   <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='16' fill='%231f5a45'/%3E%3Ctext x='32' y='44' text-anchor='middle' font-size='38' fill='white'%3EF%3C/text%3E%3C/svg%3E">
   <link rel="preload" href="/static/fonts/Fraunces.woff2" as="font" type="font/woff2" crossorigin>
   <link rel="preload" href="/static/fonts/AtkinsonHyperlegibleNext.woff2" as="font" type="font/woff2" crossorigin>
-  <link rel="stylesheet" href="/static/styles.css?v=30">
-  <link rel="stylesheet" href="/static/theme.css?v=30">
+  <link rel="stylesheet" href="/static/styles.css?v=31">
+  <link rel="stylesheet" href="/static/theme.css?v=31">
 </head>
 <body>
   <a class="skip-link" href="#main-content">Skip to Main Content</a>
@@ -110,10 +110,10 @@
       <aside class="sidebar" aria-label="Primary navigation">
         <div class="season-chip"><span class="status-dot" aria-hidden="true"></span><span id="season-chip-label">Current Season</span></div>
         <nav>
-          <a href="#overview" data-view-link="dashboard" data-student-nav class="active"><span aria-hidden="true">⌂</span>Overview</a>
-          <a href="#learn" data-view-link="learn" data-student-nav><span aria-hidden="true">◇</span>Learn</a>
-          <a href="#practice" data-view-link="practice" data-student-nav><span aria-hidden="true">◎</span>Practice & Exams</a>
-          <a href="#errors" data-view-link="errors" data-student-nav><span aria-hidden="true">↻</span>Error Notebook <span id="nav-error-count" class="nav-count">0</span></a>
+          <a href="#overview" data-view-link="dashboard" data-student-nav class="active"><span aria-hidden="true">⌂</span>Home</a>
+          <a href="#learn" data-view-link="learn" data-student-nav><span aria-hidden="true">◇</span>Courses</a>
+          <a href="#practice" data-view-link="practice" data-student-nav><span aria-hidden="true">◎</span>Practice</a>
+          <a href="#errors" data-view-link="errors" data-student-nav><span aria-hidden="true">↻</span>Review <span id="nav-error-count" class="nav-count">0</span></a>
           <a href="#coach" data-view-link="coach" data-coach-nav hidden><span aria-hidden="true">⌂</span>Coach Overview</a>
           <a href="#content" data-view-link="content" data-content-nav hidden><span aria-hidden="true">◫</span>Source Operations</a>
         </nav>
@@ -175,6 +175,11 @@
         </section>
 
         <section id="learn" class="view" aria-labelledby="learn-title" hidden>
+          <div id="course-preview-banner" class="course-preview-banner" role="status" hidden>
+            <strong>Staff preview</strong>
+            <span>This draft is not visible to students. Review its teaching, evidence, and checks before release.</span>
+            <a href="/#content">Return to content operations</a>
+          </div>
           <div id="learn-catalog" class="student-catalog">
           <header class="event-context surface">
             <div id="learn-event-icon" class="event-context-icon" aria-hidden="true">◇</div>
@@ -214,16 +219,25 @@
 
           <article id="lesson-reader" class="lesson-reader" aria-labelledby="lesson-reader-title" hidden>
             <header class="lesson-reader-header">
-              <button id="close-lesson" class="button button-quiet" type="button"><span aria-hidden="true">←</span> Back to Learning Path</button>
+              <button id="close-lesson" class="button button-quiet" type="button"><span aria-hidden="true">←</span> Course</button>
               <div class="lesson-reader-meta"><button id="open-lesson-tutor" class="button button-secondary button-compact" type="button">Ask Grounded Tutor</button><span id="lesson-save-state" aria-live="polite">Progress saved</span><strong id="lesson-position">1 of 1</strong></div>
             </header>
             <div class="lesson-progress" aria-hidden="true"><span id="lesson-progress-bar"></span></div>
-            <div id="lesson-block" class="lesson-block surface" tabindex="-1"></div>
-            <footer class="lesson-reader-actions">
-              <button id="lesson-previous" class="button button-secondary" type="button">Previous</button>
-              <button id="lesson-next" class="button button-dark" type="button">Next Section</button>
-              <button id="lesson-finish" class="button button-primary" type="button" hidden>Finish Lesson</button>
-            </footer>
+            <div class="lesson-reader-layout">
+              <aside class="lesson-outline" aria-label="Lesson sections">
+                <p id="lesson-outline-unit">Lesson</p>
+                <h2 id="lesson-outline-title">Lesson title</h2>
+                <ol id="lesson-outline-list"></ol>
+              </aside>
+              <div class="lesson-stage">
+                <div id="lesson-block" class="lesson-block" tabindex="-1"></div>
+                <footer class="lesson-reader-actions">
+                  <button id="lesson-previous" class="button button-secondary" type="button">Previous</button>
+                  <button id="lesson-next" class="button button-dark" type="button">Continue</button>
+                  <button id="lesson-finish" class="button button-primary" type="button" hidden>Finish Lesson</button>
+                </footer>
+              </div>
+            </div>
           </article>
         </section>
 
@@ -425,6 +439,6 @@
       </div>
     </div>
   </div>
-  <script src="/static/app.js?v=35"></script>
+  <script src="/static/app.js?v=36"></script>
 </body>
 </html>

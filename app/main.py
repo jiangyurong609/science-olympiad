@@ -32,3 +32,17 @@ def index():
 def course_page(season: int, event_slug: str):
     """Serve the SPA at a stable, shareable course URL."""
     return index()
+
+
+@app.get(
+    "/courses/{season}/{event_slug}/{content_type}/{content_slug}",
+    include_in_schema=False,
+)
+def course_content_page(
+    season: int,
+    event_slug: str,
+    content_type: str,
+    content_slug: str,
+):
+    """Serve deep-linked units, lessons, practice, and tests through the SPA."""
+    return index()

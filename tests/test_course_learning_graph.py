@@ -121,6 +121,11 @@ def test_course_page_has_stable_shareable_url(client):
     assert response.status_code == 200
     assert response.headers["cache-control"] == "no-cache, must-revalidate"
     assert "id=\"course-unit-list\"" in response.text
+    lesson = client.get(
+        "/courses/2027/rocks-and-minerals-b-2027/lesson/mineral-hardness",
+    )
+    assert lesson.status_code == 200
+    assert lesson.headers["cache-control"] == "no-cache, must-revalidate"
 
 
 def test_current_season_lesson_is_hidden_without_both_review_decisions(client):
@@ -148,6 +153,13 @@ def test_staff_can_preview_draft_lesson_while_students_cannot(client):
         lesson.status = "draft"
         course = db.scalar(select(Course).where(Course.event_id == lesson.event_id))
         course.status = "review_required"
+        db.add(CourseUnit(
+            course_id=course.id,
+            slug="legacy-learning-path",
+            title="Legacy Learning Path",
+            sequence=10000,
+            status="withdrawn",
+        ))
         reviewer = db.scalar(select(User).where(User.email == "reviewer@example.com"))
         reviewer_token = create_access_token(str(reviewer.id))
         db.commit()
@@ -158,6 +170,7 @@ def test_staff_can_preview_draft_lesson_while_students_cannot(client):
         f"/api/courses/{season}/{event_slug}", headers=auth(reviewer_token),
     )
     assert staff_course.status_code == 200
+    assert len(staff_course.json()["units"]) == 1
     assert staff_course.json()["units"][0]["skills"][0]["lessons"][0]["id"] == lesson_id
     assert client.post(
         f"/api/lessons/{lesson_id}/start", headers=auth(student_token),

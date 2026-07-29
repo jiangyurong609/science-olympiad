@@ -198,14 +198,13 @@ input:focus-visible, select:focus-visible, textarea:focus-visible {
 /* ---------- choreographed page reveal ---------- */
 
 @media (prefers-reduced-motion: no-preference) {
-  .view > *, .auth-story > *, .auth-panel, .exam-mode > *, .review-mode > * {
+  .auth-story > *, .auth-panel, .exam-mode > *, .review-mode > * {
     animation: rise .55s var(--ease-spring) backwards;
   }
-  .view > :nth-child(2), .review-mode > :nth-child(2) { animation-delay: .06s; }
-  .view > :nth-child(3), .review-mode > :nth-child(3) { animation-delay: .12s; }
-  .view > :nth-child(4), .review-mode > :nth-child(4) { animation-delay: .18s; }
-  .view > :nth-child(5), .review-mode > :nth-child(5) { animation-delay: .24s; }
-  .view > :nth-child(6) { animation-delay: .3s; }
+  .review-mode > :nth-child(2) { animation-delay: .06s; }
+  .review-mode > :nth-child(3) { animation-delay: .12s; }
+  .review-mode > :nth-child(4) { animation-delay: .18s; }
+  .review-mode > :nth-child(5) { animation-delay: .24s; }
   .auth-story > :nth-child(2) { animation-delay: .08s; }
   .auth-story > :nth-child(3) { animation-delay: .16s; }
   .auth-story > :nth-child(4) { animation-delay: .24s; }

@@ -245,13 +245,21 @@ function showView(id, updateHash = true) {
   $(`${id === 'dashboard' ? 'welcome' : `${id}-title`}`)?.focus?.({ preventScroll: true });
 }
 
-function coursePath(event = activeEvent()) {
-  return event ? `/courses/${event.season}/${encodeURIComponent(event.slug)}` : '/';
+function coursePath(event = activeEvent(), suffix = '') {
+  if (!event) return '/';
+  return `/courses/${event.season}/${encodeURIComponent(event.slug)}${suffix}`;
 }
 
 function coursePathEvent() {
-  const match = location.pathname.match(/^\/courses\/(\d{4})\/([^/]+)\/?$/);
-  return match ? { season: Number(match[1]), slug: decodeURIComponent(match[2]) } : null;
+  const match = location.pathname.match(
+    /^\/courses\/(\d{4})\/([^/]+)(?:\/(unit|lesson|practice|test)\/([^/]+))?\/?$/,
+  );
+  return match ? {
+    season: Number(match[1]),
+    slug: decodeURIComponent(match[2]),
+    contentType: match[3] || null,
+    contentSlug: match[4] ? decodeURIComponent(match[4]) : null,
+  } : null;
 }
 
 function persistAuth(data, firebaseSession = null) {
@@ -869,6 +877,11 @@ document.addEventListener('click', event => {
 function renderConcepts() {
   const event = activeEvent();
   const concepts = state.dashboard?.concepts?.filter(item => !event || item.event_id === event.id) || [];
+  if (state.courseMap?.units?.length) {
+    $('concepts-block').hidden = true;
+    $('concept-list').innerHTML = '';
+    return;
+  }
   $('concepts-block').hidden = concepts.length === 0;
   $('concept-list').innerHTML = concepts.map((concept, index) => `<article class="concept-row">
     <span class="concept-index">${String(index + 1).padStart(2, '0')}</span><div><h3>${escapeHtml(concept.name)}</h3><p>${escapeHtml(concept.description || 'Core competition objective')}</p></div><small>${concept.mastery_probability != null ? `${Math.round(concept.mastery_probability * 100)}% mastery` : 'Ready to learn'}</small>
@@ -945,12 +958,15 @@ function renderSubjectShell() {
   renderEventContext('learn', event, experience);
   renderEventContext('practice', event, experience);
   $('season-chip-label').textContent = `${event.season} Season`;
-  $('learn-title').textContent = `Learn ${event.name}`;
-  $('learn-lede').textContent = experience.focus;
-  $('learning-path-title').textContent = `${event.name} Course`;
+  $('learn-kicker').textContent = `${event.season} course`;
+  $('learn-title').textContent = event.name;
+  $('learn-lede').textContent = state.courseMap?.summary || experience.focus;
+  $('learning-path-title').textContent = 'Course content';
   $('learn-module-count').textContent = state.courseMap?.units?.length ?? state.lessons.length;
   $('learn-duration').textContent = totalMinutes >= 60 ? `${Math.round(totalMinutes / 6) / 10} hr` : `${totalMinutes} min`;
   $('learn-progress-value').textContent = `${progress}%`;
+  const preview = $('course-preview-banner');
+  preview.hidden = !state.courseMap || state.courseMap.status === 'published';
   state.featuredLessonId = nextLesson?.id || null;
   $('featured-event-kicker').textContent = nextLesson?.progress.status === 'completed' ? 'Review Anytime' : 'Up Next';
   $('featured-lesson-title').textContent = nextLesson?.title || 'Lessons Are Being Prepared';
@@ -1081,24 +1097,32 @@ function renderCourseMap() {
   unitList.hidden = false;
   legacyList.hidden = true;
   $('lessons-empty').hidden = true;
-  $('learning-path-title').textContent = course.title;
+  $('learning-path-title').textContent = 'Course content';
   $('course-scope').textContent = `${course.progress.mastered_skills} of ${course.progress.total_skills} skills mastered`;
   $('learn-module-count').textContent = course.units.length;
   $('learn-progress-value').textContent = `${course.progress.percent}%`;
 
+  const activeUnitIndex = Math.max(0, course.units.findIndex(unit => (
+    unit.skills.some(skill => {
+      const lesson = skill.lessons.find(item => item.is_primary) || skill.lessons[0];
+      return lesson?.progress?.status === 'in_progress';
+    })
+  )));
   unitList.innerHTML = course.units.map((unit, unitIndex) => {
     const mastered = unit.skills.filter(skill => skill.mastery.level === 'mastered').length;
+    const unitPercent = unit.skills.length ? Math.round((mastered / unit.skills.length) * 100) : 0;
     const skills = unit.skills.map(skill => {
       const primaryLesson = skill.lessons.find(lesson => lesson.is_primary) || skill.lessons[0];
       const lessonStatus = primaryLesson?.progress?.status || 'not_started';
       const actionLabel = lessonStatus === 'in_progress' ? 'Resume'
         : lessonStatus === 'completed' ? 'Review' : 'Learn';
       const action = primaryLesson
-        ? `<button class="skill-action" type="button" data-start-lesson="${primaryLesson.id}" aria-label="${actionLabel} ${escapeHtml(primaryLesson.title)}">${actionLabel}<span aria-hidden="true">›</span></button>`
+        ? `<a class="skill-action" href="${coursePath(activeEvent(), `/lesson/${encodeURIComponent(primaryLesson.slug)}`)}" data-start-lesson="${primaryLesson.id}" aria-label="${actionLabel} ${escapeHtml(primaryLesson.title)}">${actionLabel}<span aria-hidden="true">›</span></a>`
         : '<span class="skill-coming-soon">Lesson in review</span>';
       return `<li class="course-skill">
         <span class="mastery-dot mastery-${escapeHtml(skill.mastery.level)}" aria-hidden="true"></span>
         <div class="course-skill-copy">
+          <span class="course-skill-type">Lesson${primaryLesson ? ` · ${primaryLesson.estimated_minutes} min` : ''}</span>
           <h4>${escapeHtml(skill.name)}</h4>
           ${skill.description ? `<p>${escapeHtml(skill.description)}</p>` : ''}
           <span class="mastery-label">${escapeHtml(masteryLabel(skill.mastery.level))}</span>
@@ -1107,17 +1131,21 @@ function renderCourseMap() {
       </li>`;
     }).join('');
     const assessments = unit.assessments.length
-      ? `<div class="unit-assessments"><span>Unit check</span>${unit.assessments.map(item => `<button type="button" class="button button-secondary button-compact" data-practice-jump>${escapeHtml(item.title)}</button>`).join('')}</div>`
+      ? `<div class="unit-assessments"><span>Unit check</span>${unit.assessments.map(item => (
+        course.status === 'published'
+          ? `<button type="button" class="button button-secondary button-compact" data-practice-jump>${escapeHtml(item.title)}</button>`
+          : `<span class="unit-assessment-draft">${escapeHtml(item.title)} · draft</span>`
+      )).join('')}</div>`
       : '';
-    return `<article class="course-unit">
-      <header class="course-unit-header">
+    return `<details class="course-unit"${unitIndex === activeUnitIndex ? ' open' : ''}>
+      <summary class="course-unit-header">
         <span class="unit-number" aria-hidden="true">${unitIndex + 1}</span>
         <div><span>Unit ${unitIndex + 1}</span><h3>${escapeHtml(unit.title)}</h3>${unit.summary ? `<p>${escapeHtml(unit.summary)}</p>` : ''}</div>
-        <strong>${mastered}/${unit.skills.length}<small> skills mastered</small></strong>
-      </header>
+        <div class="unit-progress"><strong>${mastered}/${unit.skills.length} skills</strong><span><i style="width:${unitPercent}%"></i></span></div>
+      </summary>
       <ol class="course-skill-list">${skills}</ol>
       ${assessments}
-    </article>`;
+    </details>`;
   }).join('');
 }
 
@@ -1607,11 +1635,12 @@ async function loadApplication() {
   }, 60_000);
   const roleMode = configureRoleNavigation();
   const pathCourse = coursePathEvent();
+  const contentPreview = roleMode === 'content' && Boolean(pathCourse);
   const initialRoute = pathCourse ? 'learn' : location.hash.slice(1).split('?')[0];
-  showView(roleMode === 'content' ? 'content' : roleMode === 'coach' ? 'coach' : initialRoute === 'learn' ? 'learn' : initialRoute === 'practice' ? 'practice' : initialRoute === 'errors' ? 'errors' : 'dashboard', false);
+  showView(contentPreview ? 'learn' : roleMode === 'content' ? 'content' : roleMode === 'coach' ? 'coach' : initialRoute === 'learn' ? 'learn' : initialRoute === 'practice' ? 'practice' : initialRoute === 'errors' ? 'errors' : 'dashboard', false);
   if (roleMode === 'student') $('today-copy').textContent = 'Loading your study plan…';
   try {
-    if (roleMode === 'content') {
+    if (roleMode === 'content' && !contentPreview) {
       const [events, coverage, queue, calibration, challenges] = await Promise.all([api('/events'), api('/content/source-coverage'), api('/content/questions/review-queue'), api('/content/questions/calibration-queue'), api('/content/challenges')]);
       state.events = events;
       state.sourceCoverage = coverage.scorecards;
@@ -1677,6 +1706,12 @@ async function loadApplication() {
         if (state.lessons.some(lesson => lesson.id === lessonId)) {
           showView('learn', false);
           await openLesson(lessonId);
+        }
+      } else if (pathCourse?.contentType === 'lesson' && pathCourse.contentSlug) {
+        const lesson = state.lessons.find(item => item.slug === pathCourse.contentSlug);
+        if (lesson) {
+          showView('learn', false);
+          await openLesson(lesson.id);
         }
       }
       if (location.hash.startsWith('#lab=')) {
@@ -1893,7 +1928,17 @@ document.addEventListener('click', event => {
   const subjectButton = event.target.closest('[data-subject]');
   if (subjectButton) selectSubject(subjectButton.dataset.subject, subjectButton.dataset.subjectDestination || 'learn').catch(error => toast(error.message));
   const lessonButton = event.target.closest('[data-start-lesson]');
-  if (lessonButton) openLesson(Number(lessonButton.dataset.startLesson));
+  if (lessonButton) {
+    event.preventDefault();
+    openLesson(Number(lessonButton.dataset.startLesson));
+  }
+  const lessonSection = event.target.closest('[data-lesson-block]');
+  if (lessonSection && state.currentLesson) {
+    state.lessonBlockIndex = Number(lessonSection.dataset.lessonBlock);
+    saveCurrentLessonProgress(false)
+      .then(renderLessonBlock)
+      .catch(error => toast(error.message));
+  }
   const practiceButton = event.target.closest('[data-start-practice-set]');
   if (practiceButton) openPracticeLab(Number(practiceButton.dataset.startPracticeSet), practiceButton.dataset.practiceMode);
   const practiceJump = event.target.closest('[data-practice-jump]');
@@ -2114,7 +2159,12 @@ async function openLesson(id) {
     showView('learn', false);
     $('learn-catalog').hidden = true;
     $('lesson-reader').hidden = false;
-    history.replaceState(null, '', `#lesson=${id}&event=${encodeURIComponent(state.activeEventSlug)}`);
+    const lessonSlug = state.currentLesson.slug || String(id);
+    history.replaceState(
+      null,
+      '',
+      coursePath(activeEvent(), `/lesson/${encodeURIComponent(lessonSlug)}`),
+    );
     renderLessonBlock();
   } catch (error) { toast(error.message); }
   finally { setBusy(button, false); }
@@ -2131,6 +2181,7 @@ function renderLessonBlock() {
   $('lesson-finish').hidden = state.lessonBlockIndex !== total - 1;
   $('lesson-finish').disabled = lesson.progress.status !== 'completed';
   $('lesson-finish').textContent = lesson.progress.status === 'completed' ? 'Finish Lesson' : 'Complete Required Checkpoints';
+  renderLessonOutline();
   const renderer = {
     opening: renderOpeningBlock,
     property_cards: renderPropertyCardsBlock,
@@ -2146,6 +2197,39 @@ function renderLessonBlock() {
   node.innerHTML = renderer ? renderer(block) : `<h1>${escapeHtml(block.heading || 'Lesson section')}</h1><p>${escapeHtml(block.body || '')}</p>`;
   node.focus({ preventScroll: true });
   window.scrollTo({ top: 0, behavior: preferredScrollBehavior() });
+}
+
+function lessonBlockLabel(block, index) {
+  const labels = {
+    opening: 'Goal',
+    video: 'Watch',
+    property_cards: 'Learn',
+    steps: 'Strategy',
+    worked_example: 'Try it',
+    checkpoint: 'Check',
+    image_gallery: 'Observe',
+    summary: 'Review',
+  };
+  return block.heading || block.title || labels[block.type] || `Part ${index + 1}`;
+}
+
+function renderLessonOutline() {
+  const lesson = state.currentLesson;
+  const unit = state.courseMap?.units?.find(item => item.skills.some(
+    skill => skill.lessons.some(candidate => candidate.id === lesson.id),
+  ));
+  $('lesson-outline-unit').textContent = unit ? unit.title : 'Lesson';
+  $('lesson-outline-title').textContent = lesson.title;
+  const complete = new Set(lesson.progress.completed_block_ids || []);
+  $('lesson-outline-list').innerHTML = lesson.content.map((block, index) => {
+    const current = index === state.lessonBlockIndex;
+    const completed = complete.has(block.id)
+      || lesson.progress.checkpoint_results?.[block.id]?.correct;
+    return `<li><button type="button" data-lesson-block="${index}"${current ? ' aria-current="step"' : ''}>
+      <span aria-hidden="true">${completed ? '✓' : index + 1}</span>
+      <span>${escapeHtml(lessonBlockLabel(block, index))}</span>
+    </button></li>`;
+  }).join('');
 }
 
 function renderOpeningBlock(block) {
@@ -2266,7 +2350,7 @@ function closeLesson() {
   $('lesson-reader').hidden = true;
   $('learn-catalog').hidden = false;
   state.currentLesson = null;
-  history.replaceState(null, '', `#learn?event=${encodeURIComponent(state.activeEventSlug)}`);
+  history.replaceState(null, '', coursePath(activeEvent()));
   $('start-featured-lesson').focus();
 }
 
