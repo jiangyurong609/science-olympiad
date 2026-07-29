@@ -153,6 +153,47 @@ Every generated artifact passes independent gates:
 
 Preview content is explicitly ungraded and feedback-enabled. Published content is versioned; editing creates a new version and never mutates a version students have attempted.
 
+## End-to-end journeys and failure behavior
+
+### Parent contributes a past exam
+
+1. Parent signs in and sees only their linked team/student context.
+2. Parent chooses `Past exam`, selects the event if known, attaches the file, and completes the rights/ownership declaration.
+3. The upload is acknowledged immediately with an intake receipt and remains private.
+4. The ingestion agent quarantines, scans, extracts, and reports page-level warnings.
+5. Staff triages the event/topic and rights record; the parent receives `Accepted`, `Needs more information`, or `Rejected` with a reason.
+6. Only after acceptance can staff request question or lesson drafts.
+7. Generated artifacts appear in the review queue with citations; the parent never sees model prompts, private staff notes, or unreviewed student content.
+
+### Editor creates a lesson from a video
+
+1. Editor selects an approved transcript snapshot and target event objectives.
+2. The authoring run creates a draft containing an embedded video, concise teaching notes, worked application, and checkpoints.
+3. A validator verifies every claim citation and ensures checkpoint answers are present.
+4. Editor and SME review the draft in a split view with timestamp/page citations.
+5. The lesson enters preview as a new immutable release; student feedback is collected separately from mastery.
+6. Calibration either promotes the lesson to published or returns it to a specific revision with actionable issues.
+
+### Student encounters a missing or withdrawn class
+
+The app must never show a launchable CTA for a lesson the API will reject. The materials endpoint and lesson catalog must use the same visibility predicate. If a source or lesson is withdrawn after a student has started it, the student sees a clear “Temporarily unavailable — review the updated version” state, while the original attempt remains pinned and auditable.
+
+### Failure states that must be first-class
+
+| Failure | User-visible state | Recovery |
+|---|---|---|
+| Upload interrupted | Resumable upload / retry | Continue from checksum-safe chunk |
+| Malware or unsafe file | Rejected, no preview | Re-upload a clean file |
+| OCR/table extraction poor | Needs human extraction review | Correct pages or upload a better scan |
+| Rights unclear | Rights review blocked | Add license/proof or withdraw |
+| Topic confidence low | Needs triage | Staff assigns event/topic |
+| Generation timeout | Draft unavailable, source intact | Retry with same idempotency key |
+| Missing citation/answer key | Draft blocked by validator | Editor fixes or regenerates |
+| SME rejection | Returned with reason | Revise exact version |
+| Source withdrawn | Dependents flagged | Replace source and create new release |
+
+Every state must have a visible owner, next action, timestamp, and retry or escalation path. “In review” without an owner or action is not an acceptable terminal state.
+
 ## Data model additions
 
 Existing `Source`, `SourceSnapshot`, `SourcePassage`, `EventSourceMap`, course, lesson, question, review, and release entities are the correct foundation. Add:

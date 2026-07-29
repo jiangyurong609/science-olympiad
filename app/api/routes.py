@@ -1022,6 +1022,12 @@ def list_event_materials(
         version = db.scalar(select(LessonVersion).where(
             LessonVersion.lesson_id == lesson.id, LessonVersion.version == lesson.current_version,
         ))
+        # Do not expose a guided-lesson CTA unless the same lesson is actually
+        # launchable by this learner. Previously a material could advertise a
+        # published lesson that the lesson catalog filtered out, producing a
+        # misleading "Lesson not found" toast.
+        if not _lesson_is_student_visible(db, user, lesson, version):
+            continue
         lesson_blocks = (version.content if version else [])
         for block in lesson_blocks:
             if block.get("type") == "video" and block.get("transcript_source"):

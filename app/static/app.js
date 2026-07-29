@@ -832,7 +832,8 @@ function renderMaterials() {
     const isPdf = material.media_type?.includes('pdf') || new URL(safeUrl(url), location.origin).pathname.toLowerCase().endsWith('.pdf');
     const kind = group === 'video' ? 'Video' : isPdf ? 'PDF' : material.has_text ? 'Article' : 'Link';
     const size = material.has_text ? `${Math.round((material.text_chars || 0) / 1000)}k chars` : 'link only';
-    const guided = material.guided_lesson;
+    const guided = material.guided_lesson && state.lessons.some(lesson => lesson.id === material.guided_lesson.id)
+      ? material.guided_lesson : null;
     return `<article class="material-card surface${guided ? ' material-card-guided' : ''}">
       <div class="material-card-top"><span class="material-type">${guided ? 'GUIDED LESSON' : escapeHtml((material.purpose || 'reference').replaceAll('_', ' '))}</span><span class="material-format">${kind}</span></div>
       <h3>${escapeHtml(materialTitle(material))}</h3>
