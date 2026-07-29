@@ -1,6 +1,6 @@
 from logging.config import fileConfig
 from alembic import context
-from sqlalchemy import engine_from_config, pool
+from sqlalchemy import create_engine, pool
 from app.core.config import get_settings
 from app.core.database import Base
 import app.models.entities  # noqa: F401
@@ -19,7 +19,10 @@ def run_migrations_offline():
 
 
 def run_migrations_online():
-    connectable = engine_from_config(config.get_section(config.config_ini_section), prefix="sqlalchemy.", poolclass=pool.NullPool)
+    # Build directly from the settings URL. Passing a URL through Alembic's
+    # ConfigParser can reinterpret percent-encoded password characters and
+    # silently change credentials for Cloud SQL URLs.
+    connectable = create_engine(get_settings().database_url, poolclass=pool.NullPool)
     with connectable.connect() as connection:
         context.configure(connection=connection, target_metadata=target_metadata, compare_type=True)
         with context.begin_transaction():
