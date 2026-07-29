@@ -2070,6 +2070,18 @@ $('show-assignment-form').addEventListener('click', () => {
 
 $('refresh-content-operations').addEventListener('click', event => loadContentOperations(event.currentTarget));
 $('refresh-content-releases').addEventListener('click', event => { setBusy(event.currentTarget, true, 'Refreshing…'); loadContentReleases().finally(() => setBusy(event.currentTarget, false)); });
+$('enrich-content-media').addEventListener('click', async event => {
+  const button = event.currentTarget;
+  if (!window.confirm('Add approved videos and specimen images to eligible lessons? Published lessons will receive a new review version.')) return;
+  setBusy(button, true, 'Composing media…');
+  try {
+    const form = new FormData();
+    const result = await api('/content/lessons/media-enrich', { method: 'POST', body: form });
+    toast(result.count ? `${result.count} lesson${result.count === 1 ? '' : 's'} queued with grounded media.` : 'No eligible lessons needed media.');
+    await loadContentOperations(button);
+  } catch (error) { toast(`Media enrichment failed. ${error.message}`); }
+  finally { setBusy(button, false); }
+});
 $('content-intake-form').addEventListener('submit', submitContentIntake);
 $('refresh-content-intake').addEventListener('click', event => { setBusy(event.currentTarget, true, 'Refreshing…'); loadContentIntake().finally(() => setBusy(event.currentTarget, false)); });
 $('content-intake-list').addEventListener('click', event => {

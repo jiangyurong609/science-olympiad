@@ -245,6 +245,7 @@ textarea { resize: vertical; }
 .dashboard-hero-actions { display: flex; flex-wrap: wrap; justify-content: flex-end; gap: 10px; }
 .dashboard-heading h1 { font-size: clamp(2.1rem, 4vw, 3.7rem); }
 .section-heading { margin-bottom: 18px; }
+.section-heading-actions { display: flex; flex-wrap: wrap; align-items: center; justify-content: flex-end; gap: 8px; }
 .section-heading > p { max-width: 360px; color: var(--muted); font-size: .85rem; text-align: right; }
 .focus-grid { display: grid; grid-template-columns: minmax(0, 1.35fr) minmax(280px, .65fr); gap: 20px; }
 .focus-card { overflow: hidden; display: grid; grid-template-columns: 38% 62%; border-radius: 18px; }

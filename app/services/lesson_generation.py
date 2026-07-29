@@ -25,6 +25,7 @@ from app.models.entities import (
 )
 from app.services.model_provider import ModelProviderError, OpenAICompatibleProvider
 from app.services.source_passages import ensure_source_passages
+from app.services.lesson_media import compose_multimedia_blocks
 
 MATERIAL_CHARS = 24_000
 LESSON_MATERIAL_CHARS = 16_000
@@ -55,6 +56,7 @@ _LESSON_SYSTEM = (
     "- {\"type\":\"worked_example\",\"heading\":str,\"prompt\":str,\"steps\":[str]}  (a fully solved example; 4-7 steps)\n"
     "- {\"type\":\"checkpoint\",\"id\":str,\"heading\":str,\"question\":str,\"choices\":[str,str,str,str],\"correct_index\":int,\"explanation\":str}  (knowledge check)\n"
     "- {\"type\":\"summary\",\"heading\":str,\"points\":[str]}  (key takeaways; last block)\n"
+    "Media is composed server-side after authoring from approved, rights-cleared event assets; never invent image URLs, video IDs, or unsupported claims.\n"
     "Requirements: exactly one `opening` first and one `summary` last; at least 5 teaching "
     "blocks (property_cards/steps/worked_example) covering ALL the subtopics; at least 3 "
     "`checkpoint` blocks spread through the lesson, each with one correct answer and "
@@ -233,6 +235,7 @@ def generate_lessons_for_event(
         checkpoints = sum(1 for b in blocks if b.get("type") == "checkpoint")
         if len(blocks) < 6 or teaching < 2 or checkpoints < 1:
             continue
+        blocks = compose_multimedia_blocks(db, event, blocks)
         blocks, citations = _attach_passage_citations(db, source, blocks)
         if not citations:
             continue

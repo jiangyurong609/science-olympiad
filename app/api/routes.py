@@ -46,6 +46,7 @@ from app.services.remediation import build_delayed_review, build_transfer_questi
 from app.services.firebase_identity import FirebaseIdentityError, verify_firebase_id_token
 from app.services.validation import build_similarity_report
 from app.services.source_coverage import event_source_coverage
+from app.services.lesson_media import compose_multimedia_blocks
 from app.services.calibration import calculate_item_calibration
 from app.services.content_corrections import apply_score_correction
 from app.services.notifications import create_notification
@@ -1225,6 +1226,58 @@ def lesson_version_diff(
         "claim_ids_added": [item for item in (after.claim_ids or []) if item not in (before.claim_ids or [])],
         "claim_ids_removed": [item for item in (before.claim_ids or []) if item not in (after.claim_ids or [])],
     }
+
+
+@router.post("/content/lessons/media-enrich")
+def enrich_lessons_with_grounded_media(
+    event_id: int | None = Form(default=None),
+    db: Session = Depends(get_db),
+    actor: User = Depends(require_content_staff),
+):
+    """Add approved video/specimen media without mutating attempted versions.
+
+    Published lessons receive a new editor-review version; draft lessons can
+    be composed in place. No URL or image is accepted from the model itself.
+    """
+    query = select(Lesson).order_by(Lesson.event_id, Lesson.sequence, Lesson.id)
+    if event_id is not None:
+        if not db.get(Event, event_id):
+            raise HTTPException(status_code=404, detail="Event not found")
+        query = query.where(Lesson.event_id == event_id)
+    lessons = db.scalars(query).all()
+    changed, versioned = [], []
+    for lesson in lessons:
+        version = db.scalar(select(LessonVersion).where(
+            LessonVersion.lesson_id == lesson.id,
+            LessonVersion.version == lesson.current_version,
+        ))
+        event = db.get(Event, lesson.event_id)
+        if not version or not event:
+            continue
+        composed = compose_multimedia_blocks(db, event, version.content or [])
+        if composed == (version.content or []):
+            continue
+        if lesson.status in {"published", "student_preview"} or version.review_status in {"published", "released", "sme_approved"}:
+            next_version = db.scalar(select(func.max(LessonVersion.version)).where(
+                LessonVersion.lesson_id == lesson.id,
+            )) or lesson.current_version
+            next_version += 1
+            db.add(LessonVersion(
+                lesson_id=lesson.id, version=next_version, content=composed,
+                citations=version.citations, claim_ids=version.claim_ids,
+                review_status="editor_review",
+            ))
+            lesson.current_version = next_version
+            lesson.status = "draft"
+            versioned.append(lesson.id)
+        else:
+            version.content = composed
+            version.review_status = "editor_review"
+        changed.append(lesson.id)
+        _audit(db, actor, "lesson.media_enrich", "lesson", lesson.id,
+               version=lesson.current_version, media_types=[block.get("type") for block in composed if block.get("type") in {"video", "image_gallery"}])
+    db.commit()
+    return {"changed_lessons": changed, "new_versions": versioned, "count": len(changed)}
 
 
 @router.get("/events/{event_id}/materials")
