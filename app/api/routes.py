@@ -18,7 +18,7 @@ from app.models.entities import (
     GenerationRun, Lesson, LessonProgress, LessonSkill, LessonVersion, MasteryState, PracticeSession,
     PracticeSet, PracticeSetVersion, Question, QuestionCalibration, QuestionReview, RemediationCase,
     Response, ResponseRevision, ReviewDecision, RightsStatus,
-    EventSourceMap, EventTaxonScope, IngestionRun, RawArtifact, ScientificClaim, Skill, Source,
+    EventSourceMap, EventTaxonScope, ExtractionAsset, IngestionRun, RawArtifact, ScientificClaim, Skill, Source,
     SourcePassage, SourceSnapshot, SpecimenAsset, StudentContentFeedback, Taxon,
     Team, TeamMembership, TransferAttempt, TutorMessage, TutorSession, UploadSubmission, User, UserNotification,
 )
@@ -1136,13 +1136,20 @@ def list_content_uploads(
     runs = {run.upload_id: run for run in db.scalars(select(IngestionRun).where(
         IngestionRun.upload_id.in_([row.id for row in rows])
     )).all()} if rows else {}
+    assets = {asset.upload_id: asset for asset in db.scalars(select(ExtractionAsset).where(
+        ExtractionAsset.upload_id.in_([row.id for row in rows])
+    )).all()} if rows else {}
     return [{
         "id": row.id, "filename": row.filename, "event_id": row.event_id,
         "status": row.status, "sha256": row.sha256, "byte_count": row.byte_count,
         "created_at": row.created_at,
         "ingestion": ({"id": runs[row.id].id, "stage": runs[row.id].stage,
                        "status": runs[row.id].status, "diagnostics": runs[row.id].diagnostics_json,
-                       "source_id": runs[row.id].source_id} if row.id in runs else None),
+                       "source_id": runs[row.id].source_id,
+                       "extraction": ({"page_count": assets[row.id].page_count, "text_chars": assets[row.id].text_chars,
+                                       "status": assets[row.id].status, "version": assets[row.id].extraction_version,
+                                       "diagnostics": assets[row.id].diagnostics_json} if row.id in assets else None),
+                       } if row.id in runs else None),
     } for row in rows]
 
 

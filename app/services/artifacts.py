@@ -3,6 +3,8 @@ from __future__ import annotations
 import hashlib
 import os
 import uuid
+import io
+import zipfile
 from pathlib import Path
 
 from app.core.config import get_settings
@@ -19,6 +21,10 @@ def _extension(media_type: str) -> str:
         return ".html"
     if "json" in media_type:
         return ".json"
+    if "wordprocessingml.document" in media_type:
+        return ".docx"
+    if "presentationml.presentation" in media_type:
+        return ".pptx"
     return ".bin"
 
 
@@ -30,6 +36,19 @@ def validate_raw_artifact(content: bytes, media_type: str) -> str:
         raise ArtifactError("PDF content does not match its declared media type")
     if ("html" in lowered or lowered.startswith("text/")) and b"\x00" in content[:8192]:
         raise ArtifactError("Text artifact contains unexpected binary data")
+    if "wordprocessingml" in lowered or "presentationml" in lowered or content[:2] == b"PK":
+        try:
+            with zipfile.ZipFile(io.BytesIO(content)) as archive:
+                names = archive.namelist()
+                if any(name.lower().endswith("vbaproject.bin") for name in names):
+                    raise ArtifactError("Office macros are not accepted; upload a macro-free file")
+                if any(info.flag_bits & 0x1 for info in archive.infolist()):
+                    raise ArtifactError("Encrypted archives are not accepted")
+                if sum(info.file_size for info in archive.infolist()) > 100_000_000:
+                    raise ArtifactError("Compressed upload expands beyond the safety limit")
+        except zipfile.BadZipFile:
+            if "wordprocessingml" in lowered or "presentationml" in lowered:
+                raise ArtifactError("Office file is not a valid ZIP package")
     return "basic_pass"
 
 

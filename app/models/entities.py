@@ -478,6 +478,21 @@ class RawArtifact(Base):
     created_at: Mapped[datetime] = mapped_column(DateTime(timezone=True), default=now_utc)
 
 
+class ExtractionAsset(Base):
+    """Machine-readable extraction diagnostics for reviewer tooling."""
+    __tablename__ = "extraction_assets"
+    id: Mapped[int] = mapped_column(primary_key=True)
+    upload_id: Mapped[int] = mapped_column(ForeignKey("upload_submissions.id", ondelete="CASCADE"), unique=True, index=True)
+    page_count: Mapped[int] = mapped_column(Integer, default=0)
+    text_chars: Mapped[int] = mapped_column(Integer, default=0)
+    ocr_confidence: Mapped[float | None] = mapped_column(Float, nullable=True)
+    extraction_version: Mapped[str] = mapped_column(String(80), default="v1")
+    artifact_key: Mapped[str] = mapped_column(String(500), default="")
+    status: Mapped[str] = mapped_column(String(40), default="completed", index=True)
+    diagnostics_json: Mapped[dict] = mapped_column(JSON, default=dict)
+    created_at: Mapped[datetime] = mapped_column(DateTime(timezone=True), default=now_utc)
+
+
 class UploadSubmission(Base):
     """A user-submitted artifact before it becomes an approved source."""
     __tablename__ = "upload_submissions"

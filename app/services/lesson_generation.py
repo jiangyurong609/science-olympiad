@@ -20,9 +20,10 @@ from sqlalchemy import delete, select
 from sqlalchemy.orm import Session
 
 from app.models.entities import (
-    Event, EventSourceMap, Lesson, LessonVersion, Source, SourceSnapshot,
+    Event, EventSourceMap, Lesson, LessonVersion, Source, SourcePassage, SourceSnapshot,
 )
 from app.services.model_provider import ModelProviderError, OpenAICompatibleProvider
+from app.services.source_passages import ensure_source_passages
 
 MATERIAL_CHARS = 24_000
 LESSON_MATERIAL_CHARS = 16_000
@@ -71,6 +72,11 @@ def _course_material(db: Session, event: Event) -> tuple[Source, str] | None:
     """Combine the event's richest materials into one grounding corpus."""
     snaps: list[tuple[Source, str]] = []
     for mapping in db.scalars(select(EventSourceMap).where(EventSourceMap.event_id == event.id)).all():
+        source = db.get(Source, mapping.source_id)
+        if source is None:
+            continue
+        if (source.metadata_json or {}).get("origin_type") == "upload" and (not source.approved or not mapping.reviewed):
+            continue
         snap = db.scalar(select(SourceSnapshot).where(
             SourceSnapshot.source_id == mapping.source_id
         ).order_by(SourceSnapshot.id.desc()))
@@ -88,6 +94,44 @@ def _course_material(db: Session, event: Event) -> tuple[Source, str] | None:
         if total >= MATERIAL_CHARS:
             break
     return snaps[0][0], "\n\n".join(combined)
+
+
+def _attach_passage_citations(db: Session, source: Source, blocks: list[dict]) -> tuple[list[dict], list[dict]]:
+    passages = db.scalars(select(SourcePassage).where(
+        SourcePassage.source_id == source.id,
+    ).order_by(SourcePassage.sequence, SourcePassage.id)).all()
+    if not passages:
+        snapshot = db.scalar(select(SourceSnapshot).where(
+            SourceSnapshot.source_id == source.id,
+        ).order_by(SourceSnapshot.id.desc()))
+        if snapshot:
+            passages = ensure_source_passages(db, snapshot, commit=False)
+    if not passages:
+        return blocks, []
+    citations = []
+    seen = set()
+    enriched = []
+    for block in blocks:
+        haystack = " ".join(str(value) for key, value in block.items() if key not in {"passage_ids", "choices"})
+        words = {word.lower() for word in re.findall(r"[A-Za-z]{4,}", haystack)}
+        scored = sorted(
+            passages,
+            key=lambda passage: len(words & {word.lower() for word in re.findall(r"[A-Za-z]{4,}", passage.text)}),
+            reverse=True,
+        )
+        selected = [passage for passage in scored[:2] if words & {word.lower() for word in re.findall(r"[A-Za-z]{4,}", passage.text)}] or [passages[0]]
+        ids = [passage.id for passage in selected]
+        enriched_block = {**block, "passage_ids": ids}
+        enriched.append(enriched_block)
+        for passage in selected:
+            if passage.id not in seen:
+                seen.add(passage.id)
+                citations.append({
+                    "source_id": source.id, "source_passage_id": passage.id,
+                    "locator": passage.locator, "title": source.title,
+                    "publisher": source.publisher or "", "url": source.url if source.url.startswith(("http://", "https://")) else "",
+                })
+    return enriched, citations
 
 
 def _valid_blocks(raw_blocks, lesson_index: int) -> list:
@@ -149,8 +193,6 @@ def generate_lessons_for_event(
     if not syllabus:
         raise ModelProviderError("Model returned no syllabus")
 
-    citations = [{"title": source.title, "publisher": source.publisher or "",
-                  "url": source.url if source.url.startswith(("http://", "https://")) else ""}]
     # Regeneration replaces the prior auto-generated course.
     old = db.scalars(select(Lesson.id).where(
         Lesson.event_id == event.id, Lesson.slug.like(f"{SLUG_PREFIX}%")
@@ -179,6 +221,9 @@ def generate_lessons_for_event(
         teaching = sum(1 for b in blocks if b.get("type") in _TEACHING)
         checkpoints = sum(1 for b in blocks if b.get("type") == "checkpoint")
         if len(blocks) < 6 or teaching < 2 or checkpoints < 1:
+            continue
+        blocks, citations = _attach_passage_citations(db, source, blocks)
+        if not citations:
             continue
         title = str(raw.get("title") or entry.get("title") or f"{event.name} Lesson {index + 1}").strip()
         try:

@@ -8,13 +8,15 @@ from __future__ import annotations
 import io
 import hashlib
 import re
+import zipfile
+from html import unescape
 from datetime import datetime, timezone
 
 from pypdf import PdfReader
 from sqlalchemy import select
 from sqlalchemy.orm import Session
 
-from app.models.entities import EventSourceMap, IngestionRun, RawArtifact, Source, SourcePassage, SourceSnapshot, UploadSubmission
+from app.models.entities import EventSourceMap, ExtractionAsset, IngestionRun, RawArtifact, Source, SourcePassage, SourceSnapshot, UploadSubmission
 from app.services.artifacts import read_raw_artifact
 
 
@@ -22,6 +24,8 @@ def _extract(content: bytes, media_type: str, filename: str) -> tuple[str, dict]
     kind = (media_type or "").lower()
     if "pdf" in kind or filename.lower().endswith(".pdf"):
         reader = PdfReader(io.BytesIO(content))
+        if reader.is_encrypted:
+            raise ValueError("Encrypted PDFs require a staff-assisted secure review")
         pages = []
         for number, page in enumerate(reader.pages, start=1):
             pages.append(f"[Page {number}]\n{page.extract_text() or ''}")
@@ -29,7 +33,27 @@ def _extract(content: bytes, media_type: str, filename: str) -> tuple[str, dict]
         return text, {"page_count": len(reader.pages), "extraction": "pypdf"}
     if kind.startswith("text/") or filename.lower().endswith((".txt", ".md", ".csv")):
         return content.decode("utf-8", errors="replace").strip(), {"page_count": 0, "extraction": "utf8"}
-    raise ValueError("Unsupported upload type; use PDF or UTF-8 text for this ingestion worker")
+    suffix = filename.lower()
+    if suffix.endswith(".docx") or "wordprocessingml.document" in kind:
+        with zipfile.ZipFile(io.BytesIO(content)) as archive:
+            xml = archive.read("word/document.xml").decode("utf-8", errors="replace")
+        text = re.sub(r"</w:p>", "\n\n", xml)
+        text = re.sub(r"<w:tab[^>]*/>", "\t", text)
+        text = re.sub(r"<[^>]+>", "", text)
+        return unescape(text).strip(), {"page_count": 0, "extraction": "docx-xml"}
+    if suffix.endswith(".pptx") or "presentationml.presentation" in kind:
+        with zipfile.ZipFile(io.BytesIO(content)) as archive:
+            slide_names = sorted(name for name in archive.namelist() if re.fullmatch(r"ppt/slides/slide\d+\.xml", name))
+            slides = []
+            for number, name in enumerate(slide_names, start=1):
+                xml = archive.read(name).decode("utf-8", errors="replace")
+                xml = re.sub(r"<a:br[^>]*/>", "\n", xml)
+                xml = re.sub(r"<[^>]+>", "", xml)
+                slides.append(f"[Slide {number}]\n{unescape(xml).strip()}")
+        return "\n\n".join(slides).strip(), {"page_count": len(slides), "extraction": "pptx-xml"}
+    if kind.startswith("image/") or suffix.endswith((".png", ".jpg", ".jpeg", ".webp")):
+        raise ValueError("Image upload requires OCR review; no OCR engine is configured for this worker")
+    raise ValueError("Unsupported upload type; use PDF, DOCX, PPTX, or UTF-8 text")
 
 
 def _passages(text: str, diagnostics: dict) -> list[dict]:
@@ -50,6 +74,8 @@ def process_ingestion_run(db: Session, run_id: int) -> IngestionRun:
     run = db.get(IngestionRun, run_id)
     if not run:
         raise ValueError("Ingestion run not found")
+    if run.status == "completed" and run.stage in {"ready_for_review", "ready_for_authoring", "withdrawn"}:
+        return run
     upload = db.get(UploadSubmission, run.upload_id)
     if not upload:
         raise ValueError("Upload submission not found")
@@ -63,6 +89,15 @@ def process_ingestion_run(db: Session, run_id: int) -> IngestionRun:
         if len(text) < 80:
             raise ValueError("Extraction produced too little text for authoring")
         run.stage = "snapshotting"
+        extraction = db.scalar(select(ExtractionAsset).where(ExtractionAsset.upload_id == upload.id))
+        if not extraction:
+            extraction = ExtractionAsset(
+                upload_id=upload.id, page_count=int(diagnostics.get("page_count", 0)),
+                text_chars=len(text), extraction_version="v2", artifact_key=upload.artifact_key,
+                status="completed", diagnostics_json=diagnostics,
+            )
+            db.add(extraction)
+            db.flush()
         source = db.scalar(select(Source).where(Source.content_hash == upload.sha256))
         if not source:
             source = Source(

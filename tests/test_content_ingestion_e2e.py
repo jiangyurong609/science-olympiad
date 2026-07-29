@@ -1,9 +1,10 @@
 from io import BytesIO
+from zipfile import ZIP_DEFLATED, ZipFile
 
 from sqlalchemy import select
 
 from app.core.database import SessionLocal
-from app.models.entities import Event, Lesson, Source, SourcePassage
+from app.models.entities import Event, ExtractionAsset, Lesson, Source, SourcePassage
 
 
 def auth(token):
@@ -96,3 +97,33 @@ def test_upload_extract_review_and_student_visibility(client, admin_token, stude
     # Parent/student roles cannot use the staff intake surface.
     denied = client.get("/api/content/intake/uploads", headers=auth(student_token))
     assert denied.status_code == 403
+
+
+def test_office_formats_extract_into_reviewable_assets(client, admin_token):
+    with SessionLocal() as db:
+        event = Event(slug="office-ingestion-2027", name="Office Ingestion", division="B", season=2027)
+        db.add(event)
+        db.commit()
+        event_id = event.id
+
+    docx = BytesIO()
+    with ZipFile(docx, "w", ZIP_DEFLATED) as archive:
+        archive.writestr("word/document.xml", "<w:document><w:p><w:t>Document lesson content with enough detail for extraction and review. Students compare observations, record evidence, and explain their reasoning.</w:t></w:p></w:document>")
+    pptx = BytesIO()
+    with ZipFile(pptx, "w", ZIP_DEFLATED) as archive:
+        archive.writestr("ppt/slides/slide1.xml", "<p:sld><a:t>Slide lesson content with an observation routine and evidence. Students apply the routine to a new specimen and justify a conclusion.</a:t></p:sld>")
+
+    for filename, body, media_type in (("lesson.docx", docx.getvalue(), "application/vnd.openxmlformats-officedocument.wordprocessingml.document"), ("lesson.pptx", pptx.getvalue(), "application/vnd.openxmlformats-officedocument.presentationml.presentation")):
+        uploaded = client.post(
+            "/api/content/intake/uploads", headers=auth(admin_token),
+            data={"event_id": str(event_id), "rights_attestation": "Fieldstone owns this source."},
+            files={"file": (filename, BytesIO(body), media_type)},
+        )
+        assert uploaded.status_code == 200
+        ran = client.post("/api/jobs/run-next", headers=auth(admin_token))
+        assert ran.json()["status"] == "completed"
+
+    with SessionLocal() as db:
+        assets = db.query(ExtractionAsset).all()
+        assert {asset.diagnostics_json["extraction"] for asset in assets} == {"docx-xml", "pptx-xml"}
+        assert all(asset.text_chars > 40 for asset in assets)
