@@ -29,7 +29,7 @@ ARTIFACT_STORE_BACKEND="${ARTIFACT_STORE_BACKEND:-gcs}"
 ARTIFACT_STORE_BUCKET="${ARTIFACT_STORE_BUCKET:-soplat-artifacts-video-agent-493605}"
 # ClamAV loads a large signature database per scan process. Keep the scanner
 # fail-closed without allowing concurrent uploads to exhaust the instance.
-CLOUD_RUN_MEMORY="${CLOUD_RUN_MEMORY:-1Gi}"
+CLOUD_RUN_MEMORY="${CLOUD_RUN_MEMORY:-2Gi}"
 CLOUD_RUN_CONCURRENCY="${CLOUD_RUN_CONCURRENCY:-1}"
 
 TAG=""
