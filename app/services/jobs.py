@@ -9,6 +9,7 @@ from app.services.crawler import check_source_metadata, crawl_source
 from app.services.discovery import discover_sitemap
 from app.services.crawl_schedule import mark_crawl_failure, schedule_due_sources
 from app.services.notifications import deliver_notification_outbox
+from app.services.content_ingestion import process_ingestion_run
 
 
 def enqueue_job(db: Session, job_type: str, payload: dict, actor_user_id: int | None = None, scheduled_at=None) -> BackgroundJob:
@@ -101,6 +102,9 @@ def run_next_job(db: Session) -> BackgroundJob | None:
             }
         elif job.job_type == "deliver_notification_outbox":
             job.result = deliver_notification_outbox(db, limit=int(job.payload.get("limit", 50)))
+        elif job.job_type == "ingest_upload":
+            run = process_ingestion_run(db, int(job.payload["ingestion_run_id"]))
+            job.result = {"ingestion_run_id": run.id, "source_id": run.source_id, "status": run.status}
         else:
             raise ValueError(f"Unsupported job type: {job.job_type}")
         job.status = "completed"

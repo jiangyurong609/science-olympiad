@@ -4,7 +4,7 @@ import json
 import logging
 import math
 import secrets
-from fastapi import APIRouter, Depends, Header, HTTPException, Query
+from fastapi import APIRouter, Depends, File, Form, Header, HTTPException, Query, UploadFile
 from jose import JWTError
 from sqlalchemy import func, or_, select
 from sqlalchemy.orm import Session
@@ -18,9 +18,9 @@ from app.models.entities import (
     GenerationRun, Lesson, LessonProgress, LessonSkill, LessonVersion, MasteryState, PracticeSession,
     PracticeSet, PracticeSetVersion, Question, QuestionCalibration, QuestionReview, RemediationCase,
     Response, ResponseRevision, ReviewDecision, RightsStatus,
-    EventSourceMap, EventTaxonScope, RawArtifact, ScientificClaim, Skill, Source,
+    EventSourceMap, EventTaxonScope, IngestionRun, RawArtifact, ScientificClaim, Skill, Source,
     SourcePassage, SourceSnapshot, SpecimenAsset, StudentContentFeedback, Taxon,
-    Team, TeamMembership, TransferAttempt, TutorMessage, TutorSession, User, UserNotification,
+    Team, TeamMembership, TransferAttempt, TutorMessage, TutorSession, UploadSubmission, User, UserNotification,
 )
 from app.schemas.api import (
     AccommodationUpdateRequest, AdminUserUpdate, AnswerKeyUpdate, ClaimCreateRequest, ClaimExtractionRequest,
@@ -51,6 +51,8 @@ from app.services.notifications import create_notification
 from app.services.daily_plan import build_daily_plan
 from app.services.tutor import TutorAccessError, create_tutor_session, respond_to_tutor
 from app.services.course_quality import audit_course
+from app.services.artifacts import ArtifactError, store_raw_artifact
+from app.services.jobs import enqueue_job
 
 router = APIRouter(prefix="/api")
 _log = logging.getLogger("soplat.api")
@@ -1072,6 +1074,71 @@ def list_event_materials(
         "material_count": len(materials),
         "materials": materials,
     }
+
+
+@router.post("/content/intake/uploads")
+async def submit_content_upload(
+    file: UploadFile = File(...),
+    event_id: int | None = Form(default=None),
+    rights_attestation: str = Form(default=""),
+    db: Session = Depends(get_db),
+    user: User = Depends(require_content_staff),
+):
+    """Accept an artifact into quarantine; extraction runs asynchronously."""
+    if len(rights_attestation.strip()) < 10:
+        raise HTTPException(status_code=422, detail="Rights/ownership attestation is required")
+    if event_id is not None and not db.get(Event, event_id):
+        raise HTTPException(status_code=404, detail="Event not found")
+    content = await file.read()
+    if len(content) > 25_000_000:
+        raise HTTPException(status_code=413, detail="Upload exceeds the 25 MB safety limit")
+    try:
+        artifact = store_raw_artifact(content, file.content_type or "application/octet-stream")
+    except ArtifactError as exc:
+        raise HTTPException(status_code=422, detail=str(exc)) from exc
+    existing = db.scalar(select(UploadSubmission).where(UploadSubmission.sha256 == artifact["content_hash"]))
+    if existing:
+        return {"upload_id": existing.id, "status": existing.status, "deduplicated": True}
+    upload = UploadSubmission(
+        uploader_user_id=user.id, event_id=event_id, filename=file.filename or "uploaded-material",
+        declared_media_type=artifact["detected_media_type"], artifact_key=artifact["storage_key"],
+        sha256=artifact["content_hash"], byte_count=artifact["byte_count"],
+        rights_attestation=rights_attestation.strip(), status="received",
+    )
+    db.add(upload)
+    db.flush()
+    run = IngestionRun(upload_id=upload.id, stage="received", status="queued")
+    db.add(run)
+    db.commit()
+    db.refresh(upload)
+    db.refresh(run)
+    enqueue_job(db, "ingest_upload", {"ingestion_run_id": run.id}, actor_user_id=user.id)
+    _audit(db, user, "content.upload.received", "upload_submission", upload.id, ingestion_run_id=run.id)
+    db.commit()
+    return {"upload_id": upload.id, "ingestion_run_id": run.id, "status": upload.status, "deduplicated": False}
+
+
+@router.get("/content/intake/uploads")
+def list_content_uploads(
+    status: str | None = Query(default=None),
+    db: Session = Depends(get_db),
+    user: User = Depends(require_content_staff),
+):
+    query = select(UploadSubmission).order_by(UploadSubmission.created_at.desc())
+    if status:
+        query = query.where(UploadSubmission.status == status)
+    rows = db.scalars(query.limit(200)).all()
+    runs = {run.upload_id: run for run in db.scalars(select(IngestionRun).where(
+        IngestionRun.upload_id.in_([row.id for row in rows])
+    )).all()} if rows else {}
+    return [{
+        "id": row.id, "filename": row.filename, "event_id": row.event_id,
+        "status": row.status, "sha256": row.sha256, "byte_count": row.byte_count,
+        "created_at": row.created_at,
+        "ingestion": ({"id": runs[row.id].id, "stage": runs[row.id].stage,
+                       "status": runs[row.id].status, "diagnostics": runs[row.id].diagnostics_json,
+                       "source_id": runs[row.id].source_id} if row.id in runs else None),
+    } for row in rows]
 
 
 @router.get("/materials/{source_id}")

@@ -478,6 +478,38 @@ class RawArtifact(Base):
     created_at: Mapped[datetime] = mapped_column(DateTime(timezone=True), default=now_utc)
 
 
+class UploadSubmission(Base):
+    """A user-submitted artifact before it becomes an approved source."""
+    __tablename__ = "upload_submissions"
+    id: Mapped[int] = mapped_column(primary_key=True)
+    uploader_user_id: Mapped[int] = mapped_column(ForeignKey("users.id", ondelete="CASCADE"), index=True)
+    event_id: Mapped[int | None] = mapped_column(ForeignKey("events.id", ondelete="SET NULL"), nullable=True, index=True)
+    filename: Mapped[str] = mapped_column(String(500))
+    declared_media_type: Mapped[str] = mapped_column(String(160), default="application/octet-stream")
+    artifact_key: Mapped[str] = mapped_column(String(500))
+    sha256: Mapped[str] = mapped_column(String(64), index=True)
+    byte_count: Mapped[int] = mapped_column(Integer, default=0)
+    rights_attestation: Mapped[str] = mapped_column(Text, default="")
+    status: Mapped[str] = mapped_column(String(40), default="received", index=True)
+    created_at: Mapped[datetime] = mapped_column(DateTime(timezone=True), default=now_utc)
+    updated_at: Mapped[datetime] = mapped_column(DateTime(timezone=True), default=now_utc, onupdate=now_utc)
+
+
+class IngestionRun(Base):
+    """Auditable, retryable state for extraction and source creation."""
+    __tablename__ = "ingestion_runs"
+    id: Mapped[int] = mapped_column(primary_key=True)
+    upload_id: Mapped[int] = mapped_column(ForeignKey("upload_submissions.id", ondelete="CASCADE"), index=True)
+    stage: Mapped[str] = mapped_column(String(40), default="received", index=True)
+    status: Mapped[str] = mapped_column(String(32), default="queued", index=True)
+    worker_version: Mapped[str] = mapped_column(String(80), default="v1")
+    diagnostics_json: Mapped[dict] = mapped_column(JSON, default=dict)
+    source_id: Mapped[int | None] = mapped_column(ForeignKey("sources.id", ondelete="SET NULL"), nullable=True, index=True)
+    started_at: Mapped[datetime | None] = mapped_column(DateTime(timezone=True), nullable=True)
+    finished_at: Mapped[datetime | None] = mapped_column(DateTime(timezone=True), nullable=True)
+    created_at: Mapped[datetime] = mapped_column(DateTime(timezone=True), default=now_utc)
+
+
 class SourceChange(Base):
     __tablename__ = "source_changes"
     id: Mapped[int] = mapped_column(primary_key=True)

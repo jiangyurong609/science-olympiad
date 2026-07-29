@@ -81,3 +81,22 @@ def store_raw_artifact(content: bytes, media_type: str) -> dict:
         "detected_media_type": media_type,
         "scan_status": scan_status,
     }
+
+
+def read_raw_artifact(storage_key: str) -> bytes:
+    """Read an immutable artifact for a background ingestion worker."""
+    settings = get_settings()
+    if settings.artifact_store_backend == "gcs":
+        if not settings.artifact_store_bucket:
+            raise ArtifactError("GCS artifact bucket is not configured")
+        try:
+            from google.cloud import storage
+            blob = storage.Client().bucket(settings.artifact_store_bucket).blob(storage_key)
+            return blob.download_as_bytes()
+        except Exception as error:  # noqa: BLE001
+            raise ArtifactError(f"GCS artifact read failed: {error}") from error
+    path = Path(settings.artifact_store_path).expanduser().resolve() / storage_key
+    try:
+        return path.read_bytes()
+    except OSError as error:
+        raise ArtifactError(f"Artifact could not be read: {error}") from error
