@@ -280,6 +280,15 @@ textarea { resize: vertical; }
 .property-card strong { display: block; margin: 5px 0; color: var(--forest); font-size: .75rem; }
 .property-card p { margin: 0; color: var(--muted); font-size: .78rem; }
 .property-card-empty { min-height: 96px; grid-column: 1 / -1; background: #f5f8f5; }
+.course-resource-preview { width: min(980px, 100%); margin: 28px auto 0; text-align: left; }
+.course-resource-preview > h4 { margin: 0 0 10px; color: var(--forest); font-size: .7rem; letter-spacing: .08em; text-transform: uppercase; }
+.course-resource-grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 10px; }
+.course-resource-card { padding: 15px; border: 1px solid var(--line); border-radius: 11px; background: #fff; }
+.course-resource-card > span { color: var(--forest); font-size: .62rem; font-weight: 800; letter-spacing: .07em; }
+.course-resource-card h4 { margin: 5px 0 3px; color: var(--ink); font-family: var(--font-body); font-size: .95rem; }
+.course-resource-card p { margin: 0; color: var(--muted); font-size: .72rem; }
+.course-resource-card > div { display: flex; flex-wrap: wrap; gap: 7px; margin-top: 12px; }
+@media (max-width: 700px) { .course-resource-grid { grid-template-columns: 1fr; } }
 .worked-prompt { margin: 28px 0; padding: 22px; border-left: 5px solid var(--amber); background: #fff8e9; font-family: Georgia, serif; font-size: 1.2rem; line-height: 1.5; }
 .worked-steps, .routine-steps { display: grid; gap: 11px; padding: 0; list-style: none; counter-reset: lesson-step; }
 .worked-steps li, .routine-steps li { position: relative; padding: 15px 16px 15px 54px; border: 1px solid var(--line); border-radius: 11px; }
@@ -1285,7 +1294,7 @@ h2[tabindex="-1"]:focus-visible { outline: 0; }
 }
 .lesson-stage {
   min-width: 0;
-  overflow: hidden;
+  overflow: visible;
   border: 1px solid #d9dfdb;
   border-radius: 12px;
   background: #fff;

@@ -791,6 +791,11 @@ function materialGroup(material) {
   return 'guide';
 }
 
+function materialTitle(material) {
+  const raw = String(material?.title || 'Material').replaceAll('%20', ' ');
+  try { return decodeURIComponent(raw); } catch { return raw; }
+}
+
 const materialGroupLabels = {
   video: { title: 'Watch & Learn', description: 'Official introductions and demonstrations', icon: '▶' },
   guide: { title: 'Guides & Handouts', description: 'Slides, worksheets, schedules, and reference material', icon: '▤' },
@@ -830,7 +835,7 @@ function renderMaterials() {
     const guided = material.guided_lesson;
     return `<article class="material-card surface${guided ? ' material-card-guided' : ''}">
       <div class="material-card-top"><span class="material-type">${guided ? 'GUIDED LESSON' : escapeHtml((material.purpose || 'reference').replaceAll('_', ' '))}</span><span class="material-format">${kind}</span></div>
-      <h3>${escapeHtml(material.title || 'Material')}</h3>
+      <h3>${escapeHtml(materialTitle(material))}</h3>
       ${guided ? `<p class="material-plan"><strong>${guided.estimated_minutes || 10} min</strong> lesson · ${guided.checkpoint_count || 0} quick checks</p><p class="material-summary">${escapeHtml(guided.summary || 'Watch the source, learn the key ideas, and check your understanding as you go.')}</p>` : `<p class="material-meta">${escapeHtml(material.publisher || 'Official resource')} · ${size}</p>`}
       <div class="material-actions">${guided ? `<button type="button" class="button button-dark button-compact" data-start-guided-lesson="${guided.id}">Start Lesson <span aria-hidden="true">→</span></button>` : material.has_text ? `<button type="button" class="button button-dark button-compact" data-open-material="${material.source_id}">Open Transcript</button>` : ''}${material.url ? `<a class="button ${guided || material.has_text ? 'button-secondary' : 'button-dark'} button-compact" href="${safeUrl(material.url)}" target="_blank" rel="noopener noreferrer">${group === 'video' ? 'Watch Source Video' : isPdf ? 'Open PDF' : 'Open Resource'} <span aria-hidden="true">↗</span></a>` : ''}</div>
     </article>`;
@@ -988,9 +993,9 @@ function renderSubjectShell() {
     : `The ${event.name} learning path is being authored and will appear here after review.`);
   $('featured-lesson-status').textContent = nextLesson ? nextLesson.progress.status.replaceAll('_', ' ') : 'In Review';
   $('featured-lesson-status').classList.toggle('attention', nextLesson?.progress.status === 'in_progress');
-  $('start-featured-lesson').disabled = !nextLesson;
+  $('start-featured-lesson').disabled = !nextLesson && !event.material_count;
   $('start-featured-lesson').textContent = nextLesson?.progress.status === 'in_progress' ? 'Resume Lesson →'
-    : nextLesson?.progress.status === 'completed' ? 'Review Lesson →' : 'Start Lesson →';
+    : nextLesson?.progress.status === 'completed' ? 'Review Lesson →' : nextLesson ? 'Start Lesson →' : 'Browse Resources →';
 
   $('practice-title').textContent = resourceOnly ? `${event.name} Learning Path` : `${event.name} Practice`;
   $('practice-lede').textContent = resourceOnly
@@ -1075,6 +1080,21 @@ function renderLessons() {
     if (copy) copy.textContent = event?.material_count > 0
       ? `${event.name} does not have a guided course yet. Explore ${event.material_count} official resources while lessons are authored.`
       : `The ${event?.name || 'event'} learning path is being authored and will appear here after review.`;
+    const items = (state.materials && state.materials.materials) || [];
+    const resourceMarkup = items.slice(0, 6).map(material => {
+      const isVideo = materialGroup(material) === 'video';
+      const isPdf = material.media_type?.includes('pdf') || (material.url || '').toLowerCase().includes('.pdf');
+      const action = material.has_text
+        ? `<button type="button" class="button button-dark button-compact" data-open-course-material="${material.source_id}">Read in Fieldstone</button>`
+        : '';
+      const external = material.url
+        ? `<a class="button ${action ? 'button-secondary' : 'button-dark'} button-compact" href="${safeUrl(material.url)}" target="_blank" rel="noopener noreferrer">${isVideo ? 'Watch Video' : isPdf ? 'Open PDF' : 'Open Resource'} ↗</a>`
+        : '';
+      return `<article class="course-resource-card"><span>${isVideo ? 'VIDEO' : isPdf ? 'PDF' : 'OFFICIAL RESOURCE'}</span><h4>${escapeHtml(materialTitle(material))}</h4><p>${escapeHtml(material.publisher || 'Science Olympiad source')}</p><div>${action}${external}</div></article>`;
+    }).join('');
+    const existing = $('lessons-empty')?.querySelector('.course-resource-preview');
+    if (existing) existing.remove();
+    if (resourceMarkup) $('lessons-empty')?.insertAdjacentHTML('beforeend', `<div class="course-resource-preview"><h4>Available now</h4><div class="course-resource-grid">${resourceMarkup}</div></div>`);
   }
   $('lesson-list').innerHTML = state.lessons.map((lesson, index) => {
     const statusLabel = lesson.progress.status === 'completed' ? 'Completed' : lesson.progress.status === 'in_progress' ? 'Resume' : 'Start';
@@ -1084,7 +1104,7 @@ function renderLessons() {
       <button class="button ${lesson.progress.status === 'not_started' ? 'button-dark' : 'button-secondary'}" type="button" data-start-lesson="${lesson.id}">${statusLabel} <span class="sr-only">${escapeHtml(lesson.title)}</span></button>
     </article>`;
   }).join('');
-  $('start-featured-lesson').disabled = state.lessons.length === 0;
+  $('start-featured-lesson').disabled = state.lessons.length === 0 && !(activeEvent()?.material_count > 0);
   const featured = state.lessons.find(lesson => lesson.id === state.featuredLessonId);
   $('start-featured-lesson').textContent = featured?.progress.status === 'in_progress' ? 'Resume Lesson →' : featured?.progress.status === 'completed' ? 'Review Lesson →' : 'Start Lesson →';
   const learnResources = $('learn-resources-button');
@@ -2124,7 +2144,14 @@ document.addEventListener('keydown', event => {
 });
 
 $('start-featured-lesson').addEventListener('click', () => {
-  if (state.featuredLessonId) openLesson(state.featuredLessonId);
+  if (state.featuredLessonId) return openLesson(state.featuredLessonId);
+  selectSubject(state.activeEventSlug, 'practice').then(() => {
+    $('materials-block')?.scrollIntoView({ behavior: preferredScrollBehavior(), block: 'start' });
+  }).catch(error => toast(error.message));
+});
+$('lessons-empty')?.addEventListener('click', event => {
+  const button = event.target.closest('[data-open-course-material]');
+  if (button) openMaterial(Number(button.dataset.openCourseMaterial));
 });
 $('overview-learn-button').addEventListener('click', () => {
   selectSubject(state.activeEventSlug, 'learn').catch(error => toast(error.message));
