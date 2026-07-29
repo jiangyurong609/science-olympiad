@@ -2330,7 +2330,7 @@ function renderLessonBlock() {
   node.className = `lesson-block surface${block.type === 'opening' ? ' lesson-block-opening' : ''}`;
   node.innerHTML = renderer ? renderer(block) : `<h1>${escapeHtml(block.heading || 'Lesson section')}</h1><p>${escapeHtml(block.body || '')}</p>`;
   node.focus({ preventScroll: true });
-  window.scrollTo({ top: 0, behavior: preferredScrollBehavior() });
+  node.scrollIntoView({ behavior: preferredScrollBehavior(), block: 'start' });
 }
 
 function lessonBlockLabel(block, index) {
