@@ -2,6 +2,8 @@
 from alembic import op
 import sqlalchemy as sa
 
+from app.core.migration_guards import create_index_if_absent, create_table_if_absent, drop_table_if_present
+
 revision = "0028_student_content_feedback"
 down_revision = "0027_material_coverage_ledger"
 branch_labels = None
@@ -9,7 +11,8 @@ depends_on = None
 
 
 def upgrade() -> None:
-    op.create_table(
+    # 0001 runs Base.metadata.create_all(), so a fresh database already has this table.
+    create_table_if_absent(
         "student_content_feedback",
         sa.Column("id", sa.Integer(), primary_key=True),
         sa.Column("user_id", sa.Integer(), sa.ForeignKey("users.id", ondelete="CASCADE"), nullable=False),
@@ -24,8 +27,10 @@ def upgrade() -> None:
         sa.Column("created_at", sa.DateTime(timezone=True), nullable=False, server_default=sa.func.now()),
     )
     for column in ("user_id", "event_id", "course_id", "entity_type", "entity_id", "created_at"):
-        op.create_index(f"ix_student_content_feedback_{column}", "student_content_feedback", [column])
+        create_index_if_absent(
+            f"ix_student_content_feedback_{column}", "student_content_feedback", [column]
+        )
 
 
 def downgrade() -> None:
-    op.drop_table("student_content_feedback")
+    drop_table_if_present("student_content_feedback")

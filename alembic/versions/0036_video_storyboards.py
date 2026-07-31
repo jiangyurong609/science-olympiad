@@ -6,6 +6,8 @@ Revises: 0035_parent_relationship_teams
 from alembic import op
 import sqlalchemy as sa
 
+from app.core.migration_guards import create_table_if_absent, drop_table_if_present
+
 revision = "0036_video_storyboards"
 down_revision = "0035_parent_relationship_teams"
 branch_labels = None
@@ -13,7 +15,8 @@ depends_on = None
 
 
 def upgrade() -> None:
-    op.create_table(
+    # 0001 runs create_all(), so a fresh database already has these tables.
+    create_table_if_absent(
         "video_storyboards",
         sa.Column("id", sa.Integer(), primary_key=True),
         sa.Column("lesson_id", sa.Integer(), sa.ForeignKey("lessons.id", ondelete="CASCADE"), nullable=False, index=True),
@@ -29,7 +32,7 @@ def upgrade() -> None:
         sa.Column("created_at", sa.DateTime(timezone=True), nullable=False),
         sa.UniqueConstraint("lesson_id", "version", name="uq_video_storyboard_version"),
     )
-    op.create_table(
+    create_table_if_absent(
         "video_renders",
         sa.Column("id", sa.Integer(), primary_key=True),
         sa.Column("storyboard_id", sa.Integer(), sa.ForeignKey("video_storyboards.id", ondelete="CASCADE"), nullable=False, index=True),
@@ -50,5 +53,5 @@ def upgrade() -> None:
 
 
 def downgrade() -> None:
-    op.drop_table("video_renders")
-    op.drop_table("video_storyboards")
+    drop_table_if_present("video_renders")
+    drop_table_if_present("video_storyboards")
