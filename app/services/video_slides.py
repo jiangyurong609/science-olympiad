@@ -12,6 +12,8 @@ from __future__ import annotations
 
 from xml.sax.saxutils import escape
 
+from app.services.video_diagrams import DiagramError, render_diagram
+
 W, H = 1920, 1080
 GROUND = "#0b1417"
 PANEL = "#16262a"
@@ -40,6 +42,7 @@ ARCHETYPES = {
     "image_gallery": "figure",
     "summary": "recap",
     "checkpoint": "check",
+    "diagram": "diagram",
 }
 
 
@@ -152,6 +155,19 @@ def render_scene_svg(scene: dict) -> str:
             + f'<rect x="140" y="410" width="{W - 280}" height="480" rx="12" fill="{PANEL}" stroke="{RULE}" stroke-width="2"/>'
             + _text(W // 2, 660, scene.get("figure_caption", "figure"), size=36, fill=MUTED, anchor="middle")
         )
+    elif kind == "diagram" or scene.get("diagram"):
+        # A relationship reads faster as a picture than as a sentence, so when a scene
+        # carries a diagram spec it becomes the slide rather than an afterthought.
+        try:
+            fragment, height, natural_width = render_diagram(scene.get("diagram") or {})
+            top = 430 if height < 420 else 380
+            left = max(140, (W - natural_width) // 2)   # centre it, don't hug the left rail
+            body = (_headline(headline, accent, y=230)
+                    + f'<g transform="translate({left},{top})">{fragment}</g>')
+        except DiagramError as exc:
+            # Never render a blank slide: fall back to the caption so the lesson still reads.
+            body = (_headline(headline, accent, y=230)
+                    + _text(140, 470, f"[diagram unavailable: {exc}]", size=32, fill=MUTED))
     else:  # points
         body = _headline(headline, accent, y=230) + _points(points, accent, top=470)
 
