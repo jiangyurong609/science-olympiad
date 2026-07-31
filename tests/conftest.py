@@ -8,6 +8,14 @@ os.environ["ARTIFACT_STORE_BACKEND"] = "local"
 os.environ["ARTIFACT_STORE_BUCKET"] = ""
 os.environ["GCS_SIGNING_SERVICE_ACCOUNT"] = ""
 os.environ["VIDEO_RENDER_WORKER_URL"] = ""
+# Unset model credentials too: services branch on "is a provider configured", so a developer
+# with real keys would silently make live API calls during the suite (which then fails on
+# network variance rather than on the behaviour under test).
+os.environ["OPENAI_COMPATIBLE_BASE_URL"] = ""
+os.environ["OPENAI_API_KEY"] = ""
+os.environ["OPENAI_EMBEDDING_MODEL"] = ""
+os.environ["DEEPGRAM_API_KEY"] = ""
+os.environ["DEEPGRAM"] = ""
 
 import pytest
 import shutil
