@@ -107,9 +107,12 @@ def _richest(db: Session, events: list[Event]) -> tuple[Event, list[Event]]:
 
 def build_plan(db: Session, resolve_intra: bool) -> dict:
     events = db.scalars(select(Event)).all()
-    # (name, division) -> season -> [events]
+    # (name, division) -> season -> [events]. Already-archived events are excluded from
+    # planning (they've been resolved, e.g. via merge_events) so they don't re-trigger conflicts.
     groups: dict[tuple, dict[int, list[Event]]] = defaultdict(lambda: defaultdict(list))
     for e in events:
+        if e.season_status == ARCHIVED_STATUS:
+            continue
         groups[(norm(e.name), e.division)][e.season].append(e)
 
     recurring, only_prior, only_current = [], [], []
@@ -274,6 +277,79 @@ def _archive_event(db: Session, event_id: int, reason: str) -> None:
     # it is removed from the live catalog because the event is inactive + archived-status.
 
 
+def merge_events(db: Session, keep_id: int, drop_id: int) -> dict:
+    """Merge a same-key duplicate event: re-point `drop`'s content onto `keep` (nothing hidden),
+    then archive the now-empty `drop`. Slug-unique tables (Lesson/PracticeSet/EventTaxonScope)
+    get a `-merged-<drop_id>` suffix on collision. `keep`'s single course is preserved
+    (uq_course_event); `drop`'s course is archived. Returns a conservation report."""
+    keep = db.get(Event, keep_id)
+    drop = db.get(Event, drop_id)
+    if not keep or not drop:
+        raise SystemExit(f"merge_events: unknown event id(s) keep={keep_id} drop={drop_id}")
+
+    before = {
+        "questions": _q(db, Question, keep_id) + _q(db, Question, drop_id),
+        "lessons": _q(db, Lesson, keep_id) + _q(db, Lesson, drop_id),
+        "exams": _q(db, Exam, keep_id) + _q(db, Exam, drop_id),
+    }
+
+    # direct re-point (no per-event uniqueness)
+    for model in (Concept, Question, Exam):
+        for row in db.scalars(select(model).where(model.event_id == drop_id)).all():
+            row.event_id = keep_id
+
+    # slug-unique re-point (suffix on collision)
+    for model in (Lesson, PracticeSet):
+        keep_slugs = {r.slug for r in db.scalars(select(model).where(model.event_id == keep_id)).all()}
+        for row in db.scalars(select(model).where(model.event_id == drop_id)).all():
+            if row.slug in keep_slugs:
+                row.slug = f"{row.slug}-merged-{drop_id}"
+            keep_slugs.add(row.slug)
+            row.event_id = keep_id
+
+    # taxon scopes (uq event_id,taxon_id,list_version) — re-point unless it would collide
+    keep_scope_keys = {
+        (s.taxon_id, s.list_version)
+        for s in db.scalars(select(EventTaxonScope).where(EventTaxonScope.event_id == keep_id)).all()
+    }
+    for s in db.scalars(select(EventTaxonScope).where(EventTaxonScope.event_id == drop_id)).all():
+        if (s.taxon_id, s.list_version) not in keep_scope_keys:
+            s.event_id = keep_id  # else leave on drop (archived) to avoid a uq violation
+
+    # source maps (dedup on the uq tuple)
+    keep_src = {
+        (m.source_id, m.purpose, m.source_universe_version)
+        for m in db.scalars(select(EventSourceMap).where(EventSourceMap.event_id == keep_id)).all()
+    }
+    for m in db.scalars(select(EventSourceMap).where(EventSourceMap.event_id == drop_id)).all():
+        if (m.source_id, m.purpose, m.source_universe_version) not in keep_src:
+            m.event_id = keep_id
+
+    _archive_event(db, drop_id, f"merged into {keep_id}")
+    db.flush()
+
+    after = {
+        "questions": _q(db, Question, keep_id),
+        "lessons": _q(db, Lesson, keep_id),
+        "exams": _q(db, Exam, keep_id),
+    }
+    # nothing lost: every live row now lives on `keep`
+    for k in before:
+        if after[k] != before[k]:
+            raise SystemExit(f"merge_events conservation failed for {k}: {before[k]} -> {after[k]}")
+    # targeted invariant: this key now has exactly one active event (the rest of the catalog
+    # may still be unconsolidated, so we do NOT assert the global invariant here).
+    key = (norm(keep.name), keep.division)
+    active_here = sum(
+        1 for e in db.scalars(select(Event)).all()
+        if (norm(e.name), e.division) == key and e.active and e.season_status != ARCHIVED_STATUS
+    )
+    if active_here != 1:
+        raise SystemExit(f"merge_events: key {key} has {active_here} active events after merge (want 1)")
+    db.commit()
+    return {"keep_id": keep_id, "drop_id": drop_id, "before": before, "after": after}
+
+
 def apply_plan(db: Session, plan: dict) -> None:
     for r in plan["recurring"]:
         canon = db.get(Event, r["canonical_event_id"])
@@ -344,8 +420,21 @@ def main() -> None:
     ap.add_argument("--archive-surface-ready", action="store_true",
                     help="assert the R-C6 archive listing/detail surface + canonical redirects are "
                          "deployed and tested; required to actually --apply")
+    ap.add_argument("--merge", nargs=2, type=int, metavar=("KEEP", "DROP"),
+                    help="merge duplicate event DROP into KEEP (re-point content, archive DROP), "
+                         "then exit; requires --i-took-a-backup")
     ap.add_argument("--json", dest="json_path", default=None)
     args = ap.parse_args()
+
+    if args.merge:
+        if not args.i_took_a_backup:
+            raise SystemExit("Refusing --merge without --i-took-a-backup.")
+        keep_id, drop_id = args.merge
+        with SessionLocal() as db:
+            report = merge_events(db, keep_id, drop_id)
+        print(f"MERGED {drop_id} -> {keep_id}: {report['before']} conserved. "
+              f"{drop_id} archived. Re-run the dry-run to confirm the duplicate is gone.")
+        return
 
     with SessionLocal() as db:
         plan = build_plan(db, resolve_intra=args.resolve_intra_season)

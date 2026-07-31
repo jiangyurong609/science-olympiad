@@ -2,6 +2,7 @@
 from __future__ import annotations
 
 import pytest
+from sqlalchemy import func, select
 
 from app.core.database import SessionLocal
 from app.models.entities import Course, Event, Exam, Lesson, PracticeSet, Question
@@ -82,6 +83,40 @@ def test_invariant_passes_with_exactly_one_active():
         _ev(db, "astronomy-c-2027", "Astronomy", "C", 2027, active=False, status=cs.ARCHIVED_STATUS)
         db.commit()
         cs._assert_invariant(db)  # must not raise
+
+
+def test_merge_events_repoints_content_and_archives_drop():
+    from app.models.entities import Concept, Lesson, Question
+    with SessionLocal() as db:
+        keep = _ev(db, "heredity-b", "Heredity", "B", 2026, status="foundational")
+        drop = _ev(db, "heredity", "Heredity", "B", 2026, status="unscoped")
+        db.add_all([
+            Course(event_id=keep.id, slug="heredity-b", title="Heredity", status="published"),
+            Course(event_id=drop.id, slug="heredity", title="Heredity (legacy)", status="published"),
+        ])
+        # keep has a lesson slug "intro"; drop also has "intro" (collision) + a question + concept
+        db.add(Lesson(event_id=keep.id, slug="intro", title="Keep intro", status="published"))
+        db.add(Lesson(event_id=drop.id, slug="intro", title="Drop intro", status="published"))
+        db.add(Question(event_id=drop.id, stem="A legacy heredity question about alleles.",
+                        choices=["a", "b", "c", "d"], answer_spec={"correct_index": 0}, status="published"))
+        db.add(Concept(event_id=drop.id, name="Punnett squares"))
+        db.commit()
+        keep_id, drop_id = keep.id, drop.id
+
+    with SessionLocal() as db:
+        report = cs.merge_events(db, keep_id, drop_id)
+
+    with SessionLocal() as db:
+        # drop is archived + inactive; keep is the sole active event for the key
+        assert db.get(Event, drop_id).season_status == cs.ARCHIVED_STATUS
+        assert db.get(Event, drop_id).active is False
+        # content re-pointed to keep
+        assert db.scalar(select(func.count(Question.id)).where(Question.event_id == keep_id)) == 1
+        assert db.scalar(select(func.count(Concept.id)).where(Concept.event_id == keep_id)) == 1
+        # colliding lesson slug got suffixed, both lessons now under keep
+        keep_lessons = db.scalars(select(Lesson).where(Lesson.event_id == keep_id)).all()
+        assert {l.slug for l in keep_lessons} == {"intro", f"intro-merged-{drop_id}"}
+    assert report["before"]["questions"] == report["after"]["questions"] == 1
 
 
 def test_apply_is_blocked_until_archive_surface_ready(monkeypatch):
