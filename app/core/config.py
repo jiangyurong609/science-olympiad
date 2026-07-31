@@ -1,5 +1,5 @@
 from functools import lru_cache
-from pydantic import model_validator
+from pydantic import AliasChoices, Field, model_validator
 from pydantic_settings import BaseSettings, SettingsConfigDict
 
 
@@ -25,10 +25,16 @@ class Settings(BaseSettings):
     openai_api_key: str | None = None
     openai_model: str = "gpt-4.1-mini"
     openai_embedding_model: str | None = None  # set to enable semantic similarity checks
-    # Phase V — generated video lessons
-    deepgram_api_key: str | None = None
+    # Phase V — generated video lessons.
+    # Accept either DEEPGRAM_API_KEY or the shorter DEEPGRAM that deployments already use.
+    deepgram_api_key: str | None = Field(
+        default=None, validation_alias=AliasChoices("DEEPGRAM_API_KEY", "DEEPGRAM")
+    )
     deepgram_tts_model: str = "aura-2-thalia-en"
     video_render_worker_url: str | None = None   # dreamvibe Remotion worker (Cloud Run)
+    # Neither user ADC nor Cloud Run metadata credentials can sign URLs locally; signing is
+    # done by impersonating this service account through the IAM API.
+    gcs_signing_service_account: str | None = None
     video_render_timeout_seconds: float = 960.0
     rate_limit_requests: int = 120
     rate_limit_window_seconds: int = 60

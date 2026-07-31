@@ -32,6 +32,15 @@ def _scene(**over):
     return base
 
 
+def test_slide_headline_is_not_duplicated_as_an_overlay():
+    """The slide image already shows the headline; an overlay would double it and cover
+    the design. Overlays must be opt-in."""
+    spec = build_edit_spec([_scene()])
+    assert spec["overlays"] == []
+    opted_in = build_edit_spec([_scene(overlay=True)])
+    assert len(opted_in["overlays"]) == 1
+
+
 def test_build_edit_spec_shapes_a_valid_document():
     spec = build_edit_spec([_scene(), _scene(headline="Matter cycles")])
     assert spec["version"] == 0
@@ -134,8 +143,14 @@ def test_narration_survives_alignment_failure(monkeypatch):
 
 
 def test_unconfigured_deepgram_refuses():
+    # Clear the key explicitly: constructing with api_key=None falls back to settings, which
+    # in a configured environment would make this test hit the real API.
+    narrator = DeepgramNarrator(api_key="placeholder")
+    narrator.api_key = None
     with pytest.raises(DeepgramError):
-        DeepgramNarrator(api_key=None).synthesize("x")
+        narrator.synthesize("x")
+    with pytest.raises(DeepgramError):
+        narrator.align(b"audio")
 
 
 # ---------------------------------------------------------------- render worker

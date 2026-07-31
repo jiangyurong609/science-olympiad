@@ -24,6 +24,13 @@ ACCENTS = {
 }
 DEFAULT_ACCENT = ACCENTS["energy"]
 
+# Font stacks must name faces present in the render container (Debian/Chromium). A stack of
+# macOS-only names silently degrades to monospace in the rendered video.
+DISPLAY_FONT = ("'Liberation Sans Narrow', 'DejaVu Sans Condensed', 'Arial Narrow', "
+                "'Helvetica Neue', Helvetica, Arial, sans-serif")
+BODY_FONT = "'DejaVu Sans', 'Liberation Sans', Arial, Helvetica, sans-serif"
+MONO_FONT = "'DejaVu Sans Mono', 'Liberation Mono', 'Courier New', monospace"
+
 # Slide archetypes; a scene's block type maps onto one of these.
 ARCHETYPES = {
     "opening": "title",
@@ -55,7 +62,7 @@ def _wrap(text: str, width: int) -> list[str]:
 
 
 def _text(x: int, y: int, content: str, *, size: int, fill: str = INK,
-          weight: int = 400, family: str = "system-ui, sans-serif",
+          weight: int = 400, family: str = BODY_FONT,
           anchor: str = "start", spacing: float = 0) -> str:
     ls = f' letter-spacing="{spacing}"' if spacing else ""
     return (f'<text x="{x}" y="{y}" font-family="{family}" font-size="{size}" '
@@ -68,7 +75,7 @@ def _headline(text: str, accent: str, y: int = 250) -> str:
     out = []
     for i, line in enumerate(lines):
         out.append(_text(140, y + i * 92, line.upper(), size=76, weight=700,
-                         family="'Avenir Next Condensed', 'Arial Narrow', system-ui, sans-serif",
+                         family=DISPLAY_FONT,
                          spacing=0.5))
     out.append(f'<rect x="140" y="{y + len(lines) * 92 - 46}" width="150" height="7" fill="{accent}" rx="3"/>')
     return "".join(out)
@@ -83,7 +90,7 @@ def _frame(body: str, *, slug: str, accent: str) -> str:
         f'<rect width="{W}" height="{H}" fill="{GROUND}"/>'
         f'<rect width="{W}" height="{H}" fill="url(#glow)"/>'
         f'<rect x="0" y="0" width="14" height="{H}" fill="{accent}"/>'
-        + _text(W - 80, 84, slug, size=26, fill=MUTED, family="ui-monospace, monospace",
+        + _text(W - 80, 84, slug, size=26, fill=MUTED, family=MONO_FONT,
                 anchor="end", spacing=3)
         + body + "</svg>"
     )
@@ -105,7 +112,7 @@ def _numbered(items: list[str], accent: str, top: int = 470) -> str:
     out, y = [], top
     for index, item in enumerate(items[:5], start=1):
         out.append(_text(140, y, f"{index:02d}", size=38, fill=accent,
-                         family="ui-monospace, monospace", weight=700))
+                         family=MONO_FONT, weight=700))
         for i, line in enumerate(_wrap(item, 56)[:2]):
             out.append(_text(240, y + i * 50, line, size=40, fill=INK))
         y += 96
@@ -124,7 +131,7 @@ def render_scene_svg(scene: dict) -> str:
     if kind == "title":
         body = (
             _text(140, 300, str(scene.get("eyebrow", "Science Olympiad")).upper(), size=30,
-                  fill=accent, family="ui-monospace, monospace", spacing=6)
+                  fill=accent, family=MONO_FONT, spacing=6)
             + _headline(headline, accent, y=430)
             + (_text(140, 700, scene.get("subtitle", ""), size=42, fill=MUTED)
                if scene.get("subtitle") else "")

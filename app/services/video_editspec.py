@@ -168,7 +168,9 @@ def build_edit_spec(
             clip["transitionIn"] = {"type": "fade", "durationInSeconds": transition_seconds}
         clips.append(clip)
 
-        headline = (scene.get("headline") or "").strip()
+        # The slide image already carries its own headline, so a text overlay would double
+        # the text and cover the design. Overlays are therefore opt-in per scene.
+        headline = (scene.get("headline") or "").strip() if scene.get("overlay") else ""
         if headline:
             overlays.append({
                 "id": f"title-{index + 1}",

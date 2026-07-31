@@ -24,6 +24,36 @@ class StoredObject:
     url: str
 
 
+def _client():
+    """A storage client whose credentials can *sign* URLs.
+
+    Neither user ADC nor Cloud Run's metadata credentials carry a private key, so signing
+    has to go through the IAM API. Impersonating a service account gives us credentials that
+    do that, and works identically on a laptop and on Cloud Run.
+    """
+    settings = get_settings()
+    try:
+        from google.cloud import storage
+    except ImportError as exc:  # pragma: no cover - environment dependent
+        raise MediaStorageError("google-cloud-storage is required for video rendering") from exc
+
+    signer = settings.gcs_signing_service_account
+    if not signer:
+        return storage.Client()
+    try:
+        import google.auth
+        from google.auth import impersonated_credentials
+    except ImportError as exc:  # pragma: no cover
+        raise MediaStorageError("google-auth is required for signed URLs") from exc
+    source, _ = google.auth.default()
+    credentials = impersonated_credentials.Credentials(
+        source_credentials=source,
+        target_principal=signer,
+        target_scopes=["https://www.googleapis.com/auth/devstorage.read_write"],
+    )
+    return storage.Client(credentials=credentials)
+
+
 def _bucket():
     settings = get_settings()
     if settings.artifact_store_backend != "gcs" or not settings.artifact_store_bucket:
@@ -31,11 +61,7 @@ def _bucket():
             "video rendering requires ARTIFACT_STORE_BACKEND=gcs with a bucket: the render "
             "worker can only read signed https URLs"
         )
-    try:
-        from google.cloud import storage
-    except ImportError as exc:  # pragma: no cover - environment dependent
-        raise MediaStorageError("google-cloud-storage is required for video rendering") from exc
-    return storage.Client().bucket(settings.artifact_store_bucket)
+    return _client().bucket(settings.artifact_store_bucket)
 
 
 def upload_media(key: str, content: bytes, content_type: str, ttl: timedelta = DEFAULT_TTL) -> StoredObject:

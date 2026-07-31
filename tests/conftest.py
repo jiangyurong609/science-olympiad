@@ -2,6 +2,12 @@ import os
 os.environ["DATABASE_URL"] = "sqlite:///./test_science_olympiad.db"
 os.environ["ENVIRONMENT"] = "test"
 os.environ["ARTIFACT_STORE_PATH"] = "/tmp/science_olympiad_test_artifacts"
+# Pin every externally-backed setting so a developer's .env can never change what the suite
+# tests — e.g. ARTIFACT_STORE_BACKEND=gcs would send artifact writes to a real bucket.
+os.environ["ARTIFACT_STORE_BACKEND"] = "local"
+os.environ["ARTIFACT_STORE_BUCKET"] = ""
+os.environ["GCS_SIGNING_SERVICE_ACCOUNT"] = ""
+os.environ["VIDEO_RENDER_WORKER_URL"] = ""
 
 import pytest
 import shutil
