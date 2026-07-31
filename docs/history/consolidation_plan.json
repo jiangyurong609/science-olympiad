@@ -1,0 +1,1299 @@
+{
+  "summary": {
+    "events_before": 102,
+    "canonical_active_after": 67,
+    "recurring_merged": 34,
+    "only_2026_prior_practice": 17,
+    "only_2027_current": 16,
+    "twins_archived": 34,
+    "intra_season_dups_archived": 0,
+    "source_maps_to_move": 95,
+    "conflicts": 1,
+    "content_archived_totals": {
+      "EventSourceMap": 95,
+      "Concept": 14,
+      "Course": 34,
+      "Lesson": 14,
+      "Question": 104,
+      "PracticeSet": 0,
+      "EventTaxonScope": 0,
+      "Exam": 0
+    },
+    "total_questions": 5954,
+    "total_lessons": 424,
+    "total_exams": 150
+  },
+  "conflicts": [
+    {
+      "key": [
+        "heredity",
+        "B"
+      ],
+      "issue": "2 events share (name,division,season=2026) \u2014 pass --resolve-intra-season or clean up the data",
+      "event_ids": [
+        5,
+        10
+      ],
+      "slugs": [
+        "heredity",
+        "heredity-b"
+      ]
+    }
+  ],
+  "recurring": [
+    {
+      "key": [
+        "heredity",
+        "B"
+      ],
+      "canonical_event_id": 10,
+      "canonical_slug": "heredity-b",
+      "archive_event_id": 55,
+      "archive_slug": "heredity-b-2027",
+      "carry_metadata": {
+        "official_url": "https://www.soinc.org/heredity-b",
+        "category": "Life, Personal & Social Science",
+        "season_status": "current"
+      },
+      "source_maps_move": 0,
+      "source_maps_dup_skip": 0,
+      "twin_inventory_archived": {
+        "EventSourceMap": 0,
+        "Concept": 0,
+        "Course": 1,
+        "Lesson": 0,
+        "Question": 0,
+        "PracticeSet": 0,
+        "EventTaxonScope": 0,
+        "Exam": 0
+      },
+      "canonical_questions": 121
+    },
+    {
+      "key": [
+        "anatomy physiology",
+        "B"
+      ],
+      "canonical_event_id": 7,
+      "canonical_slug": "anatomy-and-physiology-b",
+      "archive_event_id": 53,
+      "archive_slug": "anatomy-and-physiology-b-2027",
+      "carry_metadata": {
+        "official_url": "https://www.soinc.org/anatomy-and-physiology-b",
+        "category": "Life, Personal & Social Science",
+        "season_status": "current"
+      },
+      "source_maps_move": 3,
+      "source_maps_dup_skip": 0,
+      "twin_inventory_archived": {
+        "EventSourceMap": 3,
+        "Concept": 0,
+        "Course": 1,
+        "Lesson": 0,
+        "Question": 0,
+        "PracticeSet": 0,
+        "EventTaxonScope": 0,
+        "Exam": 0
+      },
+      "canonical_questions": 284
+    },
+    {
+      "key": [
+        "disease detectives",
+        "B"
+      ],
+      "canonical_event_id": 8,
+      "canonical_slug": "disease-detectives-b",
+      "archive_event_id": 54,
+      "archive_slug": "disease-detectives-b-2027",
+      "carry_metadata": {
+        "official_url": "https://www.soinc.org/disease-detectives-b",
+        "category": "Life, Personal & Social Science",
+        "season_status": "current"
+      },
+      "source_maps_move": 1,
+      "source_maps_dup_skip": 0,
+      "twin_inventory_archived": {
+        "EventSourceMap": 1,
+        "Concept": 0,
+        "Course": 1,
+        "Lesson": 0,
+        "Question": 0,
+        "PracticeSet": 0,
+        "EventTaxonScope": 0,
+        "Exam": 0
+      },
+      "canonical_questions": 372
+    },
+    {
+      "key": [
+        "water quality",
+        "B"
+      ],
+      "canonical_event_id": 11,
+      "canonical_slug": "water-quality-b",
+      "archive_event_id": 57,
+      "archive_slug": "water-quality-b-2027",
+      "carry_metadata": {
+        "official_url": "https://www.soinc.org/water-quality-b",
+        "category": "Life, Personal & Social Science",
+        "season_status": "current"
+      },
+      "source_maps_move": 0,
+      "source_maps_dup_skip": 0,
+      "twin_inventory_archived": {
+        "EventSourceMap": 0,
+        "Concept": 0,
+        "Course": 1,
+        "Lesson": 0,
+        "Question": 0,
+        "PracticeSet": 0,
+        "EventTaxonScope": 0,
+        "Exam": 0
+      },
+      "canonical_questions": 184
+    },
+    {
+      "key": [
+        "dynamic planet",
+        "B"
+      ],
+      "canonical_event_id": 12,
+      "canonical_slug": "dynamic-planet-b",
+      "archive_event_id": 58,
+      "archive_slug": "dynamic-planet-b-2027",
+      "carry_metadata": {
+        "official_url": "https://www.soinc.org/dynamic-planet-b",
+        "category": "Earth & Space Science",
+        "season_status": "current"
+      },
+      "source_maps_move": 1,
+      "source_maps_dup_skip": 0,
+      "twin_inventory_archived": {
+        "EventSourceMap": 1,
+        "Concept": 0,
+        "Course": 1,
+        "Lesson": 0,
+        "Question": 0,
+        "PracticeSet": 0,
+        "EventTaxonScope": 0,
+        "Exam": 0
+      },
+      "canonical_questions": 156
+    },
+    {
+      "key": [
+        "meteorology",
+        "B"
+      ],
+      "canonical_event_id": 13,
+      "canonical_slug": "meteorology-b",
+      "archive_event_id": 59,
+      "archive_slug": "meteorology-b-2027",
+      "carry_metadata": {
+        "official_url": "https://www.soinc.org/meteorology-b",
+        "category": "Earth & Space Science",
+        "season_status": "current"
+      },
+      "source_maps_move": 1,
+      "source_maps_dup_skip": 0,
+      "twin_inventory_archived": {
+        "EventSourceMap": 1,
+        "Concept": 0,
+        "Course": 1,
+        "Lesson": 0,
+        "Question": 0,
+        "PracticeSet": 0,
+        "EventTaxonScope": 0,
+        "Exam": 0
+      },
+      "canonical_questions": 120
+    },
+    {
+      "key": [
+        "remote sensing",
+        "B"
+      ],
+      "canonical_event_id": 14,
+      "canonical_slug": "remote-sensing-b",
+      "archive_event_id": 60,
+      "archive_slug": "remote-sensing-b-2027",
+      "carry_metadata": {
+        "official_url": "https://www.soinc.org/remote-sensing-b",
+        "category": "Earth & Space Science",
+        "season_status": "current"
+      },
+      "source_maps_move": 1,
+      "source_maps_dup_skip": 0,
+      "twin_inventory_archived": {
+        "EventSourceMap": 1,
+        "Concept": 0,
+        "Course": 1,
+        "Lesson": 0,
+        "Question": 0,
+        "PracticeSet": 0,
+        "EventTaxonScope": 0,
+        "Exam": 0
+      },
+      "canonical_questions": 112
+    },
+    {
+      "key": [
+        "rocks and minerals",
+        "B"
+      ],
+      "canonical_event_id": 15,
+      "canonical_slug": "rocks-and-minerals-b",
+      "archive_event_id": 61,
+      "archive_slug": "rocks-and-minerals-b-2027",
+      "carry_metadata": {
+        "official_url": "https://www.soinc.org/rocks-and-minerals-b",
+        "category": "Earth & Space Science",
+        "season_status": "current"
+      },
+      "source_maps_move": 16,
+      "source_maps_dup_skip": 0,
+      "twin_inventory_archived": {
+        "EventSourceMap": 16,
+        "Concept": 14,
+        "Course": 1,
+        "Lesson": 14,
+        "Question": 104,
+        "PracticeSet": 0,
+        "EventTaxonScope": 0,
+        "Exam": 0
+      },
+      "canonical_questions": 105
+    },
+    {
+      "key": [
+        "solar system",
+        "B"
+      ],
+      "canonical_event_id": 16,
+      "canonical_slug": "solar-system-b",
+      "archive_event_id": 62,
+      "archive_slug": "solar-system-b-2027",
+      "carry_metadata": {
+        "official_url": "https://www.soinc.org/solar-system-b",
+        "category": "Earth & Space Science",
+        "season_status": "current"
+      },
+      "source_maps_move": 1,
+      "source_maps_dup_skip": 0,
+      "twin_inventory_archived": {
+        "EventSourceMap": 1,
+        "Concept": 0,
+        "Course": 1,
+        "Lesson": 0,
+        "Question": 0,
+        "PracticeSet": 0,
+        "EventTaxonScope": 0,
+        "Exam": 0
+      },
+      "canonical_questions": 127
+    },
+    {
+      "key": [
+        "hovercraft",
+        "B"
+      ],
+      "canonical_event_id": 17,
+      "canonical_slug": "hovercraft-b",
+      "archive_event_id": 63,
+      "archive_slug": "hovercraft-b-2027",
+      "carry_metadata": {
+        "official_url": "https://www.soinc.org/hovercraft-b",
+        "category": "Physical Science & Chemistry",
+        "season_status": "current"
+      },
+      "source_maps_move": 2,
+      "source_maps_dup_skip": 0,
+      "twin_inventory_archived": {
+        "EventSourceMap": 2,
+        "Concept": 0,
+        "Course": 1,
+        "Lesson": 0,
+        "Question": 0,
+        "PracticeSet": 0,
+        "EventTaxonScope": 0,
+        "Exam": 0
+      },
+      "canonical_questions": 25
+    },
+    {
+      "key": [
+        "circuit lab",
+        "B"
+      ],
+      "canonical_event_id": 18,
+      "canonical_slug": "circuit-lab-b",
+      "archive_event_id": 64,
+      "archive_slug": "circuit-lab-b-2027",
+      "carry_metadata": {
+        "official_url": "https://www.soinc.org/circuit-lab-b",
+        "category": "Physical Science & Chemistry",
+        "season_status": "current"
+      },
+      "source_maps_move": 1,
+      "source_maps_dup_skip": 0,
+      "twin_inventory_archived": {
+        "EventSourceMap": 1,
+        "Concept": 0,
+        "Course": 1,
+        "Lesson": 0,
+        "Question": 0,
+        "PracticeSet": 0,
+        "EventTaxonScope": 0,
+        "Exam": 0
+      },
+      "canonical_questions": 25
+    },
+    {
+      "key": [
+        "crime busters",
+        "B"
+      ],
+      "canonical_event_id": 20,
+      "canonical_slug": "crime-busters-b",
+      "archive_event_id": 66,
+      "archive_slug": "crime-busters-b-2027",
+      "carry_metadata": {
+        "official_url": "https://www.soinc.org/crime-busters-b",
+        "category": "Physical Science & Chemistry",
+        "season_status": "current"
+      },
+      "source_maps_move": 2,
+      "source_maps_dup_skip": 0,
+      "twin_inventory_archived": {
+        "EventSourceMap": 2,
+        "Concept": 0,
+        "Course": 1,
+        "Lesson": 0,
+        "Question": 0,
+        "PracticeSet": 0,
+        "EventTaxonScope": 0,
+        "Exam": 0
+      },
+      "canonical_questions": 46
+    },
+    {
+      "key": [
+        "boomilever",
+        "B"
+      ],
+      "canonical_event_id": 22,
+      "canonical_slug": "boomilever-b",
+      "archive_event_id": 68,
+      "archive_slug": "boomilever-b-2027",
+      "carry_metadata": {
+        "official_url": "https://www.soinc.org/boomilever-b",
+        "category": "Technology & Engineering Design",
+        "season_status": "current"
+      },
+      "source_maps_move": 8,
+      "source_maps_dup_skip": 0,
+      "twin_inventory_archived": {
+        "EventSourceMap": 8,
+        "Concept": 0,
+        "Course": 1,
+        "Lesson": 0,
+        "Question": 0,
+        "PracticeSet": 0,
+        "EventTaxonScope": 0,
+        "Exam": 0
+      },
+      "canonical_questions": 25
+    },
+    {
+      "key": [
+        "scrambler",
+        "B"
+      ],
+      "canonical_event_id": 25,
+      "canonical_slug": "scrambler-b",
+      "archive_event_id": 71,
+      "archive_slug": "scrambler-b-2027",
+      "carry_metadata": {
+        "official_url": "https://www.soinc.org/scrambler-b",
+        "category": "Technology & Engineering Design",
+        "season_status": "current"
+      },
+      "source_maps_move": 0,
+      "source_maps_dup_skip": 0,
+      "twin_inventory_archived": {
+        "EventSourceMap": 0,
+        "Concept": 0,
+        "Course": 1,
+        "Lesson": 0,
+        "Question": 0,
+        "PracticeSet": 0,
+        "EventTaxonScope": 0,
+        "Exam": 0
+      },
+      "canonical_questions": 10
+    },
+    {
+      "key": [
+        "codebusters",
+        "B"
+      ],
+      "canonical_event_id": 26,
+      "canonical_slug": "codebusters-b",
+      "archive_event_id": 72,
+      "archive_slug": "codebusters-b-2027",
+      "carry_metadata": {
+        "official_url": "https://www.soinc.org/codebusters-b",
+        "category": "Inquiry & Nature of Science",
+        "season_status": "current"
+      },
+      "source_maps_move": 4,
+      "source_maps_dup_skip": 0,
+      "twin_inventory_archived": {
+        "EventSourceMap": 4,
+        "Concept": 0,
+        "Course": 1,
+        "Lesson": 0,
+        "Question": 0,
+        "PracticeSet": 0,
+        "EventTaxonScope": 0,
+        "Exam": 0
+      },
+      "canonical_questions": 107
+    },
+    {
+      "key": [
+        "experimental design",
+        "B"
+      ],
+      "canonical_event_id": 27,
+      "canonical_slug": "experimental-design-b",
+      "archive_event_id": 73,
+      "archive_slug": "experimental-design-b-2027",
+      "carry_metadata": {
+        "official_url": "https://www.soinc.org/experimental-design-b",
+        "category": "Inquiry & Nature of Science",
+        "season_status": "current"
+      },
+      "source_maps_move": 2,
+      "source_maps_dup_skip": 0,
+      "twin_inventory_archived": {
+        "EventSourceMap": 2,
+        "Concept": 0,
+        "Course": 1,
+        "Lesson": 0,
+        "Question": 0,
+        "PracticeSet": 0,
+        "EventTaxonScope": 0,
+        "Exam": 0
+      },
+      "canonical_questions": 25
+    },
+    {
+      "key": [
+        "write it do it",
+        "B"
+      ],
+      "canonical_event_id": 29,
+      "canonical_slug": "write-it-do-it-b",
+      "archive_event_id": 75,
+      "archive_slug": "write-it-do-it-b-2027",
+      "carry_metadata": {
+        "official_url": "https://www.soinc.org/write-it-do-it-b",
+        "category": "Inquiry & Nature of Science",
+        "season_status": "current"
+      },
+      "source_maps_move": 1,
+      "source_maps_dup_skip": 0,
+      "twin_inventory_archived": {
+        "EventSourceMap": 1,
+        "Concept": 0,
+        "Course": 1,
+        "Lesson": 0,
+        "Question": 0,
+        "PracticeSet": 0,
+        "EventTaxonScope": 0,
+        "Exam": 0
+      },
+      "canonical_questions": 10
+    },
+    {
+      "key": [
+        "anatomy physiology",
+        "C"
+      ],
+      "canonical_event_id": 30,
+      "canonical_slug": "anatomy-and-physiology-c",
+      "archive_event_id": 76,
+      "archive_slug": "anatomy-and-physiology-c-2027",
+      "carry_metadata": {
+        "official_url": "https://www.soinc.org/anatomy-and-physiology-c",
+        "category": "Life, Personal & Social Science",
+        "season_status": "current"
+      },
+      "source_maps_move": 3,
+      "source_maps_dup_skip": 0,
+      "twin_inventory_archived": {
+        "EventSourceMap": 3,
+        "Concept": 0,
+        "Course": 1,
+        "Lesson": 0,
+        "Question": 0,
+        "PracticeSet": 0,
+        "EventTaxonScope": 0,
+        "Exam": 0
+      },
+      "canonical_questions": 202
+    },
+    {
+      "key": [
+        "designer genes",
+        "C"
+      ],
+      "canonical_event_id": 31,
+      "canonical_slug": "designer-genes-c",
+      "archive_event_id": 77,
+      "archive_slug": "designer-genes-c-2027",
+      "carry_metadata": {
+        "official_url": "https://www.soinc.org/designer-genes-c",
+        "category": "Life, Personal & Social Science",
+        "season_status": "current"
+      },
+      "source_maps_move": 1,
+      "source_maps_dup_skip": 0,
+      "twin_inventory_archived": {
+        "EventSourceMap": 1,
+        "Concept": 0,
+        "Course": 1,
+        "Lesson": 0,
+        "Question": 0,
+        "PracticeSet": 0,
+        "EventTaxonScope": 0,
+        "Exam": 0
+      },
+      "canonical_questions": 331
+    },
+    {
+      "key": [
+        "disease detectives",
+        "C"
+      ],
+      "canonical_event_id": 32,
+      "canonical_slug": "disease-detectives-c",
+      "archive_event_id": 78,
+      "archive_slug": "disease-detectives-c-2027",
+      "carry_metadata": {
+        "official_url": "https://www.soinc.org/disease-detectives-c",
+        "category": "Life, Personal & Social Science",
+        "season_status": "current"
+      },
+      "source_maps_move": 1,
+      "source_maps_dup_skip": 0,
+      "twin_inventory_archived": {
+        "EventSourceMap": 1,
+        "Concept": 0,
+        "Course": 1,
+        "Lesson": 0,
+        "Question": 0,
+        "PracticeSet": 0,
+        "EventTaxonScope": 0,
+        "Exam": 0
+      },
+      "canonical_questions": 341
+    },
+    {
+      "key": [
+        "water quality",
+        "C"
+      ],
+      "canonical_event_id": 34,
+      "canonical_slug": "water-quality-c",
+      "archive_event_id": 80,
+      "archive_slug": "water-quality-c-2027",
+      "carry_metadata": {
+        "official_url": "https://www.soinc.org/water-quality-c",
+        "category": "Life, Personal & Social Science",
+        "season_status": "current"
+      },
+      "source_maps_move": 0,
+      "source_maps_dup_skip": 0,
+      "twin_inventory_archived": {
+        "EventSourceMap": 0,
+        "Concept": 0,
+        "Course": 1,
+        "Lesson": 0,
+        "Question": 0,
+        "PracticeSet": 0,
+        "EventTaxonScope": 0,
+        "Exam": 0
+      },
+      "canonical_questions": 71
+    },
+    {
+      "key": [
+        "astronomy",
+        "C"
+      ],
+      "canonical_event_id": 35,
+      "canonical_slug": "astronomy-c",
+      "archive_event_id": 81,
+      "archive_slug": "astronomy-c-2027",
+      "carry_metadata": {
+        "official_url": "https://www.soinc.org/astronomy-c",
+        "category": "Earth & Space Science",
+        "season_status": "current"
+      },
+      "source_maps_move": 1,
+      "source_maps_dup_skip": 0,
+      "twin_inventory_archived": {
+        "EventSourceMap": 1,
+        "Concept": 0,
+        "Course": 1,
+        "Lesson": 0,
+        "Question": 0,
+        "PracticeSet": 0,
+        "EventTaxonScope": 0,
+        "Exam": 0
+      },
+      "canonical_questions": 558
+    },
+    {
+      "key": [
+        "dynamic planet",
+        "C"
+      ],
+      "canonical_event_id": 36,
+      "canonical_slug": "dynamic-planet-c",
+      "archive_event_id": 82,
+      "archive_slug": "dynamic-planet-c-2027",
+      "carry_metadata": {
+        "official_url": "https://www.soinc.org/dynamic-planet-c",
+        "category": "Earth & Space Science",
+        "season_status": "current"
+      },
+      "source_maps_move": 1,
+      "source_maps_dup_skip": 0,
+      "twin_inventory_archived": {
+        "EventSourceMap": 1,
+        "Concept": 0,
+        "Course": 1,
+        "Lesson": 0,
+        "Question": 0,
+        "PracticeSet": 0,
+        "EventTaxonScope": 0,
+        "Exam": 0
+      },
+      "canonical_questions": 249
+    },
+    {
+      "key": [
+        "remote sensing",
+        "C"
+      ],
+      "canonical_event_id": 37,
+      "canonical_slug": "remote-sensing-c",
+      "archive_event_id": 83,
+      "archive_slug": "remote-sensing-c-2027",
+      "carry_metadata": {
+        "official_url": "https://www.soinc.org/remote-sensing-c",
+        "category": "Earth & Space Science",
+        "season_status": "current"
+      },
+      "source_maps_move": 1,
+      "source_maps_dup_skip": 0,
+      "twin_inventory_archived": {
+        "EventSourceMap": 1,
+        "Concept": 0,
+        "Course": 1,
+        "Lesson": 0,
+        "Question": 0,
+        "PracticeSet": 0,
+        "EventTaxonScope": 0,
+        "Exam": 0
+      },
+      "canonical_questions": 118
+    },
+    {
+      "key": [
+        "rocks and minerals",
+        "C"
+      ],
+      "canonical_event_id": 38,
+      "canonical_slug": "rocks-and-minerals-c",
+      "archive_event_id": 84,
+      "archive_slug": "rocks-and-minerals-c-2027",
+      "carry_metadata": {
+        "official_url": "https://www.soinc.org/rocks-and-minerals-c",
+        "category": "Earth & Space Science",
+        "season_status": "current"
+      },
+      "source_maps_move": 17,
+      "source_maps_dup_skip": 0,
+      "twin_inventory_archived": {
+        "EventSourceMap": 17,
+        "Concept": 0,
+        "Course": 1,
+        "Lesson": 0,
+        "Question": 0,
+        "PracticeSet": 0,
+        "EventTaxonScope": 0,
+        "Exam": 0
+      },
+      "canonical_questions": 184
+    },
+    {
+      "key": [
+        "circuit lab",
+        "C"
+      ],
+      "canonical_event_id": 39,
+      "canonical_slug": "circuit-lab-c",
+      "archive_event_id": 85,
+      "archive_slug": "circuit-lab-c-2027",
+      "carry_metadata": {
+        "official_url": "https://www.soinc.org/circuit-lab-c",
+        "category": "Physical Science & Chemistry",
+        "season_status": "current"
+      },
+      "source_maps_move": 1,
+      "source_maps_dup_skip": 0,
+      "twin_inventory_archived": {
+        "EventSourceMap": 1,
+        "Concept": 0,
+        "Course": 1,
+        "Lesson": 0,
+        "Question": 0,
+        "PracticeSet": 0,
+        "EventTaxonScope": 0,
+        "Exam": 0
+      },
+      "canonical_questions": 91
+    },
+    {
+      "key": [
+        "hovercraft",
+        "C"
+      ],
+      "canonical_event_id": 40,
+      "canonical_slug": "hovercraft-c",
+      "archive_event_id": 86,
+      "archive_slug": "hovercraft-c-2027",
+      "carry_metadata": {
+        "official_url": "https://www.soinc.org/hovercraft-c",
+        "category": "Physical Science & Chemistry",
+        "season_status": "current"
+      },
+      "source_maps_move": 2,
+      "source_maps_dup_skip": 0,
+      "twin_inventory_archived": {
+        "EventSourceMap": 2,
+        "Concept": 0,
+        "Course": 1,
+        "Lesson": 0,
+        "Question": 0,
+        "PracticeSet": 0,
+        "EventTaxonScope": 0,
+        "Exam": 0
+      },
+      "canonical_questions": 25
+    },
+    {
+      "key": [
+        "chemistry lab",
+        "C"
+      ],
+      "canonical_event_id": 42,
+      "canonical_slug": "chemistry-lab-c",
+      "archive_event_id": 88,
+      "archive_slug": "chemistry-lab-c-2027",
+      "carry_metadata": {
+        "official_url": "https://www.soinc.org/chemistry-lab-c",
+        "category": "Physical Science & Chemistry",
+        "season_status": "current"
+      },
+      "source_maps_move": 3,
+      "source_maps_dup_skip": 0,
+      "twin_inventory_archived": {
+        "EventSourceMap": 3,
+        "Concept": 0,
+        "Course": 1,
+        "Lesson": 0,
+        "Question": 0,
+        "PracticeSet": 0,
+        "EventTaxonScope": 0,
+        "Exam": 0
+      },
+      "canonical_questions": 331
+    },
+    {
+      "key": [
+        "forensics",
+        "C"
+      ],
+      "canonical_event_id": 43,
+      "canonical_slug": "forensics-c",
+      "archive_event_id": 89,
+      "archive_slug": "forensics-c-2027",
+      "carry_metadata": {
+        "official_url": "https://www.soinc.org/forensics-c",
+        "category": "Physical Science & Chemistry",
+        "season_status": "current"
+      },
+      "source_maps_move": 3,
+      "source_maps_dup_skip": 0,
+      "twin_inventory_archived": {
+        "EventSourceMap": 3,
+        "Concept": 0,
+        "Course": 1,
+        "Lesson": 0,
+        "Question": 0,
+        "PracticeSet": 0,
+        "EventTaxonScope": 0,
+        "Exam": 0
+      },
+      "canonical_questions": 123
+    },
+    {
+      "key": [
+        "boomilever",
+        "C"
+      ],
+      "canonical_event_id": 45,
+      "canonical_slug": "boomilever-c",
+      "archive_event_id": 91,
+      "archive_slug": "boomilever-c-2027",
+      "carry_metadata": {
+        "official_url": "https://www.soinc.org/boomilever-c",
+        "category": "Technology & Engineering Design",
+        "season_status": "current"
+      },
+      "source_maps_move": 8,
+      "source_maps_dup_skip": 0,
+      "twin_inventory_archived": {
+        "EventSourceMap": 8,
+        "Concept": 0,
+        "Course": 1,
+        "Lesson": 0,
+        "Question": 0,
+        "PracticeSet": 0,
+        "EventTaxonScope": 0,
+        "Exam": 0
+      },
+      "canonical_questions": 10
+    },
+    {
+      "key": [
+        "electric vehicle",
+        "C"
+      ],
+      "canonical_event_id": 46,
+      "canonical_slug": "electric-vehicle-c",
+      "archive_event_id": 92,
+      "archive_slug": "electric-vehicle-c-2027",
+      "carry_metadata": {
+        "official_url": "https://www.soinc.org/electric-vehicle-c",
+        "category": "Technology & Engineering Design",
+        "season_status": "current"
+      },
+      "source_maps_move": 2,
+      "source_maps_dup_skip": 0,
+      "twin_inventory_archived": {
+        "EventSourceMap": 2,
+        "Concept": 0,
+        "Course": 1,
+        "Lesson": 0,
+        "Question": 0,
+        "PracticeSet": 0,
+        "EventTaxonScope": 0,
+        "Exam": 0
+      },
+      "canonical_questions": 25
+    },
+    {
+      "key": [
+        "codebusters",
+        "C"
+      ],
+      "canonical_event_id": 49,
+      "canonical_slug": "codebusters-c",
+      "archive_event_id": 95,
+      "archive_slug": "codebusters-c-2027",
+      "carry_metadata": {
+        "official_url": "https://www.soinc.org/codebusters-c",
+        "category": "Inquiry & Nature of Science",
+        "season_status": "current"
+      },
+      "source_maps_move": 4,
+      "source_maps_dup_skip": 0,
+      "twin_inventory_archived": {
+        "EventSourceMap": 4,
+        "Concept": 0,
+        "Course": 1,
+        "Lesson": 0,
+        "Question": 0,
+        "PracticeSet": 0,
+        "EventTaxonScope": 0,
+        "Exam": 0
+      },
+      "canonical_questions": 59
+    },
+    {
+      "key": [
+        "experimental design",
+        "C"
+      ],
+      "canonical_event_id": 50,
+      "canonical_slug": "experimental-design-c",
+      "archive_event_id": 96,
+      "archive_slug": "experimental-design-c-2027",
+      "carry_metadata": {
+        "official_url": "https://www.soinc.org/experimental-design-c",
+        "category": "Inquiry & Nature of Science",
+        "season_status": "current"
+      },
+      "source_maps_move": 2,
+      "source_maps_dup_skip": 0,
+      "twin_inventory_archived": {
+        "EventSourceMap": 2,
+        "Concept": 0,
+        "Course": 1,
+        "Lesson": 0,
+        "Question": 0,
+        "PracticeSet": 0,
+        "EventTaxonScope": 0,
+        "Exam": 0
+      },
+      "canonical_questions": 59
+    },
+    {
+      "key": [
+        "engineering cad",
+        "C"
+      ],
+      "canonical_event_id": 52,
+      "canonical_slug": "engineering-cad-c",
+      "archive_event_id": 98,
+      "archive_slug": "engineering-cad-c-2027",
+      "carry_metadata": {
+        "official_url": "https://www.soinc.org/engineering-cad-c",
+        "category": "Inquiry & Nature of Science",
+        "season_status": "current"
+      },
+      "source_maps_move": 1,
+      "source_maps_dup_skip": 0,
+      "twin_inventory_archived": {
+        "EventSourceMap": 1,
+        "Concept": 0,
+        "Course": 1,
+        "Lesson": 0,
+        "Question": 0,
+        "PracticeSet": 0,
+        "EventTaxonScope": 0,
+        "Exam": 0
+      },
+      "canonical_questions": 10
+    }
+  ],
+  "intra_season_archived": [],
+  "only_2026_prior_practice": [
+    {
+      "key": [
+        "rocks and minerals",
+        "B/C"
+      ],
+      "event_id": 1,
+      "slug": "rocks-and-minerals",
+      "action": "season_status -> prior_season_practice"
+    },
+    {
+      "key": [
+        "ecology",
+        "B/C"
+      ],
+      "event_id": 2,
+      "slug": "ecology",
+      "action": "season_status -> prior_season_practice"
+    },
+    {
+      "key": [
+        "entomology",
+        "B/C"
+      ],
+      "event_id": 3,
+      "slug": "entomology",
+      "action": "season_status -> prior_season_practice"
+    },
+    {
+      "key": [
+        "meteorology",
+        "B/C"
+      ],
+      "event_id": 4,
+      "slug": "meteorology",
+      "action": "season_status -> prior_season_practice"
+    },
+    {
+      "key": [
+        "experimental design",
+        "B/C"
+      ],
+      "event_id": 6,
+      "slug": "experimental-design",
+      "action": "season_status -> prior_season_practice"
+    },
+    {
+      "key": [
+        "entomology",
+        "B"
+      ],
+      "event_id": 9,
+      "slug": "entomology-b",
+      "action": "season_status -> prior_season_practice"
+    },
+    {
+      "key": [
+        "machines",
+        "B"
+      ],
+      "event_id": 19,
+      "slug": "machines-b",
+      "action": "season_status -> prior_season_practice"
+    },
+    {
+      "key": [
+        "potions and poisons",
+        "B"
+      ],
+      "event_id": 21,
+      "slug": "potions-and-poisons-b",
+      "action": "season_status -> prior_season_practice"
+    },
+    {
+      "key": [
+        "helicopter",
+        "B"
+      ],
+      "event_id": 23,
+      "slug": "helicopter-b",
+      "action": "season_status -> prior_season_practice"
+    },
+    {
+      "key": [
+        "mission possible",
+        "B"
+      ],
+      "event_id": 24,
+      "slug": "mission-possible-b",
+      "action": "season_status -> prior_season_practice"
+    },
+    {
+      "key": [
+        "metric mastery",
+        "B"
+      ],
+      "event_id": 28,
+      "slug": "metric-mastery-b",
+      "action": "season_status -> prior_season_practice"
+    },
+    {
+      "key": [
+        "entomology",
+        "C"
+      ],
+      "event_id": 33,
+      "slug": "entomology-c",
+      "action": "season_status -> prior_season_practice"
+    },
+    {
+      "key": [
+        "machines",
+        "C"
+      ],
+      "event_id": 41,
+      "slug": "machines-c",
+      "action": "season_status -> prior_season_practice"
+    },
+    {
+      "key": [
+        "materials science",
+        "C"
+      ],
+      "event_id": 44,
+      "slug": "materials-science-c",
+      "action": "season_status -> prior_season_practice"
+    },
+    {
+      "key": [
+        "helicopter",
+        "C"
+      ],
+      "event_id": 47,
+      "slug": "helicopter-c",
+      "action": "season_status -> prior_season_practice"
+    },
+    {
+      "key": [
+        "robot tour",
+        "C"
+      ],
+      "event_id": 48,
+      "slug": "robot-tour-c",
+      "action": "season_status -> prior_season_practice"
+    },
+    {
+      "key": [
+        "bungee drop",
+        "C"
+      ],
+      "event_id": 51,
+      "slug": "bungee-drop-c",
+      "action": "season_status -> prior_season_practice"
+    }
+  ],
+  "only_2027_current": [
+    {
+      "key": [
+        "botany",
+        "B"
+      ],
+      "event_id": 56,
+      "slug": "botany-b-2027",
+      "action": "keep current (needs content)"
+    },
+    {
+      "key": [
+        "thermodynamics",
+        "B"
+      ],
+      "event_id": 65,
+      "slug": "thermodynamics-b-2027",
+      "action": "keep current (needs content)"
+    },
+    {
+      "key": [
+        "food science",
+        "B"
+      ],
+      "event_id": 67,
+      "slug": "food-science-b-2027",
+      "action": "keep current (needs content)"
+    },
+    {
+      "key": [
+        "elastic launch glider",
+        "B"
+      ],
+      "event_id": 69,
+      "slug": "elastic-launch-glider-b-2027",
+      "action": "keep current (needs content)"
+    },
+    {
+      "key": [
+        "roller coaster",
+        "B"
+      ],
+      "event_id": 70,
+      "slug": "roller-coaster-b-2027",
+      "action": "keep current (needs content)"
+    },
+    {
+      "key": [
+        "ping pong parachute",
+        "B"
+      ],
+      "event_id": 74,
+      "slug": "ping-pong-parachute-b-2027",
+      "action": "keep current (needs content)"
+    },
+    {
+      "key": [
+        "botany",
+        "C"
+      ],
+      "event_id": 79,
+      "slug": "botany-c-2027",
+      "action": "keep current (needs content)"
+    },
+    {
+      "key": [
+        "thermodynamics",
+        "C"
+      ],
+      "event_id": 87,
+      "slug": "thermodynamics-c-2027",
+      "action": "keep current (needs content)"
+    },
+    {
+      "key": [
+        "protein modeling",
+        "C"
+      ],
+      "event_id": 90,
+      "slug": "protein-modeling-c-2027",
+      "action": "keep current (needs content)"
+    },
+    {
+      "key": [
+        "mission possible",
+        "C"
+      ],
+      "event_id": 93,
+      "slug": "mission-possible-c-2027",
+      "action": "keep current (needs content)"
+    },
+    {
+      "key": [
+        "wright stuff",
+        "C"
+      ],
+      "event_id": 94,
+      "slug": "wright-stuff-c-2027",
+      "action": "keep current (needs content)"
+    },
+    {
+      "key": [
+        "ping pong parachute",
+        "C"
+      ],
+      "event_id": 97,
+      "slug": "ping-pong-parachute-c-2027",
+      "action": "keep current (needs content)"
+    },
+    {
+      "key": [
+        "code craze",
+        "B"
+      ],
+      "event_id": 99,
+      "slug": "code-craze-b-trial-2027",
+      "action": "keep current (needs content)"
+    },
+    {
+      "key": [
+        "protein modeling",
+        "B"
+      ],
+      "event_id": 100,
+      "slug": "protein-modeling-b-trial-2027",
+      "action": "keep current (needs content)"
+    },
+    {
+      "key": [
+        "code craze",
+        "C"
+      ],
+      "event_id": 101,
+      "slug": "code-craze-c-trial-2027",
+      "action": "keep current (needs content)"
+    },
+    {
+      "key": [
+        "season resources",
+        "B/C"
+      ],
+      "event_id": 102,
+      "slug": "season-resources-bc-2027",
+      "action": "keep current (needs content)"
+    }
+  ]
+}
