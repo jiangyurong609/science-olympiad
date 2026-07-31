@@ -9,6 +9,34 @@ from app.services.validation import build_similarity_report, validate_candidate
 
 PROMPT_VERSION = "competition-item-v1"
 
+_SOLVER_SYSTEM = (
+    "You are an INDEPENDENT solver. You receive ONLY a question stem and its answer choices — "
+    "never the intended answer or any explanation. Solve it yourself from first principles. "
+    'Return strict JSON: {"chosen_index": int, "confidence": number 0..1, '
+    '"ambiguous": boolean, "insufficient": boolean}. Set "ambiguous" if more than one choice is '
+    'defensibly correct; set "insufficient" if the stem lacks the information needed to answer.'
+)
+
+
+def _independent_solve(provider, stem: str, choices: list) -> dict:
+    """Blind solve: the solver never sees the proposed correct answer."""
+    return provider.generate_json(
+        _SOLVER_SYSTEM,
+        json.dumps({"stem": stem, "choices": [str(c) for c in choices]}),
+    ).payload
+
+
+def _solver_verdict(solver: dict, correct_index) -> tuple[bool, str]:
+    """A candidate only survives if the blind solver independently reproduces the key."""
+    if solver.get("insufficient"):
+        return False, "solver_insufficient_information"
+    if solver.get("ambiguous"):
+        return False, "solver_reports_ambiguous"
+    chosen = solver.get("chosen_index")
+    if not isinstance(chosen, int) or chosen != correct_index:
+        return False, "solver_disagrees_with_key"
+    return True, "solver_agrees"
+
 
 def _grounding_context(db: Session, concept: Concept | None) -> tuple[Source, list[ScientificClaim]]:
     stmt = select(ScientificClaim).where(
@@ -90,6 +118,14 @@ def generate_model_questions(
                 claim_ids=claim_ids,
                 source_id=source.id,
             )
+            # Independent SOLVER pass: re-derive the answer blind (no key shown). A candidate
+            # only survives if the solver reproduces the key and finds it unambiguous.
+            solver_payload = _independent_solve(provider, str(raw.get("stem", "")), choices)
+            solver_ok, solver_reason = _solver_verdict(solver_payload, answer_spec["correct_index"])
+            report["independent_solver"] = {**solver_payload, "verdict": solver_reason, "passed": solver_ok}
+            if not solver_ok:
+                report.setdefault("errors", []).append(solver_reason)
+
             # Independent verifier pass; failure keeps the item in draft.
             verify_payload = provider.generate_json(
                 "Act as an independent scientific and assessment verifier. Return JSON with passed, errors, and warnings.",
@@ -101,7 +137,7 @@ def generate_model_questions(
             ).payload
             verifier_passed = bool(verify_payload.get("passed"))
             report["independent_verifier"] = verify_payload
-            report["passed"] = bool(report["passed"] and verifier_passed)
+            report["passed"] = bool(report["passed"] and solver_ok and verifier_passed)
             question = Question(
                 event_id=event.id,
                 concept_id=concept.id if concept else None,
