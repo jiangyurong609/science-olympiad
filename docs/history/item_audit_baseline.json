@@ -1,0 +1,1908 @@
+{
+  "filter": {
+    "status": null,
+    "generation_run": null
+  },
+  "census": {
+    "matched": 5954,
+    "audited": 5954,
+    "unaudited": 0
+  },
+  "totals": {
+    "questions": 5954,
+    "passing_structural": 4120,
+    "passing_pct": 69.2,
+    "grounded": 518,
+    "grounded_pct": 8.7,
+    "single_shot_provenance": 470,
+    "near_dup_clusters": 232,
+    "duplicate_questions": 758,
+    "exams_under_blueprint": 0
+  },
+  "error_histogram": {
+    "missing_accepted_answers": 1332,
+    "missing_answer": 801,
+    "four_meaningful_choices_required": 500,
+    "duplicate_choices": 3
+  },
+  "duplicate_clusters": [
+    [
+      1,
+      3,
+      5,
+      7
+    ],
+    [
+      2,
+      4,
+      6,
+      8
+    ],
+    [
+      9,
+      11,
+      13,
+      15
+    ],
+    [
+      10,
+      12,
+      14,
+      16
+    ],
+    [
+      17,
+      19,
+      21,
+      23
+    ],
+    [
+      18,
+      20,
+      22,
+      24
+    ],
+    [
+      25,
+      27,
+      29,
+      31
+    ],
+    [
+      26,
+      28,
+      30,
+      32
+    ],
+    [
+      33,
+      35,
+      37,
+      39
+    ],
+    [
+      34,
+      36,
+      38,
+      40
+    ],
+    [
+      41,
+      43,
+      45,
+      47
+    ],
+    [
+      42,
+      44,
+      46,
+      48
+    ],
+    [
+      49,
+      406
+    ],
+    [
+      59,
+      69
+    ],
+    [
+      60,
+      70
+    ],
+    [
+      82,
+      92
+    ],
+    [
+      85,
+      95
+    ],
+    [
+      99,
+      479
+    ],
+    [
+      101,
+      481
+    ],
+    [
+      102,
+      482
+    ],
+    [
+      109,
+      119,
+      129,
+      159,
+      249,
+      319,
+      329,
+      349,
+      359,
+      369,
+      379,
+      419,
+      459,
+      469
+    ],
+    [
+      111,
+      131,
+      151,
+      321
+    ],
+    [
+      113,
+      253,
+      363,
+      373,
+      463,
+      473
+    ],
+    [
+      114,
+      124,
+      134,
+      154,
+      164,
+      324,
+      334,
+      354,
+      364,
+      374,
+      384,
+      424,
+      474
+    ],
+    [
+      116,
+      156
+    ],
+    [
+      118,
+      158,
+      168
+    ],
+    [
+      120,
+      130,
+      150,
+      160,
+      250,
+      320,
+      330,
+      360,
+      370,
+      380,
+      420,
+      460,
+      470
+    ],
+    [
+      121,
+      331,
+      471
+    ],
+    [
+      123,
+      133,
+      153,
+      353,
+      383
+    ],
+    [
+      126,
+      386
+    ],
+    [
+      132,
+      152,
+      322
+    ],
+    [
+      135,
+      255,
+      475
+    ],
+    [
+      136,
+      356
+    ],
+    [
+      139,
+      389
+    ],
+    [
+      155,
+      355
+    ],
+    [
+      157,
+      338,
+      428
+    ],
+    [
+      161,
+      351,
+      461
+    ],
+    [
+      167,
+      337
+    ],
+    [
+      169,
+      179
+    ],
+    [
+      171,
+      181
+    ],
+    [
+      192,
+      312
+    ],
+    [
+      199,
+      339
+    ],
+    [
+      200,
+      340
+    ],
+    [
+      202,
+      342
+    ],
+    [
+      204,
+      344
+    ],
+    [
+      209,
+      219
+    ],
+    [
+      229,
+      239
+    ],
+    [
+      252,
+      422,
+      462
+    ],
+    [
+      259,
+      289,
+      509
+    ],
+    [
+      264,
+      514
+    ]
+  ],
+  "exams_under_blueprint_detail": [],
+  "flagged_questions": [
+    {
+      "id": 625,
+      "status": "machine_validated",
+      "event_id": 1,
+      "errors": [],
+      "grounded": false,
+      "single_shot": false
+    },
+    {
+      "id": 626,
+      "status": "machine_validated",
+      "event_id": 1,
+      "errors": [],
+      "grounded": false,
+      "single_shot": false
+    },
+    {
+      "id": 627,
+      "status": "machine_validated",
+      "event_id": 1,
+      "errors": [],
+      "grounded": false,
+      "single_shot": false
+    },
+    {
+      "id": 628,
+      "status": "machine_validated",
+      "event_id": 1,
+      "errors": [],
+      "grounded": false,
+      "single_shot": false
+    },
+    {
+      "id": 629,
+      "status": "machine_validated",
+      "event_id": 1,
+      "errors": [],
+      "grounded": false,
+      "single_shot": false
+    },
+    {
+      "id": 630,
+      "status": "machine_validated",
+      "event_id": 1,
+      "errors": [],
+      "grounded": false,
+      "single_shot": false
+    },
+    {
+      "id": 631,
+      "status": "machine_validated",
+      "event_id": 1,
+      "errors": [],
+      "grounded": false,
+      "single_shot": false
+    },
+    {
+      "id": 632,
+      "status": "machine_validated",
+      "event_id": 1,
+      "errors": [],
+      "grounded": false,
+      "single_shot": false
+    },
+    {
+      "id": 633,
+      "status": "machine_validated",
+      "event_id": 1,
+      "errors": [],
+      "grounded": false,
+      "single_shot": false
+    },
+    {
+      "id": 634,
+      "status": "machine_validated",
+      "event_id": 1,
+      "errors": [],
+      "grounded": false,
+      "single_shot": false
+    },
+    {
+      "id": 635,
+      "status": "machine_validated",
+      "event_id": 1,
+      "errors": [],
+      "grounded": false,
+      "single_shot": false
+    },
+    {
+      "id": 636,
+      "status": "machine_validated",
+      "event_id": 1,
+      "errors": [],
+      "grounded": false,
+      "single_shot": false
+    },
+    {
+      "id": 637,
+      "status": "machine_validated",
+      "event_id": 1,
+      "errors": [],
+      "grounded": false,
+      "single_shot": false
+    },
+    {
+      "id": 638,
+      "status": "machine_validated",
+      "event_id": 1,
+      "errors": [],
+      "grounded": false,
+      "single_shot": false
+    },
+    {
+      "id": 639,
+      "status": "machine_validated",
+      "event_id": 1,
+      "errors": [],
+      "grounded": false,
+      "single_shot": false
+    },
+    {
+      "id": 640,
+      "status": "machine_validated",
+      "event_id": 1,
+      "errors": [],
+      "grounded": false,
+      "single_shot": false
+    },
+    {
+      "id": 641,
+      "status": "machine_validated",
+      "event_id": 1,
+      "errors": [],
+      "grounded": false,
+      "single_shot": false
+    },
+    {
+      "id": 642,
+      "status": "machine_validated",
+      "event_id": 1,
+      "errors": [],
+      "grounded": false,
+      "single_shot": false
+    },
+    {
+      "id": 643,
+      "status": "machine_validated",
+      "event_id": 1,
+      "errors": [],
+      "grounded": false,
+      "single_shot": false
+    },
+    {
+      "id": 644,
+      "status": "machine_validated",
+      "event_id": 1,
+      "errors": [],
+      "grounded": false,
+      "single_shot": false
+    },
+    {
+      "id": 645,
+      "status": "machine_validated",
+      "event_id": 1,
+      "errors": [],
+      "grounded": false,
+      "single_shot": false
+    },
+    {
+      "id": 646,
+      "status": "machine_validated",
+      "event_id": 1,
+      "errors": [],
+      "grounded": false,
+      "single_shot": false
+    },
+    {
+      "id": 647,
+      "status": "machine_validated",
+      "event_id": 1,
+      "errors": [],
+      "grounded": false,
+      "single_shot": false
+    },
+    {
+      "id": 648,
+      "status": "machine_validated",
+      "event_id": 1,
+      "errors": [],
+      "grounded": false,
+      "single_shot": false
+    },
+    {
+      "id": 649,
+      "status": "machine_validated",
+      "event_id": 1,
+      "errors": [],
+      "grounded": false,
+      "single_shot": false
+    },
+    {
+      "id": 650,
+      "status": "machine_validated",
+      "event_id": 1,
+      "errors": [],
+      "grounded": false,
+      "single_shot": false
+    },
+    {
+      "id": 651,
+      "status": "machine_validated",
+      "event_id": 1,
+      "errors": [],
+      "grounded": false,
+      "single_shot": false
+    },
+    {
+      "id": 652,
+      "status": "machine_validated",
+      "event_id": 1,
+      "errors": [],
+      "grounded": false,
+      "single_shot": false
+    },
+    {
+      "id": 653,
+      "status": "machine_validated",
+      "event_id": 1,
+      "errors": [],
+      "grounded": false,
+      "single_shot": false
+    },
+    {
+      "id": 654,
+      "status": "machine_validated",
+      "event_id": 1,
+      "errors": [],
+      "grounded": false,
+      "single_shot": false
+    },
+    {
+      "id": 655,
+      "status": "machine_validated",
+      "event_id": 3,
+      "errors": [],
+      "grounded": false,
+      "single_shot": false
+    },
+    {
+      "id": 656,
+      "status": "machine_validated",
+      "event_id": 3,
+      "errors": [],
+      "grounded": false,
+      "single_shot": false
+    },
+    {
+      "id": 657,
+      "status": "machine_validated",
+      "event_id": 3,
+      "errors": [],
+      "grounded": false,
+      "single_shot": false
+    },
+    {
+      "id": 658,
+      "status": "machine_validated",
+      "event_id": 3,
+      "errors": [],
+      "grounded": false,
+      "single_shot": false
+    },
+    {
+      "id": 659,
+      "status": "machine_validated",
+      "event_id": 3,
+      "errors": [],
+      "grounded": false,
+      "single_shot": false
+    },
+    {
+      "id": 660,
+      "status": "machine_validated",
+      "event_id": 3,
+      "errors": [],
+      "grounded": false,
+      "single_shot": false
+    },
+    {
+      "id": 661,
+      "status": "machine_validated",
+      "event_id": 3,
+      "errors": [],
+      "grounded": false,
+      "single_shot": false
+    },
+    {
+      "id": 662,
+      "status": "machine_validated",
+      "event_id": 3,
+      "errors": [],
+      "grounded": false,
+      "single_shot": false
+    },
+    {
+      "id": 663,
+      "status": "machine_validated",
+      "event_id": 3,
+      "errors": [],
+      "grounded": false,
+      "single_shot": false
+    },
+    {
+      "id": 664,
+      "status": "machine_validated",
+      "event_id": 3,
+      "errors": [],
+      "grounded": false,
+      "single_shot": false
+    },
+    {
+      "id": 665,
+      "status": "machine_validated",
+      "event_id": 3,
+      "errors": [],
+      "grounded": false,
+      "single_shot": false
+    },
+    {
+      "id": 666,
+      "status": "machine_validated",
+      "event_id": 3,
+      "errors": [],
+      "grounded": false,
+      "single_shot": false
+    },
+    {
+      "id": 667,
+      "status": "machine_validated",
+      "event_id": 3,
+      "errors": [],
+      "grounded": false,
+      "single_shot": false
+    },
+    {
+      "id": 668,
+      "status": "machine_validated",
+      "event_id": 3,
+      "errors": [],
+      "grounded": false,
+      "single_shot": false
+    },
+    {
+      "id": 669,
+      "status": "machine_validated",
+      "event_id": 3,
+      "errors": [],
+      "grounded": false,
+      "single_shot": false
+    },
+    {
+      "id": 670,
+      "status": "machine_validated",
+      "event_id": 3,
+      "errors": [],
+      "grounded": false,
+      "single_shot": false
+    },
+    {
+      "id": 671,
+      "status": "machine_validated",
+      "event_id": 3,
+      "errors": [],
+      "grounded": false,
+      "single_shot": false
+    },
+    {
+      "id": 672,
+      "status": "machine_validated",
+      "event_id": 3,
+      "errors": [],
+      "grounded": false,
+      "single_shot": false
+    },
+    {
+      "id": 673,
+      "status": "machine_validated",
+      "event_id": 3,
+      "errors": [],
+      "grounded": false,
+      "single_shot": false
+    },
+    {
+      "id": 674,
+      "status": "machine_validated",
+      "event_id": 3,
+      "errors": [],
+      "grounded": false,
+      "single_shot": false
+    },
+    {
+      "id": 675,
+      "status": "machine_validated",
+      "event_id": 9,
+      "errors": [],
+      "grounded": false,
+      "single_shot": false
+    },
+    {
+      "id": 676,
+      "status": "machine_validated",
+      "event_id": 9,
+      "errors": [],
+      "grounded": false,
+      "single_shot": false
+    },
+    {
+      "id": 677,
+      "status": "machine_validated",
+      "event_id": 9,
+      "errors": [],
+      "grounded": false,
+      "single_shot": false
+    },
+    {
+      "id": 678,
+      "status": "machine_validated",
+      "event_id": 9,
+      "errors": [],
+      "grounded": false,
+      "single_shot": false
+    },
+    {
+      "id": 679,
+      "status": "machine_validated",
+      "event_id": 9,
+      "errors": [],
+      "grounded": false,
+      "single_shot": false
+    },
+    {
+      "id": 680,
+      "status": "machine_validated",
+      "event_id": 9,
+      "errors": [],
+      "grounded": false,
+      "single_shot": false
+    },
+    {
+      "id": 681,
+      "status": "machine_validated",
+      "event_id": 9,
+      "errors": [],
+      "grounded": false,
+      "single_shot": false
+    },
+    {
+      "id": 682,
+      "status": "machine_validated",
+      "event_id": 9,
+      "errors": [],
+      "grounded": false,
+      "single_shot": false
+    },
+    {
+      "id": 683,
+      "status": "machine_validated",
+      "event_id": 9,
+      "errors": [],
+      "grounded": false,
+      "single_shot": false
+    },
+    {
+      "id": 684,
+      "status": "machine_validated",
+      "event_id": 9,
+      "errors": [],
+      "grounded": false,
+      "single_shot": false
+    },
+    {
+      "id": 685,
+      "status": "machine_validated",
+      "event_id": 9,
+      "errors": [],
+      "grounded": false,
+      "single_shot": false
+    },
+    {
+      "id": 686,
+      "status": "machine_validated",
+      "event_id": 9,
+      "errors": [],
+      "grounded": false,
+      "single_shot": false
+    },
+    {
+      "id": 687,
+      "status": "machine_validated",
+      "event_id": 9,
+      "errors": [],
+      "grounded": false,
+      "single_shot": false
+    },
+    {
+      "id": 688,
+      "status": "machine_validated",
+      "event_id": 9,
+      "errors": [],
+      "grounded": false,
+      "single_shot": false
+    },
+    {
+      "id": 689,
+      "status": "machine_validated",
+      "event_id": 9,
+      "errors": [],
+      "grounded": false,
+      "single_shot": false
+    },
+    {
+      "id": 690,
+      "status": "machine_validated",
+      "event_id": 9,
+      "errors": [],
+      "grounded": false,
+      "single_shot": false
+    },
+    {
+      "id": 691,
+      "status": "machine_validated",
+      "event_id": 9,
+      "errors": [],
+      "grounded": false,
+      "single_shot": false
+    },
+    {
+      "id": 692,
+      "status": "machine_validated",
+      "event_id": 9,
+      "errors": [],
+      "grounded": false,
+      "single_shot": false
+    },
+    {
+      "id": 693,
+      "status": "machine_validated",
+      "event_id": 9,
+      "errors": [],
+      "grounded": false,
+      "single_shot": false
+    },
+    {
+      "id": 694,
+      "status": "machine_validated",
+      "event_id": 9,
+      "errors": [],
+      "grounded": false,
+      "single_shot": false
+    },
+    {
+      "id": 695,
+      "status": "machine_validated",
+      "event_id": 15,
+      "errors": [],
+      "grounded": false,
+      "single_shot": false
+    },
+    {
+      "id": 696,
+      "status": "machine_validated",
+      "event_id": 15,
+      "errors": [],
+      "grounded": false,
+      "single_shot": false
+    },
+    {
+      "id": 697,
+      "status": "machine_validated",
+      "event_id": 15,
+      "errors": [],
+      "grounded": false,
+      "single_shot": false
+    },
+    {
+      "id": 698,
+      "status": "machine_validated",
+      "event_id": 15,
+      "errors": [],
+      "grounded": false,
+      "single_shot": false
+    },
+    {
+      "id": 699,
+      "status": "machine_validated",
+      "event_id": 15,
+      "errors": [],
+      "grounded": false,
+      "single_shot": false
+    },
+    {
+      "id": 700,
+      "status": "machine_validated",
+      "event_id": 15,
+      "errors": [],
+      "grounded": false,
+      "single_shot": false
+    },
+    {
+      "id": 701,
+      "status": "machine_validated",
+      "event_id": 15,
+      "errors": [],
+      "grounded": false,
+      "single_shot": false
+    },
+    {
+      "id": 702,
+      "status": "machine_validated",
+      "event_id": 15,
+      "errors": [],
+      "grounded": false,
+      "single_shot": false
+    },
+    {
+      "id": 703,
+      "status": "machine_validated",
+      "event_id": 15,
+      "errors": [],
+      "grounded": false,
+      "single_shot": false
+    },
+    {
+      "id": 704,
+      "status": "machine_validated",
+      "event_id": 15,
+      "errors": [],
+      "grounded": false,
+      "single_shot": false
+    },
+    {
+      "id": 705,
+      "status": "machine_validated",
+      "event_id": 15,
+      "errors": [],
+      "grounded": false,
+      "single_shot": false
+    },
+    {
+      "id": 706,
+      "status": "machine_validated",
+      "event_id": 15,
+      "errors": [],
+      "grounded": false,
+      "single_shot": false
+    },
+    {
+      "id": 707,
+      "status": "machine_validated",
+      "event_id": 15,
+      "errors": [],
+      "grounded": false,
+      "single_shot": false
+    },
+    {
+      "id": 708,
+      "status": "machine_validated",
+      "event_id": 15,
+      "errors": [],
+      "grounded": false,
+      "single_shot": false
+    },
+    {
+      "id": 709,
+      "status": "machine_validated",
+      "event_id": 15,
+      "errors": [],
+      "grounded": false,
+      "single_shot": false
+    },
+    {
+      "id": 710,
+      "status": "machine_validated",
+      "event_id": 15,
+      "errors": [],
+      "grounded": false,
+      "single_shot": false
+    },
+    {
+      "id": 711,
+      "status": "machine_validated",
+      "event_id": 15,
+      "errors": [],
+      "grounded": false,
+      "single_shot": false
+    },
+    {
+      "id": 712,
+      "status": "machine_validated",
+      "event_id": 15,
+      "errors": [],
+      "grounded": false,
+      "single_shot": false
+    },
+    {
+      "id": 713,
+      "status": "machine_validated",
+      "event_id": 15,
+      "errors": [],
+      "grounded": false,
+      "single_shot": false
+    },
+    {
+      "id": 714,
+      "status": "machine_validated",
+      "event_id": 15,
+      "errors": [],
+      "grounded": false,
+      "single_shot": false
+    },
+    {
+      "id": 715,
+      "status": "machine_validated",
+      "event_id": 15,
+      "errors": [],
+      "grounded": false,
+      "single_shot": false
+    },
+    {
+      "id": 716,
+      "status": "machine_validated",
+      "event_id": 15,
+      "errors": [],
+      "grounded": false,
+      "single_shot": false
+    },
+    {
+      "id": 717,
+      "status": "machine_validated",
+      "event_id": 15,
+      "errors": [],
+      "grounded": false,
+      "single_shot": false
+    },
+    {
+      "id": 718,
+      "status": "machine_validated",
+      "event_id": 15,
+      "errors": [],
+      "grounded": false,
+      "single_shot": false
+    },
+    {
+      "id": 719,
+      "status": "machine_validated",
+      "event_id": 15,
+      "errors": [],
+      "grounded": false,
+      "single_shot": false
+    },
+    {
+      "id": 720,
+      "status": "machine_validated",
+      "event_id": 15,
+      "errors": [],
+      "grounded": false,
+      "single_shot": false
+    },
+    {
+      "id": 721,
+      "status": "machine_validated",
+      "event_id": 15,
+      "errors": [],
+      "grounded": false,
+      "single_shot": false
+    },
+    {
+      "id": 722,
+      "status": "machine_validated",
+      "event_id": 15,
+      "errors": [],
+      "grounded": false,
+      "single_shot": false
+    },
+    {
+      "id": 723,
+      "status": "machine_validated",
+      "event_id": 15,
+      "errors": [],
+      "grounded": false,
+      "single_shot": false
+    },
+    {
+      "id": 724,
+      "status": "machine_validated",
+      "event_id": 15,
+      "errors": [],
+      "grounded": false,
+      "single_shot": false
+    },
+    {
+      "id": 725,
+      "status": "machine_validated",
+      "event_id": 16,
+      "errors": [],
+      "grounded": false,
+      "single_shot": false
+    },
+    {
+      "id": 726,
+      "status": "machine_validated",
+      "event_id": 16,
+      "errors": [],
+      "grounded": false,
+      "single_shot": false
+    },
+    {
+      "id": 727,
+      "status": "machine_validated",
+      "event_id": 16,
+      "errors": [],
+      "grounded": false,
+      "single_shot": false
+    },
+    {
+      "id": 728,
+      "status": "machine_validated",
+      "event_id": 16,
+      "errors": [],
+      "grounded": false,
+      "single_shot": false
+    },
+    {
+      "id": 729,
+      "status": "machine_validated",
+      "event_id": 16,
+      "errors": [],
+      "grounded": false,
+      "single_shot": false
+    },
+    {
+      "id": 730,
+      "status": "machine_validated",
+      "event_id": 16,
+      "errors": [],
+      "grounded": false,
+      "single_shot": false
+    },
+    {
+      "id": 731,
+      "status": "machine_validated",
+      "event_id": 16,
+      "errors": [],
+      "grounded": false,
+      "single_shot": false
+    },
+    {
+      "id": 732,
+      "status": "machine_validated",
+      "event_id": 16,
+      "errors": [],
+      "grounded": false,
+      "single_shot": false
+    },
+    {
+      "id": 733,
+      "status": "machine_validated",
+      "event_id": 16,
+      "errors": [],
+      "grounded": false,
+      "single_shot": false
+    },
+    {
+      "id": 734,
+      "status": "machine_validated",
+      "event_id": 16,
+      "errors": [],
+      "grounded": false,
+      "single_shot": false
+    },
+    {
+      "id": 735,
+      "status": "machine_validated",
+      "event_id": 16,
+      "errors": [],
+      "grounded": false,
+      "single_shot": false
+    },
+    {
+      "id": 736,
+      "status": "machine_validated",
+      "event_id": 16,
+      "errors": [],
+      "grounded": false,
+      "single_shot": false
+    },
+    {
+      "id": 737,
+      "status": "machine_validated",
+      "event_id": 16,
+      "errors": [],
+      "grounded": false,
+      "single_shot": false
+    },
+    {
+      "id": 738,
+      "status": "machine_validated",
+      "event_id": 16,
+      "errors": [],
+      "grounded": false,
+      "single_shot": false
+    },
+    {
+      "id": 739,
+      "status": "machine_validated",
+      "event_id": 16,
+      "errors": [],
+      "grounded": false,
+      "single_shot": false
+    },
+    {
+      "id": 740,
+      "status": "machine_validated",
+      "event_id": 33,
+      "errors": [],
+      "grounded": false,
+      "single_shot": false
+    },
+    {
+      "id": 741,
+      "status": "machine_validated",
+      "event_id": 33,
+      "errors": [],
+      "grounded": false,
+      "single_shot": false
+    },
+    {
+      "id": 742,
+      "status": "machine_validated",
+      "event_id": 33,
+      "errors": [],
+      "grounded": false,
+      "single_shot": false
+    },
+    {
+      "id": 743,
+      "status": "machine_validated",
+      "event_id": 33,
+      "errors": [],
+      "grounded": false,
+      "single_shot": false
+    },
+    {
+      "id": 744,
+      "status": "machine_validated",
+      "event_id": 33,
+      "errors": [],
+      "grounded": false,
+      "single_shot": false
+    },
+    {
+      "id": 745,
+      "status": "machine_validated",
+      "event_id": 33,
+      "errors": [],
+      "grounded": false,
+      "single_shot": false
+    },
+    {
+      "id": 746,
+      "status": "machine_validated",
+      "event_id": 33,
+      "errors": [],
+      "grounded": false,
+      "single_shot": false
+    },
+    {
+      "id": 747,
+      "status": "machine_validated",
+      "event_id": 33,
+      "errors": [],
+      "grounded": false,
+      "single_shot": false
+    },
+    {
+      "id": 748,
+      "status": "machine_validated",
+      "event_id": 33,
+      "errors": [],
+      "grounded": false,
+      "single_shot": false
+    },
+    {
+      "id": 749,
+      "status": "machine_validated",
+      "event_id": 33,
+      "errors": [],
+      "grounded": false,
+      "single_shot": false
+    },
+    {
+      "id": 750,
+      "status": "machine_validated",
+      "event_id": 33,
+      "errors": [],
+      "grounded": false,
+      "single_shot": false
+    },
+    {
+      "id": 751,
+      "status": "machine_validated",
+      "event_id": 33,
+      "errors": [],
+      "grounded": false,
+      "single_shot": false
+    },
+    {
+      "id": 752,
+      "status": "machine_validated",
+      "event_id": 33,
+      "errors": [],
+      "grounded": false,
+      "single_shot": false
+    },
+    {
+      "id": 753,
+      "status": "machine_validated",
+      "event_id": 33,
+      "errors": [],
+      "grounded": false,
+      "single_shot": false
+    },
+    {
+      "id": 754,
+      "status": "machine_validated",
+      "event_id": 33,
+      "errors": [],
+      "grounded": false,
+      "single_shot": false
+    },
+    {
+      "id": 755,
+      "status": "machine_validated",
+      "event_id": 33,
+      "errors": [],
+      "grounded": false,
+      "single_shot": false
+    },
+    {
+      "id": 756,
+      "status": "machine_validated",
+      "event_id": 33,
+      "errors": [],
+      "grounded": false,
+      "single_shot": false
+    },
+    {
+      "id": 757,
+      "status": "machine_validated",
+      "event_id": 33,
+      "errors": [],
+      "grounded": false,
+      "single_shot": false
+    },
+    {
+      "id": 758,
+      "status": "machine_validated",
+      "event_id": 33,
+      "errors": [],
+      "grounded": false,
+      "single_shot": false
+    },
+    {
+      "id": 759,
+      "status": "machine_validated",
+      "event_id": 33,
+      "errors": [],
+      "grounded": false,
+      "single_shot": false
+    },
+    {
+      "id": 760,
+      "status": "machine_validated",
+      "event_id": 35,
+      "errors": [],
+      "grounded": false,
+      "single_shot": false
+    },
+    {
+      "id": 761,
+      "status": "machine_validated",
+      "event_id": 35,
+      "errors": [],
+      "grounded": false,
+      "single_shot": false
+    },
+    {
+      "id": 762,
+      "status": "machine_validated",
+      "event_id": 35,
+      "errors": [],
+      "grounded": false,
+      "single_shot": false
+    },
+    {
+      "id": 763,
+      "status": "machine_validated",
+      "event_id": 35,
+      "errors": [],
+      "grounded": false,
+      "single_shot": false
+    },
+    {
+      "id": 764,
+      "status": "machine_validated",
+      "event_id": 35,
+      "errors": [],
+      "grounded": false,
+      "single_shot": false
+    },
+    {
+      "id": 765,
+      "status": "machine_validated",
+      "event_id": 35,
+      "errors": [],
+      "grounded": false,
+      "single_shot": false
+    },
+    {
+      "id": 766,
+      "status": "machine_validated",
+      "event_id": 35,
+      "errors": [],
+      "grounded": false,
+      "single_shot": false
+    },
+    {
+      "id": 767,
+      "status": "machine_validated",
+      "event_id": 35,
+      "errors": [],
+      "grounded": false,
+      "single_shot": false
+    },
+    {
+      "id": 768,
+      "status": "machine_validated",
+      "event_id": 35,
+      "errors": [],
+      "grounded": false,
+      "single_shot": false
+    },
+    {
+      "id": 769,
+      "status": "machine_validated",
+      "event_id": 35,
+      "errors": [],
+      "grounded": false,
+      "single_shot": false
+    },
+    {
+      "id": 770,
+      "status": "machine_validated",
+      "event_id": 35,
+      "errors": [],
+      "grounded": false,
+      "single_shot": false
+    },
+    {
+      "id": 771,
+      "status": "machine_validated",
+      "event_id": 35,
+      "errors": [],
+      "grounded": false,
+      "single_shot": false
+    },
+    {
+      "id": 772,
+      "status": "machine_validated",
+      "event_id": 35,
+      "errors": [],
+      "grounded": false,
+      "single_shot": false
+    },
+    {
+      "id": 773,
+      "status": "machine_validated",
+      "event_id": 35,
+      "errors": [],
+      "grounded": false,
+      "single_shot": false
+    },
+    {
+      "id": 774,
+      "status": "machine_validated",
+      "event_id": 35,
+      "errors": [],
+      "grounded": false,
+      "single_shot": false
+    },
+    {
+      "id": 775,
+      "status": "machine_validated",
+      "event_id": 35,
+      "errors": [],
+      "grounded": false,
+      "single_shot": false
+    },
+    {
+      "id": 776,
+      "status": "machine_validated",
+      "event_id": 35,
+      "errors": [],
+      "grounded": false,
+      "single_shot": false
+    },
+    {
+      "id": 777,
+      "status": "machine_validated",
+      "event_id": 38,
+      "errors": [],
+      "grounded": false,
+      "single_shot": false
+    },
+    {
+      "id": 778,
+      "status": "machine_validated",
+      "event_id": 38,
+      "errors": [],
+      "grounded": false,
+      "single_shot": false
+    },
+    {
+      "id": 779,
+      "status": "machine_validated",
+      "event_id": 38,
+      "errors": [],
+      "grounded": false,
+      "single_shot": false
+    },
+    {
+      "id": 780,
+      "status": "machine_validated",
+      "event_id": 38,
+      "errors": [],
+      "grounded": false,
+      "single_shot": false
+    },
+    {
+      "id": 781,
+      "status": "machine_validated",
+      "event_id": 38,
+      "errors": [],
+      "grounded": false,
+      "single_shot": false
+    },
+    {
+      "id": 782,
+      "status": "machine_validated",
+      "event_id": 38,
+      "errors": [],
+      "grounded": false,
+      "single_shot": false
+    },
+    {
+      "id": 783,
+      "status": "machine_validated",
+      "event_id": 38,
+      "errors": [],
+      "grounded": false,
+      "single_shot": false
+    },
+    {
+      "id": 784,
+      "status": "machine_validated",
+      "event_id": 38,
+      "errors": [],
+      "grounded": false,
+      "single_shot": false
+    },
+    {
+      "id": 785,
+      "status": "machine_validated",
+      "event_id": 38,
+      "errors": [],
+      "grounded": false,
+      "single_shot": false
+    },
+    {
+      "id": 786,
+      "status": "machine_validated",
+      "event_id": 38,
+      "errors": [],
+      "grounded": false,
+      "single_shot": false
+    },
+    {
+      "id": 787,
+      "status": "machine_validated",
+      "event_id": 38,
+      "errors": [],
+      "grounded": false,
+      "single_shot": false
+    },
+    {
+      "id": 788,
+      "status": "machine_validated",
+      "event_id": 38,
+      "errors": [],
+      "grounded": false,
+      "single_shot": false
+    },
+    {
+      "id": 789,
+      "status": "machine_validated",
+      "event_id": 38,
+      "errors": [],
+      "grounded": false,
+      "single_shot": false
+    },
+    {
+      "id": 790,
+      "status": "machine_validated",
+      "event_id": 38,
+      "errors": [],
+      "grounded": false,
+      "single_shot": false
+    },
+    {
+      "id": 791,
+      "status": "machine_validated",
+      "event_id": 38,
+      "errors": [],
+      "grounded": false,
+      "single_shot": false
+    },
+    {
+      "id": 792,
+      "status": "machine_validated",
+      "event_id": 38,
+      "errors": [],
+      "grounded": false,
+      "single_shot": false
+    },
+    {
+      "id": 793,
+      "status": "machine_validated",
+      "event_id": 38,
+      "errors": [],
+      "grounded": false,
+      "single_shot": false
+    },
+    {
+      "id": 794,
+      "status": "machine_validated",
+      "event_id": 38,
+      "errors": [],
+      "grounded": false,
+      "single_shot": false
+    },
+    {
+      "id": 795,
+      "status": "machine_validated",
+      "event_id": 38,
+      "errors": [],
+      "grounded": false,
+      "single_shot": false
+    },
+    {
+      "id": 796,
+      "status": "machine_validated",
+      "event_id": 38,
+      "errors": [],
+      "grounded": false,
+      "single_shot": false
+    },
+    {
+      "id": 797,
+      "status": "machine_validated",
+      "event_id": 38,
+      "errors": [],
+      "grounded": false,
+      "single_shot": false
+    },
+    {
+      "id": 798,
+      "status": "machine_validated",
+      "event_id": 38,
+      "errors": [],
+      "grounded": false,
+      "single_shot": false
+    },
+    {
+      "id": 799,
+      "status": "machine_validated",
+      "event_id": 38,
+      "errors": [],
+      "grounded": false,
+      "single_shot": false
+    },
+    {
+      "id": 800,
+      "status": "machine_validated",
+      "event_id": 38,
+      "errors": [],
+      "grounded": false,
+      "single_shot": false
+    },
+    {
+      "id": 801,
+      "status": "machine_validated",
+      "event_id": 38,
+      "errors": [],
+      "grounded": false,
+      "single_shot": false
+    },
+    {
+      "id": 802,
+      "status": "machine_validated",
+      "event_id": 38,
+      "errors": [],
+      "grounded": false,
+      "single_shot": false
+    },
+    {
+      "id": 803,
+      "status": "machine_validated",
+      "event_id": 38,
+      "errors": [],
+      "grounded": false,
+      "single_shot": false
+    },
+    {
+      "id": 804,
+      "status": "machine_validated",
+      "event_id": 38,
+      "errors": [],
+      "grounded": false,
+      "single_shot": false
+    },
+    {
+      "id": 805,
+      "status": "machine_validated",
+      "event_id": 38,
+      "errors": [],
+      "grounded": false,
+      "single_shot": false
+    },
+    {
+      "id": 806,
+      "status": "machine_validated",
+      "event_id": 38,
+      "errors": [],
+      "grounded": false,
+      "single_shot": false
+    },
+    {
+      "id": 807,
+      "status": "machine_validated",
+      "event_id": 1,
+      "errors": [],
+      "grounded": false,
+      "single_shot": false
+    },
+    {
+      "id": 808,
+      "status": "machine_validated",
+      "event_id": 1,
+      "errors": [],
+      "grounded": false,
+      "single_shot": false
+    },
+    {
+      "id": 809,
+      "status": "machine_validated",
+      "event_id": 1,
+      "errors": [],
+      "grounded": false,
+      "single_shot": false
+    },
+    {
+      "id": 810,
+      "status": "machine_validated",
+      "event_id": 1,
+      "errors": [],
+      "grounded": false,
+      "single_shot": false
+    },
+    {
+      "id": 811,
+      "status": "machine_validated",
+      "event_id": 1,
+      "errors": [],
+      "grounded": false,
+      "single_shot": false
+    },
+    {
+      "id": 812,
+      "status": "machine_validated",
+      "event_id": 1,
+      "errors": [],
+      "grounded": false,
+      "single_shot": false
+    },
+    {
+      "id": 813,
+      "status": "machine_validated",
+      "event_id": 1,
+      "errors": [],
+      "grounded": false,
+      "single_shot": false
+    },
+    {
+      "id": 814,
+      "status": "machine_validated",
+      "event_id": 1,
+      "errors": [],
+      "grounded": false,
+      "single_shot": false
+    },
+    {
+      "id": 815,
+      "status": "machine_validated",
+      "event_id": 1,
+      "errors": [],
+      "grounded": false,
+      "single_shot": false
+    },
+    {
+      "id": 816,
+      "status": "machine_validated",
+      "event_id": 1,
+      "errors": [],
+      "grounded": false,
+      "single_shot": false
+    },
+    {
+      "id": 817,
+      "status": "machine_validated",
+      "event_id": 3,
+      "errors": [],
+      "grounded": false,
+      "single_shot": false
+    },
+    {
+      "id": 818,
+      "status": "machine_validated",
+      "event_id": 3,
+      "errors": [],
+      "grounded": false,
+      "single_shot": false
+    },
+    {
+      "id": 819,
+      "status": "machine_validated",
+      "event_id": 3,
+      "errors": [],
+      "grounded": false,
+      "single_shot": false
+    },
+    {
+      "id": 820,
+      "status": "machine_validated",
+      "event_id": 3,
+      "errors": [],
+      "grounded": false,
+      "single_shot": false
+    },
+    {
+      "id": 821,
+      "status": "machine_validated",
+      "event_id": 3,
+      "errors": [],
+      "grounded": false,
+      "single_shot": false
+    },
+    {
+      "id": 822,
+      "status": "machine_validated",
+      "event_id": 3,
+      "errors": [],
+      "grounded": false,
+      "single_shot": false
+    },
+    {
+      "id": 823,
+      "status": "machine_validated",
+      "event_id": 3,
+      "errors": [],
+      "grounded": false,
+      "single_shot": false
+    },
+    {
+      "id": 824,
+      "status": "machine_validated",
+      "event_id": 3,
+      "errors": [],
+      "grounded": false,
+      "single_shot": false
+    }
+  ]
+}

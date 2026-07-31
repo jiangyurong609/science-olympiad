@@ -5,6 +5,10 @@ __pycache__/
 *.egg-info/
 .DS_Store
 *.db
+*.db.*
+*.bak
+*.sqlite
+*.sqlite3
 .env
 data/artifacts/
 data/blueprints/
