@@ -22,10 +22,33 @@ class OpenAICompatibleProvider:
         self.base_url = (settings.openai_compatible_base_url or "").rstrip("/")
         self.api_key = settings.openai_api_key
         self.model = settings.openai_model
+        self.embedding_model = settings.openai_embedding_model
 
     @property
     def configured(self) -> bool:
         return bool(self.base_url and self.api_key)
+
+    @property
+    def embeddings_configured(self) -> bool:
+        return bool(self.configured and self.embedding_model)
+
+    def embed(self, texts: list[str]) -> list[list[float]]:
+        """Embed a batch of texts via an OpenAI-compatible /embeddings endpoint."""
+        if not self.embeddings_configured:
+            raise ModelProviderError("No embedding model is configured")
+        url = f"{self.base_url}/embeddings"
+        try:
+            response = httpx.post(
+                url,
+                headers={"Authorization": f"Bearer {self.api_key}", "Content-Type": "application/json"},
+                json={"model": self.embedding_model, "input": texts},
+                timeout=httpx.Timeout(120.0, connect=15.0),
+            )
+            response.raise_for_status()
+            data = response.json()["data"]
+            return [row["embedding"] for row in data]
+        except (httpx.HTTPError, KeyError, IndexError, TypeError, ValueError) as exc:
+            raise ModelProviderError(f"Embedding request failed: {exc}") from exc
 
     def generate_json(self, system: str, user: str) -> ModelResult:
         if not self.configured:

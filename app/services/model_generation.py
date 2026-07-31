@@ -137,7 +137,21 @@ def generate_model_questions(
             ).payload
             verifier_passed = bool(verify_payload.get("passed"))
             report["independent_verifier"] = verify_payload
-            report["passed"] = bool(report["passed"] and solver_ok and verifier_passed)
+
+            # Semantic leakage check: block if an embedding near-duplicate exists (when an
+            # embedding model is configured; otherwise the report records "not_configured").
+            embedder = provider.embed if getattr(provider, "embeddings_configured", False) else None
+            similarity_report = build_similarity_report(
+                db, str(raw.get("stem", "")), choices, embed=embedder
+            )
+            emb = similarity_report.get("embedding_check")
+            embedding_blocked = isinstance(emb, dict) and emb.get("outcome") == "blocked"
+            if embedding_blocked:
+                report.setdefault("errors", []).append("embedding_near_duplicate")
+
+            report["passed"] = bool(
+                report["passed"] and solver_ok and verifier_passed and not embedding_blocked
+            )
             question = Question(
                 event_id=event.id,
                 concept_id=concept.id if concept else None,
@@ -153,7 +167,7 @@ def generate_model_questions(
                 cognitive_level=cognitive_level,
                 estimated_seconds=int(raw.get("estimated_seconds", 90)),
                 validation_report=report,
-                similarity_report=build_similarity_report(db, str(raw.get("stem", "")), choices),
+                similarity_report=similarity_report,
                 generation_provenance={
                     "provider": generated.provider,
                     "model": generated.model,

@@ -24,6 +24,7 @@ class Settings(BaseSettings):
     openai_compatible_base_url: str | None = None
     openai_api_key: str | None = None
     openai_model: str = "gpt-4.1-mini"
+    openai_embedding_model: str | None = None  # set to enable semantic similarity checks
     rate_limit_requests: int = 120
     rate_limit_window_seconds: int = 60
     redis_url: str | None = None
