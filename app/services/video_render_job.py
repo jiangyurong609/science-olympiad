@@ -96,4 +96,7 @@ def render_storyboard(
         db.commit()
         raise
     db.commit()
+    # commit expires the instance; reload it so callers can read the result after the
+    # session closes instead of hitting DetachedInstanceError.
+    db.refresh(render)
     return render
