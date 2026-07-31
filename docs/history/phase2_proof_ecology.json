@@ -1,0 +1,16 @@
+{
+  "event": "ecology",
+  "concept": "Energy flow",
+  "before": {
+    "draft": 6,
+    "machine_validated": 2
+  },
+  "after": {
+    "draft": 6,
+    "machine_validated": 5
+  },
+  "generated": 3,
+  "all_solver_agreed": true,
+  "all_verifier_passed": true,
+  "path": "model_generation.generate_model_questions (writer->validate->solver->verifier->similarity)"
+}
