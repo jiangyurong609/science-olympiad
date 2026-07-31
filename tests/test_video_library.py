@@ -165,3 +165,14 @@ def test_video_endpoints_enforce_roles(client, student_token, admin_token, monke
     body = client.get(f"/api/lessons/{lesson_id}/videos",
                       headers={"Authorization": f"Bearer {student_token}"}).json()
     assert len(body["chapters"]) == 1 and body["available"] is True
+
+
+def test_unchaptered_render_is_labelled_full_lesson():
+    """Renders made before chaptering have no chapter key; they must not show a blank title."""
+    with SessionLocal() as db:
+        lesson_id, board_id = _seed(db, chapters=[{"key": "", "title": "", "qa": vl.QA_APPROVED}])
+        render = db.scalars(vl.select(VideoRender)).first()
+        render.provenance = {}
+        db.commit()
+        chapters = vl.lesson_chapters(db, lesson_id)
+    assert chapters[0]["title"] == "Full lesson"

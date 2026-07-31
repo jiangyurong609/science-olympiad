@@ -70,7 +70,10 @@ def lesson_chapters(db: Session, lesson_id: int, *, include_pending: bool = Fals
         out.append({
             "render_id": render.id,
             "chapter": render.chapter,
-            "title": (render.provenance or {}).get("chapter_title") or render.chapter.replace("-", " ").title(),
+            # A render made before chaptering has no chapter key; it is the whole lesson.
+            "title": ((render.provenance or {}).get("chapter_title")
+                      or (render.chapter.replace("-", " ").title() if render.chapter
+                          else "Full lesson")),
             "duration_seconds": render.duration_seconds,
             "version": render.version,
             "qa_status": render.qa_status,
