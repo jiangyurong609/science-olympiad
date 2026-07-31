@@ -902,8 +902,13 @@ function renderConcepts() {
 
 function studentEvents() {
   const division = state.user?.division;
+  // Student navigation is intentionally scoped to the active competition
+  // season. Historical courses remain reachable from saved/direct links, but
+  // should not overwhelm the everyday event picker.
+  const currentSeason = Math.max(...state.events.filter(event => event.season_status === 'current').map(event => Number(event.season) || 0), 0);
   return [...state.events]
     .filter(event => event.lesson_count > 0 || event.exam_count > 0 || event.material_count > 0)
+    .filter(event => !currentSeason || Number(event.season) === currentSeason || event.slug === state.activeEventSlug)
     .filter(event => !division || event.division === division || event.division === 'B/C' || event.slug === state.activeEventSlug)
     .sort((a, b) => {
       const aRank = a.division === division ? 0 : a.division === 'B/C' ? 1 : 2;
@@ -1999,7 +2004,7 @@ async function loadApplication() {
       renderCoachDashboard();
     } else {
       const [events, exams, dashboard, accommodation] = await Promise.all([
-        api('/events'), api('/exams'), api(`/student/dashboard?event_slug=${encodeURIComponent(state.activeEventSlug)}`), api('/me/accommodations'),
+        api('/events'), api('/exams'), Promise.resolve(null), api('/me/accommodations'),
       ]);
       state.events = events;
       state.exams = exams;
