@@ -302,3 +302,15 @@ class AnswerKeyUpdate(BaseModel):
     accepted: list[Annotated[str, StringConstraints(max_length=200)]] = Field(
         default_factory=list, max_length=20)
     rubric: str | None = Field(default=None, max_length=2000)
+
+
+class VideoQaNote(BaseModel):
+    """A reviewer's note anchored to where the problem is, so the author can act on it."""
+    scene: int | None = None
+    at_seconds: float | None = None
+    note: str
+
+
+class VideoQaRequest(BaseModel):
+    decision: str          # approved | rejected
+    notes: list[VideoQaNote] = []

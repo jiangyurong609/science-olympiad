@@ -1680,6 +1680,7 @@ async function loadContentOperations(button = null) {
     renderLessonReviewQueue();
     renderQuestionReviewQueue();
     renderCalibrationQueue();
+    renderVideoReviewQueue();
     renderContentChallengeQueue();
     await loadContentReleases();
     renderIntakeEvents();
@@ -1989,6 +1990,7 @@ async function loadApplication() {
       renderLessonReviewQueue();
       renderQuestionReviewQueue();
       renderCalibrationQueue();
+    renderVideoReviewQueue();
       renderContentChallengeQueue();
       // Content Studio has its own event picker and inbox. Populate these
       // before the first paint; previously they were only refreshed after an
@@ -2235,6 +2237,7 @@ $('calibration-queue').addEventListener('click', async event => {
     });
     state.calibrationQueue = await api('/content/questions/calibration-queue');
     renderCalibrationQueue();
+    renderVideoReviewQueue();
     toast(button.dataset.calibrationDecision === 'accepted' ? 'Calibration accepted.' : 'Calibration rejection recorded.');
   } catch (error) { status.textContent = error.message; }
   finally { setBusy(button, false); }
@@ -2623,6 +2626,7 @@ async function openLesson(id) {
       coursePath(activeEvent(), `/lesson/${encodeURIComponent(lessonSlug)}`),
     );
     renderLessonBlock();
+    loadLessonVideo(id);
   } catch (error) { toast(error.message); }
   finally { setBusy(button, false); }
 }
@@ -2796,6 +2800,7 @@ async function moveLesson(delta) {
     state.lessonBlockIndex += delta;
     await saveCurrentLessonProgress(false);
     renderLessonBlock();
+    loadLessonVideo(id);
   } catch (error) { toast(error.message); }
 }
 
@@ -3443,3 +3448,123 @@ async function initialize() {
 }
 
 initialize();
+
+
+// --- Generated video lessons -------------------------------------------------
+// Chapters are short per-sub-topic clips; selecting one swaps the player source so a
+// student can jump straight to the part they need instead of scrubbing one long file.
+async function loadLessonVideo(lessonId) {
+  const section = $('lesson-video');
+  if (!section) return;
+  section.hidden = true;
+  try {
+    const data = await api(`/lessons/${lessonId}/videos`);
+    const chapters = data.chapters || [];
+    if (!chapters.length) return;
+    state.lessonVideoChapters = chapters;
+    const count = $('lesson-video-count');
+    const totalMinutes = Math.round(chapters.reduce((sum, c) => sum + (c.duration_seconds || 0), 0) / 60);
+    count.textContent = `${chapters.length} chapter${chapters.length === 1 ? '' : 's'}` +
+      (totalMinutes ? ` · about ${totalMinutes} min` : '');
+    $('lesson-video-chapters').innerHTML = chapters.map((chapter, index) => `
+      <li>
+        <button type="button" class="video-chapter" data-video-chapter="${index}" aria-pressed="${index === 0}">
+          <span class="video-chapter-index">${String(index + 1).padStart(2, '0')}</span>
+          <span class="video-chapter-title">${escapeHtml(chapter.title)}</span>
+          <span class="video-chapter-time">${formatClock(chapter.duration_seconds)}</span>
+          ${chapter.qa_status !== 'approved' ? '<span class="video-chapter-flag">in review</span>' : ''}
+        </button>
+      </li>`).join('');
+    playVideoChapter(0, false);
+    section.hidden = false;
+  } catch (error) {
+    // A missing video must never break the lesson itself.
+    section.hidden = true;
+  }
+}
+
+function formatClock(seconds) {
+  const total = Math.max(0, Math.round(seconds || 0));
+  return `${Math.floor(total / 60)}:${String(total % 60).padStart(2, '0')}`;
+}
+
+function playVideoChapter(index, autoplay = true) {
+  const chapters = state.lessonVideoChapters || [];
+  const chapter = chapters[index];
+  if (!chapter) return;
+  const player = $('lesson-video-player');
+  player.src = chapter.playback_url;
+  if (autoplay) player.play().catch(() => {});
+  document.querySelectorAll('[data-video-chapter]').forEach(button => {
+    button.setAttribute('aria-pressed', String(Number(button.dataset.videoChapter) === index));
+  });
+  state.currentVideoChapter = index;
+}
+
+document.addEventListener('click', event => {
+  const button = event.target.closest('[data-video-chapter]');
+  if (button) playVideoChapter(Number(button.dataset.videoChapter));
+});
+
+// Roll straight into the next chapter, the way a lesson should flow.
+document.addEventListener('DOMContentLoaded', () => {
+  const player = $('lesson-video-player');
+  if (!player) return;
+  player.addEventListener('ended', () => {
+    const next = (state.currentVideoChapter ?? 0) + 1;
+    if ((state.lessonVideoChapters || [])[next]) playVideoChapter(next);
+  });
+});
+
+// --- Staff: video review queue ----------------------------------------------
+async function renderVideoReviewQueue() {
+  const host = $('video-review-list');
+  if (!host) return;
+  try {
+    const data = await api('/content/video-renders?status=pending');
+    const renders = data.renders || [];
+    $('video-review-count').textContent = renders.length ? `${renders.length} awaiting review` : 'Queue clear';
+    if (!renders.length) {
+      host.innerHTML = '<p class="catalog-empty">No rendered videos are waiting for review.</p>';
+      return;
+    }
+    host.innerHTML = renders.map(render => `
+      <article class="video-review-card surface" data-render="${render.render_id}">
+        <header>
+          <h4>${escapeHtml(render.lesson_title || 'Lesson')} — ${escapeHtml(render.chapter)}</h4>
+          <span>v${render.version} · ${formatClock(render.duration_seconds)} · ${render.scenes || '?'} scenes</span>
+        </header>
+        <video class="video-review-player" controls preload="metadata" src="${safeUrl(render.playback_url)}"></video>
+        <label class="video-review-note">
+          <span>Notes (required to reject — say what to fix and where)</span>
+          <textarea data-note="${render.render_id}" rows="2" placeholder="e.g. scene 3: caption drifts after 00:12"></textarea>
+        </label>
+        <footer class="video-review-actions">
+          <button type="button" class="button button-secondary" data-video-qa="rejected" data-render-id="${render.render_id}">Request changes</button>
+          <button type="button" class="button" data-video-qa="approved" data-render-id="${render.render_id}">Approve for students</button>
+        </footer>
+      </article>`).join('');
+  } catch (error) { toast(error.message); }
+}
+
+document.addEventListener('click', async event => {
+  const button = event.target.closest('[data-video-qa]');
+  if (!button) return;
+  const renderId = button.dataset.renderId;
+  const decision = button.dataset.videoQa;
+  const text = (document.querySelector(`[data-note="${renderId}"]`)?.value || '').trim();
+  if (decision === 'rejected' && !text) {
+    toast('Add a note describing what to fix before requesting changes.');
+    return;
+  }
+  setBusy(button, true, decision === 'approved' ? 'Approving…' : 'Sending…');
+  try {
+    await api(`/content/video-renders/${renderId}/qa`, {
+      method: 'POST',
+      body: JSON.stringify({ decision, notes: text ? [{ note: text }] : [] }),
+    });
+    toast(decision === 'approved' ? 'Approved — students can watch it.' : 'Sent back with notes.');
+    renderVideoReviewQueue();
+  } catch (error) { toast(error.message); }
+  finally { setBusy(button, false); }
+});

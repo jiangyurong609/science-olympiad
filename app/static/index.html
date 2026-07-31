@@ -9,8 +9,8 @@
   <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='16' fill='%231f5a45'/%3E%3Ctext x='32' y='44' text-anchor='middle' font-size='38' fill='white'%3EF%3C/text%3E%3C/svg%3E">
   <link rel="preload" href="/static/fonts/Fraunces.woff2" as="font" type="font/woff2" crossorigin>
   <link rel="preload" href="/static/fonts/AtkinsonHyperlegibleNext.woff2" as="font" type="font/woff2" crossorigin>
-  <link rel="stylesheet" href="/static/styles.css?v=31">
-  <link rel="stylesheet" href="/static/theme.css?v=31">
+  <link rel="stylesheet" href="/static/styles.css?v=11">
+  <link rel="stylesheet" href="/static/theme.css?v=11">
 </head>
 <body>
   <a class="skip-link" href="#main-content">Skip to Main Content</a>
@@ -224,6 +224,14 @@
               <div class="lesson-reader-meta"><button id="open-lesson-tutor" class="button button-secondary button-compact" type="button">Ask Grounded Tutor</button><span id="lesson-save-state" aria-live="polite">Progress saved</span><strong id="lesson-position">1 of 1</strong></div>
             </header>
             <div class="lesson-progress" aria-hidden="true"><span id="lesson-progress-bar"></span></div>
+            <section id="lesson-video" class="lesson-video" hidden aria-labelledby="lesson-video-title">
+              <header class="lesson-video-header">
+                <h3 id="lesson-video-title">Watch this lesson</h3>
+                <span id="lesson-video-count" class="lesson-video-count"></span>
+              </header>
+              <video id="lesson-video-player" class="lesson-video-player" controls preload="metadata" playsinline></video>
+              <ol id="lesson-video-chapters" class="lesson-video-chapters"></ol>
+            </section>
             <div class="lesson-reader-layout">
               <aside class="lesson-outline" aria-label="Lesson sections">
                 <p id="lesson-outline-unit">Lesson</p>
@@ -393,6 +401,9 @@
             <div id="question-review-empty" class="empty-state surface" hidden><span aria-hidden="true">✓</span><h3>Review Queue Clear</h3><p>No questions currently require your role’s review.</p></div>
           </section>
           <section class="calibration-workspace" aria-labelledby="calibration-title">
+            <div class="section-heading"><div><p class="kicker">Post-render gate</p><h2 id="video-review-title">Video Review</h2><p>Watch each rendered chapter before students do. Approving publishes it; requesting changes sends notes back to the storyboard.</p></div><p id="video-review-count" class="queue-count">Queue clear</p></div>
+            <div id="video-review-list" class="video-review-list" aria-live="polite"></div>
+
             <div class="section-heading"><div><p class="kicker">Pilot evidence gate</p><h2 id="calibration-title">Calibration Queue</h2><p>Use first-exposure student data to verify difficulty, discrimination, omissions, timing, and cohort representation.</p></div><p id="calibration-count" class="queue-count">0 Items</p></div>
             <div id="calibration-queue" class="calibration-queue" aria-live="polite"></div>
             <div id="calibration-empty" class="empty-state surface" hidden><span aria-hidden="true">◇</span><h3>No Published Items Awaiting Calibration</h3><p>Reviewed practice items appear here after students generate pilot evidence.</p></div>
@@ -497,6 +508,6 @@
       </div>
     </div>
   </div>
-  <script src="/static/app.js?v=37"></script>
+  <script src="/static/app.js?v=11"></script>
 </body>
 </html>

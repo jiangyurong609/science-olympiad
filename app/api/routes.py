@@ -30,6 +30,7 @@ from app.schemas.api import (
     FirebaseBootstrapRequest,
     GuardianConsentRequest, LoginRequest,
     LessonCheckpointRequest, LessonProgressRequest, LessonReviewRequest, MockExamRequest, PracticeAnswerRequest,
+    VideoQaRequest,
     PracticeStartRequest, QuestionCalibrationRequest, QuestionGenerateRequest, QuestionReviewRequest, ReflectionRequest, RegisterRequest,
     ResponseSaveRequest,
     SourceCreate, StudentContentFeedbackRequest, TeamCreateRequest, TeamMemberRequest, TransferAnswerRequest,
@@ -2200,6 +2201,68 @@ def save_lesson_progress(
         "current_block": progress.current_block,
         "completed_block_ids": progress.completed_block_ids,
     }
+
+
+@router.get("/lessons/{lesson_id}/videos")
+def list_lesson_videos(
+    lesson_id: int,
+    db: Session = Depends(get_db),
+    user: User = Depends(current_user),
+):
+    """Watchable video chapters for a lesson.
+
+    Students see only renders that passed post-render QA; content staff can also see
+    pending ones so they can check work in context before approving it.
+    """
+    from app.services import video_library
+
+    lesson = db.get(Lesson, lesson_id)
+    if not lesson:
+        raise HTTPException(status_code=404, detail="Lesson not found")
+    staff = user.role in {"admin", "editor", "sme", "calibrator"}
+    if lesson.status != "published" and not staff:
+        raise HTTPException(status_code=404, detail="Lesson not found")
+    try:
+        chapters = video_library.lesson_chapters(db, lesson_id, include_pending=staff)
+    except Exception as exc:                     # storage misconfigured should not 500 the lesson
+        _log.warning("video playback unavailable for lesson %s: %s", lesson_id, str(exc)[:200])
+        return {"lesson_id": lesson_id, "chapters": [], "available": False}
+    return {"lesson_id": lesson_id, "chapters": chapters, "available": True}
+
+
+@router.get("/content/video-renders")
+def list_video_renders(
+    status: str = "pending",
+    db: Session = Depends(get_db),
+    user: User = Depends(require_content_staff),
+):
+    """Review queue: rendered videos awaiting someone actually watching them."""
+    from app.services import video_library
+
+    return {"status": status, "renders": video_library.review_queue(db, status=status)}
+
+
+@router.post("/content/video-renders/{render_id}/qa")
+def review_video_render(
+    render_id: int,
+    payload: VideoQaRequest,
+    db: Session = Depends(get_db),
+    actor: User = Depends(require_content_staff),
+):
+    """Approve a render for students, or reject it with notes the author renders against."""
+    from app.services import video_library
+
+    try:
+        render = video_library.record_qa(
+            db, render_id, payload.decision,
+            [note.model_dump() for note in payload.notes], actor.id,
+        )
+    except video_library.VideoLibraryError as exc:
+        raise HTTPException(status_code=400, detail=str(exc))
+    _audit(db, actor, "video.qa", "video_render", render.id,
+           decision=payload.decision, notes=len(render.qa_notes or []))
+    db.commit()
+    return {"render_id": render.id, "qa_status": render.qa_status, "qa_notes": render.qa_notes}
 
 
 @router.post("/lessons/{lesson_id}/checkpoint")

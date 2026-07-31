@@ -676,3 +676,35 @@ details[open] summary { color: var(--forest); }
   .material-group .materials-grid { grid-template-columns: 1fr; }
   .resource-library .material-card { min-height: 0; }
 }
+
+/* --- Generated video lessons ------------------------------------------------
+   Chapters are short clips, so the list is a compact index rather than a playlist
+   that competes with the player for attention. */
+.lesson-video { margin: 0 0 1.5rem; }
+.lesson-video-header { display: flex; align-items: baseline; justify-content: space-between; gap: 1rem; margin-bottom: .6rem; }
+.lesson-video-header h3 { margin: 0; font-size: 1.05rem; }
+.lesson-video-count { font-size: .82rem; opacity: .7; }
+.lesson-video-player { width: 100%; aspect-ratio: 16 / 9; border-radius: 12px; background: #0b1417; display: block; }
+.lesson-video-chapters { list-style: none; margin: .6rem 0 0; padding: 0; display: grid; gap: .3rem; }
+.video-chapter { width: 100%; display: grid; grid-template-columns: auto 1fr auto auto; gap: .7rem; align-items: center;
+  text-align: left; font: inherit; font-size: .9rem; padding: .5rem .7rem; border-radius: 8px; cursor: pointer;
+  background: transparent; border: 1px solid rgba(128, 145, 140, .28); color: inherit; }
+.video-chapter:hover { border-color: rgba(52, 201, 138, .55); }
+.video-chapter[aria-pressed="true"] { border-color: rgba(52, 201, 138, .8); background: rgba(52, 201, 138, .1); }
+.video-chapter-index { font-variant-numeric: tabular-nums; opacity: .55; font-size: .78rem; }
+.video-chapter-time { font-variant-numeric: tabular-nums; opacity: .7; font-size: .82rem; }
+.video-chapter-flag { font-size: .68rem; text-transform: uppercase; letter-spacing: .06em; padding: .1rem .4rem;
+  border-radius: 4px; background: rgba(224, 82, 44, .16); color: #e0522c; }
+
+/* Staff review queue */
+.video-review-list { display: grid; gap: 1rem; }
+.video-review-card { padding: 1rem; border-radius: 12px; display: grid; gap: .7rem; }
+.video-review-card header { display: flex; justify-content: space-between; align-items: baseline; gap: 1rem; flex-wrap: wrap; }
+.video-review-card header h4 { margin: 0; font-size: 1rem; }
+.video-review-card header span { font-size: .8rem; opacity: .7; font-variant-numeric: tabular-nums; }
+.video-review-player { width: 100%; aspect-ratio: 16 / 9; border-radius: 10px; background: #0b1417; }
+.video-review-note { display: grid; gap: .3rem; font-size: .84rem; }
+.video-review-note textarea { width: 100%; font: inherit; font-size: .88rem; padding: .5rem .6rem; border-radius: 8px;
+  border: 1px solid rgba(128, 145, 140, .35); background: transparent; color: inherit; resize: vertical; }
+.video-review-actions { display: flex; gap: .6rem; justify-content: flex-end; flex-wrap: wrap; }
+@media (max-width: 560px) { .video-chapter { grid-template-columns: auto 1fr auto; } .video-chapter-flag { display: none; } }

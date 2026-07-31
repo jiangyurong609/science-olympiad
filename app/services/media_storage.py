@@ -83,3 +83,12 @@ def signed_upload_url(key: str, content_type: str = "video/mp4", ttl: timedelta 
 
 def render_key(storyboard_id: int, version: int, name: str) -> str:
     return f"video/storyboard-{storyboard_id}/v{version}/{name}"
+
+
+def playback_url(key: str, ttl: timedelta = DEFAULT_TTL) -> str:
+    """Mint a fresh signed GET URL for playback.
+
+    Signed URLs expire, so playback links are minted per request rather than stored; that
+    also means a withdrawn video stops being reachable once its last link lapses.
+    """
+    return _bucket().blob(key).generate_signed_url(version="v4", expiration=ttl, method="GET")
