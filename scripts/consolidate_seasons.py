@@ -286,6 +286,11 @@ def merge_events(db: Session, keep_id: int, drop_id: int) -> dict:
     drop = db.get(Event, drop_id)
     if not keep or not drop:
         raise SystemExit(f"merge_events: unknown event id(s) keep={keep_id} drop={drop_id}")
+    if (norm(keep.name), keep.division, keep.season) != (norm(drop.name), drop.division, drop.season):
+        raise SystemExit(
+            "merge_events only merges same (name,division,season) duplicates; "
+            f"keep={keep.slug}({keep.season}) drop={drop.slug}({drop.season})"
+        )
 
     before = {
         "questions": _q(db, Question, keep_id) + _q(db, Question, drop_id),
@@ -337,15 +342,16 @@ def merge_events(db: Session, keep_id: int, drop_id: int) -> dict:
     for k in before:
         if after[k] != before[k]:
             raise SystemExit(f"merge_events conservation failed for {k}: {before[k]} -> {after[k]}")
-    # targeted invariant: this key now has exactly one active event (the rest of the catalog
-    # may still be unconsolidated, so we do NOT assert the global invariant here).
-    key = (norm(keep.name), keep.division)
+    # targeted invariant: this key now has exactly one active event *within the merged season*
+    # (a cross-season twin may still be active — the main consolidation archives it later, and
+    # the rest of the catalog may still be unconsolidated, so we don't assert the global one).
+    key = (norm(keep.name), keep.division, keep.season)
     active_here = sum(
         1 for e in db.scalars(select(Event)).all()
-        if (norm(e.name), e.division) == key and e.active and e.season_status != ARCHIVED_STATUS
+        if (norm(e.name), e.division, e.season) == key and e.active and e.season_status != ARCHIVED_STATUS
     )
     if active_here != 1:
-        raise SystemExit(f"merge_events: key {key} has {active_here} active events after merge (want 1)")
+        raise SystemExit(f"merge_events: key {key} has {active_here} active events in-season after merge (want 1)")
     db.commit()
     return {"keep_id": keep_id, "drop_id": drop_id, "before": before, "after": after}
 
