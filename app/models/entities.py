@@ -1240,6 +1240,7 @@ class VideoRender(Base):
     id: Mapped[int] = mapped_column(primary_key=True)
     storyboard_id: Mapped[int] = mapped_column(ForeignKey("video_storyboards.id", ondelete="CASCADE"), index=True)
     version: Mapped[int] = mapped_column(Integer, default=1)
+    chapter: Mapped[str] = mapped_column(String(120), default="", index=True)
     status: Mapped[str] = mapped_column(String(32), default="queued", index=True)
     spec_hash: Mapped[str] = mapped_column(String(64), default="", index=True)
     duration_seconds: Mapped[float] = mapped_column(Float, default=0.0)

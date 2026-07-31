@@ -12,7 +12,9 @@ from app.models.entities import (
 )
 import app.services.video_storyboard as sb
 from app.services.tts_deepgram import Narration
-from app.services.video_render_job import render_storyboard, spec_fingerprint
+from app.services.video_render_job import (
+    narrate_scenes, render_lesson, render_storyboard, spec_fingerprint,
+)
 from app.services.video_slides import archetype_for, render_scene_svg, render_storyboard as slides_for
 from app.services.video_worker import RenderResult
 
@@ -203,3 +205,60 @@ def test_spec_fingerprint_is_stable_and_order_insensitive():
     b = {"clips": [{"id": "1"}], "version": 0}
     assert spec_fingerprint(a) == spec_fingerprint(b)
     assert spec_fingerprint(a) != spec_fingerprint({"version": 0, "clips": [{"id": "2"}]})
+
+
+# ------------------------------------------------------------------ chapters + parallelism
+
+def test_narration_runs_concurrently_and_preserves_order():
+    import threading, time
+    seen, lock = [], threading.Lock()
+
+    class Slow:
+        configured, model = True, "aura-test"
+
+        def narrate(self, text):
+            time.sleep(0.05)                     # simulate a network round trip
+            with lock:
+                seen.append(text)
+            return Narration(audio=b"a", model=self.model,
+                             words=[{"text": text, "startSeconds": 0, "endSeconds": 1}])
+
+    scenes = [{"narration": f"scene {i}"} for i in range(6)]
+    t0 = time.time()
+    results = narrate_scenes(Slow(), scenes, workers=6)
+    elapsed = time.time() - t0
+
+    assert [r.words[0]["text"] for r in results] == [s["narration"] for s in scenes], "order preserved"
+    assert elapsed < 0.05 * len(scenes), "narration must overlap, not run serially"
+
+
+def test_render_lesson_produces_one_render_per_chapter():
+    with SessionLocal() as db:
+        board_id = _approved_storyboard(db)
+        board = db.get(sb.VideoStoryboard, board_id)
+        board.scenes = [
+            {**board.scenes[0], "chapter": "Roles", "narration": "Roles narration here."},
+            {**board.scenes[1], "chapter": "Recap", "narration": "Recap narration here."},
+        ]
+        db.commit()
+
+        client = _FakeClient()
+        renders = render_lesson(db, board_id, narrator=_FakeNarrator(),
+                                client=client, storage=_FakeStorage())
+        assert len(renders) == 2
+        assert [r.chapter for r in renders] == ["roles", "recap"]
+        assert all(r.status == "succeeded" for r in renders)
+        # each chapter writes its own video, so one cannot overwrite another
+        keys = [r.video_key for r in renders]
+        assert len(set(keys)) == 2
+        assert all(k.endswith("lesson.mp4") for k in keys)
+
+
+def test_render_lesson_respects_the_approval_gate():
+    with SessionLocal() as db:
+        board_id = _approved_storyboard(db)
+        db.get(sb.VideoStoryboard, board_id).status = sb.DRAFT
+        db.commit()
+        with pytest.raises(sb.StoryboardError, match="approve it before rendering"):
+            render_lesson(db, board_id, narrator=_FakeNarrator(),
+                          client=_FakeClient(), storage=_FakeStorage())
