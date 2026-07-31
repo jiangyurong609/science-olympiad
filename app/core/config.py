@@ -25,6 +25,11 @@ class Settings(BaseSettings):
     openai_api_key: str | None = None
     openai_model: str = "gpt-4.1-mini"
     openai_embedding_model: str | None = None  # set to enable semantic similarity checks
+    # Phase V — generated video lessons
+    deepgram_api_key: str | None = None
+    deepgram_tts_model: str = "aura-2-thalia-en"
+    video_render_worker_url: str | None = None   # dreamvibe Remotion worker (Cloud Run)
+    video_render_timeout_seconds: float = 960.0
     rate_limit_requests: int = 120
     rate_limit_window_seconds: int = 60
     redis_url: str | None = None

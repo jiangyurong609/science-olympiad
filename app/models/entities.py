@@ -1205,3 +1205,50 @@ class Assignment(Base):
     created_by_user_id: Mapped[int] = mapped_column(ForeignKey("users.id"), index=True)
     created_at: Mapped[datetime] = mapped_column(DateTime(timezone=True), default=now_utc)
     exam: Mapped[Exam] = relationship()
+
+
+class VideoStoryboard(Base):
+    """Phase V — the approved plan for a generated video lesson.
+
+    Slides and their narration are authored together: each scene pairs what is on screen with
+    the beat of narration that explains it. Nothing is synthesized or rendered until a human
+    approves this, because storyboard edits are cheap and renders are not.
+    """
+    __tablename__ = "video_storyboards"
+    __table_args__ = (UniqueConstraint("lesson_id", "version", name="uq_video_storyboard_version"),)
+    id: Mapped[int] = mapped_column(primary_key=True)
+    lesson_id: Mapped[int] = mapped_column(ForeignKey("lessons.id", ondelete="CASCADE"), index=True)
+    lesson_version: Mapped[int] = mapped_column(Integer, default=1)
+    event_id: Mapped[int] = mapped_column(ForeignKey("events.id"), index=True)
+    version: Mapped[int] = mapped_column(Integer, default=1)
+    title: Mapped[str] = mapped_column(String(255), default="")
+    scenes: Mapped[list] = mapped_column(JSON, default=list)
+    status: Mapped[str] = mapped_column(String(32), default="draft", index=True)
+    review_notes: Mapped[str] = mapped_column(Text, default="")
+    approved_by_user_id: Mapped[int | None] = mapped_column(ForeignKey("users.id"), nullable=True)
+    approved_at: Mapped[datetime | None] = mapped_column(DateTime(timezone=True), nullable=True)
+    created_at: Mapped[datetime] = mapped_column(DateTime(timezone=True), default=now_utc)
+
+
+class VideoRender(Base):
+    """Phase V — one render attempt for a storyboard, with full provenance.
+
+    Renders are versioned rather than overwritten: fixing a video means editing the storyboard
+    and rendering again, leaving the prior render recoverable.
+    """
+    __tablename__ = "video_renders"
+    id: Mapped[int] = mapped_column(primary_key=True)
+    storyboard_id: Mapped[int] = mapped_column(ForeignKey("video_storyboards.id", ondelete="CASCADE"), index=True)
+    version: Mapped[int] = mapped_column(Integer, default=1)
+    status: Mapped[str] = mapped_column(String(32), default="queued", index=True)
+    spec_hash: Mapped[str] = mapped_column(String(64), default="", index=True)
+    duration_seconds: Mapped[float] = mapped_column(Float, default=0.0)
+    audio_keys: Mapped[list] = mapped_column(JSON, default=list)
+    slide_keys: Mapped[list] = mapped_column(JSON, default=list)
+    video_key: Mapped[str] = mapped_column(String(512), default="")
+    worker_job_id: Mapped[str] = mapped_column(String(120), default="")
+    provenance: Mapped[dict] = mapped_column(JSON, default=dict)
+    error: Mapped[str] = mapped_column(Text, default="")
+    qa_status: Mapped[str] = mapped_column(String(32), default="pending", index=True)
+    qa_notes: Mapped[list] = mapped_column(JSON, default=list)
+    created_at: Mapped[datetime] = mapped_column(DateTime(timezone=True), default=now_utc)
