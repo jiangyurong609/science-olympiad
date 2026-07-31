@@ -440,9 +440,35 @@ def bootstrap_firebase_profile(
     return result
 
 
+import re as _re
+
+# Events with these statuses are not part of the live catalog (R-C6): prior_season_practice
+# is reachable via the archive surface; archived_superseded are retired consolidation twins.
+ARCHIVE_SEASON_STATUSES = {"prior_season_practice", "archived_superseded"}
+
+
+def _norm_event_key(event: Event) -> tuple[str, str]:
+    return (_re.sub(r"[^a-z0-9]+", " ", (event.name or "").lower()).strip(), event.division)
+
+
+def _canonical_event_for(db: Session, event: Event) -> Event | None:
+    """The live canonical event sharing this event's (normalized name, division)."""
+    key = _norm_event_key(event)
+    for candidate in db.scalars(select(Event).where(
+        Event.active.is_(True),
+        Event.season_status.notin_(ARCHIVE_SEASON_STATUSES),
+    )).all():
+        if _norm_event_key(candidate) == key and candidate.id != event.id:
+            return candidate
+    return None
+
+
 @router.get("/events")
 def list_events(db: Session = Depends(get_db)):
-    events = db.scalars(select(Event).where(Event.active.is_(True)).order_by(Event.name)).all()
+    events = db.scalars(select(Event).where(
+        Event.active.is_(True),
+        Event.season_status.notin_(ARCHIVE_SEASON_STATUSES),
+    ).order_by(Event.name)).all()
     lesson_counts = dict(db.execute(
         select(Lesson.event_id, func.count(Lesson.id))
         .where(Lesson.status == "published").group_by(Lesson.event_id)
@@ -466,6 +492,58 @@ def list_events(db: Session = Depends(get_db)):
         "exam_count": exam_counts.get(e.id, 0),
         "material_count": material_counts.get(e.id, 0),
     } for e in events]
+
+
+@router.get("/catalog/archive")
+def list_archive(db: Session = Depends(get_db), user: User = Depends(current_user)):
+    """Authenticated archive surface (R-C6): prior-season practice + retired consolidation
+    twins, so archived content stays reachable through a supported app path rather than being
+    silently hidden. Each entry links to its live canonical event where one exists."""
+    events = db.scalars(select(Event).where(
+        Event.season_status.in_(ARCHIVE_SEASON_STATUSES)
+    ).order_by(Event.name, Event.season)).all()
+    lesson_counts = dict(db.execute(
+        select(Lesson.event_id, func.count(Lesson.id)).group_by(Lesson.event_id)
+    ).all())
+    question_counts = dict(db.execute(
+        select(Question.event_id, func.count(Question.id)).group_by(Question.event_id)
+    ).all())
+    exam_counts = dict(db.execute(
+        select(Exam.event_id, func.count(Exam.id)).group_by(Exam.event_id)
+    ).all())
+    out = []
+    for e in events:
+        canonical = _canonical_event_for(db, e)
+        out.append({
+            "id": e.id, "slug": e.slug, "name": e.name, "division": e.division,
+            "season": e.season, "season_status": e.season_status, "active": e.active,
+            "kind": "prior_season_practice" if e.season_status == "prior_season_practice" else "archived",
+            "lesson_count": lesson_counts.get(e.id, 0),
+            "question_count": question_counts.get(e.id, 0),
+            "exam_count": exam_counts.get(e.id, 0),
+            "canonical_event_id": canonical.id if canonical else None,
+            "canonical_slug": canonical.slug if canonical else None,
+        })
+    return out
+
+
+@router.get("/events/by-slug/{slug}")
+def resolve_event_slug(slug: str, db: Session = Depends(get_db)):
+    """Resolve any event slug — including a retired consolidation twin — to the live canonical
+    event (R-C6 canonical redirect). Returns {redirect: true, ...} when the slug is archived."""
+    event = db.scalar(select(Event).where(Event.slug == slug))
+    if not event:
+        raise HTTPException(status_code=404, detail="Event not found")
+    if event.active and event.season_status not in ARCHIVE_SEASON_STATUSES:
+        return {"redirect": False, "event_id": event.id, "slug": event.slug}
+    canonical = _canonical_event_for(db, event)
+    if canonical is None:
+        # archived with no live canonical (e.g. prior-season-only) — resolve to itself
+        return {"redirect": False, "event_id": event.id, "slug": event.slug, "archived": True}
+    return {
+        "redirect": True, "from_slug": event.slug,
+        "event_id": canonical.id, "slug": canonical.slug,
+    }
 
 
 @router.get("/events/{event_id}/concepts")
