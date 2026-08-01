@@ -7,6 +7,7 @@ from sqlalchemy import func, select
 from sqlalchemy.orm import Session
 
 from app.core.config import get_settings
+from app.services import student_visibility
 from app.models.entities import (
     Attempt, Lesson, LessonVersion, Question, RemediationCase, ScientificClaim, Source,
     SourceSnapshot, TutorMessage, TutorSession, User,
@@ -30,14 +31,20 @@ def _assert_exam_integrity(db: Session, user: User) -> None:
 def _context(db: Session, user: User, context_type: str, context_id: int) -> tuple[int, int | None, list[int], str]:
     if context_type == "lesson":
         lesson = db.get(Lesson, context_id)
-        if not lesson or lesson.status != "published":
+        if not lesson:
             raise TutorAccessError("Published lesson not found")
         version = db.scalar(select(LessonVersion).where(
             LessonVersion.lesson_id == lesson.id,
             LessonVersion.version == lesson.current_version,
-            LessonVersion.review_status.in_(["sme_approved", "published"]),
         ))
         if not version:
+            raise TutorAccessError("Reviewed lesson version not found")
+        # The tutor used to decide this itself, from `lesson.status` plus
+        # `LessonVersion.review_status` — a different mechanism from the ReviewDecision rows
+        # the lesson reader consults. They agreed only because of how the current data
+        # happens to look. One definition now answers "may this student see this lesson",
+        # so a tutor can never discuss a lesson its reader would refuse.
+        if not student_visibility.lesson_is_student_visible(db, user, lesson, version):
             raise TutorAccessError("Reviewed lesson version not found")
         return lesson.current_version, lesson.concept_id, list(version.claim_ids or []), f"Lesson: {lesson.title}. {lesson.summary}"
     case = db.get(RemediationCase, context_id)

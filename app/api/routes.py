@@ -718,40 +718,8 @@ def _lesson_is_student_visible(
     lesson: Lesson,
     version: LessonVersion | None = None,
 ) -> bool:
-    if user.role in {"admin", "editor", "sme", "calibrator"}:
-        return True
-    # Visibility was previously granted to every lesson on a pre-2027 event, so review
-    # evidence was never consulted for most of the catalog. Legacy content is now
-    # grandfathered by an explicit per-lesson decision instead of by season: a lesson marked
-    # `unreviewed_practice` stays readable and is reported as unreviewed, while anything
-    # undecided is hidden until a human decides. New lessons therefore fail closed.
-    if getattr(lesson, "disposition", None) == "unreviewed_practice":
-        return True
-    # `student_preview` used to return True here, bypassing the review-evidence check below
-    # entirely — so putting a course into preview made every unreviewed lesson on it readable.
-    # That is the Phase 0 invariant inverted, and it fired: moving the pilot into preview to
-    # correct an unrelated inconsistency exposed 24 unreviewed lessons, carrying 30 checkpoints
-    # an independent verifier disputes and 13 blocks that read from figures the lesson never
-    # shows. Grandfathered content is already handled explicitly above by the
-    # `unreviewed_practice` disposition, so preview needs no exemption of its own: it governs
-    # when a finished course becomes visible, not whether review happened.
-    version = version or db.scalar(select(LessonVersion).where(
-        LessonVersion.lesson_id == lesson.id,
-        LessonVersion.version == lesson.current_version,
-    ))
-    if version is None:
-        return False
-    decisions = db.execute(select(
-        ReviewDecision.stage, ReviewDecision.decision,
-    ).where(
-        ReviewDecision.entity_type == "lesson",
-        ReviewDecision.entity_id == lesson.id,
-        ReviewDecision.entity_version == version.version,
-    )).all()
-    approved_stages = {
-        stage for stage, decision in decisions if decision == "approved"
-    }
-    return {"editor", "sme"}.issubset(approved_stages)
+    """Delegates to the one definition in `student_visibility`."""
+    return sv.lesson_is_student_visible(db, user, lesson, version)
 
 
 @router.get("/events/{event_id}/lessons")

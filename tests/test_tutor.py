@@ -6,7 +6,7 @@ from app.core.database import SessionLocal
 from app.core.security import create_access_token
 from app.models.entities import (
     Attempt, Concept, Event, Exam, Lesson, LessonVersion, ScientificClaim, Source,
-    SourceSnapshot, TutorMessage, TutorSession, User,
+    SourceSnapshot, TutorMessage, TutorSession, User, ReviewDecision,
 )
 
 
@@ -48,6 +48,17 @@ def seed_tutor_context():
             lesson_id=lesson.id, version=1, content=[], claim_ids=[claim.id],
             citations=[{"claim_id": claim.id}], review_status="sme_approved",
         ))
+        # These tests are about grounding and rate limits, so the lesson must be genuinely
+        # student-visible. The tutor now shares one visibility rule with the lesson reader,
+        # and that rule reads ReviewDecision rows rather than the version's status string —
+        # setting only the string used to be enough because the tutor decided for itself.
+        reviewer = User(email="tutor-reviewer@example.com", full_name="Reviewer",
+                        role="editor")
+        db.add(reviewer); db.flush()
+        for stage in ("editor", "sme"):
+            db.add(ReviewDecision(entity_type="lesson", entity_id=lesson.id,
+                                  entity_version=1, stage=stage, decision="approved",
+                                  reviewer_user_id=reviewer.id))
         other = User(email="other-tutor@example.com", full_name="Other Tutor User", role="student")
         db.add(other)
         db.commit()
