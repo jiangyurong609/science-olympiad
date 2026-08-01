@@ -317,7 +317,8 @@ Record the decision and its rationale here when made.
 | Exams without an explicit disposition | 150 | **0** | 0 | 0 |
 | In-progress attempts stranded | — | **0** | 0 | 0 |
 | Pilot blocks accounted for (evidenced or an open gap) | 0% | **100%** | 100% | 1 |
-| Pilot blocks evidence-backed | 0% | **96.4%** (189/196) | — | 1 |
+| Pilot blocks evidence-backed (topical) | 0% | **96.4%** (189/196) | — | 1 |
+| Pilot checkpoints clean on solver **and** verifier | — | **43 / 73** | all | 3 |
 | Pilot items passing validation | — | **93.1%** | ≥90% | 2 |
 | Pilot `audit_course` blockers needing no human | many | **0** | 0 | 3 |
 | Pilot `audit_course` blockers needing a human | — | **252** | 0 | 3 |

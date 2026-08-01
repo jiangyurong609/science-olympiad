@@ -80,12 +80,26 @@ result of splitting 8 lessons that ran 19–27 minutes into parts of 8–12 minu
    assessment text and the only place in this course where a question was changed rather than
    moved. The remaining 23 are teaching blocks that read oddly but score nobody.
 
-4. **Checkpoints an independent solver disputed.** All 73 pilot checkpoints have now been
-   put through the same blind solver that gates every exam item — it sees the stem and the
-   choices, never the key. **71 agreed; 2 are flagged** in `disputed_checkpoints` on the queue
-   row. One of those had the solver pick the right index while still reporting the stem
-   underspecified, which is worth reading: agreement on the letter is not agreement on the
-   question. Start with those 2.
+4. **Checkpoints the independent judges disputed.** All 73 pilot checkpoints have now been
+   put through both gates every exam item passes — a blind solver that sees only the stem and
+   choices, and an independent verifier checking factual support, unambiguity, answer
+   consistency and age-appropriateness. Results are on the block and surfaced as
+   `disputed_checkpoints`:
+
+   | Judge | Result |
+   |---|---|
+   | Blind solver reproduced the key | **71 / 73** |
+   | Verifier raised no objection | **43 / 73** |
+   | Clean on both | **43** |
+
+   **The verifier objected to 30, almost all on "factual support"** — it judges that the
+   claims attached to the checkpoint do not actually support the keyed answer. That is the
+   entailment question, and it is the strongest evidence available that §"Known limits" is
+   right about what 96.4% grounding means: the attachment is topical, not evidential. Most of
+   these are likely a weak *citation* rather than a wrong *answer*, but only a person can tell
+   the difference, and that judgement is the point of this pass.
+
+   **Start here.** These 30 are the highest-information rows in the whole review.
 
 ## 3. Sources — 21 dispositions to review
 
@@ -121,7 +135,9 @@ cleared these by switching them to a role the audit exempts; that was reverted.
   **What the number means:** a supported block cites a claim that is approved, rights-cleared,
   verifiably present in a retained snapshot, and topically relevant. It does **not** assert the
   claim entails the block's specific statement — that judgement is exactly what the SME pass is
-  for. Spot-checking found the pairings sound but sometimes adjacent rather than entailing.
+  for. This is now measured rather than asserted: an independent verifier run over the 73
+  checkpoints objected to 30, almost all on factual support. Read 96.4% as "has real sourced
+  material behind it", never as "is proven".
 - **7 blocks remain ungrounded and mostly should not be grounded** — they cite the same
   unavailable source packet flagged in §2 and need rewriting, not a citation.
 - **Figure recovery cannot help this catalog.** These tests use vector diagrams that

@@ -64,9 +64,16 @@ def checkpoints_the_solver_disputed(content: list) -> list[dict]:
     disputed = []
     for index, block in enumerate(content or []):
         check = block.get("solver_check")
-        if not isinstance(check, dict) or check.get("agreed"):
+        verifier = block.get("verifier_check")
+        solver_ok = not isinstance(check, dict) or check.get("agreed")
+        verifier_ok = not isinstance(verifier, dict) or verifier.get("passed") is not False
+        if solver_ok and verifier_ok:
             continue
+        if not isinstance(check, dict):
+            check = {}
         disputed.append({
+            "verifier_passed": (verifier or {}).get("passed"),
+            "verifier_errors": (verifier or {}).get("errors") or [],
             "position": index + 1,
             "heading": block.get("heading") or "",
             "verdict": check.get("verdict"),

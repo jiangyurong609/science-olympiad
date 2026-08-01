@@ -1,4 +1,4 @@
-"""Put lesson checkpoints through the blind solver that every exam item already faces.
+"""Put lesson checkpoints through the same gates every exam item already faces.
 
 An exam item cannot reach `machine_validated` unless an independent solver — shown only the
 stem and the choices, never the intended answer — reproduces the key. Lesson checkpoints
@@ -6,10 +6,15 @@ assess students in the same way and have never faced that gate at all: 73 in the
 them model-written, none blind-solved. Assessment content was being held to two different
 standards depending on which table it lived in.
 
-This does not change any checkpoint. It records what an independent solver chose, so a
-disagreement is visible to the editor reviewing that lesson. A solver disagreeing is not proof
-the key is wrong — it is the single strongest signal that a human should look, which is
-exactly what it is used for on the exam side.
+Both halves of that gate run here: the blind solver asks whether the key is reproducible, and
+the independent verifier asks whether the item is sound at all — factually supported,
+unambiguous, internally consistent, age-appropriate. Running only the solver would leave these
+half-gated.
+
+This changes no checkpoint. It records what each judge concluded, so a disagreement is visible
+to the editor reviewing that lesson. A judge objecting is not proof the key is wrong — it is
+the strongest available signal that a human should look, which is exactly how it is used on
+the exam side.
 
     PYTHONPATH=. python -m scripts.solve_lesson_checkpoints --event rocks-and-minerals-b
     PYTHONPATH=. python -m scripts.solve_lesson_checkpoints --event ... --apply
@@ -18,15 +23,39 @@ from __future__ import annotations
 
 import argparse
 import copy
+import json
 from collections import Counter
 
 from sqlalchemy import select
 from sqlalchemy.orm.attributes import flag_modified
 
 from app.core.database import SessionLocal
-from app.models.entities import Event, Lesson, LessonVersion
-from app.services.model_generation import _independent_solve, _solver_verdict
+from app.models.entities import Event, Lesson, LessonVersion, ScientificClaim
 from app.services.model_provider import ModelProviderError, OpenAICompatibleProvider
+
+VERIFIER_SYSTEM = (
+    "Act as an independent scientific and assessment verifier. Return JSON with passed "
+    "(boolean), errors (array), and warnings (array)."
+)
+VERIFIER_CHECKS = ["factual support", "single unambiguous answer", "answer consistency",
+                   "age appropriateness"]
+
+
+def _verify(provider, block: dict, stem: str, choices: list, index: int,
+            claims: list) -> dict:
+    """The second half of the gate exam items pass.
+
+    The solver asks whether the key is reproducible; the verifier asks whether the item is
+    sound — factually supported, unambiguous, internally consistent, age-appropriate. Running
+    only the solver would leave lesson checkpoints half-gated, which is the asymmetry this
+    script exists to remove.
+    """
+    return provider.generate_json(VERIFIER_SYSTEM, json.dumps({
+        "claims": [{"id": c.id, "text": c.claim_text} for c in claims],
+        "item": {"stem": stem, "choices": [str(c) for c in choices],
+                 "correct_index": index, "explanation": block.get("explanation", "")},
+        "checks": VERIFIER_CHECKS,
+    })).payload
 
 
 def checkpoint_key(block: dict) -> tuple[str, list, int | None]:
@@ -81,6 +110,33 @@ def run(event_slug: str, apply: bool) -> dict:
                     stats[f"failed:{type(exc).__name__}"] += 1
                     continue
                 agreed, verdict = _solver_verdict(solved, index)
+                claims = db.scalars(select(ScientificClaim).where(
+                    ScientificClaim.id.in_(block.get("claim_ids") or [-1]))).all()
+                try:
+                    verified = _verify(provider, block, stem, choices, index, claims)
+                except (ModelProviderError, ValueError, KeyError) as exc:
+                    verified = {"passed": None, "errors": [f"verifier_failed:{type(exc).__name__}"]}
+                verifier_errors = verified.get("errors") or []
+                # some payloads put per-check findings in `passed`; a truthy list is not a pass
+                verifier_passed = (verified.get("passed")
+                                   if isinstance(verified.get("passed"), bool)
+                                   else (not verifier_errors))
+                block["verifier_check"] = {
+                    "passed": verifier_passed,
+                    "errors": verifier_errors,
+                    "warnings": verified.get("warnings") or [],
+                    "checks": (verified.get("passed")
+                               if isinstance(verified.get("passed"), list) else []),
+                }
+                if verifier_passed is False:
+                    stats["verifier_objected"] += 1
+                    disagreements.append({
+                        "lesson": lesson.title, "heading": block.get("heading") or "",
+                        "verdict": f"verifier: {'; '.join(str(e)[:60] for e in verifier_errors)}",
+                        "key": index, "solver": solved.get("chosen_index"),
+                        "model_written": bool(block.get("generated_by")
+                                              or block.get("repaired_by")),
+                    })
                 block["solver_check"] = {
                     "chosen_index": solved.get("chosen_index"),
                     "confidence": solved.get("confidence"),
