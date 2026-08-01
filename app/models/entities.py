@@ -222,6 +222,9 @@ class Lesson(Base):
     title: Mapped[str] = mapped_column(String(255))
     summary: Mapped[str] = mapped_column(Text, default="")
     status: Mapped[str] = mapped_column(String(32), default="draft", index=True)
+    # Explicit student-exposure decision, mirroring Exam.disposition. Legacy lessons are
+    # grandfathered as unreviewed_practice; anything undecided is hidden from students.
+    disposition: Mapped[str] = mapped_column(String(32), default="pending_disposition", index=True)
     current_version: Mapped[int] = mapped_column(Integer, default=1)
     sequence: Mapped[int] = mapped_column(Integer, default=0)
     estimated_minutes: Mapped[int] = mapped_column(Integer, default=10)

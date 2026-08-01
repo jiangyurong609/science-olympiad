@@ -14,7 +14,7 @@ from __future__ import annotations
 from sqlalchemy import select
 from sqlalchemy.orm import Session
 
-from app.models.entities import Exam, Question, QuestionStatus
+from app.models.entities import Exam, ExamItem, Question, QuestionStatus
 
 # Statuses that mean a human accepted the item. Anything below this is machine output.
 STUDENT_READY_ITEM_STATUSES = {
@@ -98,8 +98,39 @@ def is_unreviewed_practice(exam: Exam) -> bool:
 
 
 def classify_exam(db: Session, exam: Exam) -> str:
-    """The disposition an exam earns from its current contents."""
-    if not exam.question_ids:
+    """The disposition an exam earns from what it will actually serve.
+
+    `start_exam` serves ExamItem snapshots, not `exam.question_ids`, so the classifier judges
+    the ExamItem rows — including the exact `question_version` recorded — and fails closed on
+    any divergence between the two. Judging the id list alone would let reviewed current
+    questions authorise older or extra unreviewed snapshots.
+    """
+    declared = list(exam.question_ids or [])
+    items = db.scalars(select(ExamItem).where(ExamItem.exam_id == exam.id)
+                       .order_by(ExamItem.position)).all()
+    if not declared and not items:
         return DISPOSITION_WITHDRAWN
-    return (DISPOSITION_REVIEWED if not unreviewed_item_ids(db, list(exam.question_ids))
-            else DISPOSITION_UNREVIEWED_PRACTICE)
+    if not items:
+        # nothing snapshotted to serve yet: judge the declared list, fail closed if unreviewed
+        return (DISPOSITION_REVIEWED if not unreviewed_item_ids(db, declared)
+                else DISPOSITION_UNREVIEWED_PRACTICE)
+
+    served_ids = [i.question_id for i in items]
+    if declared and sorted(served_ids) != sorted(declared):
+        return DISPOSITION_UNREVIEWED_PRACTICE      # drift: fail closed
+    if len(set(served_ids)) != len(served_ids):
+        return DISPOSITION_UNREVIEWED_PRACTICE      # duplicates: fail closed
+
+    questions = {q.id: q for q in db.scalars(
+        select(Question).where(Question.id.in_(served_ids))
+    ).all()} if served_ids else {}
+    for item in items:
+        question = questions.get(item.question_id)
+        if question is None or not item_is_student_ready(question):
+            return DISPOSITION_UNREVIEWED_PRACTICE
+        # human acceptance applies to a specific version; a newer draft edit must not ride
+        # in on an older approval, nor an old snapshot on a newer approval
+        recorded = getattr(item, "question_version", None)
+        if recorded is not None and recorded != question.version:
+            return DISPOSITION_UNREVIEWED_PRACTICE
+    return DISPOSITION_REVIEWED

@@ -31,6 +31,7 @@ from bs4 import BeautifulSoup
 from sqlalchemy import select
 
 from app.core.database import SessionLocal
+from app.services.student_visibility import DISPOSITION_PENDING, assert_publishable
 from app.models.entities import (
     Concept, Event, Exam, ExamItem, Lesson, LessonVersion, Question, QuestionStatus,
     RightsStatus, ScientificClaim, Source, SourceSnapshot, User,
@@ -292,13 +293,13 @@ def generate_for_event(db, event: Event, source: Source, claims: list[Scientific
     lesson = Lesson(
         event_id=event.id, concept_id=primary_concept.id if primary_concept else None,
         slug="foundations-2026", title=f"{event.name}: Foundations",
-        summary=lesson_payload.get("summary", "")[:500], status="published",
+        summary=lesson_payload.get("summary", "")[:500], status="draft",
         current_version=1, sequence=1, estimated_minutes=12,
     )
     db.add(lesson)
     db.flush()
     db.add(LessonVersion(
-        lesson_id=lesson.id, version=1, review_status="machine_generated",
+        lesson_id=lesson.id, version=1, review_status="editor_review",
         claim_ids=[c.id for c in claims], citations=[citation], content=blocks,
     ))
 
@@ -342,7 +343,8 @@ def generate_for_event(db, event: Event, source: Source, claims: list[Scientific
         exam = Exam(
             event_id=event.id, title=f"{event.name} — Grounded Practice Exam",
             duration_minutes=20, question_ids=[q.id for q in question_rows],
-            published=True, release_class="foundational_practice",
+            published=False,
+        disposition=DISPOSITION_PENDING, release_class="foundational_practice",
             published_at=datetime.now(timezone.utc),
             blueprint={"marker": GEN_MARKER, "source_id": source.id, "grounded": True,
                        "snapshot_schema": 1},

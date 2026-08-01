@@ -189,3 +189,61 @@ def test_staff_cannot_publish_an_exam_of_unreviewed_items(client, admin_token):
     assert response.status_code in (400, 409, 422), (
         f"publishing unreviewed items must be refused, got {response.status_code}"
     )
+
+
+# ---------------------------------------------------------------- review findings
+
+def test_unpublishing_does_not_strand_an_active_attempt(client):
+    """Quarantine and content-challenge paths set exam.published=False. Resumption is
+    resolved before the publication gate, so saved work survives."""
+    with SessionLocal() as db:
+        e = _event(db)
+        q = _question(db, e.id, QuestionStatus.PUBLISHED.value)
+        ex = _exam(db, e.id, [q.id])
+        student = User(email="mid@example.com", full_name="M", password_hash=hash_password("x"),
+                       role="student", division="C")
+        db.add(student); db.flush()
+        db.add(Attempt(exam_id=ex.id, user_id=student.id, status="in_progress"))
+        db.commit()
+        exam_id, token = ex.id, create_access_token(str(student.id))
+        db.get(Exam, exam_id).published = False       # withdrawn mid-attempt
+        db.commit()
+
+    resumed = client.post(f"/api/exams/{exam_id}/start",
+                          headers={"Authorization": f"Bearer {token}"})
+    assert resumed.status_code == 200, "unpublishing must not strand an attempt in progress"
+
+
+def test_classifier_judges_served_snapshots_not_just_the_id_list():
+    """start_exam serves ExamItem rows; judging exam.question_ids alone would let reviewed
+    current questions authorise extra or stale snapshots."""
+    with SessionLocal() as db:
+        e = _event(db)
+        good = _question(db, e.id, QuestionStatus.PUBLISHED.value)
+        sneaky = _question(db, e.id, QuestionStatus.DRAFT.value)
+        ex = _exam(db, e.id, [good.id])
+        # an extra snapshot that the declared id list does not mention
+        db.add(ExamItem(exam_id=ex.id, question_id=sneaky.id, position=1,
+                        snapshot={"stem": sneaky.stem, "choices": sneaky.choices,
+                                  "answer_spec": sneaky.answer_spec,
+                                  "question_type": sneaky.question_type}))
+        db.commit()
+        assert sv.classify_exam(db, ex) == sv.DISPOSITION_UNREVIEWED_PRACTICE
+
+
+def test_version_skew_is_not_waved_through_by_a_newer_approval():
+    with SessionLocal() as db:
+        e = _event(db)
+        q = _question(db, e.id, QuestionStatus.PUBLISHED.value)
+        ex = _exam(db, e.id, [q.id])
+        item = db.scalars(select(ExamItem).where(ExamItem.exam_id == ex.id)).first()
+        item.question_version = q.version + 3        # snapshot from a different version
+        db.commit()
+        assert sv.classify_exam(db, ex) == sv.DISPOSITION_UNREVIEWED_PRACTICE
+
+
+def test_catalog_builder_no_longer_publishes():
+    """scripts/build_courses.py created published lessons and exams outside the ladder."""
+    source = open("scripts/build_courses.py").read()
+    assert 'status="published"' not in source
+    assert "published=True," not in source

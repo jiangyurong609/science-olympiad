@@ -683,6 +683,29 @@ def _lesson_response(lesson: Lesson, version: LessonVersion, progress: LessonPro
     }
 
 
+def _lesson_is_reviewed(
+    db: Session,
+    lesson: Lesson,
+    version: LessonVersion | None = None,
+) -> bool:
+    """Whether a human accepted this exact lesson version (editor and SME)."""
+    version = version or db.scalar(select(LessonVersion).where(
+        LessonVersion.lesson_id == lesson.id,
+        LessonVersion.version == lesson.current_version,
+    ))
+    if version is None:
+        return False
+    decisions = db.execute(select(
+        ReviewDecision.stage, ReviewDecision.decision,
+    ).where(
+        ReviewDecision.entity_type == "lesson",
+        ReviewDecision.entity_id == lesson.id,
+        ReviewDecision.entity_version == version.version,
+    )).all()
+    approved = {stage for stage, decision in decisions if decision == "approved"}
+    return {"editor", "sme"}.issubset(approved)
+
+
 def _lesson_is_student_visible(
     db: Session,
     user: User,
@@ -691,8 +714,12 @@ def _lesson_is_student_visible(
 ) -> bool:
     if user.role in {"admin", "editor", "sme", "calibrator"}:
         return True
-    event = db.get(Event, lesson.event_id)
-    if event and event.season <= 2026:
+    # Visibility was previously granted to every lesson on a pre-2027 event, so review
+    # evidence was never consulted for most of the catalog. Legacy content is now
+    # grandfathered by an explicit per-lesson decision instead of by season: a lesson marked
+    # `unreviewed_practice` stays readable and is reported as unreviewed, while anything
+    # undecided is hidden until a human decides. New lessons therefore fail closed.
+    if getattr(lesson, "disposition", None) == "unreviewed_practice":
         return True
     course = db.scalar(select(Course).where(Course.event_id == lesson.event_id))
     if course and course.status == "student_preview":
@@ -3578,18 +3605,20 @@ def start_exam(
     ))
     if held_attempt:
         raise HTTPException(status_code=409, detail="This attempt is temporarily paused while a reported content issue is reviewed; your saved responses are preserved")
-    if not exam or not exam.published:
+    if not exam:
         raise HTTPException(status_code=404, detail="Published exam not found")
-    # Phase 0: new exposure is stricter than resumption. An attempt already under way keeps
-    # working from its immutable snapshots (handled below); nobody new is sent into an exam
-    # whose items no human has accepted.
-    allowed, reason = sv.can_start_new_attempt(db, exam)
-    if not allowed:
-        existing = db.scalar(select(Attempt).where(
-            Attempt.exam_id == exam.id, Attempt.user_id == user.id,
-            Attempt.status == "in_progress",
-        ))
-        if not existing:
+    # Phase 0: resumption is resolved BEFORE any publication/disposition gate. Withdrawing or
+    # unpublishing an exam must never strand a student mid-attempt — their work continues from
+    # immutable ExamItem snapshots. Only the creation of a *new* attempt is gated.
+    resuming = db.scalar(select(Attempt).where(
+        Attempt.exam_id == exam.id, Attempt.user_id == user.id,
+        Attempt.status == AttemptStatus.IN_PROGRESS.value,
+    ))
+    if not resuming:
+        if not exam.published:
+            raise HTTPException(status_code=404, detail="Published exam not found")
+        allowed, reason = sv.can_start_new_attempt(db, exam)
+        if not allowed:
             raise HTTPException(status_code=409, detail=reason)
     if exam.organization_id is not None and exam.organization_id != user.organization_id:
         raise HTTPException(status_code=404, detail="Exam not found")

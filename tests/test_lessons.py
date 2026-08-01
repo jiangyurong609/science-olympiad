@@ -23,6 +23,7 @@ def create_lesson():
             title="Observe Properties",
             summary="Use evidence.",
             status="published",
+            disposition="unreviewed_practice",
             current_version=1,
             sequence=1,
             estimated_minutes=10,
