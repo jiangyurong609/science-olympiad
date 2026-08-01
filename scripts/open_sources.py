@@ -14,9 +14,20 @@ DOMAIN_SOURCES = {
     "geology": {
         "publisher": "U.S. National Park Service / USGS",
         "license": "public_domain",
+        # Chosen to span the Rocks & Minerals skill list: identification properties, crystal
+        # chemistry, mineral groups, igneous processes and volcanism, tectonics, sedimentary
+        # environments, and metamorphism. Federal works, so public domain.
         "urls": [
             "https://www.nps.gov/subjects/geology/minerals.htm",
-            "https://www.usgs.gov/programs/mineral-resources-program/science/mineral-resources-online-spatial-data",
+            "https://www.usgs.gov/faqs/what-are-minerals",
+            "https://www.nps.gov/subjects/geology/rocks-and-minerals.htm",
+            "https://www.usgs.gov/faqs/what-are-igneous-rocks",
+            "https://www.usgs.gov/faqs/what-are-sedimentary-rocks",
+            "https://www.usgs.gov/faqs/what-are-metamorphic-rocks",
+            "https://www.nps.gov/subjects/geology/rocks.htm",
+            "https://www.nps.gov/subjects/geology/plate-tectonics.htm",
+            "https://www.usgs.gov/programs/volcano-hazards",
+            "https://www.usgs.gov/faqs/what-is-difference-between-rock-and-mineral",
         ],
     },
     "meteorology": {
@@ -143,6 +154,8 @@ DOMAIN_SOURCES = {
 # event slug (division-agnostic) -> domain
 EVENT_DOMAIN = {
     "rocks-and-minerals": "geology",
+    "rocks-and-minerals-b": "geology",
+    "rocks-and-minerals-c": "geology",
     "dynamic-planet": "oceanography",
     "meteorology": "meteorology",
     "remote-sensing": "remote_sensing",

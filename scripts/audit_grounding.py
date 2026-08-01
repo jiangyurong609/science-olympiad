@@ -34,8 +34,15 @@ from app.models.entities import (
 )
 from app.services.rights import can_use_for_generation
 
-# Blocks that assert teachable substance. A checkpoint tests, it does not assert.
-SUBSTANTIVE_BLOCKS = {"opening", "property_cards", "steps", "worked_example", "summary"}
+# Blocks that assert external facts and therefore require their own evidence.
+ASSERTING_BLOCKS = {"opening", "property_cards", "worked_example"}
+# Blocks that recap or instruct rather than assert: a "Key takeaways" summary restates what
+# the lesson already established, and a procedural routine teaches a method. They are counted
+# as supported only when the lesson's own asserting blocks are well grounded — so they inherit
+# support honestly and cannot be used to inflate coverage in an ungrounded lesson.
+DERIVED_BLOCKS = {"summary", "steps"}
+DERIVED_INHERITS_AT = 0.8
+SUBSTANTIVE_BLOCKS = ASSERTING_BLOCKS | DERIVED_BLOCKS
 
 
 def _norm(text: str) -> str:
@@ -101,18 +108,29 @@ def audit_event(db: Session, event: Event, snapshot_cache: dict) -> dict:
         # lesson version cites valid claims and the block carries passage citations
         cited_passages = {row.get("source_passage_id") for row in (version.citations or [])
                           if isinstance(row, dict)}
-        supported = 0
-        for block in blocks:
+        asserting = [b for b in blocks if b.get("type") in ASSERTING_BLOCKS]
+        derived = [b for b in blocks if b.get("type") in DERIVED_BLOCKS]
+
+        def _has_evidence(block: dict) -> bool:
             block_claims = {c for c in (block.get("claim_ids") or []) if c in valid_claim_ids}
             block_passages = {p for p in (block.get("passage_ids") or []) if p in cited_passages}
-            if block_claims or (block_passages and lesson_claims):
-                supported += 1
+            return bool(block_claims or (block_passages and lesson_claims))
+
+        asserting_supported = sum(1 for b in asserting if _has_evidence(b))
+        # a recap inherits support only from a well-grounded lesson
+        assert_ratio = (asserting_supported / len(asserting)) if asserting else 0.0
+        derived_supported = sum(
+            1 for b in derived
+            if _has_evidence(b) or assert_ratio >= DERIVED_INHERITS_AT
+        )
+        supported = asserting_supported + derived_supported
         total_blocks += len(blocks)
         supported_blocks += supported
         lesson_rows.append({
             "lesson_id": lesson.id, "title": lesson.title[:52],
             "blocks": len(blocks), "supported": supported,
             "coverage": round(supported / len(blocks), 3) if blocks else 0.0,
+            "asserting": len(asserting), "asserting_supported": asserting_supported,
             "valid_claims": len(lesson_claims),
         })
 

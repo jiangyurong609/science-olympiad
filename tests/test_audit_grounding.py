@@ -1,6 +1,8 @@
 """Phase 1a — the grounding audit must be honest before its percentage becomes a gate."""
 from __future__ import annotations
 
+import itertools
+
 import pytest
 
 from app.core.database import SessionLocal
@@ -12,6 +14,7 @@ from scripts.audit_grounding import audit_event, claim_is_valid, run
 
 EXCERPT = "Minerals are identified by hardness, streak, and luster."
 SNAPSHOT_TEXT = f"Some preamble. {EXCERPT} Some trailing text."
+_UNIQUE = itertools.count(1)   # id() collides: identical default strings are interned
 
 
 def _event(db, slug="rocks-and-minerals-b"):
@@ -22,7 +25,7 @@ def _event(db, slug="rocks-and-minerals-b"):
 
 def _claim(db, event, *, rights="public_domain", approved_source=True, approved=True,
            excerpt=EXCERPT, snapshot_text=SNAPSHOT_TEXT, with_snapshot=True):
-    src = Source(url=f"https://sci.gov/{id(excerpt)}", title="Ref",
+    src = Source(url=f"https://sci.gov/ref-{next(_UNIQUE)}", title="Ref",
                  rights_status=rights, approved=approved_source)
     db.add(src); db.flush()
     snap_id = None
@@ -41,7 +44,7 @@ def _claim(db, event, *, rights="public_domain", approved_source=True, approved=
 
 
 def _lesson(db, event, blocks, claim_ids=()):
-    lesson = Lesson(event_id=event.id, slug=f"l{id(blocks)}", title="Lesson",
+    lesson = Lesson(event_id=event.id, slug=f"lesson-{next(_UNIQUE)}", title="Lesson",
                     status="published", current_version=1)
     db.add(lesson); db.flush()
     db.add(LessonVersion(lesson_id=lesson.id, version=1, content=blocks,
@@ -81,6 +84,37 @@ def test_invalid_claims_are_rejected_with_a_reason(kwargs, reason):
 
 # ---------------------------------------------------------------- substance
 
+def test_a_recap_inherits_support_only_from_a_grounded_lesson():
+    """A "Key takeaways" block restates the lesson rather than asserting a new external fact,
+    so it inherits support — but only when the lesson's asserting blocks really are grounded.
+    Otherwise recaps would inflate coverage in an ungrounded lesson."""
+    with SessionLocal() as db:
+        e = _event(db)
+        claim = _claim(db, e)
+        # grounded lesson: both asserting blocks supported -> the summary inherits
+        _lesson(db, e, [
+            {"type": "opening", "claim_ids": [claim.id]},
+            {"type": "property_cards", "claim_ids": [claim.id]},
+            {"type": "summary"},
+        ], claim_ids=[claim.id])
+        db.commit()
+        grounded = audit_event(db, e, {})
+    assert grounded["substantive_coverage"] == 1.0
+
+    with SessionLocal() as db:
+        e2 = _event(db, slug="rocks-and-minerals-c")
+        claim2 = _claim(db, e2)
+        # ungrounded lesson: no asserting block supported -> the summary must NOT inherit
+        _lesson(db, e2, [
+            {"type": "opening"},
+            {"type": "property_cards"},
+            {"type": "summary"},
+        ], claim_ids=[claim2.id])
+        db.commit()
+        ungrounded = audit_event(db, e2, {})
+    assert ungrounded["supported_blocks"] == 0, "a recap cannot ground an ungrounded lesson"
+
+
 def test_coverage_counts_teaching_blocks_not_claims():
     """One broad claim must not mark an entire lesson as grounded."""
     with SessionLocal() as db:
@@ -96,6 +130,8 @@ def test_coverage_counts_teaching_blocks_not_claims():
         db.commit()
         row = audit_event(db, e, {})
     assert row["substantive_blocks"] == 3, "checkpoints assert nothing and are excluded"
+    # only the opening is evidenced; property_cards is not, and steps cannot inherit because
+    # the lesson's asserting blocks are only 50% supported
     assert row["supported_blocks"] == 1
     assert row["substantive_coverage"] == pytest.approx(1 / 3, abs=0.01)
 
