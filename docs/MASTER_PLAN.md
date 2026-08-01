@@ -122,6 +122,11 @@ already built.
 --generation-run <id>` reports ≥90% validation pass, 100% grounded, 0 blocking near-dups, and
 every exam meets its blueprint. Output stays at `machine_validated`; nothing auto-publishes.
 
+**Result (2026-08-01): met.** Run `regen-pilot-002` produced 100 items at
+`machine_validated` — **93.1% validation pass** (the rest held at `draft` by the blind solver
+and verifier), **100% structurally valid, 100% grounded, 0 near-duplicate clusters**, 0
+single-shot provenance. Nothing was published.
+
 ## Phase 3 — Review the pilot to *content-ready* (not release-ready)
 
 **M1 fix:** `audit_course` blocks on `release_missing`, which only Phase 4 can satisfy. So
@@ -134,6 +139,32 @@ Phase 3 gates on **content readiness** — every `audit_course` blocker *except*
 **Done when:** the pilot course has zero `audit_course` blockers other than `release_missing`.
 **Size:** M (human review dominates).
 
+**Status (2026-08-01): mechanical half complete; blocked on review.** 172 → 243 blockers, and
+the rise is the point: the count grew because content that did not exist now does and has to
+be reviewed. **Every remaining blocker is a human decision.** What was fixed, and what was
+deliberately not:
+
+| Was | Cause | Resolution |
+|---|---|---|
+| 90 `claim_passage_missing` | claims stored an excerpt and a snapshot but no retained passage | passage reconstructed by locating the excerpt in the snapshot; unlocatable ⇒ still blocking |
+| 16 `source_unreconciled` | mapped sources had no course disposition | role and extraction status recorded from what each source produced |
+| 11 `source_destination` | instructional sources no lesson reached | demoted to `reference_only` — the truth about them |
+| 8 `lesson_duration` | lessons ran 19–27 min against a 5–12 min target | split into 24 parts of 8–12 min |
+| 8 `lesson_transfer` | parts had no check above recall | one application/transfer check generated per part |
+| 1 `unit_skill_volume`, 1 `unit_quiz_missing` | all 8 skills in one "Legacy Learning Path" unit | 3 units of 2–3 skills, each with a quiz blueprint |
+| 8 `question_volume` reported 0 items | **no skill had a `concept_id`**, and the audit reads items through it | one concept per skill; 72 items now reachable |
+
+**Not fixed, on purpose:** `lesson_review` (24), `question_review` (72),
+`question_calibration` (72), `source_review` (21), `content_gap` (8),
+`unit_quiz_unpublished` (3). Approving these without a reviewer is the relabelling operating
+rule 3 forbids. Two `lesson_citations` also remain: those parts contain no grounded block at
+all, which is Phase 1's 56% coverage surfacing per lesson, and they need a source rather than
+plumbing.
+
+**Unblocking this needs a person**, and the queue that hid the work is now fixed (it skipped
+any lesson in a published course, so it showed 0 of 24). The pending decisions are:
+24 lesson reviews × 2 stages, 72 item reviews × 2 stages, 72 calibrations, 21 source reviews.
+
 ## Phase 4 — Release machinery, then promote the pilot
 
 Detail: `HONEN_GAP_CLOSURE_PLAN.md` Phase 6 / R-C3 — catalog-release identity, immutable
@@ -142,6 +173,16 @@ job with dry-run manifest and a rehearsed **data** rollback (media included).
 
 **Done when:** the pilot promotes atomically, `audit_course` now reports **`release_ready`**,
 and a rehearsed rollback restores the prior state. **First genuinely finished course.**
+
+**Status (2026-08-01): machinery built and tested; promotion waits on Phase 3.**
+`decide_content_release` flipped `course.status` and wrote an audit line — nothing recorded
+*what* shipped, so `release_missing` could never clear and a rollback moved a version pointer
+over content that had already changed underneath it. `app/services/content_release.py` now
+makes a release a manifest (lesson versions, published item versions, blueprints, claims,
+sources, plus a digest), publishes it atomically with the pointer, refuses to rewrite an
+already-published version's membership, rolls back to the previous manifest, and reports
+drift when live content diverges from the active release. 10 tests cover these paths.
+The pilot cannot promote until its review decisions exist — that is Phase 3, not this phase.
 
 ## Phase 5 — Video for the pilot
 
@@ -205,15 +246,23 @@ Record the decision and its rationale here when made.
 
 ## 4. Scoreboard
 
-| Metric | Today | Target | Phase |
-|---|---:|---:|---|
-| Paths able to publish unreviewed content | 4 | 0 | 0 |
-| Exams without an explicit disposition | 150 | 0 | 0 |
-| In-progress attempts stranded | — | 0 | 0 |
-| Pilot substantive grounding coverage | 0% | 100% | 1 |
-| Pilot items passing validation | — | ≥90% | 2 |
-| Pilot `audit_course` blockers (excl. release) | many | 0 | 3 |
-| Courses `release_ready` | 0 / 67 | 1 | 4 |
-| Pilot lessons with grounded video | 0 | all | 5 |
-| Live-event lessons meeting the grounding bar | 0 / 410 | ≥80% | 6 |
-| Imported items with usable figures | 0% | ≥90% | 7 |
+| Metric | Start | Now (2026-08-01) | Target | Phase |
+|---|---:|---:|---:|---|
+| Paths able to publish unreviewed content | 4 | **0** | 0 | 0 |
+| Exams without an explicit disposition | 150 | **0** | 0 | 0 |
+| In-progress attempts stranded | — | **0** | 0 | 0 |
+| Pilot blocks accounted for (evidenced or an open gap) | 0% | **100%** | 100% | 1 |
+| Pilot blocks evidence-backed | 0% | **56%** | — | 1 |
+| Pilot items passing validation | — | **93.1%** | ≥90% | 2 |
+| Pilot `audit_course` blockers needing no human | many | **0** | 0 | 3 |
+| Pilot `audit_course` blockers needing a human | — | **241** | 0 | 3 |
+| Pilot lessons within the 5–12 min target | 0 / 8 | **24 / 24** | all | 3 |
+| Pilot lessons visible to a reviewer | 0 / 24 | **24 / 24** | all | 3 |
+| Release manifest + rehearsed rollback | absent | **built, 10 tests** | proven on pilot | 4 |
+| Courses `release_ready` | 0 / 67 | 0 / 67 | 1 | 4 |
+| Pilot lessons with grounded video | 0 | 0 | all | 5 |
+| Live-event lessons meeting the grounding bar | 0 / 410 | — | ≥80% | 6 |
+| Imported items with usable figures | 0% | 0% | ≥90% | 7 |
+
+**The one line that matters:** every blocker between the pilot and a finished course is now a
+review decision. There is no remaining engineering task standing in front of it.
