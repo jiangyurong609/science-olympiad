@@ -3080,7 +3080,12 @@ def lesson_review_queue(
         skill = db.get(Skill, links[0].skill_id) if links else None
         unit = db.get(CourseUnit, skill.unit_id) if skill else None
         course = db.get(Course, skill.course_id) if skill else None
-        if not course or course.status == "published":
+        # A published course used to be skipped here, on the assumption that publication
+        # implies review. That is the inverse of the actual history: several write paths
+        # published lessons that were never reviewed, so this filter hid precisely the
+        # backlog a reviewer needs to see. Completion is decided below by whether the
+        # editor and SME approvals exist, which is the real question.
+        if not course:
             continue
         event = db.get(Event, course.event_id)
         # Reviewing lessons that belong to a retired duplicate is wasted work: whatever the
@@ -3108,6 +3113,9 @@ def lesson_review_queue(
         elif not sme or sme.decision != "approved":
             next_stage = "sme"
         else:
+            # both approvals are on this exact version. The row is still returned, with a
+            # terminal stage, because the admin UI filters `complete` itself and uses the
+            # row to show what has already been signed off.
             next_stage = "complete"
         queue.append({
             "id": lesson.id,

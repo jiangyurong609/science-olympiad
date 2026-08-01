@@ -1,6 +1,8 @@
 """Phase C (R-C6) — archive listing + canonical slug redirects keep archived content reachable."""
 from __future__ import annotations
 
+from sqlalchemy import select
+
 from app.core.database import SessionLocal
 from app.models.entities import Event, Lesson
 
@@ -102,3 +104,69 @@ def test_review_queue_skips_lessons_on_retired_events(client, admin_token):
     titles = {row.get("title") for row in (queue if isinstance(queue, list) else queue.get("items", []))}
     assert f"Draft {live}" in titles, "work on a live event must still be reviewable"
     assert f"Draft {twin}" not in titles, "work on a retired event must not be queued"
+
+
+def test_review_queue_shows_unreviewed_lessons_inside_a_published_course(client, admin_token):
+    """Publication is not evidence of review.
+
+    The queue used to skip any lesson whose course was `published`, on the assumption that a
+    published course had already been through review. The catalog's actual history is the
+    opposite — several write paths published lessons that were never reviewed — so that filter
+    hid exactly the backlog a reviewer needs. It also hid lessons whose content had since been
+    rewritten underneath an old approval.
+    """
+    from app.models.entities import Course, CourseUnit, LessonSkill, LessonVersion, Skill
+    with SessionLocal() as db:
+        live, _prior, _twin = _seed(db)
+        course = Course(event_id=live, slug="published-course", title="Published",
+                        status="published")
+        db.add(course); db.flush()
+        unit = CourseUnit(course_id=course.id, slug="pu", title="U", sequence=1)
+        db.add(unit); db.flush()
+        skill = Skill(course_id=course.id, unit_id=unit.id, slug="ps", name="S", sequence=1)
+        db.add(skill); db.flush()
+        lesson = Lesson(event_id=live, slug="unreviewed-but-published",
+                        title="Unreviewed But Published", status="published", current_version=1)
+        db.add(lesson); db.flush()
+        db.add(LessonVersion(lesson_id=lesson.id, version=1, content=[], review_status="ai_draft"))
+        db.add(LessonSkill(lesson_id=lesson.id, skill_id=skill.id, is_primary=True))
+        db.commit()
+
+    queue = client.get("/api/content/lessons/review-queue",
+                       headers={"Authorization": f"Bearer {admin_token}"}).json()
+    rows = queue if isinstance(queue, list) else queue.get("items", [])
+    match = next((r for r in rows if r.get("title") == "Unreviewed But Published"), None)
+    assert match is not None, "a published course's unreviewed lesson must still be queued"
+    assert match["next_stage"] == "editor"
+
+
+def test_a_fully_approved_lesson_is_marked_complete_not_pending(client, admin_token):
+    from app.models.entities import (
+        Course, CourseUnit, LessonSkill, LessonVersion, ReviewDecision, Skill, User,
+    )
+    with SessionLocal() as db:
+        live, _prior, _twin = _seed(db)
+        course = Course(event_id=live, slug="done-course", title="Done", status="published")
+        db.add(course); db.flush()
+        unit = CourseUnit(course_id=course.id, slug="du", title="U", sequence=1)
+        db.add(unit); db.flush()
+        skill = Skill(course_id=course.id, unit_id=unit.id, slug="ds", name="S", sequence=1)
+        db.add(skill); db.flush()
+        lesson = Lesson(event_id=live, slug="fully-approved", title="Fully Approved",
+                        status="published", current_version=1)
+        db.add(lesson); db.flush()
+        db.add(LessonVersion(lesson_id=lesson.id, version=1, content=[], review_status="ai_draft"))
+        db.add(LessonSkill(lesson_id=lesson.id, skill_id=skill.id, is_primary=True))
+        reviewer = db.scalar(select(User).where(User.role.in_(("editor", "admin"))))
+        for stage in ("editor", "sme"):
+            db.add(ReviewDecision(entity_type="lesson", entity_id=lesson.id, entity_version=1,
+                                  stage=stage, decision="approved",
+                                  reviewer_user_id=reviewer.id if reviewer else None))
+        db.commit()
+
+    queue = client.get("/api/content/lessons/review-queue",
+                       headers={"Authorization": f"Bearer {admin_token}"}).json()
+    rows = queue if isinstance(queue, list) else queue.get("items", [])
+    match = next((r for r in rows if r.get("title") == "Fully Approved"), None)
+    assert match is not None, "the row is kept so the UI can show what was signed off"
+    assert match["next_stage"] == "complete", "nothing is left to decide on this version"

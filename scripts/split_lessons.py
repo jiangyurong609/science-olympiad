@@ -382,6 +382,13 @@ def _write_parts(db: Session, event: Event, lesson: Lesson, version: LessonVersi
     lesson.estimated_minutes = max(5, min(12, round(first["minutes"])))
     version.content = first["blocks"]
     flag_modified(version, "content")
+    # Part 1 now holds a fraction of what was approved plus a generated summary, so whatever
+    # review state the old version carried no longer describes it. Leaving `review_status`
+    # at "published" kept these eight lessons out of the review queue entirely — the queue
+    # filters on it — which hid the very content the split had just changed.
+    version.review_status = "draft"
+    if lesson.status == "published":
+        lesson.status = "draft"
 
     # make room so the new parts sort immediately after their parent
     for later in db.scalars(select(Lesson).where(
