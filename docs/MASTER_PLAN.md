@@ -209,7 +209,26 @@ Only now does a catalog-wide threshold make sense, because the pilot proved the 
   per-item parse confidence and low-confidence answers routed to the needs-key queue;
   **7c** per-import fidelity report feeding the Phase Q scorecard.
 - Sequenced here because it competes for the same review capacity and must clear the same
-  Phase 0 invariant.
+  Phase 0 invariant. **Brought forward** when Phase 3 stalled on human review: this is
+  engineering that produces drafts, so it consumes no review capacity while it waits.
+
+**Status (2026-08-01): complete.**
+
+- **7a** — `pdf_figures` recovers embedded figures from the retained PDF bytes. Furniture is
+  rejected by dimensions, aspect, and cross-page repetition. Only an *unambiguous* attachment
+  (one figure, one question, one page) un-drops an item; `ambiguous` attaches for review but
+  leaves the item excluded, because guessing which figure a question means is the failure
+  this exists to end. Encoded byte size was tried as a content test and removed — it
+  discarded a real line drawing, which compresses as well as any logo.
+- **7b** — every item carries a parse confidence computed from checkable facts (was the stem
+  found in the source, does an answer exist, is the choice structure coherent). The model is
+  never asked to rate itself. A short answer that fails is emptied so it reaches the
+  needs-key queue rather than grading a student against a guess.
+- **7c** — `scripts/audit_import_fidelity.py`. First run: **96 imports, 4,755 items, 83.2%
+  gradeable, 19 imports below 60%**. It found that **27 imports (1,226 items) ran with no
+  answer key while the key was in the database**, unopened. `find_key_source` recovers 8 of
+  those 27 (362 items); the remaining 19 have no key at all. Matching refuses on a tie —
+  the wrong event's key is worse than none.
 
 ## Phase 8 — Learning-flow completion
 
@@ -262,7 +281,10 @@ Record the decision and its rationale here when made.
 | Courses `release_ready` | 0 / 67 | 0 / 67 | 1 | 4 |
 | Pilot lessons with grounded video | 0 | 0 | all | 5 |
 | Live-event lessons meeting the grounding bar | 0 / 410 | — | ≥80% | 6 |
-| Imported items with usable figures | 0% | 0% | ≥90% | 7 |
+| Imported items with usable figures | 0% | recovery built | ≥90% | 7 |
+| Imported items gradeable | unmeasured | **83.2%** (4,755) | ≥90% | 7 |
+| Imports running with an available answer key | 69 / 96 | **77 / 96** | 96 / 96 | 7 |
+| Imports below 60% gradeable | unmeasured | **19** | 0 | 7 |
 
 **The one line that matters:** every blocker between the pilot and a finished course is now a
 review decision. There is no remaining engineering task standing in front of it.
