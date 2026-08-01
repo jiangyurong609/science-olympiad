@@ -2980,6 +2980,30 @@ def generate(payload: QuestionGenerateRequest, db: Session = Depends(get_db), ac
     } for q in questions]
 
 
+def _resolve_asset_urls(assets) -> list:
+    """Give each stored figure a URL the browser can actually load.
+
+    Recovered figures are recorded with a `storage_key` and no URL, deliberately: a signed
+    URL expires, so persisting one would leave the descriptor holding a dead link. The URL is
+    minted per request instead. A key that cannot be signed yields an asset without a URL
+    rather than a broken image, and the item then reads as figure-missing — which is the
+    honest state, since the student cannot see the figure either.
+    """
+    resolved = []
+    for asset in assets or []:
+        if not isinstance(asset, dict):
+            continue
+        if asset.get("url") or not asset.get("storage_key"):
+            resolved.append(asset)
+            continue
+        try:
+            from app.services import media_storage
+            resolved.append({**asset, "url": media_storage.playback_url(asset["storage_key"])})
+        except Exception:
+            resolved.append(asset)
+    return resolved
+
+
 def _snapshot_question(q: Question) -> dict:
     return {
         "question_id": q.id, "question_version": q.version, "concept_id": q.concept_id,
@@ -3708,7 +3732,7 @@ def start_exam(
         "questions": [{
             "id": item.question_id, "stem": item.snapshot["stem"],
             "choices": item.snapshot.get("choices", []),
-            "assets": item.snapshot.get("assets", []),
+            "assets": _resolve_asset_urls(item.snapshot.get("assets", [])),
             "figure_missing": bool(item.snapshot.get("figure_missing")),
             "question_type": item.snapshot["question_type"],
             "estimated_seconds": item.snapshot.get("estimated_seconds", 90),

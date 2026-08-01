@@ -72,6 +72,19 @@ def upload_media(key: str, content: bytes, content_type: str, ttl: timedelta = D
     return StoredObject(key=key, url=url)
 
 
+def download_media(key: str) -> bytes:
+    """Read stored bytes back.
+
+    Needed because figure recovery re-reads the original PDF an import was extracted from —
+    the text was kept but the bytes are where the diagrams still live.
+    """
+    blob = _bucket().blob(key)
+    content = blob.download_as_bytes()
+    if content is None:
+        raise MediaStorageError(f"No stored object at {key!r}")
+    return content
+
+
 def signed_upload_url(key: str, content_type: str = "video/mp4", ttl: timedelta = DEFAULT_TTL) -> StoredObject:
     """Pre-sign a PUT target for the worker's finished render."""
     blob = _bucket().blob(key)

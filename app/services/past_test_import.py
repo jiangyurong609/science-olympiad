@@ -19,6 +19,7 @@ from app.models.entities import (
     Event, Exam, ExamItem, Question, QuestionStatus, Source, SourceSnapshot,
 )
 from app.services.model_provider import ModelProviderError, OpenAICompatibleProvider
+from app.services.pdf_figures import attach_figures_to_items, extract_figures
 
 MAX_TEXT_CHARS = 30_000
 PROMPT_VERSION = "past-test-parse-v1"
@@ -114,6 +115,70 @@ def _answer_spec(item: dict) -> tuple[str, list, dict]:
     }
 
 
+def attach_source_figures(db: Session, exam_source: Source, snapshot: SourceSnapshot,
+                          items: list[dict]) -> dict:
+    """Recover the PDF's figures and attach each to the items printed on its page.
+
+    Import has always read only `extract_text()`, so every diagram and specimen photo was
+    discarded and the items depending on one were dropped. The bytes are still retained, so
+    this re-reads them.
+
+    It fails soft on purpose: a source with no retained bytes, an unreadable PDF, or a
+    storage backend that is not configured must degrade to today's text-only behaviour rather
+    than fail the whole import. What it must never do is attach a figure it is not sure about
+    — that decision lives in `attach_figures_to_items`, which marks ambiguity instead of
+    guessing.
+    """
+    stats = {"figures_found": 0, "attached": 0, "status": "no_bytes"}
+    raw = _retained_bytes(db, exam_source, snapshot)
+    if not raw:
+        for item in items:
+            item.setdefault("figures", [])
+            item.setdefault("figure_match", "no_source_bytes")
+        return stats
+    try:
+        report = extract_figures(raw)
+    except Exception as exc:                       # a broken PDF is not a broken import
+        stats["status"] = f"extraction_failed:{type(exc).__name__}"
+        for item in items:
+            item.setdefault("figures", [])
+            item.setdefault("figure_match", "extraction_failed")
+        return stats
+
+    stats["figures_found"] = len(report.figures)
+    stats["rejected"] = report.rejected
+    for figure in report.figures:
+        figure.storage_key = _store_figure(exam_source, snapshot, figure)
+    stats.update(attach_figures_to_items(snapshot.extracted_text or "", items, report.figures))
+    stats["status"] = "ok"
+    stats["attached"] = stats.get("with_figures", 0)
+    return stats
+
+
+def _retained_bytes(db: Session, source: Source, snapshot: SourceSnapshot) -> bytes | None:
+    """Fetch the PDF bytes this snapshot was extracted from, if they were kept."""
+    key = (snapshot.metadata_json or {}).get("artifact_key") or \
+        (source.metadata_json or {}).get("artifact_key")
+    if not key:
+        return None
+    try:
+        from app.services import media_storage
+        return media_storage.download_media(key)
+    except Exception:
+        return None
+
+
+def _store_figure(source: Source, snapshot: SourceSnapshot, figure) -> str:
+    key = f"figures/source-{source.id}/snapshot-{snapshot.id}/p{figure.page}-{figure.sha256[:12]}"
+    try:
+        from app.services import media_storage
+        stored = media_storage.upload_media(key, figure.content, figure.content_type)
+        return getattr(stored, "key", key)
+    except Exception:
+        # the descriptor still records page, size and hash, so an operator can find it later
+        return ""
+
+
 def build_questions(
     db: Session, event: Event, exam_source: Source, key_source: Source | None,
     items: list[dict], include_image_dependent: bool = False,
@@ -121,7 +186,15 @@ def build_questions(
     questions: list[Question] = []
     for item in items:
         image_dependent = bool(item.get("image_dependent"))
-        if image_dependent and not include_image_dependent:
+        figures = item.get("figures") or []
+        # An image-dependent item used to be dropped unconditionally, because the figure it
+        # referred to was never extracted. If a figure from its own page is now attached and
+        # the attachment is unambiguous, the item is answerable and belongs in the import.
+        # An `ambiguous` attachment does not qualify: several questions and several figures
+        # shared that page, and guessing which pairs with which would make an unanswerable
+        # item look answerable — the exact failure this is meant to end.
+        resolved = bool(figures) and item.get("figure_match") == "unique"
+        if image_dependent and not resolved and not include_image_dependent:
             continue
         stem = str(item.get("stem") or "").strip()
         if not stem:
@@ -134,6 +207,7 @@ def build_questions(
             question_type=qtype,
             stem=stem,
             choices=choices,
+            assets=list(figures),
             answer_spec=answer_spec,
             explanation=str(item.get("acceptance_notes") or item.get("reference_answer") or ""),
             citations=[{"source_id": exam_source.id}],
@@ -148,6 +222,9 @@ def build_questions(
                 "section": item.get("section"),
                 "label": item.get("label"),
                 "image_dependent": image_dependent,
+                "figure_match": item.get("figure_match", "none"),
+                "source_page": item.get("page"),
+                "figure_resolved": resolved,
                 "unverified_auto_import": True,
             },
         )
@@ -218,6 +295,7 @@ def import_past_test(
 
     items = parse_items(exam_snapshot.extracted_text, key_text, event)
     image_dependent = sum(1 for i in items if i.get("image_dependent"))
+    figure_stats = attach_source_figures(db, exam_source, exam_snapshot, items)
 
     questions = build_questions(
         db, event, exam_source, key_source, items, include_image_dependent,
@@ -227,6 +305,7 @@ def import_past_test(
         return {
             "parsed_items": len(items), "image_dependent_items": image_dependent,
             "questions_created": 0, "exam_id": None, "skipped": True, "items": items,
+            "figures": figure_stats,
         }
     exam = build_exam(db, event, exam_source, questions, feedback_mode) if (build and questions) else None
     if commit:
@@ -238,7 +317,11 @@ def import_past_test(
     return {
         "parsed_items": len(items),
         "image_dependent_items": image_dependent,
+        "image_dependent_recovered": sum(
+            1 for i in items
+            if i.get("image_dependent") and i.get("figure_match") == "unique"),
         "questions_created": len(questions),
         "exam_id": exam.id if exam else None,
         "items": items,
+        "figures": figure_stats,
     }
