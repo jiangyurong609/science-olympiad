@@ -26,6 +26,11 @@ class VideoLibraryError(ValueError):
     pass
 
 
+def _slug_chapter(text: str) -> str:
+    import re
+    return re.sub(r"[^a-z0-9]+", "-", str(text).lower()).strip("-")
+
+
 def _latest_per_chapter(renders: list[VideoRender]) -> list[VideoRender]:
     """Renders are versioned; a chapter shows its newest successful render."""
     newest: dict[str, VideoRender] = {}
@@ -54,12 +59,17 @@ def lesson_chapters(db: Session, lesson_id: int, *, include_pending: bool = Fals
         query = query.where(VideoRender.qa_status == QA_APPROVED)
     renders = _latest_per_chapter(db.scalars(query).all())
 
-    # keep the author's chapter order rather than an incidental database order
-    order = {}
+    # keep the author's chapter order rather than an incidental database order, and collect
+    # which lesson blocks each chapter covers so the reader can show them together
+    order, blocks_by_chapter = {}, {}
     for scene in storyboard.scenes or []:
         label = str(scene.get("chapter", "")).strip()
         if label and label not in order:
             order[label] = len(order)
+        key = _slug_chapter(label)
+        covered = [i for i in (scene.get("block_indexes") or []) if isinstance(i, int)]
+        if covered:
+            blocks_by_chapter.setdefault(key, []).extend(covered)
 
     def sort_key(render: VideoRender) -> tuple:
         title = render.provenance.get("chapter_title") if render.provenance else None
@@ -77,6 +87,7 @@ def lesson_chapters(db: Session, lesson_id: int, *, include_pending: bool = Fals
             "duration_seconds": render.duration_seconds,
             "version": render.version,
             "qa_status": render.qa_status,
+            "block_indexes": sorted(set(blocks_by_chapter.get(render.chapter, []))),
             "playback_url": media_storage.playback_url(render.video_key),
         })
     return out

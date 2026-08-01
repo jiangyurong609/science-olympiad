@@ -2695,9 +2695,17 @@ function renderLessonOutline() {
     const current = index === state.lessonBlockIndex;
     const completed = complete.has(block.id)
       || lesson.progress.checkpoint_results?.[block.id]?.correct;
+    // A chapter belongs to the section it teaches, so it is offered here rather than as a
+    // second, parallel list of lesson content.
+    const chapter = chapterForBlock(index);
+    const play = chapter
+      ? `<span class="outline-play" data-play-chapter="${chapter.index}" role="button" tabindex="0"
+           title="Watch: ${escapeHtml(chapter.title)}">▶ ${formatClock(chapter.duration_seconds)}</span>`
+      : '';
     return `<li><button type="button" data-lesson-block="${index}"${current ? ' aria-current="step"' : ''}>
       <span aria-hidden="true">${completed ? '✓' : index + 1}</span>
       <span>${escapeHtml(lessonBlockLabel(block, index))}</span>
+      ${play}
     </button></li>`;
   }).join('');
 }
@@ -3462,6 +3470,45 @@ initialize();
 // --- Generated video lessons -------------------------------------------------
 // Chapters are short per-sub-topic clips; selecting one swaps the player source so a
 // student can jump straight to the part they need instead of scrubbing one long file.
+function chapterForBlock(blockIndex) {
+  const chapters = state.lessonVideoChapters || [];
+  for (let i = 0; i < chapters.length; i += 1) {
+    if ((chapters[i].block_indexes || []).includes(blockIndex)) return { ...chapters[i], index: i };
+  }
+  return null;
+}
+
+// Play a chapter beside the section it teaches, so watching and reading stay one lesson.
+function playChapterInline(index) {
+  const chapter = (state.lessonVideoChapters || [])[index];
+  if (!chapter) return;
+  const host = $('lesson-inline-video');
+  host.hidden = false;
+  host.innerHTML = `
+    <div class="inline-video-head">
+      <strong>${escapeHtml(chapter.title)}</strong>
+      <button type="button" class="button button-quiet button-compact" data-close-inline-video>Close video</button>
+    </div>
+    <video class="inline-video-player" controls autoplay playsinline src="${safeUrl(chapter.playback_url)}"></video>
+    <p class="inline-video-note">Watching covers the same material as the section below.</p>`;
+  host.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+  // Watching counts as covering the section, so a viewer is not penalised against a reader.
+  const first = (chapter.block_indexes || [])[0];
+  if (typeof first === 'number') markBlockCovered(first);
+}
+
+function markBlockCovered(blockIndex) {
+  const lesson = state.currentLesson;
+  const block = lesson?.content?.[blockIndex];
+  if (!block) return;
+  const done = new Set(lesson.progress.completed_block_ids || []);
+  if (done.has(block.id)) return;
+  done.add(block.id);
+  lesson.progress.completed_block_ids = [...done];
+  renderLessonOutline();
+  saveLessonProgress().catch(() => {});
+}
+
 async function loadLessonVideo(lessonId) {
   const section = $('lesson-video');
   if (!section) return;
@@ -3475,17 +3522,11 @@ async function loadLessonVideo(lessonId) {
     const totalMinutes = Math.round(chapters.reduce((sum, c) => sum + (c.duration_seconds || 0), 0) / 60);
     count.textContent = `${chapters.length} chapter${chapters.length === 1 ? '' : 's'}` +
       (totalMinutes ? ` · about ${totalMinutes} min` : '');
-    $('lesson-video-chapters').innerHTML = chapters.map((chapter, index) => `
-      <li>
-        <button type="button" class="video-chapter" data-video-chapter="${index}" aria-pressed="${index === 0}">
-          <span class="video-chapter-index">${String(index + 1).padStart(2, '0')}</span>
-          <span class="video-chapter-title">${escapeHtml(chapter.title)}</span>
-          <span class="video-chapter-time">${formatClock(chapter.duration_seconds)}</span>
-          ${chapter.qa_status !== 'approved' ? '<span class="video-chapter-flag">in review</span>' : ''}
-        </button>
-      </li>`).join('');
+    // The outline owns chapter navigation; this is only a "start watching" entry point.
+    $('lesson-video-chapters').innerHTML = '';
     playVideoChapter(0, false);
     section.hidden = false;
+    renderLessonOutline();
   } catch (error) {
     // A missing video must never break the lesson itself.
     section.hidden = true;
@@ -3576,4 +3617,14 @@ document.addEventListener('click', async event => {
     renderVideoReviewQueue();
   } catch (error) { toast(error.message); }
   finally { setBusy(button, false); }
+});
+
+
+document.addEventListener('click', event => {
+  const play = event.target.closest('[data-play-chapter]');
+  if (play) { event.preventDefault(); event.stopPropagation(); playChapterInline(Number(play.dataset.playChapter)); return; }
+  if (event.target.closest('[data-close-inline-video]')) {
+    const host = $('lesson-inline-video');
+    host.hidden = true; host.innerHTML = '';
+  }
 });

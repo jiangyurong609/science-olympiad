@@ -65,6 +65,9 @@ def draft_from_lesson(db: Session, lesson_id: int) -> dict:
             continue
         scenes.append({
             "index": len(scenes) + 1,
+            # Which lesson block this scene teaches. Kept so a chapter can be shown against
+            # the section it covers instead of becoming a parallel, unrelated list.
+            "block_indexes": [index],
             "block_type": block.get("type"),
             "headline": headline,
             "visual": block.get("type"),

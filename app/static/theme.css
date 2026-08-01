@@ -714,3 +714,16 @@ details[open] summary { color: var(--forest); }
   padding: .12rem .42rem; border-radius: 4px; margin-left: .4rem; white-space: nowrap;
   background: rgba(169, 118, 31, .16); color: #a9761f; border: 1px solid rgba(169, 118, 31, .35); }
 @media (prefers-color-scheme: dark) { .prior-season-badge { color: #d7a24a; } }
+
+/* Video belongs to the section it teaches, not to a second list of the lesson. */
+.outline-play { margin-left: auto; font-size: .7rem; font-variant-numeric: tabular-nums; white-space: nowrap;
+  padding: .1rem .38rem; border-radius: 5px; color: #1f8a5b; background: rgba(31, 138, 91, .12);
+  border: 1px solid rgba(31, 138, 91, .3); cursor: pointer; }
+.outline-play:hover { background: rgba(31, 138, 91, .22); }
+.lesson-outline-list li button { display: flex; align-items: center; gap: .5rem; width: 100%; }
+.lesson-inline-video { margin: 0 0 1rem; border: 1px solid rgba(128,145,140,.28); border-radius: 12px; padding: .7rem; }
+.inline-video-head { display: flex; align-items: center; justify-content: space-between; gap: 1rem; margin-bottom: .5rem; }
+.inline-video-player { width: 100%; aspect-ratio: 16/9; border-radius: 8px; background: #0b1417; display: block; }
+.inline-video-note { font-size: .8rem; opacity: .7; margin: .45rem 0 0; }
+.lesson-video-hint { font-size: .82rem; opacity: .75; margin: .5rem 0 0; }
+@media (prefers-color-scheme: dark) { .outline-play { color: #3fb87e; } }

@@ -9,8 +9,8 @@
   <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='16' fill='%231f5a45'/%3E%3Ctext x='32' y='44' text-anchor='middle' font-size='38' fill='white'%3EF%3C/text%3E%3C/svg%3E">
   <link rel="preload" href="/static/fonts/Fraunces.woff2" as="font" type="font/woff2" crossorigin>
   <link rel="preload" href="/static/fonts/AtkinsonHyperlegibleNext.woff2" as="font" type="font/woff2" crossorigin>
-  <link rel="stylesheet" href="/static/styles.css?v=12">
-  <link rel="stylesheet" href="/static/theme.css?v=12">
+  <link rel="stylesheet" href="/static/styles.css?v=13">
+  <link rel="stylesheet" href="/static/theme.css?v=13">
 </head>
 <body>
   <a class="skip-link" href="#main-content">Skip to Main Content</a>
@@ -230,7 +230,8 @@
                 <span id="lesson-video-count" class="lesson-video-count"></span>
               </header>
               <video id="lesson-video-player" class="lesson-video-player" controls preload="metadata" playsinline></video>
-              <ol id="lesson-video-chapters" class="lesson-video-chapters"></ol>
+              <p class="lesson-video-hint">Each section below can also be watched on its own — look for <span aria-hidden="true">▶</span> in the outline.</p>
+              <ol id="lesson-video-chapters" class="lesson-video-chapters" hidden></ol>
             </section>
             <div class="lesson-reader-layout">
               <aside class="lesson-outline" aria-label="Lesson sections">
@@ -239,6 +240,7 @@
                 <ol id="lesson-outline-list"></ol>
               </aside>
               <div class="lesson-stage">
+                <div id="lesson-inline-video" class="lesson-inline-video" hidden></div>
                 <div id="lesson-block" class="lesson-block" tabindex="-1"></div>
                 <footer class="lesson-reader-actions">
                   <button id="lesson-previous" class="button button-secondary" type="button">Previous</button>
@@ -508,6 +510,6 @@
       </div>
     </div>
   </div>
-  <script src="/static/app.js?v=12"></script>
+  <script src="/static/app.js?v=13"></script>
 </body>
 </html>
