@@ -2694,7 +2694,7 @@ function renderLessonBlock() {
       <p class="kicker">Watch · ${escapeHtml(step.chapter.title)}</p>
       <video class="lesson-step-video" controls autoplay playsinline
              src="${safeUrl(step.chapter.playback_url)}"></video>
-      <p class="lesson-step-note">${formatClock(step.chapter.duration_seconds)} · the reading for this section comes next.</p>`;
+      <p class="lesson-step-note">${formatClock(step.chapter.duration_seconds)} · covers ${(step.chapter.block_indexes || []).length} section${(step.chapter.block_indexes || []).length === 1 ? '' : 's'} — the reading follows.</p>`;
     const player = node.querySelector('video');
     // Roll into the reading when the chapter ends, the way a course lesson flows.
     player?.addEventListener('ended', () => moveLesson(1));
@@ -2750,10 +2750,12 @@ function renderLessonOutline() {
       || lesson.progress.checkpoint_results?.[block.id]?.correct;
     // A chapter belongs to the section it teaches, so it is offered here rather than as a
     // second, parallel list of lesson content.
-    const chapter = chapterForBlock(index);
+    const chapter = chapterOpeningBlock(index);
+    const covers = chapter ? (chapter.block_indexes || []).length : 0;
     const play = chapter
       ? `<span class="outline-play" data-play-chapter="${chapter.index}" role="button" tabindex="0"
-           title="Watch: ${escapeHtml(chapter.title)}">▶ ${formatClock(chapter.duration_seconds)}</span>`
+           title="Watch ${escapeHtml(chapter.title)} — covers ${covers} section${covers === 1 ? '' : 's'}"
+           >▶ ${formatClock(chapter.duration_seconds)}${covers > 1 ? ` · ${covers} sections` : ''}</span>`
       : '';
     return `<li><button type="button" data-lesson-block="${index}"${current ? ' aria-current="step"' : ''}>
       <span aria-hidden="true">${completed ? '✓' : index + 1}</span>
@@ -2874,7 +2876,6 @@ async function moveLesson(delta) {
     state.lessonStepIndex += delta;
     await saveCurrentLessonProgress(false);
     renderLessonBlock();
-    loadLessonVideo(id);
   } catch (error) { toast(error.message); }
 }
 
@@ -3527,6 +3528,16 @@ initialize();
 // --- Generated video lessons -------------------------------------------------
 // Chapters are short per-sub-topic clips; selecting one swaps the player source so a
 // student can jump straight to the part they need instead of scrubbing one long file.
+// A chapter covers a run of sections but *opens* only the first of them. Badging every
+// covered section made one chapter look like three separate videos.
+function chapterOpeningBlock(blockIndex) {
+  const chapters = state.lessonVideoChapters || [];
+  for (let i = 0; i < chapters.length; i += 1) {
+    if ((chapters[i].block_indexes || [])[0] === blockIndex) return { ...chapters[i], index: i };
+  }
+  return null;
+}
+
 function chapterForBlock(blockIndex) {
   const chapters = state.lessonVideoChapters || [];
   for (let i = 0; i < chapters.length; i += 1) {
@@ -3591,9 +3602,11 @@ async function loadLessonVideo(lessonId) {
       `${chapters.length} chapter${chapters.length === 1 ? '' : 's'} · ${formatClock(total)}`;
     section.hidden = false;
     // Rebuild the sequence now that chapters are known: each chapter becomes the step that
-    // opens the section it teaches.
+    // opens the section it teaches. Preserve the reader's place rather than jumping to the top.
+    const wasAt = state.lessonBlockIndex || 0;
     state.lessonSteps = null;
-    state.lessonStepIndex = null;
+    buildLessonSteps();
+    state.lessonStepIndex = stepForBlock(wasAt);
     renderLessonBlock();
   } catch (error) {
     section.hidden = true;   // a missing video must never break the lesson
