@@ -731,10 +731,11 @@ function renderEventCatalog() {
   chips.forEach(chip => chip.setAttribute('aria-pressed', String(chip.dataset.catalogDivision === state.catalogDivision)));
   const catalog = (state.events || [])
     // Prior-season events rotated out of the current slate but still hold real lessons and
-    // exams, so they stay in the catalog and are labelled rather than hidden.
-    .filter(event => event.category && ['current', 'prior_season_practice'].includes(event.season_status))
+    // exams, so they stay in the catalog and are labelled rather than hidden. Category is a
+    // grouping convenience, not a gate: an event missing one still gets a card.
+    .filter(event => ['current', 'prior_season_practice'].includes(event.season_status))
     .filter(event => state.catalogDivision === 'all' || event.division === state.catalogDivision)
-    .sort((a, b) => a.category.localeCompare(b.category) || a.name.localeCompare(b.name));
+    .sort((a, b) => (a.category || '~').localeCompare(b.category || '~') || a.name.localeCompare(b.name));
   $('event-catalog-count').textContent = catalog.length
     ? `${catalog.length} event${catalog.length === 1 ? '' : 's'}`
     : '';
@@ -744,8 +745,10 @@ function renderEventCatalog() {
   }
   const groups = new Map();
   catalog.forEach(event => {
-    if (!groups.has(event.category)) groups.set(event.category, []);
-    groups.get(event.category).push(event);
+    const group = event.category
+      || (event.season_status === 'prior_season_practice' ? 'Prior-season practice' : 'Other events');
+    if (!groups.has(group)) groups.set(group, []);
+    groups.get(group).push(event);
   });
   $('event-catalog-list').innerHTML = [...groups.entries()].map(([category, events]) => `
     <section class="catalog-group">
@@ -904,13 +907,17 @@ function renderConcepts() {
 
 function studentEvents() {
   const division = state.user?.division;
-  // Student navigation is intentionally scoped to the active competition
-  // season. Historical courses remain reachable from saved/direct links, but
-  // should not overwhelm the everyday event picker.
+  // Student navigation is scoped to the active competition season so the picker does not
+  // fill with historical duplicates — but prior-season practice events are deliberately
+  // retained content (they rotated out of the slate, they were not superseded), so they
+  // stay selectable rather than becoming unreachable.
   const currentSeason = Math.max(...state.events.filter(event => event.season_status === 'current').map(event => Number(event.season) || 0), 0);
   return [...state.events]
     .filter(event => event.lesson_count > 0 || event.exam_count > 0 || event.material_count > 0)
-    .filter(event => !currentSeason || Number(event.season) === currentSeason || event.slug === state.activeEventSlug)
+    .filter(event => !currentSeason
+      || Number(event.season) === currentSeason
+      || event.season_status === 'prior_season_practice'
+      || event.slug === state.activeEventSlug)
     .filter(event => !division || event.division === division || event.division === 'B/C' || event.slug === state.activeEventSlug)
     .sort((a, b) => {
       const aRank = a.division === division ? 0 : a.division === 'B/C' ? 1 : 2;
@@ -942,7 +949,7 @@ function renderEventSelectors() {
     grouped.get(item.season).push(item);
   });
   const options = [...grouped.entries()].sort(([a], [b]) => b - a).map(([season, events]) => (
-    `<optgroup label="${season} Season">${events.map(item => `<option value="${escapeHtml(item.slug)}"${item.id === event?.id ? ' selected' : ''}>${escapeHtml(item.name)} · Div ${escapeHtml(item.division)}${item.season_status === 'trial' ? ' · Trial' : ''}</option>`).join('')}</optgroup>`
+    `<optgroup label="${season} Season">${events.map(item => `<option value="${escapeHtml(item.slug)}"${item.id === event?.id ? ' selected' : ''}>${escapeHtml(item.name)} · Div ${escapeHtml(item.division)}${item.season_status === 'trial' ? ' · Trial' : ''}${item.season_status === 'prior_season_practice' ? ' · Prior season' : ''}</option>`).join('')}</optgroup>`
   )).join('');
   for (const id of ['overview-event-select', 'learn-event-select', 'practice-event-select']) $(id).innerHTML = options;
 }
