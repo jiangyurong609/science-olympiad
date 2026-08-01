@@ -238,3 +238,40 @@ def test_only_a_resolving_match_is_served():
         questions = build_questions(db, event, source, None, items)
     assert len(questions[0].assets) == 1
     assert questions[0].generation_provenance["figure_candidates"] == []
+
+
+def test_retained_bytes_are_found_where_the_crawler_actually_puts_them(monkeypatch):
+    """Figure recovery reported "no retained bytes" for every crawled PDF in the catalog.
+
+    The lookup checked `metadata_json["artifact_key"]`, which only the upload path sets. The
+    crawler retains bytes as a `RawArtifact` row against the snapshot, so the whole feature
+    silently did nothing for crawled sources — the majority of the catalog.
+    """
+    from app.models.entities import RawArtifact
+    from app.services.past_test_import import _retained_bytes
+
+    with SessionLocal() as db:
+        source, snapshot = _source(db)          # no artifact_key in metadata
+        db.add(RawArtifact(snapshot_id=snapshot.id, storage_key="raw/crawled.pdf",
+                           content_hash="h", byte_count=10,
+                           detected_media_type="application/pdf"))
+        db.flush()
+        monkeypatch.setattr("app.services.media_storage.download_media",
+                            lambda key: b"%PDF-" if key == "raw/crawled.pdf" else None)
+        assert _retained_bytes(db, source, snapshot) == b"%PDF-"
+
+
+def test_the_upload_path_key_still_works(monkeypatch):
+    from app.services.past_test_import import _retained_bytes
+    with SessionLocal() as db:
+        source, snapshot = _source(db, artifact_key="uploads/test.pdf")
+        monkeypatch.setattr("app.services.media_storage.download_media",
+                            lambda key: b"%PDF-upload" if key == "uploads/test.pdf" else None)
+        assert _retained_bytes(db, source, snapshot) == b"%PDF-upload"
+
+
+def test_no_retained_bytes_anywhere_still_degrades_quietly():
+    from app.services.past_test_import import _retained_bytes
+    with SessionLocal() as db:
+        source, snapshot = _source(db)
+        assert _retained_bytes(db, source, snapshot) is None

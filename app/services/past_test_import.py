@@ -16,8 +16,8 @@ from sqlalchemy.orm import Session
 
 from app.services.student_visibility import DISPOSITION_UNREVIEWED_PRACTICE
 from app.models.entities import (
-    Event, EventSourceMap, Exam, ExamItem, Question, QuestionStatus, Source,
-    SourceSnapshot,
+    Event, EventSourceMap, Exam, ExamItem, Question, QuestionStatus, RawArtifact,
+    Source, SourceSnapshot,
 )
 from app.services.model_provider import ModelProviderError, OpenAICompatibleProvider
 from app.services.pdf_figures import (
@@ -357,16 +357,25 @@ def attach_source_figures(db: Session, exam_source: Source, snapshot: SourceSnap
 
 
 def _retained_bytes(db: Session, source: Source, snapshot: SourceSnapshot) -> bytes | None:
-    """Fetch the PDF bytes this snapshot was extracted from, if they were kept."""
-    key = (snapshot.metadata_json or {}).get("artifact_key") or \
-        (source.metadata_json or {}).get("artifact_key")
-    if not key:
-        return None
-    try:
-        from app.services import media_storage
-        return media_storage.download_media(key)
-    except Exception:
-        return None
+    """Fetch the PDF bytes this snapshot was extracted from, if they were kept.
+
+    The first version looked only in `metadata_json["artifact_key"]`, which the *upload* path
+    sets. The crawler retains bytes too, but records them as a `RawArtifact` row against the
+    snapshot — so figure recovery reported "no retained bytes" for every crawled PDF in the
+    catalog and silently did nothing. The authoritative record is checked first.
+    """
+    artifact = db.scalar(select(RawArtifact).where(
+        RawArtifact.snapshot_id == snapshot.id).order_by(RawArtifact.id.desc()))
+    keys = [artifact.storage_key if artifact else None,
+            (snapshot.metadata_json or {}).get("artifact_key"),
+            (source.metadata_json or {}).get("artifact_key")]
+    for key in [k for k in keys if k]:
+        try:
+            from app.services import media_storage
+            return media_storage.download_media(key)
+        except Exception:
+            continue
+    return None
 
 
 def _store_figure(source: Source, snapshot: SourceSnapshot, figure) -> str:
