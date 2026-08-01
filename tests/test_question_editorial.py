@@ -138,3 +138,177 @@ def test_snapshot_grounded_question_completes_release_and_exam_flow(client, admi
         "question_count": 1, "published": True,
     })
     assert exam.status_code == 200 and exam.json()["question_count"] == 1
+
+
+def test_review_queue_can_be_scoped_to_one_course(client, admin_token):
+    """820 machine-validated items were returned in one unscoped response.
+
+    A reviewer clearing a single course had no way to see only its items, which makes a
+    bounded task look unbounded — and the bottleneck here is reviewer attention, not compute.
+    """
+    from app.core.database import SessionLocal
+    from app.models.entities import (
+        Concept, Course, CourseUnit, Event, Question, Skill,
+    )
+    with SessionLocal() as db:
+        event = Event(slug="scoped-ev", name="E", division="B", season=2026)
+        db.add(event); db.flush()
+        course = Course(event_id=event.id, slug="scoped-course", title="C", status="draft")
+        db.add(course); db.flush()
+        unit = CourseUnit(course_id=course.id, slug="su", title="U", sequence=1)
+        db.add(unit); db.flush()
+        concept = Concept(event_id=event.id, name="Scoped concept")
+        db.add(concept); db.flush()
+        db.add(Skill(course_id=course.id, unit_id=unit.id, concept_id=concept.id,
+                     slug="sk", name="S", sequence=1))
+        db.add(Question(event_id=event.id, concept_id=concept.id, stem="In scope",
+                        question_type="single_choice", choices=["a", "b"],
+                        answer_spec={"correct_index": 0}, status="machine_validated"))
+        db.add(Question(event_id=event.id, stem="Out of scope — no concept",
+                        question_type="single_choice", choices=["a", "b"],
+                        answer_spec={"correct_index": 0}, status="machine_validated"))
+        db.commit()
+        course_id = course.id
+
+    headers = {"Authorization": f"Bearer {admin_token}"}
+    scoped = client.get(f"/api/content/questions/review-queue?course_id={course_id}",
+                        headers=headers).json()
+    stems = {row["stem"] for row in scoped}
+    assert "In scope" in stems
+    assert "Out of scope — no concept" not in stems
+
+
+def test_a_course_whose_skills_have_no_concept_returns_nothing_not_everything(
+        client, admin_token):
+    """An empty IN () clause would otherwise match the whole catalog — the same class of
+    error that made every skill report zero questions."""
+    from app.core.database import SessionLocal
+    from app.models.entities import Course, CourseUnit, Event, Question, Skill
+    with SessionLocal() as db:
+        event = Event(slug="no-concept-ev", name="E", division="B", season=2026)
+        db.add(event); db.flush()
+        course = Course(event_id=event.id, slug="no-concept-course", title="C", status="draft")
+        db.add(course); db.flush()
+        unit = CourseUnit(course_id=course.id, slug="ncu", title="U", sequence=1)
+        db.add(unit); db.flush()
+        db.add(Skill(course_id=course.id, unit_id=unit.id, slug="nc", name="S", sequence=1))
+        db.add(Question(event_id=event.id, stem="Should not appear",
+                        question_type="single_choice", choices=["a", "b"],
+                        answer_spec={"correct_index": 0}, status="machine_validated"))
+        db.commit()
+        course_id = course.id
+
+    rows = client.get(f"/api/content/questions/review-queue?course_id={course_id}",
+                      headers={"Authorization": f"Bearer {admin_token}"}).json()
+    assert rows == []
+
+
+def test_review_evidence_surfaces_the_decisive_signals(client, admin_token):
+    """The solver verdict was several levels down inside validation_report; a reviewer with
+    72 items should not have to read nested JSON for the single most decisive signal."""
+    from app.core.database import SessionLocal
+    from app.models.entities import Event, Question
+    with SessionLocal() as db:
+        event = Event(slug="ev-evidence", name="E", division="B", season=2026)
+        db.add(event); db.flush()
+        db.add(Question(
+            event_id=event.id, stem="Evidence item", question_type="single_choice",
+            choices=["a", "b"], answer_spec={"correct_index": 0},
+            status="machine_validated",
+            validation_report={
+                "passed": True, "claim_ids": [7],
+                "independent_solver": {"passed": True, "verdict": "solver_agrees",
+                                       "chosen_index": 0},
+                "independent_verifier": {"passed": True, "errors": [], "warnings": []},
+                "factual_grounding": "approved_claims",   # older runs store a bare string
+                "rights_check": True,                      # and a bare bool here
+            },
+            similarity_report={"max_similarity": 0.41, "outcome": "clear"}))
+        db.commit()
+
+    rows = client.get("/api/content/questions/review-queue",
+                      headers={"Authorization": f"Bearer {admin_token}"}).json()
+    row = next(r for r in rows if r["stem"] == "Evidence item")
+    evidence = row["review_evidence"]
+    assert evidence["gates_run"] is True
+    assert evidence["solver_agreed"] is True
+    assert evidence["solver_verdict"] == "solver_agrees"
+    assert evidence["verifier_passed"] is True
+    assert evidence["grounding"] == "approved_claims", "a bare string must not crash or vanish"
+    assert evidence["rights_cleared"] is True, "nor a bare bool"
+    assert evidence["max_similarity"] == 0.41
+
+
+def test_an_item_that_never_faced_the_gates_does_not_look_vetted(client, admin_token):
+    """684 of 820 machine-validated items predate the hardened generator and were never
+    blind-solved. Rendering a missing gate as a passing one would tell a reviewer they had
+    been checked."""
+    from app.core.database import SessionLocal
+    from app.models.entities import Event, Question
+    with SessionLocal() as db:
+        event = Event(slug="ev-ungated", name="E", division="B", season=2026)
+        db.add(event); db.flush()
+        db.add(Question(event_id=event.id, stem="Never gated", question_type="single_choice",
+                        choices=["a", "b"], answer_spec={"correct_index": 0},
+                        status="machine_validated", validation_report={"passed": True}))
+        db.commit()
+
+    rows = client.get("/api/content/questions/review-queue",
+                      headers={"Authorization": f"Bearer {admin_token}"}).json()
+    evidence = next(r for r in rows if r["stem"] == "Never gated")["review_evidence"]
+    assert evidence["gates_run"] is False
+    assert evidence["solver_agreed"] is None, "absent must not read as passed"
+    assert evidence["verifier_passed"] is None
+
+
+def test_a_verifier_check_list_is_not_reported_as_a_verdict(client, admin_token):
+    """Some payloads put per-check findings in `passed` instead of a boolean. A reviewer
+    glancing at `verifier_passed: [...]` would read a truthy list as a pass."""
+    from app.core.database import SessionLocal
+    from app.models.entities import Event, Question
+    with SessionLocal() as db:
+        event = Event(slug="ev-checklist", name="E", division="B", season=2026)
+        db.add(event); db.flush()
+        db.add(Question(
+            event_id=event.id, stem="Checklist verifier", question_type="single_choice",
+            choices=["a", "b"], answer_spec={"correct_index": 0},
+            status="machine_validated",
+            validation_report={
+                "passed": True,
+                "independent_solver": {"passed": True, "verdict": "solver_agrees"},
+                "independent_verifier": {
+                    "passed": [{"check": "factual support", "details": "supported"}],
+                    "errors": [],
+                },
+            }))
+        db.commit()
+
+    rows = client.get("/api/content/questions/review-queue",
+                      headers={"Authorization": f"Bearer {admin_token}"}).json()
+    evidence = next(r for r in rows if r["stem"] == "Checklist verifier")["review_evidence"]
+    assert evidence["verifier_passed"] is True, "derived from there being no errors"
+    assert len(evidence["verifier_checks"]) == 1, "and the findings are kept, named honestly"
+
+
+def test_a_verifier_that_reported_errors_is_not_a_pass(client, admin_token):
+    from app.core.database import SessionLocal
+    from app.models.entities import Event, Question
+    with SessionLocal() as db:
+        event = Event(slug="ev-vfail", name="E", division="B", season=2026)
+        db.add(event); db.flush()
+        db.add(Question(
+            event_id=event.id, stem="Verifier objected", question_type="single_choice",
+            choices=["a", "b"], answer_spec={"correct_index": 0},
+            status="machine_validated",
+            validation_report={
+                "passed": True,
+                "independent_solver": {"passed": True},
+                "independent_verifier": {"passed": [], "errors": ["two answers defensible"]},
+            }))
+        db.commit()
+
+    rows = client.get("/api/content/questions/review-queue",
+                      headers={"Authorization": f"Bearer {admin_token}"}).json()
+    evidence = next(r for r in rows if r["stem"] == "Verifier objected")["review_evidence"]
+    assert evidence["verifier_passed"] is False
+    assert evidence["verifier_errors"] == ["two answers defensible"]

@@ -3321,15 +3321,100 @@ def _citation_evidence(db: Session, question: Question) -> list[dict]:
     return evidence
 
 
+def _as_mapping(value) -> dict:
+    """Reports from different generator eras store the same field as a dict, a bare string,
+    a bool, or nothing. Normalise rather than assume the newest shape."""
+    if isinstance(value, dict):
+        return value
+    if value is None:
+        return {}
+    return {"value": value}
+
+
+def _review_evidence(question: Question) -> dict:
+    """The facts that decide an item review, lifted out of the raw reports.
+
+    All of this already sat inside `validation_report`, several levels down. A reviewer with
+    72 items to clear should not read nested JSON to learn whether the blind solver agreed
+    with the key — that is the most decisive signal there is, and burying it is why these
+    reports went unread.
+
+    `gates_run` matters as much as the verdicts. Only 136 of 820 machine-validated items have
+    solver evidence at all; the rest predate the hardened generator and were never blind-solved.
+    Rendering a missing gate as a passing one would tell a reviewer that 684 unvetted items had
+    been checked.
+    """
+    report = question.validation_report or {}
+    solver = _as_mapping(report.get("independent_solver"))
+    verifier = _as_mapping(report.get("independent_verifier"))
+    grounding = _as_mapping(report.get("factual_grounding"))
+    rights = _as_mapping(report.get("rights_check"))
+    similarity = question.similarity_report or {}
+    return {
+        "gates_run": bool(report.get("independent_solver")) and bool(
+            report.get("independent_verifier")),
+        "solver_agreed": solver.get("passed"),
+        "solver_verdict": solver.get("verdict"),
+        "solver_choice": solver.get("chosen_index"),
+        # Some verifier payloads put a list of per-check findings in `passed` rather than a
+        # boolean. That detail is worth showing, but not under a name that reads as a verdict:
+        # a reviewer glancing at `verifier_passed: [...]` would take a truthy list for a pass.
+        "verifier_passed": (
+            verifier.get("passed") if isinstance(verifier.get("passed"), bool)
+            else (not verifier.get("errors") if verifier else None)),
+        "verifier_checks": (verifier.get("passed")
+                            if isinstance(verifier.get("passed"), list) else []),
+        "verifier_errors": verifier.get("errors") or [],
+        "verifier_warnings": verifier.get("warnings") or [],
+        "grounding": grounding.get("value", grounding.get("grounded")),
+        "claim_ids": report.get("claim_ids") or [],
+        "max_similarity": similarity.get("max_similarity"),
+        "similarity_outcome": similarity.get("outcome"),
+        "rights_cleared": rights.get("value", rights.get("passed")),
+        "validation_passed": report.get("passed"),
+    }
+
+
 @router.get("/content/questions/review-queue")
-def question_review_queue(db: Session = Depends(get_db), actor: User = Depends(require_content_staff)):
+def question_review_queue(
+    event_id: int | None = None,
+    course_id: int | None = None,
+    limit: int = Query(500, ge=1, le=1000),
+    offset: int = Query(0, ge=0),
+    db: Session = Depends(get_db),
+    actor: User = Depends(require_content_staff),
+):
+    """Items awaiting review, scoped so a reviewer can clear one course at a time.
+
+    This returned every machine-validated item in the catalog — 820 of them — in one
+    unpaginated response. A reviewer working a single course had no way to see only its items,
+    which makes a bounded task look unbounded.
+    """
     allowed = ["machine_validated"] if actor.role == "editor" else ["machine_validated", "editor_reviewed", "sme_approved"]
-    questions = db.scalars(select(Question).where(Question.status.in_(allowed)).order_by(Question.created_at)).all()
+    query = select(Question).where(Question.status.in_(allowed))
+    if event_id:
+        query = query.where(Question.event_id == event_id)
+    if course_id:
+        course = db.get(Course, course_id)
+        if not course:
+            raise HTTPException(status_code=404, detail="Course not found")
+        concept_ids = [s.concept_id for s in db.scalars(select(Skill).where(
+            Skill.course_id == course.id, Skill.status != "withdrawn")).all() if s.concept_id]
+        # a course with no skill mapped to a concept must return nothing rather than
+        # everything, which an empty IN () would otherwise do
+        query = query.where(Question.event_id == course.event_id).where(
+            Question.concept_id.in_(concept_ids or [-1]))
+    # The response stays a bare list: the admin UI binds it straight to its queue state, and
+    # wrapping it in a {total, questions} envelope to add a count would break that screen for
+    # a number the client can derive.
+    questions = db.scalars(
+        query.order_by(Question.created_at).limit(limit).offset(offset)).all()
     return [{
         "id": q.id, "version": q.version, "status": q.status, "event_id": q.event_id,
         "stem": q.stem, "choices": q.choices, "answer_spec": q.answer_spec,
         "explanation": q.explanation, "citations": q.citations,
         "citation_evidence": _citation_evidence(db, q),
+        "review_evidence": _review_evidence(q),
         "validation_report": q.validation_report, "similarity_report": q.similarity_report,
     } for q in questions]
 
