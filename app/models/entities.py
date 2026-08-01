@@ -726,6 +726,9 @@ class Exam(Base):
     duration_minutes: Mapped[int] = mapped_column(Integer, default=50)
     question_ids: Mapped[list] = mapped_column(JSON, default=list)
     published: Mapped[bool] = mapped_column(Boolean, default=False)
+    # Explicit decision about student exposure. No exam may sit in an implicit state; see
+    # app/services/student_visibility.py.
+    disposition: Mapped[str] = mapped_column(String(32), default="pending_disposition", index=True)
     release_class: Mapped[str] = mapped_column(String(40), default="reviewed_practice", index=True)
     coverage_snapshot: Mapped[dict] = mapped_column(JSON, default=dict)
     published_by_user_id: Mapped[int | None] = mapped_column(ForeignKey("users.id"), nullable=True)

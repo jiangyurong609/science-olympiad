@@ -14,6 +14,9 @@ from sqlalchemy import select
 from sqlalchemy.orm import Session
 
 from app.models.entities import Event, Exam, ExamItem, Question, QuestionStatus
+from app.services.student_visibility import (
+    DISPOSITION_REVIEWED, STUDENT_READY_ITEM_STATUSES, assert_publishable,
+)
 from app.services.blueprint import blueprint_for, select_for_blueprint
 from app.services.scoring import is_servable
 
@@ -22,9 +25,11 @@ POOL_IMPORT_KINDS = {"past_test", "generated_from_material", "video_transcript_a
 
 
 def event_question_pool(db: Session, event: Event) -> list[Question]:
+    # Phase 0: a mock exam is scored, so it may only draw items a human has accepted.
+    # This previously sampled DRAFT items into a published=True exam.
     questions = db.scalars(select(Question).where(
         Question.event_id == event.id,
-        Question.status == QuestionStatus.DRAFT.value,
+        Question.status.in_(sorted(STUDENT_READY_ITEM_STATUSES)),
     )).all()
     # Only questions that (a) come from an accepted import kind and (b) are
     # servable — auto-scorable and not missing a figure they depend on. Never
@@ -84,12 +89,15 @@ def assemble_mock_exam(
         selected = random.sample(pool, size)
         random.shuffle(selected)
     duration = max(10, round(sum(q.estimated_seconds for q in selected) / 60))
+    question_ids = [q.id for q in selected]
+    assert_publishable(db, question_ids, what="mock exam")   # belt and braces on the pool filter
     exam = Exam(
         event_id=event.id,
         title=title or f"{event.name} — Mock Exam ({size} questions)",
         duration_minutes=duration,
-        question_ids=[q.id for q in selected],
+        question_ids=question_ids,
         published=True,
+        disposition=DISPOSITION_REVIEWED,
         release_class="mock_shuffled",
         blueprint={
             "import_kind": "mock_shuffled",

@@ -57,6 +57,7 @@ from app.services.course_quality import audit_course
 from app.services.artifacts import ArtifactError, read_raw_artifact, store_raw_artifact
 from app.services.jobs import enqueue_job, run_next_job
 from app.services.video_transcripts import youtube_video_id
+from app.services import student_visibility as sv
 
 router = APIRouter(prefix="/api")
 _log = logging.getLogger("soplat.api")
@@ -3508,6 +3509,7 @@ def create_exam(payload: ExamCreateRequest, db: Session = Depends(get_db), actor
         event_id=event.id, organization_id=actor.organization_id, title=payload.title,
         duration_minutes=payload.duration_minutes, question_ids=[q.id for q in selected],
         published=payload.published,
+        disposition=(sv.DISPOSITION_REVIEWED if payload.published else sv.DISPOSITION_PENDING),
         release_class=release_class, coverage_snapshot=coverage_snapshot,
         published_by_user_id=actor.id if payload.published else None,
         published_at=datetime.now(timezone.utc) if payload.published else None,
@@ -3552,6 +3554,8 @@ def list_exams(db: Session = Depends(get_db), user: User = Depends(current_user)
         "event": e.event.name, "event_division": e.event.division,
         "question_count": len(e.question_ids),
         "event_season": e.event.season, "season_status": e.event.season_status,
+        "disposition": sv.exam_disposition(e),
+        "unreviewed": sv.is_unreviewed_practice(e),
         "release_class": e.release_class,
         "release_label": RELEASE_LABELS.get(e.release_class, "Reviewed Practice"),
     } for e in exams]
@@ -3576,6 +3580,17 @@ def start_exam(
         raise HTTPException(status_code=409, detail="This attempt is temporarily paused while a reported content issue is reviewed; your saved responses are preserved")
     if not exam or not exam.published:
         raise HTTPException(status_code=404, detail="Published exam not found")
+    # Phase 0: new exposure is stricter than resumption. An attempt already under way keeps
+    # working from its immutable snapshots (handled below); nobody new is sent into an exam
+    # whose items no human has accepted.
+    allowed, reason = sv.can_start_new_attempt(db, exam)
+    if not allowed:
+        existing = db.scalar(select(Attempt).where(
+            Attempt.exam_id == exam.id, Attempt.user_id == user.id,
+            Attempt.status == "in_progress",
+        ))
+        if not existing:
+            raise HTTPException(status_code=409, detail=reason)
     if exam.organization_id is not None and exam.organization_id != user.organization_id:
         raise HTTPException(status_code=404, detail="Exam not found")
     existing = db.scalar(select(Attempt).where(

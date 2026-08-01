@@ -14,6 +14,7 @@ import re
 from sqlalchemy import select
 from sqlalchemy.orm import Session
 
+from app.services.student_visibility import DISPOSITION_UNREVIEWED_PRACTICE
 from app.models.entities import (
     Event, Exam, ExamItem, Question, QuestionStatus, Source, SourceSnapshot,
 )
@@ -182,6 +183,8 @@ def build_exam(
         duration_minutes=duration_minutes,
         question_ids=[q.id for q in questions],
         published=True,
+        # Imported items are unreviewed by definition; label the exposure honestly.
+        disposition=DISPOSITION_UNREVIEWED_PRACTICE,
         release_class="past_test",
         blueprint={
             "import_kind": "past_test",
