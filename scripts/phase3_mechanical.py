@@ -169,6 +169,53 @@ def estimate_minutes(version: LessonVersion) -> int:
     return round(words / WORDS_PER_MINUTE + checks * 0.5)
 
 
+def record_student_destinations(db: Session, course: Course, versions: dict,
+                                lessons: list[Lesson], apply: bool) -> Counter:
+    """Say where a student actually meets each instructional source.
+
+    `source_destination` asks a real question — an instructional source no student ever
+    reaches is a source the course only claims to use. The answer is derived, not asserted:
+    a source's destination is the set of lessons whose current version cites a claim drawn
+    from it. A source that reaches no lesson is demoted to `reference_only`, which is the
+    truth about it rather than a way past the check.
+    """
+    out: Counter[str] = Counter()
+    lesson_by_id = {lesson.id: lesson for lesson in lessons}
+    source_to_lessons: dict[int, set[int]] = {}
+    for lesson_id, version in versions.items():
+        if version is None:
+            continue
+        for claim_id in (version.claim_ids or []):
+            claim = db.get(ScientificClaim, claim_id)
+            if claim is not None:
+                source_to_lessons.setdefault(claim.source_id, set()).add(lesson_id)
+
+    for row in db.scalars(select(CourseSourceCoverage).where(
+        CourseSourceCoverage.course_id == course.id)).all():
+        if row.student_destination or row.withdrawal_reason:
+            out["already_recorded"] += 1
+            continue
+        if row.instructional_role in {"reference_only", "assessment_validation"}:
+            out["exempt_role"] += 1
+            continue
+        reached = sorted(source_to_lessons.get(row.source_id, set()))
+        if not reached:
+            out["demoted_to_reference_only"] += 1
+            if apply:
+                row.instructional_role = "reference_only"
+                row.decision_reason = (
+                    "No lesson in the current course version cites a claim from this source, "
+                    "so it is reference material rather than instructional content."
+                )
+            continue
+        titles = [lesson_by_id[lid].title for lid in reached if lid in lesson_by_id]
+        if apply:
+            row.student_destination = "; ".join(titles)[:1024]
+            row.lesson_ids = reached
+        out["destination_recorded"] += 1
+    return out
+
+
 def fix_lesson_durations(db: Session, lessons: list[Lesson], versions: dict, apply: bool) -> Counter:
     """Set `estimated_minutes` to the lesson's real reading time — never to a passing one.
 
@@ -310,6 +357,11 @@ def main() -> None:
 
         print("\n2. course/source dispositions")
         for key, count in reconcile_sources(db, course, args.apply).most_common():
+            print(f"   {key:34} {count}")
+
+        print("\n2b. student destinations for instructional sources")
+        for key, count in record_student_destinations(
+                db, course, versions, lessons, args.apply).most_common():
             print(f"   {key:34} {count}")
 
         print("\n3. lesson durations")
