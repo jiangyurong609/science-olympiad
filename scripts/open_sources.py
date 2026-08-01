@@ -102,6 +102,26 @@ DOMAIN_SOURCES = {
             "https://en.wikipedia.org/wiki/Diagenesis",
             "https://en.wikipedia.org/wiki/Foliation_(geology)",
             "https://en.wikipedia.org/wiki/Contact_metamorphism",
+            # Second targeted pass, against the nine blocks still unsupported after the first:
+            # carbonate acid tests, UV fluorescence, Bowen chain minerals, coal rank, the
+            # lever rule, and thin-section optics. Core Rocks & Minerals subject matter that
+            # belonged in this set regardless of which block prompted it.
+            "https://en.wikipedia.org/wiki/Dolomite_(mineral)",
+            "https://en.wikipedia.org/wiki/Calcite",
+            "https://en.wikipedia.org/wiki/Dolostone",
+            "https://en.wikipedia.org/wiki/Chalk",
+            "https://en.wikipedia.org/wiki/Barite",
+            "https://en.wikipedia.org/wiki/Fluorescence",
+            "https://en.wikipedia.org/wiki/Coal",
+            "https://en.wikipedia.org/wiki/Anthracite",
+            "https://en.wikipedia.org/wiki/Lever_rule",
+            "https://en.wikipedia.org/wiki/Birefringence",
+            "https://en.wikipedia.org/wiki/Petrographic_microscope",
+            "https://en.wikipedia.org/wiki/Olivine",
+            "https://en.wikipedia.org/wiki/Pyroxene",
+            "https://en.wikipedia.org/wiki/Amphibole",
+            "https://en.wikipedia.org/wiki/Augite",
+            "https://en.wikipedia.org/wiki/Shield_volcano",
         ],
     },
     "meteorology": {

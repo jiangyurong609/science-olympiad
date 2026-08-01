@@ -69,8 +69,12 @@ result of splitting 8 lessons that ran 19–27 minutes into parts of 8–12 minu
    blocks were *moved*, never rewritten, and keep their original claim and passage ids — so
    review effort belongs on the generated joins, not the body.
 2. **The seams.** Each part should open and close as a lesson, not as half of one.
-3. **The two ungrounded parts.** `lesson_citations` blocks on two parts that contain no
-   evidenced block at all — a real content gap, not a plumbing fault.
+3. **Blocks pointing at material the student never got.** Each queue row now carries
+   `unavailable_source_blocks`. **15 of the 24 lessons have at least one, and 6 of those are
+   checkpoints** — items assessing a student on "the source packet" or "the source's 1500 C
+   solid-solution example", which they have never seen. Those 6 are unanswerable as written
+   and are the highest-value thing to fix in this pass; the rest are teaching blocks that read
+   oddly but do not score anyone.
 
 ## 3. Sources — 21 dispositions to review
 

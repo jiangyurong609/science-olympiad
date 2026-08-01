@@ -5,6 +5,7 @@ calibration decisions; those are separate blockers in the returned report.
 """
 from __future__ import annotations
 
+import re
 from collections import Counter, defaultdict
 
 from sqlalchemy import select
@@ -19,6 +20,50 @@ from app.models.entities import (
 
 
 TEACHING_TYPES = {"property_cards", "steps", "worked_example", "image_gallery", "video"}
+
+# A student holds the lesson, never the source packet it was written from. A checkpoint asking
+# "which statement best follows from the source packet?" or "in the source's 1500 C example…"
+# cannot be answered from anything the student has been given — the same defect as a question
+# referring to a figure that was never imported. Normal pedagogical voice ("this lesson shows")
+# is not this, and is deliberately excluded.
+UNAVAILABLE_SOURCE = re.compile(
+    r"\b(the source packet|the source's|from the source|according to the source|"
+    r"in the source|the provided (?:stations|packet)|the source station)\b", re.I)
+
+
+def block_text(block: dict) -> str:
+    """Every string a block presents, including those nested in lists."""
+    parts: list[str] = []
+
+    def walk(node) -> None:
+        if isinstance(node, str):
+            parts.append(node)
+        elif isinstance(node, dict):
+            for key, value in node.items():
+                if key not in {"type", "claim_ids", "passage_ids", "id", "generated_by"}:
+                    walk(value)
+        elif isinstance(node, list):
+            for item in node:
+                walk(item)
+
+    walk(block)
+    return " ".join(parts)
+
+
+def blocks_citing_an_unavailable_source(content: list) -> list[dict]:
+    """Blocks that send the student to material they were never given."""
+    found = []
+    for index, block in enumerate(content or []):
+        match = UNAVAILABLE_SOURCE.search(block_text(block))
+        if match:
+            found.append({
+                "position": index + 1,
+                "type": block.get("type", ""),
+                "heading": block.get("heading") or block.get("title") or "",
+                "phrase": match.group(0),
+                "assessed": block.get("type") == "checkpoint",
+            })
+    return found
 
 
 def audit_course(db: Session, course_id: int) -> dict:

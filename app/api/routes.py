@@ -53,7 +53,7 @@ from app.services.content_corrections import apply_score_correction
 from app.services.notifications import create_notification
 from app.services.daily_plan import build_daily_plan
 from app.services.tutor import TutorAccessError, create_tutor_session, respond_to_tutor
-from app.services.course_quality import audit_course
+from app.services.course_quality import audit_course, blocks_citing_an_unavailable_source
 from app.services.content_release import (
     ReleaseError, build_manifest, publish_release, release_drift, rollback_release,
 )
@@ -3179,6 +3179,9 @@ def lesson_review_queue(
                 "checkpoint": block.get("question", ""),
             } for block in version.content or []],
             "evidence": _lesson_citation_evidence(db, version),
+            # blocks pointing the student at material they were never given; a checkpoint
+            # doing it is unanswerable, which a reviewer should see before approving
+            "unavailable_source_blocks": blocks_citing_an_unavailable_source(version.content),
             "decisions": [{
                 "stage": decision.stage,
                 "decision": decision.decision,
