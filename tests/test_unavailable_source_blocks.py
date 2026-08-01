@@ -87,3 +87,45 @@ def test_a_block_that_still_dangles_is_flagged_even_if_it_has_an_archive():
         "superseded": {"question": "old"},
     }
     assert len(blocks_citing_an_unavailable_source([still_bad])) == 1
+
+
+# ---------------------------------------------------- figures the lesson never shows
+
+def test_a_block_reading_from_a_figure_the_part_lacks_is_flagged():
+    """`is_figure_missing` protects exam items; lessons had no equivalent. The pilot holds
+    the exact failure — a worked example reading a diagram the part never shows, and a
+    checkpoint assessing that reading."""
+    from app.services.course_quality import blocks_referencing_absent_media
+    content = [
+        {"type": "worked_example", "heading": "Lever rule",
+         "body": "In the diagram above, read the tie-line at 1500 C."},
+        {"type": "checkpoint", "heading": "Result",
+         "question": "From the diagram, which proportions are given?"},
+    ]
+    found = blocks_referencing_absent_media(content)
+    assert len(found) == 2
+    assert [b["assessed"] for b in found] == [False, True]
+
+
+def test_a_part_that_actually_shows_the_figure_is_not_flagged():
+    from app.services.course_quality import blocks_referencing_absent_media
+    content = [
+        {"type": "image_gallery", "heading": "Solid-solution diagram"},
+        {"type": "checkpoint", "question": "From the diagram, which proportions are given?"},
+    ]
+    assert blocks_referencing_absent_media(content) == []
+
+
+def test_an_attached_asset_counts_as_showing_it():
+    from app.services.course_quality import blocks_referencing_absent_media
+    content = [
+        {"type": "property_cards", "assets": [{"kind": "figure", "storage_key": "k"}]},
+        {"type": "checkpoint", "question": "In the figure above, which mineral is shown?"},
+    ]
+    assert blocks_referencing_absent_media(content) == []
+
+
+def test_text_only_content_is_not_flagged():
+    from app.services.course_quality import blocks_referencing_absent_media
+    content = [{"type": "summary", "points": ["Streak beats colour for identification."]}]
+    assert blocks_referencing_absent_media(content) == []

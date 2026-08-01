@@ -54,7 +54,8 @@ from app.services.notifications import create_notification
 from app.services.daily_plan import build_daily_plan
 from app.services.tutor import TutorAccessError, create_tutor_session, respond_to_tutor
 from app.services.course_quality import (
-    audit_course, blocks_citing_an_unavailable_source, checkpoints_the_solver_disputed,
+    audit_course, blocks_citing_an_unavailable_source, blocks_referencing_absent_media,
+    checkpoints_the_solver_disputed,
 )
 from app.services.content_release import (
     ReleaseError, build_manifest, publish_release, release_drift, rollback_release,
@@ -3186,6 +3187,8 @@ def lesson_review_queue(
             "unavailable_source_blocks": blocks_citing_an_unavailable_source(version.content),
             # checkpoints an independent blind solver could not reproduce the key for
             "disputed_checkpoints": checkpoints_the_solver_disputed(version.content),
+            # blocks reading from a figure this part never shows
+            "absent_media_blocks": blocks_referencing_absent_media(version.content),
             "decisions": [{
                 "stage": decision.stage,
                 "decision": decision.decision,

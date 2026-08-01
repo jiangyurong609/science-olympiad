@@ -54,6 +54,41 @@ def block_text(block: dict) -> str:
     return " ".join(parts)
 
 
+MEDIA_BLOCK_TYPES = {"image_gallery", "video", "diagram"}
+
+
+def blocks_referencing_absent_media(content: list) -> list[dict]:
+    """Blocks that read from a figure the lesson part never shows.
+
+    `scoring.is_figure_missing` already stops an exam item from being scored when it names a
+    figure it does not have. Lessons had no equivalent, and the pilot contains the exact
+    failure: a worked example walks through reading a solid-solution diagram, the part
+    contains no diagram, and a checkpoint then assesses that reading. The blind solver
+    independently reported that checkpoint underspecified, which is the same finding arrived
+    at from another direction.
+    """
+    from app.services.scoring import references_figure
+
+    blocks = content or []
+    has_media = any(
+        block.get("type") in MEDIA_BLOCK_TYPES or block.get("assets") or block.get("images")
+        for block in blocks
+    )
+    if has_media:
+        return []
+    found = []
+    for index, block in enumerate(blocks):
+        text = block_text(block)
+        if references_figure(text):
+            found.append({
+                "position": index + 1,
+                "type": block.get("type", ""),
+                "heading": block.get("heading") or block.get("title") or "",
+                "assessed": block.get("type") == "checkpoint",
+            })
+    return found
+
+
 def checkpoints_the_solver_disputed(content: list) -> list[dict]:
     """Checkpoints where an independent blind solver did not reproduce the key.
 
