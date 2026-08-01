@@ -84,35 +84,35 @@ def test_invalid_claims_are_rejected_with_a_reason(kwargs, reason):
 
 # ---------------------------------------------------------------- substance
 
-def test_a_recap_inherits_support_only_from_a_grounded_lesson():
-    """A "Key takeaways" block restates the lesson rather than asserting a new external fact,
-    so it inherits support — but only when the lesson's asserting blocks really are grounded.
-    Otherwise recaps would inflate coverage in an ungrounded lesson."""
+def test_a_summary_does_not_inherit_support_from_its_lesson():
+    """Inheritance let summaries asserting mineral formulas and pressure-temperature
+    relationships count as grounded with no evidence. Every teaching block needs its own."""
     with SessionLocal() as db:
         e = _event(db)
         claim = _claim(db, e)
-        # grounded lesson: both asserting blocks supported -> the summary inherits
         _lesson(db, e, [
             {"type": "opening", "claim_ids": [claim.id]},
             {"type": "property_cards", "claim_ids": [claim.id]},
-            {"type": "summary"},
+            {"type": "summary"},          # asserts, but carries no evidence
         ], claim_ids=[claim.id])
         db.commit()
-        grounded = audit_event(db, e, {})
-    assert grounded["substantive_coverage"] == 1.0
+        row = audit_event(db, e, {})
+    assert row["supported_blocks"] == 2, "the unevidenced summary must not be credited"
+    assert row["substantive_coverage"] == pytest.approx(2 / 3, abs=0.01)
 
+
+def test_a_snapshot_from_another_source_is_rejected():
+    """Rights are checked on claim.source_id while evidence is read from
+    claim.source_snapshot_id; without this check a cleared source could launder a
+    restricted source's text."""
     with SessionLocal() as db:
-        e2 = _event(db, slug="rocks-and-minerals-c")
-        claim2 = _claim(db, e2)
-        # ungrounded lesson: no asserting block supported -> the summary must NOT inherit
-        _lesson(db, e2, [
-            {"type": "opening"},
-            {"type": "property_cards"},
-            {"type": "summary"},
-        ], claim_ids=[claim2.id])
+        e = _event(db)
+        cleared = _claim(db, e)                       # public-domain source + its snapshot
+        restricted = _claim(db, e, rights="link_only")
+        cleared.source_snapshot_id = restricted.source_snapshot_id   # borrow the other snapshot
         db.commit()
-        ungrounded = audit_event(db, e2, {})
-    assert ungrounded["supported_blocks"] == 0, "a recap cannot ground an ungrounded lesson"
+        ok, reason = claim_is_valid(db, cleared, {})
+    assert not ok and reason == "snapshot_belongs_to_another_source"
 
 
 def test_coverage_counts_teaching_blocks_not_claims():

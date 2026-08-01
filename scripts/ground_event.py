@@ -45,6 +45,41 @@ STOPWORDS = {
     "you", "your", "its", "was", "were", "been", "has", "had", "will", "would", "about",
 }
 MIN_SENTENCE, MAX_SENTENCE = 60, 320
+MIN_KEYWORD_OVERLAP = 3
+
+# Government sites carry navigation and security boilerplate that is verbatim-present in the
+# snapshot but asserts nothing about the subject. Provenance is not claimhood.
+BOILERPLATE = re.compile(
+    r"(skip to|official websites? use|share sensitive information|https?://|lock \(|"
+    r"\.gov websites?|belongs to an official|secure websites?|cookie|javascript|"
+    r"privacy policy|accessibility|last updated|contact us|sign up|subscribe|"
+    r"national park (service|system)|park service|newsroom|press release)",
+    re.I,
+)
+# A claim asserts something about the subject matter, so it must use its vocabulary.
+DOMAIN_TERMS = re.compile(
+    r"(mineral|rock|crystal|igneous|sediment|metamorph|magma|lava|quartz|feldspar|mica|"
+    r"calcite|hardness|streak|luster|cleavage|fracture|silicate|carbonate|oxide|sulfide|"
+    r"tecton|volcan|erupt|weather|erosion|deposit|strata|foliat|grain|texture|density|"
+    r"element|chemical|formula|composition|pressure|temperature|melt|cool|form)", re.I,
+)
+# A proposition needs a verb doing assertive work.
+PREDICATE = re.compile(r"\b(is|are|was|were|has|have|contains?|forms?|occurs?|consists?|"
+                       r"produces?|causes?|results?|includes?|becomes?|creates?|"
+                       r"appears?|ranges?|measures?|indicates?|means?)\b", re.I)
+
+
+def is_claimlike(sentence: str) -> tuple[bool, str]:
+    """Whether a scraped sentence is a scientific claim rather than site furniture."""
+    if BOILERPLATE.search(sentence):
+        return False, "boilerplate"
+    if not DOMAIN_TERMS.search(sentence):
+        return False, "off_topic"
+    if not PREDICATE.search(sentence):
+        return False, "not_a_proposition"
+    if sentence.count(",") > 6 or sentence.isupper():
+        return False, "list_or_heading"
+    return True, "claimlike"
 
 
 def _keywords(text: str, limit: int = 12) -> set[str]:
@@ -124,8 +159,10 @@ def ensure_snapshot(db: Session, source: Source, apply: bool) -> SourceSnapshot 
     return snapshot
 
 
-def harvest_claims(db: Session, event: Event, sources: list[Source], apply: bool) -> list[ScientificClaim]:
-    """Keep only claims whose evidence is verifiably in the snapshot (the audit's rule)."""
+def harvest_claims(db: Session, event: Event, sources: list[Source], apply: bool,
+                   approve: bool = False) -> list[ScientificClaim]:
+    """Keep only claims whose evidence is verifiably in the snapshot AND that read as claims."""
+    rejected: Counter[str] = Counter()
     concepts = db.scalars(select(Concept).where(Concept.event_id == event.id)).all()
     if not concepts:
         raise SystemExit(f"{event.slug} has no concepts to attach claims to")
@@ -135,8 +172,12 @@ def harvest_claims(db: Session, event: Event, sources: list[Source], apply: bool
         if snapshot is None:
             continue
         text = snapshot.extracted_text or ""
-        for sentence in _sentences(text)[:80]:
+        for sentence in _sentences(text)[:120]:
             if sentence not in text:            # the audit's exact check
+                continue
+            ok, reason = is_claimlike(sentence)
+            if not ok:
+                rejected[reason] += 1
                 continue
             words = _keywords(sentence)
             concept = max(concepts, key=lambda c: len(_keywords(c.name) & words))
@@ -154,10 +195,15 @@ def harvest_claims(db: Session, event: Event, sources: list[Source], apply: bool
             claim = ScientificClaim(
                 source_id=source.id, source_snapshot_id=snapshot.id, concept_id=concept.id,
                 claim_text=sentence[:500], evidence_excerpt=sentence,
-                locator=snapshot.final_url, confidence=0.8, approved=True,
+                locator=snapshot.final_url, confidence=0.8,
+                # Extraction proposes; a human approves. Auto-approving scraped text was how
+                # navigation fragments became "verified claims".
+                approved=approve,
             )
             db.add(claim); db.flush()
             made.append(claim)
+    if rejected:
+        print(f"   rejected candidates: {dict(rejected.most_common())}")
     return made
 
 
@@ -184,7 +230,12 @@ def attach_to_blocks(db: Session, event: Event, claims: list[ScientificClaim], a
             blob = " ".join(str(v) for v in block.values() if isinstance(v, str))
             words = _keywords(blob, 20)
             scored = sorted(indexed, key=lambda pair: len(pair[1] & words), reverse=True)
-            best = [c for c, kw in scored[:2] if kw & words]
+            # A single shared word is coincidence, not evidence: "Official websites use .gov"
+            # once counted as support for a crystal-systems block. Require real overlap that
+            # includes subject vocabulary.
+            best = [c for c, kw in scored[:2]
+                    if len(kw & words) >= MIN_KEYWORD_OVERLAP
+                    and any(DOMAIN_TERMS.search(w) for w in (kw & words))]
             if not best:
                 continue
             supported += 1
@@ -250,6 +301,8 @@ def main() -> None:
     ap = argparse.ArgumentParser(description="Ground an event on open sources")
     ap.add_argument("--event", required=True)
     ap.add_argument("--apply", action="store_true")
+    ap.add_argument("--approve", action="store_true",
+                    help="approve harvested claims (otherwise they await human review)")
     args = ap.parse_args()
     apply = args.apply
 
@@ -260,7 +313,7 @@ def main() -> None:
         print(f"grounding {event.slug} ({'APPLY' if apply else 'dry-run'})")
         sources = ensure_sources(db, event, apply)
         print(f"  open sources: {len(sources)}")
-        claims = harvest_claims(db, event, sources, apply)
+        claims = harvest_claims(db, event, sources, apply, approve=args.approve)
         print(f"  verified claims: {len(claims)}")
         stats = attach_to_blocks(db, event, claims, apply)
         print(f"  blocks supported: {stats['supported']}/{stats['blocks']}")

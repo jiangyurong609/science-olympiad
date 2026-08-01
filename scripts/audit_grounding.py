@@ -34,15 +34,12 @@ from app.models.entities import (
 )
 from app.services.rights import can_use_for_generation
 
-# Blocks that assert external facts and therefore require their own evidence.
-ASSERTING_BLOCKS = {"opening", "property_cards", "worked_example"}
-# Blocks that recap or instruct rather than assert: a "Key takeaways" summary restates what
-# the lesson already established, and a procedural routine teaches a method. They are counted
-# as supported only when the lesson's own asserting blocks are well grounded — so they inherit
-# support honestly and cannot be used to inflate coverage in an ungrounded lesson.
-DERIVED_BLOCKS = {"summary", "steps"}
-DERIVED_INHERITS_AT = 0.8
-SUBSTANTIVE_BLOCKS = ASSERTING_BLOCKS | DERIVED_BLOCKS
+# Every teaching block asserts something a student will be examined on, so every one needs
+# its own evidence. An earlier version let summaries and procedural steps *inherit* support
+# from a lesson that was 80% grounded; inspection showed inherited blocks asserting mineral
+# formulas and pressure-temperature relationships with no evidence at all. Inheritance is
+# removed rather than tuned: a recap that introduces a fact is asserting it.
+SUBSTANTIVE_BLOCKS = {"opening", "property_cards", "worked_example", "summary", "steps"}
 
 
 def _norm(text: str) -> str:
@@ -61,9 +58,16 @@ def claim_is_valid(db: Session, claim: ScientificClaim, snapshot_cache: dict) ->
     excerpt = _norm(claim.evidence_excerpt)
     if not excerpt:
         return False, "no_evidence_excerpt"
+    snapshot = db.get(SourceSnapshot, claim.source_snapshot_id)
+    if snapshot is None:
+        return False, "no_snapshot"
+    # The schema has independent foreign keys, so a claim can cite a cleared source while
+    # taking its excerpt from a different source's snapshot. Rights would then be checked on
+    # the wrong record.
+    if snapshot.source_id != claim.source_id:
+        return False, "snapshot_belongs_to_another_source"
     if claim.source_snapshot_id not in snapshot_cache:
-        snap = db.get(SourceSnapshot, claim.source_snapshot_id)
-        snapshot_cache[claim.source_snapshot_id] = _norm(getattr(snap, "extracted_text", "") or "")
+        snapshot_cache[claim.source_snapshot_id] = _norm(snapshot.extracted_text or "")
     if excerpt not in snapshot_cache[claim.source_snapshot_id]:
         return False, "excerpt_not_in_snapshot"
     return True, "valid"
@@ -108,29 +112,20 @@ def audit_event(db: Session, event: Event, snapshot_cache: dict) -> dict:
         # lesson version cites valid claims and the block carries passage citations
         cited_passages = {row.get("source_passage_id") for row in (version.citations or [])
                           if isinstance(row, dict)}
-        asserting = [b for b in blocks if b.get("type") in ASSERTING_BLOCKS]
-        derived = [b for b in blocks if b.get("type") in DERIVED_BLOCKS]
-
         def _has_evidence(block: dict) -> bool:
             block_claims = {c for c in (block.get("claim_ids") or []) if c in valid_claim_ids}
             block_passages = {p for p in (block.get("passage_ids") or []) if p in cited_passages}
             return bool(block_claims or (block_passages and lesson_claims))
 
-        asserting_supported = sum(1 for b in asserting if _has_evidence(b))
-        # a recap inherits support only from a well-grounded lesson
-        assert_ratio = (asserting_supported / len(asserting)) if asserting else 0.0
-        derived_supported = sum(
-            1 for b in derived
-            if _has_evidence(b) or assert_ratio >= DERIVED_INHERITS_AT
-        )
-        supported = asserting_supported + derived_supported
+        supported = sum(1 for b in blocks if _has_evidence(b))
+        asserting_supported = supported
         total_blocks += len(blocks)
         supported_blocks += supported
         lesson_rows.append({
             "lesson_id": lesson.id, "title": lesson.title[:52],
             "blocks": len(blocks), "supported": supported,
             "coverage": round(supported / len(blocks), 3) if blocks else 0.0,
-            "asserting": len(asserting), "asserting_supported": asserting_supported,
+            "asserting": len(blocks), "asserting_supported": asserting_supported,
             "valid_claims": len(lesson_claims),
         })
 
