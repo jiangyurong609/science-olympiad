@@ -309,3 +309,42 @@ def test_regeneration_is_versioned_and_never_overwrites():
         assert (first.version, second.version) == (1, 2)
         kept = db.query(VideoRender).filter(VideoRender.storyboard_id == board.id).count()
         assert kept == 2, "prior render must be retained, not replaced"
+
+
+def test_approval_rejects_an_approved_but_unrelated_claim():
+    """Approval alone is not grounding: narration about one event must not cite an approved
+    claim belonging to another. This passed before, producing a 'grounded' ecology video
+    citing a mineral-identification claim."""
+    from app.models.entities import Concept
+    with SessionLocal() as db:
+        user_id, lesson_id, claim_id = _seed_lesson(db)
+        # an approved claim from a different event entirely
+        other_src = Source(url="https://sci.gov/rocks", title="Rocks",
+                           rights_status="public_domain", approved=True)
+        db.add(other_src); db.flush()
+        other_snap = SourceSnapshot(source_id=other_src.id, final_url=other_src.url, content_hash="z")
+        db.add(other_snap); db.flush()
+        stray = ScientificClaim(source_id=other_src.id, source_snapshot_id=other_snap.id,
+                                claim_text="Mineral identification uses streak and hardness.",
+                                approved=True)
+        db.add(stray); db.flush()
+        stray_id = stray.id
+
+        draft = sb.draft_from_lesson(db, lesson_id)
+        scenes = [{**s, "narration": "Energy flows one way.", "claim_ids": [stray_id]}
+                  for s in draft["scenes"]]
+        board = sb.create_storyboard(db, lesson_id, scenes)
+        db.commit()
+        with pytest.raises(sb.StoryboardError, match="do not belong to this lesson"):
+            sb.approve_storyboard(db, board.id, user_id)
+
+
+def test_a_claim_belonging_to_the_lesson_still_approves():
+    with SessionLocal() as db:
+        user_id, lesson_id, claim_id = _seed_lesson(db)
+        draft = sb.draft_from_lesson(db, lesson_id)
+        scenes = [{**s, "narration": "Energy flows one way.", "claim_ids": [claim_id]}
+                  for s in draft["scenes"]]
+        board = sb.create_storyboard(db, lesson_id, scenes)
+        db.commit()
+        assert sb.approve_storyboard(db, board.id, user_id).status == sb.APPROVED

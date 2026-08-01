@@ -86,7 +86,39 @@ def draft_from_lesson(db: Session, lesson_id: int) -> dict:
     }
 
 
-def validate_scenes(db: Session, scenes: list[dict]) -> list[str]:
+def _claims_available_to_lesson(db: Session, lesson_id: int | None) -> set[int]:
+    """Claims a lesson may cite: approved, and belonging to this lesson or its event.
+
+    Approval alone is not grounding. Without this, narration about ecosystems could cite an
+    approved claim about mineral identification and pass the gate.
+    """
+    if lesson_id is None:
+        return set()
+    lesson = db.get(Lesson, lesson_id)
+    if not lesson:
+        return set()
+    version = db.scalar(select(LessonVersion).where(
+        LessonVersion.lesson_id == lesson.id,
+        LessonVersion.version == lesson.current_version,
+    ))
+    allowed = {c for c in ((version.claim_ids if version else None) or []) if isinstance(c, int)}
+    # also allow approved claims mapped to this event's concepts, which is how the claims
+    # pipeline attaches evidence
+    from app.models.entities import Concept
+    concept_ids = [c.id for c in db.scalars(
+        select(Concept).where(Concept.event_id == lesson.event_id)
+    ).all()]
+    if concept_ids:
+        allowed |= set(db.scalars(select(ScientificClaim.id).where(
+            ScientificClaim.concept_id.in_(concept_ids)
+        )).all())
+    approved = set(db.scalars(
+        select(ScientificClaim.id).where(ScientificClaim.approved.is_(True))
+    ).all())
+    return allowed & approved
+
+
+def validate_scenes(db: Session, scenes: list[dict], lesson_id: int | None = None) -> list[str]:
     """Grounding + completeness problems that must be fixed before approval."""
     problems: list[str] = []
     if not scenes:
@@ -94,6 +126,7 @@ def validate_scenes(db: Session, scenes: list[dict]) -> list[str]:
     approved_claims = set(db.scalars(
         select(ScientificClaim.id).where(ScientificClaim.approved.is_(True))
     ).all())
+    relevant_claims = _claims_available_to_lesson(db, lesson_id)
     for scene in scenes:
         label = f"scene {scene.get('index', '?')}"
         if not str(scene.get("narration", "")).strip():
@@ -107,6 +140,13 @@ def validate_scenes(db: Session, scenes: list[dict]) -> list[str]:
             ungrounded = [c for c in claim_ids if c not in approved_claims]
             if ungrounded:
                 problems.append(f"{label}: cites unapproved claim(s) {ungrounded}")
+            if lesson_id is not None:
+                unrelated = [c for c in claim_ids if c in approved_claims and c not in relevant_claims]
+                if unrelated:
+                    problems.append(
+                        f"{label}: cites claim(s) {unrelated} that do not belong to this lesson "
+                        f"or its event — approval alone is not grounding"
+                    )
     return problems
 
 
@@ -136,7 +176,7 @@ def approve_storyboard(db: Session, storyboard_id: int, user_id: int) -> VideoSt
     storyboard = db.get(VideoStoryboard, storyboard_id)
     if not storyboard:
         raise StoryboardError("storyboard not found")
-    problems = validate_scenes(db, storyboard.scenes or [])
+    problems = validate_scenes(db, storyboard.scenes or [], lesson_id=storyboard.lesson_id)
     if problems:
         raise StoryboardError("; ".join(problems))
     storyboard.status = APPROVED
