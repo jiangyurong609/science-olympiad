@@ -743,3 +743,9 @@ details[open] summary { color: var(--forest); }
 .visually-hidden { position: absolute; width: 1px; height: 1px; overflow: hidden;
   clip: rect(0 0 0 0); clip-path: inset(50%); white-space: nowrap; }
 @media (prefers-color-scheme: dark) { .watch-all { color: #3fb87e; } }
+
+/* A video step is a full step in the lesson sequence, sized to sit with the Continue action. */
+.lesson-block-video { display: grid; gap: .6rem; }
+.lesson-step-video { width: 100%; max-height: 56vh; aspect-ratio: 16/9; border-radius: 10px;
+  background: #0b1417; display: block; }
+.lesson-step-note { margin: 0; font-size: .84rem; opacity: .72; }

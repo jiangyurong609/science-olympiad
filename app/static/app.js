@@ -2396,7 +2396,7 @@ document.addEventListener('click', event => {
   }
   const lessonSection = event.target.closest('[data-lesson-block]');
   if (lessonSection && state.currentLesson) {
-    state.lessonBlockIndex = Number(lessonSection.dataset.lessonBlock);
+    state.lessonStepIndex = stepForBlock(Number(lessonSection.dataset.lessonBlock));
     saveCurrentLessonProgress(false)
       .then(renderLessonBlock)
       .catch(error => toast(error.message));
@@ -2623,6 +2623,8 @@ async function openLesson(id) {
       state.currentLesson.progress.current_block || 0,
       state.currentLesson.content.length - 1,
     );
+    state.lessonSteps = null;          // rebuilt once chapters are known
+    state.lessonStepIndex = null;
     // A lesson can be launched from Practice & Resources. Move the learner
     // into the lesson workspace so the reader never opens behind another view.
     showView('learn', false);
@@ -2640,18 +2642,69 @@ async function openLesson(id) {
   finally { setBusy(button, false); }
 }
 
+// A lesson plays like a course: the chapter that teaches a section comes first, then the
+// section's reading. Both are steps in one sequence, advanced with the same Continue button.
+function buildLessonSteps() {
+  const lesson = state.currentLesson;
+  const chapters = state.lessonVideoChapters || [];
+  const steps = [];
+  (lesson.content || []).forEach((block, index) => {
+    const opener = chapters.find(c => (c.block_indexes || [])[0] === index);
+    if (opener) steps.push({ kind: 'video', chapter: opener, blockIndex: index });
+    steps.push({ kind: 'block', blockIndex: index });
+  });
+  state.lessonSteps = steps;
+  return steps;
+}
+
+function lessonSteps() {
+  return state.lessonSteps?.length ? state.lessonSteps : buildLessonSteps();
+}
+
+function stepForBlock(blockIndex) {
+  const steps = lessonSteps();
+  // land on the video that opens a section, so watching comes before reading
+  const video = steps.findIndex(s => s.kind === 'video' && s.blockIndex === blockIndex);
+  if (video >= 0) return video;
+  return Math.max(0, steps.findIndex(s => s.kind === 'block' && s.blockIndex === blockIndex));
+}
+
 function renderLessonBlock() {
   const lesson = state.currentLesson;
-  const block = lesson.content[state.lessonBlockIndex];
-  const total = lesson.content.length;
-  $('lesson-position').textContent = `${state.lessonBlockIndex + 1} of ${total}`;
-  $('lesson-progress-bar').style.width = `${Math.round(((state.lessonBlockIndex + 1) / total) * 100)}%`;
-  $('lesson-previous').disabled = state.lessonBlockIndex === 0;
-  $('lesson-next').hidden = state.lessonBlockIndex === total - 1;
-  $('lesson-finish').hidden = state.lessonBlockIndex !== total - 1;
+  const steps = lessonSteps();
+  if (state.lessonStepIndex == null) state.lessonStepIndex = stepForBlock(state.lessonBlockIndex || 0);
+  state.lessonStepIndex = Math.min(Math.max(0, state.lessonStepIndex), steps.length - 1);
+  const step = steps[state.lessonStepIndex];
+  state.lessonBlockIndex = step.blockIndex;
+  const total = steps.length;
+  $('lesson-position').textContent = `${state.lessonStepIndex + 1} of ${total}`;
+  $('lesson-progress-bar').style.width = `${Math.round(((state.lessonStepIndex + 1) / total) * 100)}%`;
+  $('lesson-previous').disabled = state.lessonStepIndex === 0;
+  $('lesson-next').hidden = state.lessonStepIndex === total - 1;
+  $('lesson-finish').hidden = state.lessonStepIndex !== total - 1;
   $('lesson-finish').disabled = lesson.progress.status !== 'completed';
   $('lesson-finish').textContent = lesson.progress.status === 'completed' ? 'Finish Lesson' : 'Complete Required Checkpoints';
   renderLessonOutline();
+
+  if (step.kind === 'video') {
+    $('lesson-next').textContent = 'Continue to the reading';
+    const node = $('lesson-block');
+    node.className = 'lesson-block surface lesson-block-video';
+    node.innerHTML = `
+      <p class="kicker">Watch · ${escapeHtml(step.chapter.title)}</p>
+      <video class="lesson-step-video" controls autoplay playsinline
+             src="${safeUrl(step.chapter.playback_url)}"></video>
+      <p class="lesson-step-note">${formatClock(step.chapter.duration_seconds)} · the reading for this section comes next.</p>`;
+    const player = node.querySelector('video');
+    // Roll into the reading when the chapter ends, the way a course lesson flows.
+    player?.addEventListener('ended', () => moveLesson(1));
+    node.focus({ preventScroll: true });
+    node.scrollIntoView({ behavior: preferredScrollBehavior(), block: 'start' });
+    return;
+  }
+  $('lesson-next').textContent = 'Continue';
+
+  const block = lesson.content[step.blockIndex];
   const renderer = {
     opening: renderOpeningBlock,
     property_cards: renderPropertyCardsBlock,
@@ -2803,18 +2856,22 @@ async function saveCurrentLessonProgress(markCurrentComplete = false) {
 }
 
 async function moveLesson(delta) {
-  const block = state.currentLesson.content[state.lessonBlockIndex];
-  if (delta > 0 && block.type === 'checkpoint' && !state.currentLesson.progress.checkpoint_results[block.id]?.correct) {
+  const steps = lessonSteps();
+  const step = steps[state.lessonStepIndex] || steps[0];
+  const block = state.currentLesson.content[step.blockIndex];
+  // Only a reading step can gate on its checkpoint; a video step always advances.
+  if (delta > 0 && step.kind === 'block' && block.type === 'checkpoint'
+      && !state.currentLesson.progress.checkpoint_results[block.id]?.correct) {
     toast('Answer this knowledge check correctly before moving on.');
     return;
   }
   try {
-    if (delta > 0) {
+    if (delta > 0 && step.kind === 'block') {
       const completed = new Set(state.currentLesson.progress.completed_block_ids || []);
       completed.add(block.id);
       state.currentLesson.progress.completed_block_ids = [...completed];
     }
-    state.lessonBlockIndex += delta;
+    state.lessonStepIndex += delta;
     await saveCurrentLessonProgress(false);
     renderLessonBlock();
     loadLessonVideo(id);
@@ -3478,8 +3535,18 @@ function chapterForBlock(blockIndex) {
   return null;
 }
 
-// Play a chapter beside the section it teaches, so watching and reading stay one lesson.
+// Jump the reader to a chapter's step; the sequence itself plays it.
 function playChapterInline(index) {
+  const chapter = (state.lessonVideoChapters || [])[index];
+  const first = (chapter?.block_indexes || [])[0];
+  if (typeof first === 'number') {
+    state.lessonStepIndex = stepForBlock(first);
+    renderLessonBlock();
+  }
+  return;
+}
+
+function _unusedPlayChapterInline(index) {
   const chapter = (state.lessonVideoChapters || [])[index];
   if (!chapter) return;
   const host = $('lesson-inline-video');
@@ -3523,7 +3590,11 @@ async function loadLessonVideo(lessonId) {
     $('lesson-video-count').textContent =
       `${chapters.length} chapter${chapters.length === 1 ? '' : 's'} · ${formatClock(total)}`;
     section.hidden = false;
-    renderLessonOutline();   // the outline is where chapters actually live
+    // Rebuild the sequence now that chapters are known: each chapter becomes the step that
+    // opens the section it teaches.
+    state.lessonSteps = null;
+    state.lessonStepIndex = null;
+    renderLessonBlock();
   } catch (error) {
     section.hidden = true;   // a missing video must never break the lesson
   }
