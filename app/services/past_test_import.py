@@ -287,7 +287,10 @@ def answer_confidence(item: dict) -> tuple[float, list[str]]:
             # a paragraph is a passage the parser lifted, not an answer it isolated
             score -= 0.3
             reasons.append("reference_answer_looks_like_prose")
-    if not item.get("has_key_source", True):
+    # Defaulting to True meant "assume an answer key was supplied" — the trusting direction,
+    # for a flag whose absence means nobody recorded whether one existed. Absence of evidence
+    # about provenance is a reason for less confidence, not more.
+    if not item.get("has_key_source", False):
         # no answer key was supplied, so any answer came from the test paper itself
         score -= 0.2
         reasons.append("no_answer_key_supplied")

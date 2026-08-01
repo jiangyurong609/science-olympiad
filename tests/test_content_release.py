@@ -266,3 +266,49 @@ def test_rollback_reports_what_it_could_not_restore():
         result = restore_from_manifest(db, manifest)
     assert result["unrestorable"], "a missing lesson must be reported, not ignored"
     assert "999999" in result["unrestorable"][0]
+
+
+def test_rollback_restores_blueprint_state_it_pinned():
+    """A unit quiz published after the release would otherwise survive the rollback, so the
+    restored release would serve an assessment it never contained."""
+    from app.models.entities import AssessmentBlueprint, CourseUnit
+    with SessionLocal() as db:
+        course, actor, _, _ = _course(db)
+        unit = db.query(CourseUnit).filter(CourseUnit.course_id == course.id).first()
+        quiz = AssessmentBlueprint(course_id=course.id, unit_id=unit.id,
+                                   assessment_type="unit_quiz", title="Q", status="draft")
+        db.add(quiz); db.flush()
+        publish_release(db, actor, course, notes="v1")
+
+        quiz.status = "published"
+        course.current_version = 2
+        publish_release(db, actor, course, notes="v2")
+        db.flush()
+
+        rollback_release(db, actor, course)
+        db.flush()
+        assert db.get(AssessmentBlueprint, quiz.id).status == "draft"
+
+
+def test_rollback_does_not_touch_another_courses_items():
+    """`build_manifest` filters items by event; the withdrawal loop did not, so a rollback
+    could demote a different course's published items through a shared concept."""
+    with SessionLocal() as db:
+        course_a, actor, skill_a, event_a = _course(db)
+        course_b, _, skill_b, event_b = _course(db)
+        publish_release(db, actor, course_a, notes="v1")
+
+        # an item on another event that happens to sit on the same concept id
+        intruder = Question(event_id=event_b.id, concept_id=skill_a.concept_id,
+                            stem="Other course", question_type="single_choice",
+                            choices=["a", "b"], answer_spec={"correct_index": 0},
+                            status="published")
+        db.add(intruder); db.flush()
+        course_a.current_version = 2
+        publish_release(db, actor, course_a, notes="v2")
+        db.flush()
+
+        rollback_release(db, actor, course_a)
+        db.flush()
+        assert db.get(Question, intruder.id).status == "published", \
+            "rolling back one course must not demote another's items"

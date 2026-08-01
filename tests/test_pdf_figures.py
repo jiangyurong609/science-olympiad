@@ -266,3 +266,27 @@ def test_two_distinct_figures_on_one_page_are_both_kept():
 def test_a_malformed_pdf_raises_rather_than_returning_silence():
     with pytest.raises(Exception):
         extract_figures(b"not a pdf at all")
+
+
+def test_a_label_inside_question_prose_is_not_treated_as_a_caption():
+    """"Image 1 shows Enceladus…" identifies nothing; it refers to something identified
+    elsewhere. Counting it would let a question anchor to whichever figure happened to sit on
+    the page its own text was printed on."""
+    from app.services.pdf_figures import page_figure_labels
+    text = ("[Page 1]\n"
+            "4b. Image 1 shows Enceladus. Around which planet does it orbit?\n"
+            "[Page 2]\n"
+            "Image 1. Enceladus, imaged by Cassini.\n")
+    labels = page_figure_labels(text)
+    assert 1 not in labels, "the prose reference must not register as a caption"
+    assert labels.get(2) == {"1"}, "the caption on page 2 must"
+
+
+def test_a_prose_reference_cannot_anchor_a_figure_by_coincidence():
+    text = ("[Page 1]\n"
+            "4b. Image 1 shows Enceladus. Around which planet does it orbit?\n")
+    items = [{"label": "4b", "stem": "Image 1 shows Enceladus. Around which planet?",
+              "image_dependent": True}]
+    stats = attach_figures_to_items(text, items, [_figure(1)])
+    assert items[0]["figure_match"] != "label_matched"
+    assert stats["label_matched"] == 0

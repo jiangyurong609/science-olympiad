@@ -177,12 +177,21 @@ def figure_labels_in(text: str) -> set[str]:
 
 
 def page_figure_labels(text: str) -> dict[int, set[str]]:
-    """Which figure labels are printed on each page."""
+    """Which figure labels are *captioned* on each page.
+
+    Only line-initial mentions count. "Image 1 shows Enceladus. Around which planet…" is a
+    question referring to a figure, not a caption identifying one, and counting it would let a
+    question anchor itself to whatever figure happened to sit on the page its own text was
+    printed on — pairing by coincidence, dressed as the strongest anchor available.
+    """
     offsets = page_offsets(text)
     if not offsets:
         return {}
     out: dict[int, set[str]] = {}
     for match in FIGURE_LABEL.finditer(text):
+        line_start = text.rfind("\n", 0, match.start()) + 1
+        if text[line_start:match.start()].strip():
+            continue          # something precedes it on the line: a reference, not a caption
         page = page_of_offset(offsets, match.start())
         if page is not None:
             out.setdefault(page, set()).add(match.group(1).lower())

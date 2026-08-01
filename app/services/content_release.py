@@ -208,11 +208,17 @@ def restore_from_manifest(db: Session, manifest: dict) -> dict:
             question.status = row["status"]
             restored["questions"] += 1
     course_id = (manifest.get("course") or {}).get("id")
-    if course_id is not None:
+    course = db.get(Course, course_id) if course_id is not None else None
+    if course is not None:
         concept_ids = [s["concept_id"] for s in (manifest.get("skills") or [])
                        if s.get("concept_id")]
         if concept_ids:
+            # The event filter mirrors `build_manifest`. Without it the withdrawal reached any
+            # published item sharing a concept id, so rolling back one course could demote
+            # another course's items. No concept is shared across courses today, which is
+            # exactly why the asymmetry would have gone unnoticed until it wasn't.
             for question in db.scalars(select(Question).where(
+                Question.event_id == course.event_id,
                 Question.concept_id.in_(concept_ids),
                 Question.status == "published",
             )).all():
@@ -220,6 +226,18 @@ def restore_from_manifest(db: Session, manifest: dict) -> dict:
                     # published after the release being restored: it was never part of it
                     question.status = "machine_validated"
                     restored["questions"] += 1
+
+    # Blueprints are pinned in the manifest and were not being restored. A unit quiz that
+    # moved from draft to published after the release would have stayed published through a
+    # rollback, so the restored release would serve an assessment it never contained.
+    for row in manifest.get("blueprints") or []:
+        blueprint = db.get(AssessmentBlueprint, row.get("id"))
+        if blueprint is None:
+            missing.append(f"blueprint {row.get('id')} no longer exists")
+            continue
+        if row.get("status") is not None and blueprint.status != row["status"]:
+            blueprint.status = row["status"]
+            restored["blueprints"] = restored.get("blueprints", 0) + 1
 
     db.flush()
     restored["unrestorable"] = missing
