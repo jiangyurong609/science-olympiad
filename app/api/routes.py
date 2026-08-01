@@ -727,9 +727,14 @@ def _lesson_is_student_visible(
     # undecided is hidden until a human decides. New lessons therefore fail closed.
     if getattr(lesson, "disposition", None) == "unreviewed_practice":
         return True
-    course = db.scalar(select(Course).where(Course.event_id == lesson.event_id))
-    if course and course.status == "student_preview":
-        return True
+    # `student_preview` used to return True here, bypassing the review-evidence check below
+    # entirely — so putting a course into preview made every unreviewed lesson on it readable.
+    # That is the Phase 0 invariant inverted, and it fired: moving the pilot into preview to
+    # correct an unrelated inconsistency exposed 24 unreviewed lessons, carrying 30 checkpoints
+    # an independent verifier disputes and 13 blocks that read from figures the lesson never
+    # shows. Grandfathered content is already handled explicitly above by the
+    # `unreviewed_practice` disposition, so preview needs no exemption of its own: it governs
+    # when a finished course becomes visible, not whether review happened.
     version = version or db.scalar(select(LessonVersion).where(
         LessonVersion.lesson_id == lesson.id,
         LessonVersion.version == lesson.current_version,
@@ -759,11 +764,17 @@ def list_event_lessons(
         raise HTTPException(status_code=404, detail="Event not found")
     lesson_query = select(Lesson).where(Lesson.event_id == event_id)
     if user.role not in {"admin", "editor", "sme", "calibrator"}:
-        course = db.scalar(select(Course).where(Course.event_id == event_id))
-        if not course or course.status != "student_preview":
-            lesson_query = lesson_query.where(Lesson.status == "published")
-        else:
-            lesson_query = lesson_query.where(Lesson.status != "withdrawn")
+        # `student_preview` used to *widen* what a student could open, from published lessons
+        # to every non-withdrawn one — drafts included. Preview is meant to mean "this course
+        # is visible before formal release", not "unreviewed drafts are now readable", and the
+        # difference is the whole Phase 0 invariant: unreviewed content must not be servable.
+        #
+        # It was not theoretical. Moving the pilot to student_preview to correct an unrelated
+        # inconsistency put 24 unreviewed lessons in front of students — lessons carrying 30
+        # checkpoints an independent verifier disputes and 13 blocks that read from figures
+        # the lesson never shows. A student's view no longer depends on the course's release
+        # state; staff still see everything.
+        lesson_query = lesson_query.where(Lesson.status == "published")
     lessons = db.scalars(lesson_query.order_by(Lesson.sequence, Lesson.id)).all()
     current_versions = {lesson.id: lesson.current_version for lesson in lessons}
     versions = {
