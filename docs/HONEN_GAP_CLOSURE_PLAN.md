@@ -1,5 +1,7 @@
 # Honen Gap-Closure Plan — Science Olympiad Prep Compiler
 
+> **Order and gates are decided in [`MASTER_PLAN.md`](MASTER_PLAN.md).** This document is the detailed spec; do not start a phase here without checking its position and prerequisites there.
+
 **Status:** proposed · **Owner:** platform · **Created:** 2026-07-30
 
 ## Goal

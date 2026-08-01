@@ -1,5 +1,7 @@
 # Fieldstone Learning Experience Plan
 
+> **Order and gates are decided in [`MASTER_PLAN.md`](MASTER_PLAN.md).** This document is the detailed spec; do not start a phase here without checking its position and prerequisites there.
+
 Status: product plan only. No content is considered student-ready until it passes the editorial gates below.
 
 ## 0. Current production baseline
