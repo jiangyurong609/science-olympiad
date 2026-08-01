@@ -247,3 +247,31 @@ def test_catalog_builder_no_longer_publishes():
     source = open("scripts/build_courses.py").read()
     assert 'status="published"' not in source
     assert "published=True," not in source
+
+
+def test_exam_creation_refuses_to_publish_an_unreviewed_item():
+    """The create-exam endpoint asserts DISPOSITION_REVIEWED from `published=True` alone.
+    Its pool filter should make that true; asserting it means a future change to the filter
+    fails loudly rather than silently publishing unreviewed items."""
+    import pytest
+
+    from app.core.database import SessionLocal
+    from app.models.entities import Event, Question
+    from app.services import student_visibility as sv
+
+    with SessionLocal() as db:
+        event = Event(slug="assert-ev", name="E", division="B", season=2026)
+        db.add(event); db.flush()
+        draft = Question(event_id=event.id, stem="Unreviewed", question_type="single_choice",
+                         choices=["a", "b"], answer_spec={"correct_index": 0},
+                         status="machine_validated")
+        db.add(draft); db.flush()
+        with pytest.raises(sv.StudentVisibilityError):
+            sv.assert_publishable(db, [draft.id], what="exam")
+
+
+def test_the_student_ready_set_is_defined_once():
+    """`allowed_statuses` in the create-exam path used to spell the set out again. Two
+    spellings of one rule is how every visibility defect in this codebase started."""
+    from app.services import student_visibility as sv
+    assert sv.STUDENT_READY_ITEM_STATUSES == {"published", "calibrated"}

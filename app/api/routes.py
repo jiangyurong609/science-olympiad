@@ -3625,7 +3625,11 @@ def create_exam(payload: ExamCreateRequest, db: Session = Depends(get_db), actor
                 "coverage": coverage["summary"],
                 "next_step": "Resolve the event source-map and freshness gaps before release",
             })
-    allowed_statuses = ["calibrated"] if payload.release_class == "competition_ready" else ["published", "calibrated"]
+    # The student-ready set is defined once in `student_visibility`; spelling it out here
+    # again is how two places drift apart, which is the shape of every visibility defect
+    # found in this codebase so far.
+    allowed_statuses = (["calibrated"] if payload.release_class == "competition_ready"
+                        else sorted(sv.STUDENT_READY_ITEM_STATUSES))
     questions = db.scalars(
         select(Question).where(
             Question.event_id == event.id,
@@ -3669,6 +3673,13 @@ def create_exam(payload: ExamCreateRequest, db: Session = Depends(get_db), actor
             "source_universe_version": row["source_universe_version"],
         } for row in coverage["sources"]],
     }
+    if payload.published:
+        # This claims DISPOSITION_REVIEWED — "every item human-reviewed, fully serveable" —
+        # on the strength of the caller passing published=True. The pool filter above should
+        # already guarantee it; asserting it here means a future change to that filter fails
+        # loudly instead of silently publishing unreviewed items, which is what
+        # `mock_exam` does for the same reason.
+        sv.assert_publishable(db, [q.id for q in selected], what="exam")
     exam = Exam(
         event_id=event.id, organization_id=actor.organization_id, title=payload.title,
         duration_minutes=payload.duration_minutes, question_ids=[q.id for q in selected],
