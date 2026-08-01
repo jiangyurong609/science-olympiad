@@ -54,6 +54,9 @@ from app.services.notifications import create_notification
 from app.services.daily_plan import build_daily_plan
 from app.services.tutor import TutorAccessError, create_tutor_session, respond_to_tutor
 from app.services.course_quality import audit_course
+from app.services.content_release import (
+    ReleaseError, build_manifest, publish_release, release_drift, rollback_release,
+)
 from app.services.artifacts import ArtifactError, read_raw_artifact, store_raw_artifact
 from app.services.jobs import enqueue_job, run_next_job
 from app.services.video_transcripts import youtube_video_id
@@ -1265,20 +1268,37 @@ def decide_content_release(
                 "message": "Course is not release-ready",
                 "blockers": blockers,
             })
+    released: ContentRelease | None = None
     if decision == "preview":
         course.status = "student_preview"
     elif decision == "published":
+        # publishing must record *what* was published, not only that it was. Without a
+        # manifest a rollback could only restore a version number, while the lessons and
+        # items under it had already moved on.
+        try:
+            released = publish_release(db, actor, course, notes.strip())
+        except ReleaseError as exc:
+            raise HTTPException(status_code=409, detail=str(exc)) from exc
         course.status = "published"
     elif decision == "withdrawn":
         course.status = "withdrawn"
+        for row in db.scalars(select(ContentRelease).where(
+            ContentRelease.course_id == course.id,
+            ContentRelease.status == "published",
+        )).all():
+            row.status = "withdrawn"
     else:
-        previous = db.scalar(select(CourseVersion).where(
-            CourseVersion.course_id == course.id,
-            CourseVersion.version < course.current_version,
-        ).order_by(CourseVersion.version.desc()))
-        if not previous:
-            raise HTTPException(status_code=409, detail="No prior course version is available for rollback")
-        course.current_version = previous.version
+        try:
+            released = rollback_release(db, actor, course)
+        except ReleaseError:
+            # courses released before manifests existed have only version history to fall back on
+            previous = db.scalar(select(CourseVersion).where(
+                CourseVersion.course_id == course.id,
+                CourseVersion.version < course.current_version,
+            ).order_by(CourseVersion.version.desc()))
+            if not previous:
+                raise HTTPException(status_code=409, detail="No prior course version is available for rollback")
+            course.current_version = previous.version
         course.status = "student_preview"
     version = db.scalar(select(CourseVersion).where(
         CourseVersion.course_id == course.id,
@@ -1294,6 +1314,11 @@ def decide_content_release(
         "status": course.status,
         "version": course.current_version,
         "decision": decision,
+        "release": {
+            "id": released.id, "version": released.version, "status": released.status,
+            "digest": (released.manifest or {}).get("digest"),
+            "counts": (released.manifest or {}).get("counts"),
+        } if released is not None else None,
         "blockers": _course_release_blockers(db, course) if course.status not in {"published", "student_preview"} else [],
     }
 

@@ -1,0 +1,162 @@
+"""Phase 4 — a release must pin what shipped, and a rollback must restore it.
+
+Before this, publishing flipped `course.status` and wrote an audit line. Nothing recorded the
+membership, so `release_missing` could never clear and a rollback moved a version pointer over
+content that had already changed underneath it.
+"""
+from __future__ import annotations
+
+import itertools
+
+import pytest
+
+from app.core.database import SessionLocal
+from app.models.entities import (
+    Concept, Course, CourseUnit, Event, Lesson, LessonSkill, LessonVersion, Question, Skill, User,
+)
+from app.services.content_release import (
+    ReleaseError, build_manifest, publish_release, release_drift, rollback_release,
+)
+
+_UNIQUE = itertools.count(1)
+
+
+def _course(db, *, lessons=1):
+    n = next(_UNIQUE)
+    event = Event(slug=f"ev-{n}", name="Event", division="B", season=2026)
+    db.add(event); db.flush()
+    course = Course(event_id=event.id, slug=f"course-{n}", title="Course",
+                    status="draft", current_version=1)
+    db.add(course); db.flush()
+    unit = CourseUnit(course_id=course.id, slug=f"u-{n}", title="Unit", sequence=1)
+    db.add(unit); db.flush()
+    concept = Concept(event_id=event.id, name=f"Concept {n}")
+    db.add(concept); db.flush()
+    skill = Skill(course_id=course.id, unit_id=unit.id, concept_id=concept.id,
+                  slug=f"s-{n}", name="Skill", sequence=1)
+    db.add(skill); db.flush()
+    for index in range(lessons):
+        lesson = Lesson(event_id=event.id, slug=f"l-{n}-{index}", title=f"Lesson {index}",
+                        status="published", current_version=1, sequence=index)
+        db.add(lesson); db.flush()
+        db.add(LessonVersion(lesson_id=lesson.id, version=1,
+                             content=[{"type": "opening"}, {"type": "summary"}]))
+        db.add(LessonSkill(lesson_id=lesson.id, skill_id=skill.id))
+    db.flush()
+    actor = User(email=f"editor-{n}@example.com", full_name="Editor",
+                 password_hash="x", role="editor")
+    db.add(actor); db.flush()
+    return course, actor, skill, event
+
+
+def test_a_release_pins_lesson_versions_not_just_ids():
+    """An id alone does not pin content — the lesson can be edited afterwards."""
+    with SessionLocal() as db:
+        course, actor, _, _ = _course(db, lessons=2)
+        manifest = build_manifest(db, course)
+        assert manifest["counts"]["lessons"] == 2
+        assert all("version" in row for row in manifest["lessons"])
+        assert manifest["digest"]
+
+
+def test_publishing_creates_the_release_audit_course_looks_for():
+    with SessionLocal() as db:
+        course, actor, _, _ = _course(db)
+        release = publish_release(db, actor, course, notes="first")
+        db.commit()
+        assert release.status == "published"
+        assert release.manifest["digest"]
+        assert release.published_by_user_id == actor.id
+
+
+def test_publishing_the_same_content_twice_is_idempotent():
+    with SessionLocal() as db:
+        course, actor, _, _ = _course(db)
+        first = publish_release(db, actor, course)
+        second = publish_release(db, actor, course)
+        assert first.id == second.id, "an unchanged republish must not fork the release"
+
+
+def test_republishing_changed_content_under_one_version_is_refused():
+    """Membership is immutable; silently rewriting it would make the digest a lie."""
+    with SessionLocal() as db:
+        course, actor, skill, event = _course(db)
+        publish_release(db, actor, course)
+        extra = Lesson(event_id=event.id, slug="extra", title="Extra",
+                       status="published", current_version=1, sequence=9)
+        db.add(extra); db.flush()
+        db.add(LessonVersion(lesson_id=extra.id, version=1, content=[{"type": "opening"}]))
+        db.add(LessonSkill(lesson_id=extra.id, skill_id=skill.id))
+        db.flush()
+        with pytest.raises(ReleaseError, match="immutable"):
+            publish_release(db, actor, course)
+
+
+def test_only_one_release_is_active_at_a_time():
+    with SessionLocal() as db:
+        course, actor, _, _ = _course(db)
+        first = publish_release(db, actor, course)
+        course.current_version = 2
+        second = publish_release(db, actor, course)
+        db.flush()
+        assert first.status == "superseded"
+        assert second.status == "published"
+
+
+def test_rollback_restores_the_previous_release_and_version():
+    with SessionLocal() as db:
+        course, actor, _, _ = _course(db)
+        first = publish_release(db, actor, course)
+        course.current_version = 2
+        second = publish_release(db, actor, course)
+        db.flush()
+
+        restored = rollback_release(db, actor, course)
+        assert restored.id == first.id
+        assert course.current_version == first.version
+        assert second.status == "rolled_back"
+        assert restored.status == "published"
+
+
+def test_rollback_without_history_is_refused_not_guessed():
+    with SessionLocal() as db:
+        course, actor, _, _ = _course(db)
+        publish_release(db, actor, course)
+        with pytest.raises(ReleaseError, match="no superseded release"):
+            rollback_release(db, actor, course)
+
+
+def test_drift_detects_content_edited_after_release():
+    """A published release whose lessons have since changed means the catalog is serving
+    something nobody approved under a version that says otherwise."""
+    with SessionLocal() as db:
+        course, actor, _, _ = _course(db)
+        publish_release(db, actor, course)
+        db.flush()
+        assert release_drift(db, course)["drifted"] is False
+
+        lesson = db.query(Lesson).filter(Lesson.slug.like("l-%")).first()
+        db.add(LessonVersion(lesson_id=lesson.id, version=2, content=[{"type": "opening"}]))
+        lesson.current_version = 2
+        db.flush()
+
+        drift = release_drift(db, course)
+        assert drift["drifted"] is True
+        assert any("lesson versions changed" in change for change in drift["changes"])
+
+
+def test_an_empty_course_cannot_be_released():
+    with SessionLocal() as db:
+        course, actor, _, _ = _course(db, lessons=0)
+        with pytest.raises(ReleaseError, match="at least one lesson"):
+            publish_release(db, actor, course)
+
+
+def test_a_lesson_missing_its_current_version_fails_the_release_loudly():
+    with SessionLocal() as db:
+        course, actor, _, _ = _course(db)
+        lesson = db.query(Lesson).filter(Lesson.slug.like("l-%")).first()
+        lesson.current_version = 99          # points at a row that does not exist
+        db.flush()
+        with pytest.raises(ReleaseError, match="no row for its current version"):
+            build_manifest(db, course)
