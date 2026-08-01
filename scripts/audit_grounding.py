@@ -9,6 +9,12 @@ matters:
   * **rights**     — its source is cleared for generation
   * **relevance**  — the claim belongs to the lesson or its event's concepts
   * **substance**  — the share of *teaching blocks* supported, not the count of claims
+
+What this percentage does and does not mean: a supported block cites a claim that is approved,
+rights-cleared, verifiably present in a retained snapshot, and topically relevant to the block.
+It does **not** assert that the claim *entails* the block's specific statement — that judgement
+is the SME review, and no keyword measure substitutes for it. Read the number as "this block
+has real sourced material behind it", not "this sentence is proven".
   * **skills**     — every skill either supported or carrying an explicit ContentGap
 
 It fails closed: an empty population is an error, never 100%.

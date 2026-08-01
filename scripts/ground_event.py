@@ -228,6 +228,25 @@ def harvest_claims(db: Session, event: Event, sources: list[Source], apply: bool
     return made
 
 
+def _block_text(block: dict) -> str:
+    """Every string a block teaches with, including those nested in lists and dicts."""
+    parts: list[str] = []
+
+    def walk(node) -> None:
+        if isinstance(node, str):
+            parts.append(node)
+        elif isinstance(node, dict):
+            for key, value in node.items():
+                if key not in {"type", "claim_ids", "passage_ids", "id", "generated_by"}:
+                    walk(value)
+        elif isinstance(node, list):
+            for item in node:
+                walk(item)
+
+    walk(block)
+    return " ".join(parts)
+
+
 def attach_to_blocks(db: Session, event: Event, claims: list[ScientificClaim], apply: bool) -> dict:
     """Attach claims to the blocks they support, so coverage reflects substance."""
     if not claims:
@@ -248,8 +267,12 @@ def attach_to_blocks(db: Session, event: Event, claims: list[ScientificClaim], a
             if block.get("type") not in SUBSTANTIVE_BLOCKS:
                 continue
             total += 1
-            blob = " ".join(str(v) for v in block.values() if isinstance(v, str))
-            words = _keywords(blob, 20)
+            # Nested strings count. This used to read only top-level string values, so a
+            # summary — whose bullets live in `points`, a list — was matched on the words
+            # "Closing Summary" alone, and a checkpoint on its heading rather than its
+            # choices and explanation. 43 of 68 ungrounded blocks were summaries and
+            # checkpoints whose actual content the matcher never saw.
+            words = _keywords(_block_text(block), 40)
             scored = sorted(indexed, key=lambda pair: len(pair[1] & words), reverse=True)
             # A single shared word is coincidence, not evidence: "Official websites use .gov"
             # once counted as support for a crystal-systems block. Require real overlap that
