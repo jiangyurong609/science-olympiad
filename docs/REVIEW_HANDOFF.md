@@ -2,9 +2,11 @@
 
 **Prepared:** 2026-08-01 · **Blocking:** MASTER_PLAN Phases 3, 4, 5, 6
 
-Everything an engineer can do on this course is done. What remains is 252 review decisions,
-and this document exists so those decisions are a bounded afternoon rather than an open-ended
-slog. Every number below comes from a committed command, listed with each section.
+Everything an engineer can do on this course is done. What remains is **247 blockers, of which
+~198 are human decisions**, and this document exists so they are a bounded afternoon rather
+than an open-ended slog. Every number below comes from a committed command, listed with each
+section, and is current as of the last commit — earlier drafts of this file quoted 252 and
+29.6% before further work moved both.
 
 ---
 
@@ -102,10 +104,17 @@ cleared these by switching them to a role the audit exempts; that was reverted.
 
 ## Known limits, stated rather than buried
 
-- **Grounding is 29.6%**, not the 56% first reported. Two corrections lowered it: splitting
-  added 48 unevidenced connective blocks, and the audit had been excluding generated
-  checkpoints from the denominator. 100% of blocks are *accounted for* — evidenced or
-  recorded as an open gap. The shortfall is what open sources actually support.
+- **Grounding is 96.4%** (189 of 196 blocks), 100% accounted for. It read 29.6% earlier, and
+  the climb was almost entirely bug-fixing rather than new content: the grounder and the audit
+  had drifted to different definitions of a substantive block, and the matcher was comparing
+  claims against each block's *heading only* because it read top-level strings while summaries
+  keep their bullets in a list. 38 targeted references were added on top of that.
+  **What the number means:** a supported block cites a claim that is approved, rights-cleared,
+  verifiably present in a retained snapshot, and topically relevant. It does **not** assert the
+  claim entails the block's specific statement — that judgement is exactly what the SME pass is
+  for. Spot-checking found the pairings sound but sometimes adjacent rather than entailing.
+- **7 blocks remain ungrounded and mostly should not be grounded** — they cite the same
+  unavailable source packet flagged in §2 and need rewriting, not a citation.
 - **Figure recovery cannot help this catalog.** These tests use vector diagrams that
   `page.images` cannot see and print them on separate image sheets. 0 of 43 blocked items are
   recoverable; closing it needs vector rendering and caption OCR. See
