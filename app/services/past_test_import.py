@@ -115,6 +115,98 @@ def _answer_spec(item: dict) -> tuple[str, list, dict]:
     }
 
 
+LOW_CONFIDENCE = 0.6
+
+# Some findings are not deductions, they are the absence of the thing being scored. Weighing
+# them alongside cosmetic signals put "no answer at all" at exactly 0.6 and an out-of-range
+# choice index at 0.65 — so the two most decisive defects cleared the bar on their own while
+# a missing label and a short stem together did not. Any of these disqualifies the parse
+# regardless of what the arithmetic says.
+DISQUALIFYING = {
+    "no_reference_answer",
+    "no_valid_correct_index",
+    "multiple_choice_without_choices",
+    "stem_too_short_to_be_a_question",
+}
+
+
+def is_trustworthy(score: float, reasons: list[str]) -> bool:
+    """Whether the parse established enough for its answer to be graded against."""
+    if any(reason in DISQUALIFYING for reason in reasons):
+        return False
+    return score >= LOW_CONFIDENCE
+
+
+def parse_confidence(item: dict) -> tuple[float, list[str]]:
+    """Score how much of an item the parser actually established, from observable facts.
+
+    The model is not asked to rate its own output. A parser confident enough to be wrong is
+    exactly the failure mode here, and self-reported confidence is the one signal that cannot
+    be checked. Every signal below is verifiable after the fact: whether the stem was found
+    in the source text, whether an answer exists, whether the choice structure is coherent.
+    """
+    reasons: list[str] = []
+    score = 1.0
+
+    # A stem that cannot be found in the source is a paraphrase at best, invented at worst.
+    if item.get("page") is None:
+        score -= 0.35
+        reasons.append("stem_not_found_in_source")
+
+    qtype = item.get("question_type") or "short_answer"
+    choices = [c for c in (item.get("choices") or []) if str(c).strip()]
+    correct_index = item.get("correct_index")
+    if qtype == "single_choice":
+        if len(choices) < 2:
+            score -= 0.4
+            reasons.append("multiple_choice_without_choices")
+        if not isinstance(correct_index, int) or not 0 <= correct_index < len(choices):
+            score -= 0.35
+            reasons.append("no_valid_correct_index")
+    else:
+        if not str(item.get("reference_answer") or "").strip():
+            score -= 0.4
+            reasons.append("no_reference_answer")
+        if choices:
+            score -= 0.1
+            reasons.append("choices_on_a_non_choice_item")
+
+    stem = str(item.get("stem") or "").strip()
+    if len(stem) < 15:
+        score -= 0.3
+        reasons.append("stem_too_short_to_be_a_question")
+    elif len(stem) > 1200:
+        # several printed items almost certainly ran together into one
+        score -= 0.2
+        reasons.append("stem_long_enough_to_be_merged_items")
+    if not str(item.get("label") or "").strip():
+        score -= 0.1
+        reasons.append("no_printed_label")
+    if item.get("image_dependent") and item.get("figure_match") != "unique":
+        score -= 0.2
+        reasons.append("needs_a_figure_that_is_not_pinned")
+
+    return max(0.0, round(score, 3)), reasons
+
+
+def _withhold_untrusted_answer(item: dict, spec: dict, qtype: str,
+                               reasons: list[str]) -> dict:
+    """Blank an answer the parse did not establish, so it reaches the needs-key queue.
+
+    A low-confidence short answer is worse than a missing one: a student is graded against a
+    guess and told they are wrong. Emptying it makes the item ungradeable, which is what
+    `/content/questions/needs-key` selects on, so it surfaces for an editor instead of
+    silently scoring.
+    """
+    if qtype != "short_answer":
+        return spec
+    withheld = dict(spec)
+    withheld["answer"] = ""
+    withheld["accepted"] = []
+    withheld["withheld_reason"] = ", ".join(reasons) or "low_parse_confidence"
+    return withheld
+
+
 def attach_source_figures(db: Session, exam_source: Source, snapshot: SourceSnapshot,
                           items: list[dict]) -> dict:
     """Recover the PDF's figures and attach each to the items printed on its page.
@@ -200,6 +292,11 @@ def build_questions(
         if not stem:
             continue
         qtype, choices, answer_spec = _answer_spec(item)
+        confidence, confidence_reasons = parse_confidence(item)
+        trustworthy = is_trustworthy(confidence, confidence_reasons)
+        if not trustworthy:
+            answer_spec = _withhold_untrusted_answer(
+                item, answer_spec, qtype, confidence_reasons)
         question = Question(
             event_id=event.id,
             source_id=exam_source.id,
@@ -225,6 +322,9 @@ def build_questions(
                 "figure_match": item.get("figure_match", "none"),
                 "source_page": item.get("page"),
                 "figure_resolved": resolved,
+                "parse_confidence": confidence,
+                "parse_confidence_reasons": confidence_reasons,
+                "answer_withheld": not trustworthy and qtype == "short_answer",
                 "unverified_auto_import": True,
             },
         )
@@ -317,6 +417,8 @@ def import_past_test(
     return {
         "parsed_items": len(items),
         "image_dependent_items": image_dependent,
+        "low_confidence_items": sum(
+            1 for i in items if not is_trustworthy(*parse_confidence(i))),
         "image_dependent_recovered": sum(
             1 for i in items
             if i.get("image_dependent") and i.get("figure_match") == "unique"),
