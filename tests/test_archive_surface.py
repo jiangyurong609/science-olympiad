@@ -75,3 +75,30 @@ def test_slug_resolver_redirects_twin_to_canonical(client):
     live = client.get("/api/events/by-slug/astronomy-c").json()
     assert live["redirect"] is False
     assert live["slug"] == "astronomy-c"
+
+
+def test_review_queue_skips_lessons_on_retired_events(client, admin_token):
+    """A reviewer's decision on a retired duplicate can never reach a student, so queueing
+    it only wastes review time."""
+    from app.models.entities import Course, CourseUnit, LessonSkill, LessonVersion, Skill
+    with SessionLocal() as db:
+        live, prior, twin = _seed(db)
+        for event_id, course_status in ((twin, "draft"), (live, "draft")):
+            course = Course(event_id=event_id, slug=f"c{event_id}", title="C", status=course_status)
+            db.add(course); db.flush()
+            unit = CourseUnit(course_id=course.id, slug=f"u{event_id}", title="U", sequence=1)
+            db.add(unit); db.flush()
+            skill = Skill(course_id=course.id, unit_id=unit.id, slug=f"s{event_id}", name="S", sequence=1)
+            db.add(skill); db.flush()
+            lesson = Lesson(event_id=event_id, slug=f"draft-{event_id}", title=f"Draft {event_id}",
+                            status="draft", current_version=1)
+            db.add(lesson); db.flush()
+            db.add(LessonVersion(lesson_id=lesson.id, version=1, content=[], review_status="ai_draft"))
+            db.add(LessonSkill(lesson_id=lesson.id, skill_id=skill.id, is_primary=True))
+        db.commit()
+
+    queue = client.get("/api/content/lessons/review-queue",
+                       headers={"Authorization": f"Bearer {admin_token}"}).json()
+    titles = {row.get("title") for row in (queue if isinstance(queue, list) else queue.get("items", []))}
+    assert f"Draft {live}" in titles, "work on a live event must still be reviewable"
+    assert f"Draft {twin}" not in titles, "work on a retired event must not be queued"

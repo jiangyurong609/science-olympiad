@@ -3030,6 +3030,10 @@ def lesson_review_queue(
         if not course or course.status == "published":
             continue
         event = db.get(Event, course.event_id)
+        # Reviewing lessons that belong to a retired duplicate is wasted work: whatever the
+        # reviewer decides can never reach a student, because the event is not in the catalog.
+        if not event or not event.active or event.season_status in RETIRED_SEASON_STATUSES:
+            continue
         decisions = db.scalars(select(ReviewDecision).where(
             ReviewDecision.entity_type == "lesson",
             ReviewDecision.entity_id == lesson.id,
