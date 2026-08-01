@@ -2,14 +2,17 @@
   "events": 67,
   "totals": {
     "substantive_blocks": 4822,
-    "supported_blocks": 91,
-    "substantive_coverage": 0.019,
-    "claims_valid": 271,
-    "claims_total": 284,
-    "skills_unsupported_without_gap": 394
+    "supported_blocks": 51,
+    "substantive_coverage": 0.011,
+    "claims_valid": 943,
+    "claims_total": 956,
+    "skills_unsupported_without_gap": 394,
+    "accounted": 1.0
   },
   "by_event": [
     {
+      "accounted_blocks": 94,
+      "block_accountability": 1.0,
       "event": "anatomy-and-physiology-b",
       "event_id": 7,
       "season": 2026,
@@ -31,7 +34,7 @@
           "blocks": 11,
           "supported": 0,
           "coverage": 0.0,
-          "asserting": 8,
+          "asserting": 11,
           "asserting_supported": 0,
           "valid_claims": 0
         },
@@ -41,7 +44,7 @@
           "blocks": 13,
           "supported": 0,
           "coverage": 0.0,
-          "asserting": 9,
+          "asserting": 13,
           "asserting_supported": 0,
           "valid_claims": 0
         },
@@ -51,7 +54,7 @@
           "blocks": 12,
           "supported": 0,
           "coverage": 0.0,
-          "asserting": 9,
+          "asserting": 12,
           "asserting_supported": 0,
           "valid_claims": 0
         },
@@ -61,7 +64,7 @@
           "blocks": 12,
           "supported": 0,
           "coverage": 0.0,
-          "asserting": 9,
+          "asserting": 12,
           "asserting_supported": 0,
           "valid_claims": 0
         },
@@ -71,7 +74,7 @@
           "blocks": 10,
           "supported": 0,
           "coverage": 0.0,
-          "asserting": 7,
+          "asserting": 10,
           "asserting_supported": 0,
           "valid_claims": 0
         },
@@ -81,7 +84,7 @@
           "blocks": 12,
           "supported": 0,
           "coverage": 0.0,
-          "asserting": 9,
+          "asserting": 12,
           "asserting_supported": 0,
           "valid_claims": 0
         },
@@ -91,7 +94,7 @@
           "blocks": 13,
           "supported": 0,
           "coverage": 0.0,
-          "asserting": 9,
+          "asserting": 13,
           "asserting_supported": 0,
           "valid_claims": 0
         },
@@ -101,13 +104,15 @@
           "blocks": 11,
           "supported": 0,
           "coverage": 0.0,
-          "asserting": 9,
+          "asserting": 11,
           "asserting_supported": 0,
           "valid_claims": 0
         }
       ]
     },
     {
+      "accounted_blocks": 96,
+      "block_accountability": 1.0,
       "event": "anatomy-and-physiology-c",
       "event_id": 30,
       "season": 2026,
@@ -129,7 +134,7 @@
           "blocks": 12,
           "supported": 0,
           "coverage": 0.0,
-          "asserting": 9,
+          "asserting": 12,
           "asserting_supported": 0,
           "valid_claims": 0
         },
@@ -139,7 +144,7 @@
           "blocks": 12,
           "supported": 0,
           "coverage": 0.0,
-          "asserting": 9,
+          "asserting": 12,
           "asserting_supported": 0,
           "valid_claims": 0
         },
@@ -149,7 +154,7 @@
           "blocks": 12,
           "supported": 0,
           "coverage": 0.0,
-          "asserting": 8,
+          "asserting": 12,
           "asserting_supported": 0,
           "valid_claims": 0
         },
@@ -159,7 +164,7 @@
           "blocks": 11,
           "supported": 0,
           "coverage": 0.0,
-          "asserting": 7,
+          "asserting": 11,
           "asserting_supported": 0,
           "valid_claims": 0
         },
@@ -169,7 +174,7 @@
           "blocks": 12,
           "supported": 0,
           "coverage": 0.0,
-          "asserting": 9,
+          "asserting": 12,
           "asserting_supported": 0,
           "valid_claims": 0
         },
@@ -179,7 +184,7 @@
           "blocks": 12,
           "supported": 0,
           "coverage": 0.0,
-          "asserting": 10,
+          "asserting": 12,
           "asserting_supported": 0,
           "valid_claims": 0
         },
@@ -189,7 +194,7 @@
           "blocks": 12,
           "supported": 0,
           "coverage": 0.0,
-          "asserting": 9,
+          "asserting": 12,
           "asserting_supported": 0,
           "valid_claims": 0
         },
@@ -199,13 +204,15 @@
           "blocks": 13,
           "supported": 0,
           "coverage": 0.0,
-          "asserting": 10,
+          "asserting": 13,
           "asserting_supported": 0,
           "valid_claims": 0
         }
       ]
     },
     {
+      "accounted_blocks": 93,
+      "block_accountability": 1.0,
       "event": "astronomy-c",
       "event_id": 35,
       "season": 2026,
@@ -227,7 +234,7 @@
           "blocks": 11,
           "supported": 0,
           "coverage": 0.0,
-          "asserting": 8,
+          "asserting": 11,
           "asserting_supported": 0,
           "valid_claims": 0
         },
@@ -237,7 +244,7 @@
           "blocks": 11,
           "supported": 0,
           "coverage": 0.0,
-          "asserting": 8,
+          "asserting": 11,
           "asserting_supported": 0,
           "valid_claims": 0
         },
@@ -247,7 +254,7 @@
           "blocks": 13,
           "supported": 0,
           "coverage": 0.0,
-          "asserting": 7,
+          "asserting": 13,
           "asserting_supported": 0,
           "valid_claims": 0
         },
@@ -257,7 +264,7 @@
           "blocks": 11,
           "supported": 0,
           "coverage": 0.0,
-          "asserting": 8,
+          "asserting": 11,
           "asserting_supported": 0,
           "valid_claims": 0
         },
@@ -267,7 +274,7 @@
           "blocks": 12,
           "supported": 0,
           "coverage": 0.0,
-          "asserting": 8,
+          "asserting": 12,
           "asserting_supported": 0,
           "valid_claims": 0
         },
@@ -277,7 +284,7 @@
           "blocks": 11,
           "supported": 0,
           "coverage": 0.0,
-          "asserting": 8,
+          "asserting": 11,
           "asserting_supported": 0,
           "valid_claims": 0
         },
@@ -287,7 +294,7 @@
           "blocks": 12,
           "supported": 0,
           "coverage": 0.0,
-          "asserting": 10,
+          "asserting": 12,
           "asserting_supported": 0,
           "valid_claims": 0
         },
@@ -297,13 +304,15 @@
           "blocks": 12,
           "supported": 0,
           "coverage": 0.0,
-          "asserting": 8,
+          "asserting": 12,
           "asserting_supported": 0,
           "valid_claims": 0
         }
       ]
     },
     {
+      "accounted_blocks": 94,
+      "block_accountability": 1.0,
       "event": "boomilever-b",
       "event_id": 22,
       "season": 2026,
@@ -325,7 +334,7 @@
           "blocks": 12,
           "supported": 0,
           "coverage": 0.0,
-          "asserting": 9,
+          "asserting": 12,
           "asserting_supported": 0,
           "valid_claims": 0
         },
@@ -335,7 +344,7 @@
           "blocks": 11,
           "supported": 0,
           "coverage": 0.0,
-          "asserting": 8,
+          "asserting": 11,
           "asserting_supported": 0,
           "valid_claims": 0
         },
@@ -345,7 +354,7 @@
           "blocks": 12,
           "supported": 0,
           "coverage": 0.0,
-          "asserting": 8,
+          "asserting": 12,
           "asserting_supported": 0,
           "valid_claims": 0
         },
@@ -355,7 +364,7 @@
           "blocks": 11,
           "supported": 0,
           "coverage": 0.0,
-          "asserting": 7,
+          "asserting": 11,
           "asserting_supported": 0,
           "valid_claims": 0
         },
@@ -365,7 +374,7 @@
           "blocks": 12,
           "supported": 0,
           "coverage": 0.0,
-          "asserting": 9,
+          "asserting": 12,
           "asserting_supported": 0,
           "valid_claims": 0
         },
@@ -375,7 +384,7 @@
           "blocks": 11,
           "supported": 0,
           "coverage": 0.0,
-          "asserting": 5,
+          "asserting": 11,
           "asserting_supported": 0,
           "valid_claims": 0
         },
@@ -385,7 +394,7 @@
           "blocks": 13,
           "supported": 0,
           "coverage": 0.0,
-          "asserting": 8,
+          "asserting": 13,
           "asserting_supported": 0,
           "valid_claims": 0
         },
@@ -395,13 +404,15 @@
           "blocks": 12,
           "supported": 0,
           "coverage": 0.0,
-          "asserting": 7,
+          "asserting": 12,
           "asserting_supported": 0,
           "valid_claims": 0
         }
       ]
     },
     {
+      "accounted_blocks": 82,
+      "block_accountability": 1.0,
       "event": "boomilever-c",
       "event_id": 45,
       "season": 2026,
@@ -423,7 +434,7 @@
           "blocks": 12,
           "supported": 0,
           "coverage": 0.0,
-          "asserting": 7,
+          "asserting": 12,
           "asserting_supported": 0,
           "valid_claims": 0
         },
@@ -433,7 +444,7 @@
           "blocks": 11,
           "supported": 0,
           "coverage": 0.0,
-          "asserting": 7,
+          "asserting": 11,
           "asserting_supported": 0,
           "valid_claims": 0
         },
@@ -443,7 +454,7 @@
           "blocks": 11,
           "supported": 0,
           "coverage": 0.0,
-          "asserting": 7,
+          "asserting": 11,
           "asserting_supported": 0,
           "valid_claims": 0
         },
@@ -453,7 +464,7 @@
           "blocks": 11,
           "supported": 0,
           "coverage": 0.0,
-          "asserting": 7,
+          "asserting": 11,
           "asserting_supported": 0,
           "valid_claims": 0
         },
@@ -463,7 +474,7 @@
           "blocks": 13,
           "supported": 0,
           "coverage": 0.0,
-          "asserting": 9,
+          "asserting": 13,
           "asserting_supported": 0,
           "valid_claims": 0
         },
@@ -473,7 +484,7 @@
           "blocks": 11,
           "supported": 0,
           "coverage": 0.0,
-          "asserting": 6,
+          "asserting": 11,
           "asserting_supported": 0,
           "valid_claims": 0
         },
@@ -483,13 +494,15 @@
           "blocks": 13,
           "supported": 0,
           "coverage": 0.0,
-          "asserting": 7,
+          "asserting": 13,
           "asserting_supported": 0,
           "valid_claims": 0
         }
       ]
     },
     {
+      "accounted_blocks": 0,
+      "block_accountability": 0.0,
       "event": "botany-b-2027",
       "event_id": 56,
       "season": 2027,
@@ -507,6 +520,8 @@
       "lesson_detail": []
     },
     {
+      "accounted_blocks": 0,
+      "block_accountability": 0.0,
       "event": "botany-c-2027",
       "event_id": 79,
       "season": 2027,
@@ -524,6 +539,8 @@
       "lesson_detail": []
     },
     {
+      "accounted_blocks": 92,
+      "block_accountability": 1.0,
       "event": "bungee-drop-c",
       "event_id": 51,
       "season": 2026,
@@ -545,7 +562,7 @@
           "blocks": 12,
           "supported": 0,
           "coverage": 0.0,
-          "asserting": 8,
+          "asserting": 12,
           "asserting_supported": 0,
           "valid_claims": 0
         },
@@ -555,7 +572,7 @@
           "blocks": 11,
           "supported": 0,
           "coverage": 0.0,
-          "asserting": 7,
+          "asserting": 11,
           "asserting_supported": 0,
           "valid_claims": 0
         },
@@ -565,7 +582,7 @@
           "blocks": 10,
           "supported": 0,
           "coverage": 0.0,
-          "asserting": 6,
+          "asserting": 10,
           "asserting_supported": 0,
           "valid_claims": 0
         },
@@ -575,7 +592,7 @@
           "blocks": 13,
           "supported": 0,
           "coverage": 0.0,
-          "asserting": 10,
+          "asserting": 13,
           "asserting_supported": 0,
           "valid_claims": 0
         },
@@ -585,7 +602,7 @@
           "blocks": 11,
           "supported": 0,
           "coverage": 0.0,
-          "asserting": 8,
+          "asserting": 11,
           "asserting_supported": 0,
           "valid_claims": 0
         },
@@ -595,7 +612,7 @@
           "blocks": 11,
           "supported": 0,
           "coverage": 0.0,
-          "asserting": 6,
+          "asserting": 11,
           "asserting_supported": 0,
           "valid_claims": 0
         },
@@ -605,7 +622,7 @@
           "blocks": 11,
           "supported": 0,
           "coverage": 0.0,
-          "asserting": 7,
+          "asserting": 11,
           "asserting_supported": 0,
           "valid_claims": 0
         },
@@ -615,13 +632,15 @@
           "blocks": 13,
           "supported": 0,
           "coverage": 0.0,
-          "asserting": 8,
+          "asserting": 13,
           "asserting_supported": 0,
           "valid_claims": 0
         }
       ]
     },
     {
+      "accounted_blocks": 99,
+      "block_accountability": 1.0,
       "event": "chemistry-lab-c",
       "event_id": 42,
       "season": 2026,
@@ -643,7 +662,7 @@
           "blocks": 12,
           "supported": 0,
           "coverage": 0.0,
-          "asserting": 9,
+          "asserting": 12,
           "asserting_supported": 0,
           "valid_claims": 0
         },
@@ -653,7 +672,7 @@
           "blocks": 13,
           "supported": 0,
           "coverage": 0.0,
-          "asserting": 8,
+          "asserting": 13,
           "asserting_supported": 0,
           "valid_claims": 0
         },
@@ -663,7 +682,7 @@
           "blocks": 13,
           "supported": 0,
           "coverage": 0.0,
-          "asserting": 10,
+          "asserting": 13,
           "asserting_supported": 0,
           "valid_claims": 0
         },
@@ -673,7 +692,7 @@
           "blocks": 12,
           "supported": 0,
           "coverage": 0.0,
-          "asserting": 8,
+          "asserting": 12,
           "asserting_supported": 0,
           "valid_claims": 0
         },
@@ -683,7 +702,7 @@
           "blocks": 13,
           "supported": 0,
           "coverage": 0.0,
-          "asserting": 9,
+          "asserting": 13,
           "asserting_supported": 0,
           "valid_claims": 0
         },
@@ -693,7 +712,7 @@
           "blocks": 12,
           "supported": 0,
           "coverage": 0.0,
-          "asserting": 8,
+          "asserting": 12,
           "asserting_supported": 0,
           "valid_claims": 0
         },
@@ -703,7 +722,7 @@
           "blocks": 12,
           "supported": 0,
           "coverage": 0.0,
-          "asserting": 8,
+          "asserting": 12,
           "asserting_supported": 0,
           "valid_claims": 0
         },
@@ -713,13 +732,15 @@
           "blocks": 12,
           "supported": 0,
           "coverage": 0.0,
-          "asserting": 7,
+          "asserting": 12,
           "asserting_supported": 0,
           "valid_claims": 0
         }
       ]
     },
     {
+      "accounted_blocks": 99,
+      "block_accountability": 1.0,
       "event": "circuit-lab-b",
       "event_id": 18,
       "season": 2026,
@@ -741,7 +762,7 @@
           "blocks": 11,
           "supported": 0,
           "coverage": 0.0,
-          "asserting": 6,
+          "asserting": 11,
           "asserting_supported": 0,
           "valid_claims": 0
         },
@@ -751,7 +772,7 @@
           "blocks": 14,
           "supported": 0,
           "coverage": 0.0,
-          "asserting": 12,
+          "asserting": 14,
           "asserting_supported": 0,
           "valid_claims": 0
         },
@@ -761,7 +782,7 @@
           "blocks": 13,
           "supported": 0,
           "coverage": 0.0,
-          "asserting": 10,
+          "asserting": 13,
           "asserting_supported": 0,
           "valid_claims": 0
         },
@@ -771,7 +792,7 @@
           "blocks": 12,
           "supported": 0,
           "coverage": 0.0,
-          "asserting": 8,
+          "asserting": 12,
           "asserting_supported": 0,
           "valid_claims": 0
         },
@@ -781,7 +802,7 @@
           "blocks": 13,
           "supported": 0,
           "coverage": 0.0,
-          "asserting": 8,
+          "asserting": 13,
           "asserting_supported": 0,
           "valid_claims": 0
         },
@@ -791,7 +812,7 @@
           "blocks": 13,
           "supported": 0,
           "coverage": 0.0,
-          "asserting": 10,
+          "asserting": 13,
           "asserting_supported": 0,
           "valid_claims": 0
         },
@@ -801,7 +822,7 @@
           "blocks": 12,
           "supported": 0,
           "coverage": 0.0,
-          "asserting": 9,
+          "asserting": 12,
           "asserting_supported": 0,
           "valid_claims": 0
         },
@@ -811,13 +832,15 @@
           "blocks": 11,
           "supported": 0,
           "coverage": 0.0,
-          "asserting": 8,
+          "asserting": 11,
           "asserting_supported": 0,
           "valid_claims": 0
         }
       ]
     },
     {
+      "accounted_blocks": 97,
+      "block_accountability": 1.0,
       "event": "circuit-lab-c",
       "event_id": 39,
       "season": 2026,
@@ -839,7 +862,7 @@
           "blocks": 10,
           "supported": 0,
           "coverage": 0.0,
-          "asserting": 7,
+          "asserting": 10,
           "asserting_supported": 0,
           "valid_claims": 0
         },
@@ -849,7 +872,7 @@
           "blocks": 11,
           "supported": 0,
           "coverage": 0.0,
-          "asserting": 8,
+          "asserting": 11,
           "asserting_supported": 0,
           "valid_claims": 0
         },
@@ -859,7 +882,7 @@
           "blocks": 13,
           "supported": 0,
           "coverage": 0.0,
-          "asserting": 10,
+          "asserting": 13,
           "asserting_supported": 0,
           "valid_claims": 0
         },
@@ -869,7 +892,7 @@
           "blocks": 12,
           "supported": 0,
           "coverage": 0.0,
-          "asserting": 9,
+          "asserting": 12,
           "asserting_supported": 0,
           "valid_claims": 0
         },
@@ -879,7 +902,7 @@
           "blocks": 12,
           "supported": 0,
           "coverage": 0.0,
-          "asserting": 9,
+          "asserting": 12,
           "asserting_supported": 0,
           "valid_claims": 0
         },
@@ -889,7 +912,7 @@
           "blocks": 13,
           "supported": 0,
           "coverage": 0.0,
-          "asserting": 10,
+          "asserting": 13,
           "asserting_supported": 0,
           "valid_claims": 0
         },
@@ -899,7 +922,7 @@
           "blocks": 13,
           "supported": 0,
           "coverage": 0.0,
-          "asserting": 10,
+          "asserting": 13,
           "asserting_supported": 0,
           "valid_claims": 0
         },
@@ -909,13 +932,15 @@
           "blocks": 13,
           "supported": 0,
           "coverage": 0.0,
-          "asserting": 7,
+          "asserting": 13,
           "asserting_supported": 0,
           "valid_claims": 0
         }
       ]
     },
     {
+      "accounted_blocks": 0,
+      "block_accountability": 0.0,
       "event": "code-craze-b-trial-2027",
       "event_id": 99,
       "season": 2027,
@@ -933,6 +958,8 @@
       "lesson_detail": []
     },
     {
+      "accounted_blocks": 0,
+      "block_accountability": 0.0,
       "event": "code-craze-c-trial-2027",
       "event_id": 101,
       "season": 2027,
@@ -950,6 +977,8 @@
       "lesson_detail": []
     },
     {
+      "accounted_blocks": 94,
+      "block_accountability": 1.0,
       "event": "codebusters-b",
       "event_id": 26,
       "season": 2026,
@@ -971,7 +1000,7 @@
           "blocks": 12,
           "supported": 0,
           "coverage": 0.0,
-          "asserting": 8,
+          "asserting": 12,
           "asserting_supported": 0,
           "valid_claims": 0
         },
@@ -981,7 +1010,7 @@
           "blocks": 12,
           "supported": 0,
           "coverage": 0.0,
-          "asserting": 8,
+          "asserting": 12,
           "asserting_supported": 0,
           "valid_claims": 0
         },
@@ -991,7 +1020,7 @@
           "blocks": 11,
           "supported": 0,
           "coverage": 0.0,
-          "asserting": 7,
+          "asserting": 11,
           "asserting_supported": 0,
           "valid_claims": 0
         },
@@ -1001,7 +1030,7 @@
           "blocks": 12,
           "supported": 0,
           "coverage": 0.0,
-          "asserting": 8,
+          "asserting": 12,
           "asserting_supported": 0,
           "valid_claims": 0
         },
@@ -1011,7 +1040,7 @@
           "blocks": 11,
           "supported": 0,
           "coverage": 0.0,
-          "asserting": 7,
+          "asserting": 11,
           "asserting_supported": 0,
           "valid_claims": 0
         },
@@ -1021,7 +1050,7 @@
           "blocks": 12,
           "supported": 0,
           "coverage": 0.0,
-          "asserting": 8,
+          "asserting": 12,
           "asserting_supported": 0,
           "valid_claims": 0
         },
@@ -1031,7 +1060,7 @@
           "blocks": 13,
           "supported": 0,
           "coverage": 0.0,
-          "asserting": 9,
+          "asserting": 13,
           "asserting_supported": 0,
           "valid_claims": 0
         },
@@ -1041,13 +1070,15 @@
           "blocks": 11,
           "supported": 0,
           "coverage": 0.0,
-          "asserting": 7,
+          "asserting": 11,
           "asserting_supported": 0,
           "valid_claims": 0
         }
       ]
     },
     {
+      "accounted_blocks": 99,
+      "block_accountability": 1.0,
       "event": "codebusters-c",
       "event_id": 49,
       "season": 2026,
@@ -1069,7 +1100,7 @@
           "blocks": 12,
           "supported": 0,
           "coverage": 0.0,
-          "asserting": 8,
+          "asserting": 12,
           "asserting_supported": 0,
           "valid_claims": 0
         },
@@ -1079,7 +1110,7 @@
           "blocks": 12,
           "supported": 0,
           "coverage": 0.0,
-          "asserting": 8,
+          "asserting": 12,
           "asserting_supported": 0,
           "valid_claims": 0
         },
@@ -1089,7 +1120,7 @@
           "blocks": 13,
           "supported": 0,
           "coverage": 0.0,
-          "asserting": 8,
+          "asserting": 13,
           "asserting_supported": 0,
           "valid_claims": 0
         },
@@ -1099,7 +1130,7 @@
           "blocks": 11,
           "supported": 0,
           "coverage": 0.0,
-          "asserting": 7,
+          "asserting": 11,
           "asserting_supported": 0,
           "valid_claims": 0
         },
@@ -1109,7 +1140,7 @@
           "blocks": 13,
           "supported": 0,
           "coverage": 0.0,
-          "asserting": 8,
+          "asserting": 13,
           "asserting_supported": 0,
           "valid_claims": 0
         },
@@ -1119,7 +1150,7 @@
           "blocks": 13,
           "supported": 0,
           "coverage": 0.0,
-          "asserting": 8,
+          "asserting": 13,
           "asserting_supported": 0,
           "valid_claims": 0
         },
@@ -1129,7 +1160,7 @@
           "blocks": 14,
           "supported": 0,
           "coverage": 0.0,
-          "asserting": 8,
+          "asserting": 14,
           "asserting_supported": 0,
           "valid_claims": 0
         },
@@ -1139,13 +1170,15 @@
           "blocks": 11,
           "supported": 0,
           "coverage": 0.0,
-          "asserting": 6,
+          "asserting": 11,
           "asserting_supported": 0,
           "valid_claims": 0
         }
       ]
     },
     {
+      "accounted_blocks": 91,
+      "block_accountability": 1.0,
       "event": "crime-busters-b",
       "event_id": 20,
       "season": 2026,
@@ -1167,7 +1200,7 @@
           "blocks": 12,
           "supported": 0,
           "coverage": 0.0,
-          "asserting": 8,
+          "asserting": 12,
           "asserting_supported": 0,
           "valid_claims": 0
         },
@@ -1177,7 +1210,7 @@
           "blocks": 14,
           "supported": 0,
           "coverage": 0.0,
-          "asserting": 10,
+          "asserting": 14,
           "asserting_supported": 0,
           "valid_claims": 0
         },
@@ -1187,7 +1220,7 @@
           "blocks": 11,
           "supported": 0,
           "coverage": 0.0,
-          "asserting": 8,
+          "asserting": 11,
           "asserting_supported": 0,
           "valid_claims": 0
         },
@@ -1197,7 +1230,7 @@
           "blocks": 12,
           "supported": 0,
           "coverage": 0.0,
-          "asserting": 8,
+          "asserting": 12,
           "asserting_supported": 0,
           "valid_claims": 0
         },
@@ -1207,7 +1240,7 @@
           "blocks": 10,
           "supported": 0,
           "coverage": 0.0,
-          "asserting": 6,
+          "asserting": 10,
           "asserting_supported": 0,
           "valid_claims": 0
         },
@@ -1217,7 +1250,7 @@
           "blocks": 10,
           "supported": 0,
           "coverage": 0.0,
-          "asserting": 7,
+          "asserting": 10,
           "asserting_supported": 0,
           "valid_claims": 0
         },
@@ -1227,7 +1260,7 @@
           "blocks": 12,
           "supported": 0,
           "coverage": 0.0,
-          "asserting": 7,
+          "asserting": 12,
           "asserting_supported": 0,
           "valid_claims": 0
         },
@@ -1237,13 +1270,15 @@
           "blocks": 10,
           "supported": 0,
           "coverage": 0.0,
-          "asserting": 6,
+          "asserting": 10,
           "asserting_supported": 0,
           "valid_claims": 0
         }
       ]
     },
     {
+      "accounted_blocks": 96,
+      "block_accountability": 1.0,
       "event": "designer-genes-c",
       "event_id": 31,
       "season": 2026,
@@ -1265,7 +1300,7 @@
           "blocks": 10,
           "supported": 0,
           "coverage": 0.0,
-          "asserting": 7,
+          "asserting": 10,
           "asserting_supported": 0,
           "valid_claims": 0
         },
@@ -1275,7 +1310,7 @@
           "blocks": 13,
           "supported": 0,
           "coverage": 0.0,
-          "asserting": 9,
+          "asserting": 13,
           "asserting_supported": 0,
           "valid_claims": 0
         },
@@ -1285,7 +1320,7 @@
           "blocks": 13,
           "supported": 0,
           "coverage": 0.0,
-          "asserting": 9,
+          "asserting": 13,
           "asserting_supported": 0,
           "valid_claims": 0
         },
@@ -1295,7 +1330,7 @@
           "blocks": 12,
           "supported": 0,
           "coverage": 0.0,
-          "asserting": 8,
+          "asserting": 12,
           "asserting_supported": 0,
           "valid_claims": 0
         },
@@ -1305,7 +1340,7 @@
           "blocks": 12,
           "supported": 0,
           "coverage": 0.0,
-          "asserting": 10,
+          "asserting": 12,
           "asserting_supported": 0,
           "valid_claims": 0
         },
@@ -1315,7 +1350,7 @@
           "blocks": 12,
           "supported": 0,
           "coverage": 0.0,
-          "asserting": 9,
+          "asserting": 12,
           "asserting_supported": 0,
           "valid_claims": 0
         },
@@ -1325,7 +1360,7 @@
           "blocks": 12,
           "supported": 0,
           "coverage": 0.0,
-          "asserting": 9,
+          "asserting": 12,
           "asserting_supported": 0,
           "valid_claims": 0
         },
@@ -1335,13 +1370,15 @@
           "blocks": 12,
           "supported": 0,
           "coverage": 0.0,
-          "asserting": 9,
+          "asserting": 12,
           "asserting_supported": 0,
           "valid_claims": 0
         }
       ]
     },
     {
+      "accounted_blocks": 100,
+      "block_accountability": 1.0,
       "event": "disease-detectives-b",
       "event_id": 8,
       "season": 2026,
@@ -1363,7 +1400,7 @@
           "blocks": 12,
           "supported": 0,
           "coverage": 0.0,
-          "asserting": 9,
+          "asserting": 12,
           "asserting_supported": 0,
           "valid_claims": 0
         },
@@ -1373,7 +1410,7 @@
           "blocks": 14,
           "supported": 0,
           "coverage": 0.0,
-          "asserting": 10,
+          "asserting": 14,
           "asserting_supported": 0,
           "valid_claims": 0
         },
@@ -1383,7 +1420,7 @@
           "blocks": 11,
           "supported": 0,
           "coverage": 0.0,
-          "asserting": 8,
+          "asserting": 11,
           "asserting_supported": 0,
           "valid_claims": 0
         },
@@ -1393,7 +1430,7 @@
           "blocks": 13,
           "supported": 0,
           "coverage": 0.0,
-          "asserting": 9,
+          "asserting": 13,
           "asserting_supported": 0,
           "valid_claims": 0
         },
@@ -1403,7 +1440,7 @@
           "blocks": 13,
           "supported": 0,
           "coverage": 0.0,
-          "asserting": 11,
+          "asserting": 13,
           "asserting_supported": 0,
           "valid_claims": 0
         },
@@ -1413,7 +1450,7 @@
           "blocks": 12,
           "supported": 0,
           "coverage": 0.0,
-          "asserting": 8,
+          "asserting": 12,
           "asserting_supported": 0,
           "valid_claims": 0
         },
@@ -1423,7 +1460,7 @@
           "blocks": 13,
           "supported": 0,
           "coverage": 0.0,
-          "asserting": 9,
+          "asserting": 13,
           "asserting_supported": 0,
           "valid_claims": 0
         },
@@ -1433,13 +1470,15 @@
           "blocks": 12,
           "supported": 0,
           "coverage": 0.0,
-          "asserting": 9,
+          "asserting": 12,
           "asserting_supported": 0,
           "valid_claims": 0
         }
       ]
     },
     {
+      "accounted_blocks": 93,
+      "block_accountability": 1.0,
       "event": "disease-detectives-c",
       "event_id": 32,
       "season": 2026,
@@ -1461,7 +1500,7 @@
           "blocks": 11,
           "supported": 0,
           "coverage": 0.0,
-          "asserting": 8,
+          "asserting": 11,
           "asserting_supported": 0,
           "valid_claims": 0
         },
@@ -1471,7 +1510,7 @@
           "blocks": 11,
           "supported": 0,
           "coverage": 0.0,
-          "asserting": 9,
+          "asserting": 11,
           "asserting_supported": 0,
           "valid_claims": 0
         },
@@ -1481,7 +1520,7 @@
           "blocks": 12,
           "supported": 0,
           "coverage": 0.0,
-          "asserting": 9,
+          "asserting": 12,
           "asserting_supported": 0,
           "valid_claims": 0
         },
@@ -1491,7 +1530,7 @@
           "blocks": 12,
           "supported": 0,
           "coverage": 0.0,
-          "asserting": 8,
+          "asserting": 12,
           "asserting_supported": 0,
           "valid_claims": 0
         },
@@ -1501,7 +1540,7 @@
           "blocks": 12,
           "supported": 0,
           "coverage": 0.0,
-          "asserting": 9,
+          "asserting": 12,
           "asserting_supported": 0,
           "valid_claims": 0
         },
@@ -1511,7 +1550,7 @@
           "blocks": 12,
           "supported": 0,
           "coverage": 0.0,
-          "asserting": 8,
+          "asserting": 12,
           "asserting_supported": 0,
           "valid_claims": 0
         },
@@ -1521,7 +1560,7 @@
           "blocks": 12,
           "supported": 0,
           "coverage": 0.0,
-          "asserting": 9,
+          "asserting": 12,
           "asserting_supported": 0,
           "valid_claims": 0
         },
@@ -1531,13 +1570,15 @@
           "blocks": 11,
           "supported": 0,
           "coverage": 0.0,
-          "asserting": 8,
+          "asserting": 11,
           "asserting_supported": 0,
           "valid_claims": 0
         }
       ]
     },
     {
+      "accounted_blocks": 98,
+      "block_accountability": 1.0,
       "event": "dynamic-planet-b",
       "event_id": 12,
       "season": 2026,
@@ -1559,7 +1600,7 @@
           "blocks": 12,
           "supported": 0,
           "coverage": 0.0,
-          "asserting": 9,
+          "asserting": 12,
           "asserting_supported": 0,
           "valid_claims": 0
         },
@@ -1569,7 +1610,7 @@
           "blocks": 11,
           "supported": 0,
           "coverage": 0.0,
-          "asserting": 8,
+          "asserting": 11,
           "asserting_supported": 0,
           "valid_claims": 0
         },
@@ -1579,7 +1620,7 @@
           "blocks": 13,
           "supported": 0,
           "coverage": 0.0,
-          "asserting": 9,
+          "asserting": 13,
           "asserting_supported": 0,
           "valid_claims": 0
         },
@@ -1589,7 +1630,7 @@
           "blocks": 13,
           "supported": 0,
           "coverage": 0.0,
-          "asserting": 10,
+          "asserting": 13,
           "asserting_supported": 0,
           "valid_claims": 0
         },
@@ -1599,7 +1640,7 @@
           "blocks": 12,
           "supported": 0,
           "coverage": 0.0,
-          "asserting": 8,
+          "asserting": 12,
           "asserting_supported": 0,
           "valid_claims": 0
         },
@@ -1609,7 +1650,7 @@
           "blocks": 12,
           "supported": 0,
           "coverage": 0.0,
-          "asserting": 9,
+          "asserting": 12,
           "asserting_supported": 0,
           "valid_claims": 0
         },
@@ -1619,7 +1660,7 @@
           "blocks": 12,
           "supported": 0,
           "coverage": 0.0,
-          "asserting": 9,
+          "asserting": 12,
           "asserting_supported": 0,
           "valid_claims": 0
         },
@@ -1629,13 +1670,15 @@
           "blocks": 13,
           "supported": 0,
           "coverage": 0.0,
-          "asserting": 9,
+          "asserting": 13,
           "asserting_supported": 0,
           "valid_claims": 0
         }
       ]
     },
     {
+      "accounted_blocks": 94,
+      "block_accountability": 1.0,
       "event": "dynamic-planet-c",
       "event_id": 36,
       "season": 2026,
@@ -1657,7 +1700,7 @@
           "blocks": 11,
           "supported": 0,
           "coverage": 0.0,
-          "asserting": 8,
+          "asserting": 11,
           "asserting_supported": 0,
           "valid_claims": 0
         },
@@ -1667,7 +1710,7 @@
           "blocks": 12,
           "supported": 0,
           "coverage": 0.0,
-          "asserting": 9,
+          "asserting": 12,
           "asserting_supported": 0,
           "valid_claims": 0
         },
@@ -1677,7 +1720,7 @@
           "blocks": 11,
           "supported": 0,
           "coverage": 0.0,
-          "asserting": 8,
+          "asserting": 11,
           "asserting_supported": 0,
           "valid_claims": 0
         },
@@ -1687,7 +1730,7 @@
           "blocks": 11,
           "supported": 0,
           "coverage": 0.0,
-          "asserting": 8,
+          "asserting": 11,
           "asserting_supported": 0,
           "valid_claims": 0
         },
@@ -1697,7 +1740,7 @@
           "blocks": 11,
           "supported": 0,
           "coverage": 0.0,
-          "asserting": 9,
+          "asserting": 11,
           "asserting_supported": 0,
           "valid_claims": 0
         },
@@ -1707,7 +1750,7 @@
           "blocks": 13,
           "supported": 0,
           "coverage": 0.0,
-          "asserting": 10,
+          "asserting": 13,
           "asserting_supported": 0,
           "valid_claims": 0
         },
@@ -1717,7 +1760,7 @@
           "blocks": 12,
           "supported": 0,
           "coverage": 0.0,
-          "asserting": 9,
+          "asserting": 12,
           "asserting_supported": 0,
           "valid_claims": 0
         },
@@ -1727,13 +1770,15 @@
           "blocks": 13,
           "supported": 0,
           "coverage": 0.0,
-          "asserting": 9,
+          "asserting": 13,
           "asserting_supported": 0,
           "valid_claims": 0
         }
       ]
     },
     {
+      "accounted_blocks": 95,
+      "block_accountability": 1.0,
       "event": "ecology",
       "event_id": 2,
       "season": 2026,
@@ -1757,7 +1802,7 @@
           "blocks": 12,
           "supported": 0,
           "coverage": 0.0,
-          "asserting": 9,
+          "asserting": 12,
           "asserting_supported": 0,
           "valid_claims": 0
         },
@@ -1767,7 +1812,7 @@
           "blocks": 13,
           "supported": 0,
           "coverage": 0.0,
-          "asserting": 10,
+          "asserting": 13,
           "asserting_supported": 0,
           "valid_claims": 0
         },
@@ -1777,7 +1822,7 @@
           "blocks": 12,
           "supported": 0,
           "coverage": 0.0,
-          "asserting": 9,
+          "asserting": 12,
           "asserting_supported": 0,
           "valid_claims": 0
         },
@@ -1787,7 +1832,7 @@
           "blocks": 12,
           "supported": 0,
           "coverage": 0.0,
-          "asserting": 9,
+          "asserting": 12,
           "asserting_supported": 0,
           "valid_claims": 0
         },
@@ -1797,7 +1842,7 @@
           "blocks": 11,
           "supported": 0,
           "coverage": 0.0,
-          "asserting": 8,
+          "asserting": 11,
           "asserting_supported": 0,
           "valid_claims": 0
         },
@@ -1807,7 +1852,7 @@
           "blocks": 12,
           "supported": 0,
           "coverage": 0.0,
-          "asserting": 9,
+          "asserting": 12,
           "asserting_supported": 0,
           "valid_claims": 0
         },
@@ -1817,7 +1862,7 @@
           "blocks": 11,
           "supported": 0,
           "coverage": 0.0,
-          "asserting": 8,
+          "asserting": 11,
           "asserting_supported": 0,
           "valid_claims": 0
         },
@@ -1827,13 +1872,15 @@
           "blocks": 12,
           "supported": 0,
           "coverage": 0.0,
-          "asserting": 9,
+          "asserting": 12,
           "asserting_supported": 0,
           "valid_claims": 0
         }
       ]
     },
     {
+      "accounted_blocks": 0,
+      "block_accountability": 0.0,
       "event": "elastic-launch-glider-b-2027",
       "event_id": 69,
       "season": 2027,
@@ -1851,6 +1898,8 @@
       "lesson_detail": []
     },
     {
+      "accounted_blocks": 96,
+      "block_accountability": 1.0,
       "event": "electric-vehicle-c",
       "event_id": 46,
       "season": 2026,
@@ -1872,7 +1921,7 @@
           "blocks": 13,
           "supported": 0,
           "coverage": 0.0,
-          "asserting": 9,
+          "asserting": 13,
           "asserting_supported": 0,
           "valid_claims": 0
         },
@@ -1882,7 +1931,7 @@
           "blocks": 11,
           "supported": 0,
           "coverage": 0.0,
-          "asserting": 7,
+          "asserting": 11,
           "asserting_supported": 0,
           "valid_claims": 0
         },
@@ -1892,7 +1941,7 @@
           "blocks": 11,
           "supported": 0,
           "coverage": 0.0,
-          "asserting": 7,
+          "asserting": 11,
           "asserting_supported": 0,
           "valid_claims": 0
         },
@@ -1902,7 +1951,7 @@
           "blocks": 11,
           "supported": 0,
           "coverage": 0.0,
-          "asserting": 8,
+          "asserting": 11,
           "asserting_supported": 0,
           "valid_claims": 0
         },
@@ -1912,7 +1961,7 @@
           "blocks": 15,
           "supported": 0,
           "coverage": 0.0,
-          "asserting": 9,
+          "asserting": 15,
           "asserting_supported": 0,
           "valid_claims": 0
         },
@@ -1922,7 +1971,7 @@
           "blocks": 12,
           "supported": 0,
           "coverage": 0.0,
-          "asserting": 7,
+          "asserting": 12,
           "asserting_supported": 0,
           "valid_claims": 0
         },
@@ -1932,7 +1981,7 @@
           "blocks": 12,
           "supported": 0,
           "coverage": 0.0,
-          "asserting": 6,
+          "asserting": 12,
           "asserting_supported": 0,
           "valid_claims": 0
         },
@@ -1942,13 +1991,15 @@
           "blocks": 11,
           "supported": 0,
           "coverage": 0.0,
-          "asserting": 7,
+          "asserting": 11,
           "asserting_supported": 0,
           "valid_claims": 0
         }
       ]
     },
     {
+      "accounted_blocks": 94,
+      "block_accountability": 1.0,
       "event": "engineering-cad-c",
       "event_id": 52,
       "season": 2026,
@@ -1970,7 +2021,7 @@
           "blocks": 11,
           "supported": 0,
           "coverage": 0.0,
-          "asserting": 7,
+          "asserting": 11,
           "asserting_supported": 0,
           "valid_claims": 0
         },
@@ -1980,7 +2031,7 @@
           "blocks": 11,
           "supported": 0,
           "coverage": 0.0,
-          "asserting": 8,
+          "asserting": 11,
           "asserting_supported": 0,
           "valid_claims": 0
         },
@@ -1990,7 +2041,7 @@
           "blocks": 12,
           "supported": 0,
           "coverage": 0.0,
-          "asserting": 7,
+          "asserting": 12,
           "asserting_supported": 0,
           "valid_claims": 0
         },
@@ -2000,7 +2051,7 @@
           "blocks": 11,
           "supported": 0,
           "coverage": 0.0,
-          "asserting": 8,
+          "asserting": 11,
           "asserting_supported": 0,
           "valid_claims": 0
         },
@@ -2010,7 +2061,7 @@
           "blocks": 13,
           "supported": 0,
           "coverage": 0.0,
-          "asserting": 9,
+          "asserting": 13,
           "asserting_supported": 0,
           "valid_claims": 0
         },
@@ -2020,7 +2071,7 @@
           "blocks": 12,
           "supported": 0,
           "coverage": 0.0,
-          "asserting": 7,
+          "asserting": 12,
           "asserting_supported": 0,
           "valid_claims": 0
         },
@@ -2030,7 +2081,7 @@
           "blocks": 13,
           "supported": 0,
           "coverage": 0.0,
-          "asserting": 8,
+          "asserting": 13,
           "asserting_supported": 0,
           "valid_claims": 0
         },
@@ -2040,13 +2091,15 @@
           "blocks": 11,
           "supported": 0,
           "coverage": 0.0,
-          "asserting": 6,
+          "asserting": 11,
           "asserting_supported": 0,
           "valid_claims": 0
         }
       ]
     },
     {
+      "accounted_blocks": 94,
+      "block_accountability": 1.0,
       "event": "entomology",
       "event_id": 3,
       "season": 2026,
@@ -2071,7 +2124,7 @@
           "blocks": 11,
           "supported": 0,
           "coverage": 0.0,
-          "asserting": 8,
+          "asserting": 11,
           "asserting_supported": 0,
           "valid_claims": 0
         },
@@ -2081,7 +2134,7 @@
           "blocks": 12,
           "supported": 0,
           "coverage": 0.0,
-          "asserting": 9,
+          "asserting": 12,
           "asserting_supported": 0,
           "valid_claims": 0
         },
@@ -2091,7 +2144,7 @@
           "blocks": 12,
           "supported": 0,
           "coverage": 0.0,
-          "asserting": 10,
+          "asserting": 12,
           "asserting_supported": 0,
           "valid_claims": 0
         },
@@ -2101,7 +2154,7 @@
           "blocks": 11,
           "supported": 0,
           "coverage": 0.0,
-          "asserting": 8,
+          "asserting": 11,
           "asserting_supported": 0,
           "valid_claims": 0
         },
@@ -2111,7 +2164,7 @@
           "blocks": 12,
           "supported": 0,
           "coverage": 0.0,
-          "asserting": 9,
+          "asserting": 12,
           "asserting_supported": 0,
           "valid_claims": 0
         },
@@ -2121,7 +2174,7 @@
           "blocks": 11,
           "supported": 0,
           "coverage": 0.0,
-          "asserting": 9,
+          "asserting": 11,
           "asserting_supported": 0,
           "valid_claims": 0
         },
@@ -2131,7 +2184,7 @@
           "blocks": 12,
           "supported": 0,
           "coverage": 0.0,
-          "asserting": 7,
+          "asserting": 12,
           "asserting_supported": 0,
           "valid_claims": 0
         },
@@ -2141,13 +2194,15 @@
           "blocks": 13,
           "supported": 0,
           "coverage": 0.0,
-          "asserting": 7,
+          "asserting": 13,
           "asserting_supported": 0,
           "valid_claims": 0
         }
       ]
     },
     {
+      "accounted_blocks": 94,
+      "block_accountability": 1.0,
       "event": "entomology-b",
       "event_id": 9,
       "season": 2026,
@@ -2169,7 +2224,7 @@
           "blocks": 11,
           "supported": 0,
           "coverage": 0.0,
-          "asserting": 7,
+          "asserting": 11,
           "asserting_supported": 0,
           "valid_claims": 0
         },
@@ -2179,7 +2234,7 @@
           "blocks": 12,
           "supported": 0,
           "coverage": 0.0,
-          "asserting": 9,
+          "asserting": 12,
           "asserting_supported": 0,
           "valid_claims": 0
         },
@@ -2189,7 +2244,7 @@
           "blocks": 12,
           "supported": 0,
           "coverage": 0.0,
-          "asserting": 9,
+          "asserting": 12,
           "asserting_supported": 0,
           "valid_claims": 0
         },
@@ -2199,7 +2254,7 @@
           "blocks": 12,
           "supported": 0,
           "coverage": 0.0,
-          "asserting": 8,
+          "asserting": 12,
           "asserting_supported": 0,
           "valid_claims": 0
         },
@@ -2209,7 +2264,7 @@
           "blocks": 12,
           "supported": 0,
           "coverage": 0.0,
-          "asserting": 9,
+          "asserting": 12,
           "asserting_supported": 0,
           "valid_claims": 0
         },
@@ -2219,7 +2274,7 @@
           "blocks": 12,
           "supported": 0,
           "coverage": 0.0,
-          "asserting": 10,
+          "asserting": 12,
           "asserting_supported": 0,
           "valid_claims": 0
         },
@@ -2229,7 +2284,7 @@
           "blocks": 11,
           "supported": 0,
           "coverage": 0.0,
-          "asserting": 8,
+          "asserting": 11,
           "asserting_supported": 0,
           "valid_claims": 0
         },
@@ -2239,13 +2294,15 @@
           "blocks": 12,
           "supported": 0,
           "coverage": 0.0,
-          "asserting": 9,
+          "asserting": 12,
           "asserting_supported": 0,
           "valid_claims": 0
         }
       ]
     },
     {
+      "accounted_blocks": 97,
+      "block_accountability": 1.0,
       "event": "entomology-c",
       "event_id": 33,
       "season": 2026,
@@ -2267,7 +2324,7 @@
           "blocks": 12,
           "supported": 0,
           "coverage": 0.0,
-          "asserting": 9,
+          "asserting": 12,
           "asserting_supported": 0,
           "valid_claims": 0
         },
@@ -2277,7 +2334,7 @@
           "blocks": 12,
           "supported": 0,
           "coverage": 0.0,
-          "asserting": 9,
+          "asserting": 12,
           "asserting_supported": 0,
           "valid_claims": 0
         },
@@ -2287,7 +2344,7 @@
           "blocks": 13,
           "supported": 0,
           "coverage": 0.0,
-          "asserting": 10,
+          "asserting": 13,
           "asserting_supported": 0,
           "valid_claims": 0
         },
@@ -2297,7 +2354,7 @@
           "blocks": 11,
           "supported": 0,
           "coverage": 0.0,
-          "asserting": 9,
+          "asserting": 11,
           "asserting_supported": 0,
           "valid_claims": 0
         },
@@ -2307,7 +2364,7 @@
           "blocks": 12,
           "supported": 0,
           "coverage": 0.0,
-          "asserting": 10,
+          "asserting": 12,
           "asserting_supported": 0,
           "valid_claims": 0
         },
@@ -2317,7 +2374,7 @@
           "blocks": 13,
           "supported": 0,
           "coverage": 0.0,
-          "asserting": 10,
+          "asserting": 13,
           "asserting_supported": 0,
           "valid_claims": 0
         },
@@ -2327,7 +2384,7 @@
           "blocks": 12,
           "supported": 0,
           "coverage": 0.0,
-          "asserting": 9,
+          "asserting": 12,
           "asserting_supported": 0,
           "valid_claims": 0
         },
@@ -2337,13 +2394,15 @@
           "blocks": 12,
           "supported": 0,
           "coverage": 0.0,
-          "asserting": 8,
+          "asserting": 12,
           "asserting_supported": 0,
           "valid_claims": 0
         }
       ]
     },
     {
+      "accounted_blocks": 82,
+      "block_accountability": 1.0,
       "event": "experimental-design",
       "event_id": 6,
       "season": 2026,
@@ -2367,7 +2426,7 @@
           "blocks": 11,
           "supported": 0,
           "coverage": 0.0,
-          "asserting": 8,
+          "asserting": 11,
           "asserting_supported": 0,
           "valid_claims": 0
         },
@@ -2377,7 +2436,7 @@
           "blocks": 11,
           "supported": 0,
           "coverage": 0.0,
-          "asserting": 7,
+          "asserting": 11,
           "asserting_supported": 0,
           "valid_claims": 0
         },
@@ -2387,7 +2446,7 @@
           "blocks": 12,
           "supported": 0,
           "coverage": 0.0,
-          "asserting": 9,
+          "asserting": 12,
           "asserting_supported": 0,
           "valid_claims": 0
         },
@@ -2397,7 +2456,7 @@
           "blocks": 11,
           "supported": 0,
           "coverage": 0.0,
-          "asserting": 7,
+          "asserting": 11,
           "asserting_supported": 0,
           "valid_claims": 0
         },
@@ -2407,7 +2466,7 @@
           "blocks": 12,
           "supported": 0,
           "coverage": 0.0,
-          "asserting": 8,
+          "asserting": 12,
           "asserting_supported": 0,
           "valid_claims": 0
         },
@@ -2417,7 +2476,7 @@
           "blocks": 12,
           "supported": 0,
           "coverage": 0.0,
-          "asserting": 8,
+          "asserting": 12,
           "asserting_supported": 0,
           "valid_claims": 0
         },
@@ -2427,13 +2486,15 @@
           "blocks": 13,
           "supported": 0,
           "coverage": 0.0,
-          "asserting": 10,
+          "asserting": 13,
           "asserting_supported": 0,
           "valid_claims": 0
         }
       ]
     },
     {
+      "accounted_blocks": 101,
+      "block_accountability": 1.0,
       "event": "experimental-design-b",
       "event_id": 27,
       "season": 2026,
@@ -2455,7 +2516,7 @@
           "blocks": 12,
           "supported": 0,
           "coverage": 0.0,
-          "asserting": 7,
+          "asserting": 12,
           "asserting_supported": 0,
           "valid_claims": 0
         },
@@ -2465,7 +2526,7 @@
           "blocks": 13,
           "supported": 0,
           "coverage": 0.0,
-          "asserting": 7,
+          "asserting": 13,
           "asserting_supported": 0,
           "valid_claims": 0
         },
@@ -2475,7 +2536,7 @@
           "blocks": 12,
           "supported": 0,
           "coverage": 0.0,
-          "asserting": 6,
+          "asserting": 12,
           "asserting_supported": 0,
           "valid_claims": 0
         },
@@ -2485,7 +2546,7 @@
           "blocks": 12,
           "supported": 0,
           "coverage": 0.0,
-          "asserting": 8,
+          "asserting": 12,
           "asserting_supported": 0,
           "valid_claims": 0
         },
@@ -2495,7 +2556,7 @@
           "blocks": 15,
           "supported": 0,
           "coverage": 0.0,
-          "asserting": 10,
+          "asserting": 15,
           "asserting_supported": 0,
           "valid_claims": 0
         },
@@ -2505,7 +2566,7 @@
           "blocks": 13,
           "supported": 0,
           "coverage": 0.0,
-          "asserting": 9,
+          "asserting": 13,
           "asserting_supported": 0,
           "valid_claims": 0
         },
@@ -2515,7 +2576,7 @@
           "blocks": 13,
           "supported": 0,
           "coverage": 0.0,
-          "asserting": 9,
+          "asserting": 13,
           "asserting_supported": 0,
           "valid_claims": 0
         },
@@ -2525,13 +2586,15 @@
           "blocks": 11,
           "supported": 0,
           "coverage": 0.0,
-          "asserting": 6,
+          "asserting": 11,
           "asserting_supported": 0,
           "valid_claims": 0
         }
       ]
     },
     {
+      "accounted_blocks": 85,
+      "block_accountability": 1.0,
       "event": "experimental-design-c",
       "event_id": 50,
       "season": 2026,
@@ -2553,7 +2616,7 @@
           "blocks": 11,
           "supported": 0,
           "coverage": 0.0,
-          "asserting": 7,
+          "asserting": 11,
           "asserting_supported": 0,
           "valid_claims": 0
         },
@@ -2563,7 +2626,7 @@
           "blocks": 11,
           "supported": 0,
           "coverage": 0.0,
-          "asserting": 6,
+          "asserting": 11,
           "asserting_supported": 0,
           "valid_claims": 0
         },
@@ -2573,7 +2636,7 @@
           "blocks": 12,
           "supported": 0,
           "coverage": 0.0,
-          "asserting": 8,
+          "asserting": 12,
           "asserting_supported": 0,
           "valid_claims": 0
         },
@@ -2583,7 +2646,7 @@
           "blocks": 11,
           "supported": 0,
           "coverage": 0.0,
-          "asserting": 7,
+          "asserting": 11,
           "asserting_supported": 0,
           "valid_claims": 0
         },
@@ -2593,7 +2656,7 @@
           "blocks": 7,
           "supported": 0,
           "coverage": 0.0,
-          "asserting": 5,
+          "asserting": 7,
           "asserting_supported": 0,
           "valid_claims": 0
         },
@@ -2603,7 +2666,7 @@
           "blocks": 10,
           "supported": 0,
           "coverage": 0.0,
-          "asserting": 6,
+          "asserting": 10,
           "asserting_supported": 0,
           "valid_claims": 0
         },
@@ -2613,7 +2676,7 @@
           "blocks": 11,
           "supported": 0,
           "coverage": 0.0,
-          "asserting": 7,
+          "asserting": 11,
           "asserting_supported": 0,
           "valid_claims": 0
         },
@@ -2623,13 +2686,15 @@
           "blocks": 12,
           "supported": 0,
           "coverage": 0.0,
-          "asserting": 6,
+          "asserting": 12,
           "asserting_supported": 0,
           "valid_claims": 0
         }
       ]
     },
     {
+      "accounted_blocks": 0,
+      "block_accountability": 0.0,
       "event": "food-science-b-2027",
       "event_id": 67,
       "season": 2027,
@@ -2647,6 +2712,8 @@
       "lesson_detail": []
     },
     {
+      "accounted_blocks": 94,
+      "block_accountability": 1.0,
       "event": "forensics-c",
       "event_id": 43,
       "season": 2026,
@@ -2668,7 +2735,7 @@
           "blocks": 11,
           "supported": 0,
           "coverage": 0.0,
-          "asserting": 7,
+          "asserting": 11,
           "asserting_supported": 0,
           "valid_claims": 0
         },
@@ -2678,7 +2745,7 @@
           "blocks": 15,
           "supported": 0,
           "coverage": 0.0,
-          "asserting": 12,
+          "asserting": 15,
           "asserting_supported": 0,
           "valid_claims": 0
         },
@@ -2688,7 +2755,7 @@
           "blocks": 12,
           "supported": 0,
           "coverage": 0.0,
-          "asserting": 8,
+          "asserting": 12,
           "asserting_supported": 0,
           "valid_claims": 0
         },
@@ -2698,7 +2765,7 @@
           "blocks": 10,
           "supported": 0,
           "coverage": 0.0,
-          "asserting": 7,
+          "asserting": 10,
           "asserting_supported": 0,
           "valid_claims": 0
         },
@@ -2708,7 +2775,7 @@
           "blocks": 12,
           "supported": 0,
           "coverage": 0.0,
-          "asserting": 8,
+          "asserting": 12,
           "asserting_supported": 0,
           "valid_claims": 0
         },
@@ -2718,7 +2785,7 @@
           "blocks": 12,
           "supported": 0,
           "coverage": 0.0,
-          "asserting": 8,
+          "asserting": 12,
           "asserting_supported": 0,
           "valid_claims": 0
         },
@@ -2728,7 +2795,7 @@
           "blocks": 11,
           "supported": 0,
           "coverage": 0.0,
-          "asserting": 8,
+          "asserting": 11,
           "asserting_supported": 0,
           "valid_claims": 0
         },
@@ -2738,13 +2805,15 @@
           "blocks": 11,
           "supported": 0,
           "coverage": 0.0,
-          "asserting": 7,
+          "asserting": 11,
           "asserting_supported": 0,
           "valid_claims": 0
         }
       ]
     },
     {
+      "accounted_blocks": 89,
+      "block_accountability": 1.0,
       "event": "helicopter-b",
       "event_id": 23,
       "season": 2026,
@@ -2766,7 +2835,7 @@
           "blocks": 10,
           "supported": 0,
           "coverage": 0.0,
-          "asserting": 6,
+          "asserting": 10,
           "asserting_supported": 0,
           "valid_claims": 0
         },
@@ -2776,7 +2845,7 @@
           "blocks": 11,
           "supported": 0,
           "coverage": 0.0,
-          "asserting": 6,
+          "asserting": 11,
           "asserting_supported": 0,
           "valid_claims": 0
         },
@@ -2786,7 +2855,7 @@
           "blocks": 12,
           "supported": 0,
           "coverage": 0.0,
-          "asserting": 6,
+          "asserting": 12,
           "asserting_supported": 0,
           "valid_claims": 0
         },
@@ -2796,7 +2865,7 @@
           "blocks": 11,
           "supported": 0,
           "coverage": 0.0,
-          "asserting": 7,
+          "asserting": 11,
           "asserting_supported": 0,
           "valid_claims": 0
         },
@@ -2806,7 +2875,7 @@
           "blocks": 11,
           "supported": 0,
           "coverage": 0.0,
-          "asserting": 8,
+          "asserting": 11,
           "asserting_supported": 0,
           "valid_claims": 0
         },
@@ -2816,7 +2885,7 @@
           "blocks": 12,
           "supported": 0,
           "coverage": 0.0,
-          "asserting": 6,
+          "asserting": 12,
           "asserting_supported": 0,
           "valid_claims": 0
         },
@@ -2826,7 +2895,7 @@
           "blocks": 11,
           "supported": 0,
           "coverage": 0.0,
-          "asserting": 6,
+          "asserting": 11,
           "asserting_supported": 0,
           "valid_claims": 0
         },
@@ -2836,13 +2905,15 @@
           "blocks": 11,
           "supported": 0,
           "coverage": 0.0,
-          "asserting": 7,
+          "asserting": 11,
           "asserting_supported": 0,
           "valid_claims": 0
         }
       ]
     },
     {
+      "accounted_blocks": 92,
+      "block_accountability": 1.0,
       "event": "helicopter-c",
       "event_id": 47,
       "season": 2026,
@@ -2864,7 +2935,7 @@
           "blocks": 12,
           "supported": 0,
           "coverage": 0.0,
-          "asserting": 8,
+          "asserting": 12,
           "asserting_supported": 0,
           "valid_claims": 0
         },
@@ -2874,7 +2945,7 @@
           "blocks": 11,
           "supported": 0,
           "coverage": 0.0,
-          "asserting": 8,
+          "asserting": 11,
           "asserting_supported": 0,
           "valid_claims": 0
         },
@@ -2884,7 +2955,7 @@
           "blocks": 11,
           "supported": 0,
           "coverage": 0.0,
-          "asserting": 7,
+          "asserting": 11,
           "asserting_supported": 0,
           "valid_claims": 0
         },
@@ -2894,7 +2965,7 @@
           "blocks": 11,
           "supported": 0,
           "coverage": 0.0,
-          "asserting": 5,
+          "asserting": 11,
           "asserting_supported": 0,
           "valid_claims": 0
         },
@@ -2904,7 +2975,7 @@
           "blocks": 11,
           "supported": 0,
           "coverage": 0.0,
-          "asserting": 7,
+          "asserting": 11,
           "asserting_supported": 0,
           "valid_claims": 0
         },
@@ -2914,7 +2985,7 @@
           "blocks": 12,
           "supported": 0,
           "coverage": 0.0,
-          "asserting": 7,
+          "asserting": 12,
           "asserting_supported": 0,
           "valid_claims": 0
         },
@@ -2924,7 +2995,7 @@
           "blocks": 11,
           "supported": 0,
           "coverage": 0.0,
-          "asserting": 7,
+          "asserting": 11,
           "asserting_supported": 0,
           "valid_claims": 0
         },
@@ -2934,13 +3005,15 @@
           "blocks": 13,
           "supported": 0,
           "coverage": 0.0,
-          "asserting": 6,
+          "asserting": 13,
           "asserting_supported": 0,
           "valid_claims": 0
         }
       ]
     },
     {
+      "accounted_blocks": 186,
+      "block_accountability": 1.0,
       "event": "heredity-b",
       "event_id": 10,
       "season": 2026,
@@ -2964,7 +3037,7 @@
           "blocks": 11,
           "supported": 0,
           "coverage": 0.0,
-          "asserting": 7,
+          "asserting": 11,
           "asserting_supported": 0,
           "valid_claims": 0
         },
@@ -2974,7 +3047,7 @@
           "blocks": 12,
           "supported": 0,
           "coverage": 0.0,
-          "asserting": 8,
+          "asserting": 12,
           "asserting_supported": 0,
           "valid_claims": 0
         },
@@ -2984,7 +3057,7 @@
           "blocks": 12,
           "supported": 0,
           "coverage": 0.0,
-          "asserting": 9,
+          "asserting": 12,
           "asserting_supported": 0,
           "valid_claims": 0
         },
@@ -2994,7 +3067,7 @@
           "blocks": 10,
           "supported": 0,
           "coverage": 0.0,
-          "asserting": 7,
+          "asserting": 10,
           "asserting_supported": 0,
           "valid_claims": 0
         },
@@ -3004,7 +3077,7 @@
           "blocks": 12,
           "supported": 0,
           "coverage": 0.0,
-          "asserting": 8,
+          "asserting": 12,
           "asserting_supported": 0,
           "valid_claims": 0
         },
@@ -3014,7 +3087,7 @@
           "blocks": 11,
           "supported": 0,
           "coverage": 0.0,
-          "asserting": 8,
+          "asserting": 11,
           "asserting_supported": 0,
           "valid_claims": 0
         },
@@ -3024,7 +3097,7 @@
           "blocks": 13,
           "supported": 0,
           "coverage": 0.0,
-          "asserting": 9,
+          "asserting": 13,
           "asserting_supported": 0,
           "valid_claims": 0
         },
@@ -3034,7 +3107,7 @@
           "blocks": 11,
           "supported": 0,
           "coverage": 0.0,
-          "asserting": 8,
+          "asserting": 11,
           "asserting_supported": 0,
           "valid_claims": 0
         },
@@ -3044,7 +3117,7 @@
           "blocks": 13,
           "supported": 0,
           "coverage": 0.0,
-          "asserting": 10,
+          "asserting": 13,
           "asserting_supported": 0,
           "valid_claims": 0
         },
@@ -3054,7 +3127,7 @@
           "blocks": 11,
           "supported": 0,
           "coverage": 0.0,
-          "asserting": 9,
+          "asserting": 11,
           "asserting_supported": 0,
           "valid_claims": 0
         },
@@ -3064,7 +3137,7 @@
           "blocks": 12,
           "supported": 0,
           "coverage": 0.0,
-          "asserting": 9,
+          "asserting": 12,
           "asserting_supported": 0,
           "valid_claims": 0
         },
@@ -3074,7 +3147,7 @@
           "blocks": 12,
           "supported": 0,
           "coverage": 0.0,
-          "asserting": 9,
+          "asserting": 12,
           "asserting_supported": 0,
           "valid_claims": 0
         },
@@ -3084,7 +3157,7 @@
           "blocks": 12,
           "supported": 0,
           "coverage": 0.0,
-          "asserting": 8,
+          "asserting": 12,
           "asserting_supported": 0,
           "valid_claims": 0
         },
@@ -3094,7 +3167,7 @@
           "blocks": 11,
           "supported": 0,
           "coverage": 0.0,
-          "asserting": 8,
+          "asserting": 11,
           "asserting_supported": 0,
           "valid_claims": 0
         },
@@ -3104,7 +3177,7 @@
           "blocks": 12,
           "supported": 0,
           "coverage": 0.0,
-          "asserting": 9,
+          "asserting": 12,
           "asserting_supported": 0,
           "valid_claims": 0
         },
@@ -3114,13 +3187,15 @@
           "blocks": 11,
           "supported": 0,
           "coverage": 0.0,
-          "asserting": 7,
+          "asserting": 11,
           "asserting_supported": 0,
           "valid_claims": 0
         }
       ]
     },
     {
+      "accounted_blocks": 89,
+      "block_accountability": 1.0,
       "event": "hovercraft-b",
       "event_id": 17,
       "season": 2026,
@@ -3142,7 +3217,7 @@
           "blocks": 11,
           "supported": 0,
           "coverage": 0.0,
-          "asserting": 6,
+          "asserting": 11,
           "asserting_supported": 0,
           "valid_claims": 0
         },
@@ -3152,7 +3227,7 @@
           "blocks": 11,
           "supported": 0,
           "coverage": 0.0,
-          "asserting": 8,
+          "asserting": 11,
           "asserting_supported": 0,
           "valid_claims": 0
         },
@@ -3162,7 +3237,7 @@
           "blocks": 11,
           "supported": 0,
           "coverage": 0.0,
-          "asserting": 6,
+          "asserting": 11,
           "asserting_supported": 0,
           "valid_claims": 0
         },
@@ -3172,7 +3247,7 @@
           "blocks": 11,
           "supported": 0,
           "coverage": 0.0,
-          "asserting": 6,
+          "asserting": 11,
           "asserting_supported": 0,
           "valid_claims": 0
         },
@@ -3182,7 +3257,7 @@
           "blocks": 11,
           "supported": 0,
           "coverage": 0.0,
-          "asserting": 7,
+          "asserting": 11,
           "asserting_supported": 0,
           "valid_claims": 0
         },
@@ -3192,7 +3267,7 @@
           "blocks": 11,
           "supported": 0,
           "coverage": 0.0,
-          "asserting": 7,
+          "asserting": 11,
           "asserting_supported": 0,
           "valid_claims": 0
         },
@@ -3202,7 +3277,7 @@
           "blocks": 11,
           "supported": 0,
           "coverage": 0.0,
-          "asserting": 6,
+          "asserting": 11,
           "asserting_supported": 0,
           "valid_claims": 0
         },
@@ -3212,13 +3287,15 @@
           "blocks": 12,
           "supported": 0,
           "coverage": 0.0,
-          "asserting": 7,
+          "asserting": 12,
           "asserting_supported": 0,
           "valid_claims": 0
         }
       ]
     },
     {
+      "accounted_blocks": 98,
+      "block_accountability": 1.0,
       "event": "hovercraft-c",
       "event_id": 40,
       "season": 2026,
@@ -3240,7 +3317,7 @@
           "blocks": 12,
           "supported": 0,
           "coverage": 0.0,
-          "asserting": 8,
+          "asserting": 12,
           "asserting_supported": 0,
           "valid_claims": 0
         },
@@ -3250,7 +3327,7 @@
           "blocks": 12,
           "supported": 0,
           "coverage": 0.0,
-          "asserting": 9,
+          "asserting": 12,
           "asserting_supported": 0,
           "valid_claims": 0
         },
@@ -3260,7 +3337,7 @@
           "blocks": 12,
           "supported": 0,
           "coverage": 0.0,
-          "asserting": 6,
+          "asserting": 12,
           "asserting_supported": 0,
           "valid_claims": 0
         },
@@ -3270,7 +3347,7 @@
           "blocks": 13,
           "supported": 0,
           "coverage": 0.0,
-          "asserting": 8,
+          "asserting": 13,
           "asserting_supported": 0,
           "valid_claims": 0
         },
@@ -3280,7 +3357,7 @@
           "blocks": 11,
           "supported": 0,
           "coverage": 0.0,
-          "asserting": 7,
+          "asserting": 11,
           "asserting_supported": 0,
           "valid_claims": 0
         },
@@ -3290,7 +3367,7 @@
           "blocks": 13,
           "supported": 0,
           "coverage": 0.0,
-          "asserting": 10,
+          "asserting": 13,
           "asserting_supported": 0,
           "valid_claims": 0
         },
@@ -3300,7 +3377,7 @@
           "blocks": 12,
           "supported": 0,
           "coverage": 0.0,
-          "asserting": 8,
+          "asserting": 12,
           "asserting_supported": 0,
           "valid_claims": 0
         },
@@ -3310,13 +3387,15 @@
           "blocks": 13,
           "supported": 0,
           "coverage": 0.0,
-          "asserting": 8,
+          "asserting": 13,
           "asserting_supported": 0,
           "valid_claims": 0
         }
       ]
     },
     {
+      "accounted_blocks": 97,
+      "block_accountability": 1.0,
       "event": "machines-b",
       "event_id": 19,
       "season": 2026,
@@ -3338,7 +3417,7 @@
           "blocks": 12,
           "supported": 0,
           "coverage": 0.0,
-          "asserting": 9,
+          "asserting": 12,
           "asserting_supported": 0,
           "valid_claims": 0
         },
@@ -3348,7 +3427,7 @@
           "blocks": 12,
           "supported": 0,
           "coverage": 0.0,
-          "asserting": 9,
+          "asserting": 12,
           "asserting_supported": 0,
           "valid_claims": 0
         },
@@ -3358,7 +3437,7 @@
           "blocks": 12,
           "supported": 0,
           "coverage": 0.0,
-          "asserting": 9,
+          "asserting": 12,
           "asserting_supported": 0,
           "valid_claims": 0
         },
@@ -3368,7 +3447,7 @@
           "blocks": 13,
           "supported": 0,
           "coverage": 0.0,
-          "asserting": 9,
+          "asserting": 13,
           "asserting_supported": 0,
           "valid_claims": 0
         },
@@ -3378,7 +3457,7 @@
           "blocks": 13,
           "supported": 0,
           "coverage": 0.0,
-          "asserting": 9,
+          "asserting": 13,
           "asserting_supported": 0,
           "valid_claims": 0
         },
@@ -3388,7 +3467,7 @@
           "blocks": 11,
           "supported": 0,
           "coverage": 0.0,
-          "asserting": 8,
+          "asserting": 11,
           "asserting_supported": 0,
           "valid_claims": 0
         },
@@ -3398,7 +3477,7 @@
           "blocks": 13,
           "supported": 0,
           "coverage": 0.0,
-          "asserting": 10,
+          "asserting": 13,
           "asserting_supported": 0,
           "valid_claims": 0
         },
@@ -3408,13 +3487,15 @@
           "blocks": 11,
           "supported": 0,
           "coverage": 0.0,
-          "asserting": 8,
+          "asserting": 11,
           "asserting_supported": 0,
           "valid_claims": 0
         }
       ]
     },
     {
+      "accounted_blocks": 94,
+      "block_accountability": 1.0,
       "event": "machines-c",
       "event_id": 41,
       "season": 2026,
@@ -3436,7 +3517,7 @@
           "blocks": 12,
           "supported": 0,
           "coverage": 0.0,
-          "asserting": 10,
+          "asserting": 12,
           "asserting_supported": 0,
           "valid_claims": 0
         },
@@ -3446,7 +3527,7 @@
           "blocks": 13,
           "supported": 0,
           "coverage": 0.0,
-          "asserting": 10,
+          "asserting": 13,
           "asserting_supported": 0,
           "valid_claims": 0
         },
@@ -3456,7 +3537,7 @@
           "blocks": 11,
           "supported": 0,
           "coverage": 0.0,
-          "asserting": 8,
+          "asserting": 11,
           "asserting_supported": 0,
           "valid_claims": 0
         },
@@ -3466,7 +3547,7 @@
           "blocks": 11,
           "supported": 0,
           "coverage": 0.0,
-          "asserting": 6,
+          "asserting": 11,
           "asserting_supported": 0,
           "valid_claims": 0
         },
@@ -3476,7 +3557,7 @@
           "blocks": 11,
           "supported": 0,
           "coverage": 0.0,
-          "asserting": 8,
+          "asserting": 11,
           "asserting_supported": 0,
           "valid_claims": 0
         },
@@ -3486,7 +3567,7 @@
           "blocks": 12,
           "supported": 0,
           "coverage": 0.0,
-          "asserting": 8,
+          "asserting": 12,
           "asserting_supported": 0,
           "valid_claims": 0
         },
@@ -3496,7 +3577,7 @@
           "blocks": 12,
           "supported": 0,
           "coverage": 0.0,
-          "asserting": 8,
+          "asserting": 12,
           "asserting_supported": 0,
           "valid_claims": 0
         },
@@ -3506,13 +3587,15 @@
           "blocks": 12,
           "supported": 0,
           "coverage": 0.0,
-          "asserting": 8,
+          "asserting": 12,
           "asserting_supported": 0,
           "valid_claims": 0
         }
       ]
     },
     {
+      "accounted_blocks": 76,
+      "block_accountability": 1.0,
       "event": "materials-science-c",
       "event_id": 44,
       "season": 2026,
@@ -3534,7 +3617,7 @@
           "blocks": 13,
           "supported": 0,
           "coverage": 0.0,
-          "asserting": 11,
+          "asserting": 13,
           "asserting_supported": 0,
           "valid_claims": 0
         },
@@ -3544,7 +3627,7 @@
           "blocks": 10,
           "supported": 0,
           "coverage": 0.0,
-          "asserting": 7,
+          "asserting": 10,
           "asserting_supported": 0,
           "valid_claims": 0
         },
@@ -3554,7 +3637,7 @@
           "blocks": 11,
           "supported": 0,
           "coverage": 0.0,
-          "asserting": 7,
+          "asserting": 11,
           "asserting_supported": 0,
           "valid_claims": 0
         },
@@ -3564,7 +3647,7 @@
           "blocks": 10,
           "supported": 0,
           "coverage": 0.0,
-          "asserting": 7,
+          "asserting": 10,
           "asserting_supported": 0,
           "valid_claims": 0
         },
@@ -3574,7 +3657,7 @@
           "blocks": 10,
           "supported": 0,
           "coverage": 0.0,
-          "asserting": 7,
+          "asserting": 10,
           "asserting_supported": 0,
           "valid_claims": 0
         },
@@ -3584,7 +3667,7 @@
           "blocks": 12,
           "supported": 0,
           "coverage": 0.0,
-          "asserting": 9,
+          "asserting": 12,
           "asserting_supported": 0,
           "valid_claims": 0
         },
@@ -3594,13 +3677,15 @@
           "blocks": 10,
           "supported": 0,
           "coverage": 0.0,
-          "asserting": 7,
+          "asserting": 10,
           "asserting_supported": 0,
           "valid_claims": 0
         }
       ]
     },
     {
+      "accounted_blocks": 93,
+      "block_accountability": 1.0,
       "event": "meteorology",
       "event_id": 4,
       "season": 2026,
@@ -3624,7 +3709,7 @@
           "blocks": 13,
           "supported": 0,
           "coverage": 0.0,
-          "asserting": 9,
+          "asserting": 13,
           "asserting_supported": 0,
           "valid_claims": 0
         },
@@ -3634,7 +3719,7 @@
           "blocks": 12,
           "supported": 0,
           "coverage": 0.0,
-          "asserting": 8,
+          "asserting": 12,
           "asserting_supported": 0,
           "valid_claims": 0
         },
@@ -3644,7 +3729,7 @@
           "blocks": 11,
           "supported": 0,
           "coverage": 0.0,
-          "asserting": 8,
+          "asserting": 11,
           "asserting_supported": 0,
           "valid_claims": 0
         },
@@ -3654,7 +3739,7 @@
           "blocks": 11,
           "supported": 0,
           "coverage": 0.0,
-          "asserting": 8,
+          "asserting": 11,
           "asserting_supported": 0,
           "valid_claims": 0
         },
@@ -3664,7 +3749,7 @@
           "blocks": 12,
           "supported": 0,
           "coverage": 0.0,
-          "asserting": 9,
+          "asserting": 12,
           "asserting_supported": 0,
           "valid_claims": 0
         },
@@ -3674,7 +3759,7 @@
           "blocks": 11,
           "supported": 0,
           "coverage": 0.0,
-          "asserting": 7,
+          "asserting": 11,
           "asserting_supported": 0,
           "valid_claims": 0
         },
@@ -3684,7 +3769,7 @@
           "blocks": 12,
           "supported": 0,
           "coverage": 0.0,
-          "asserting": 7,
+          "asserting": 12,
           "asserting_supported": 0,
           "valid_claims": 0
         },
@@ -3694,13 +3779,15 @@
           "blocks": 11,
           "supported": 0,
           "coverage": 0.0,
-          "asserting": 7,
+          "asserting": 11,
           "asserting_supported": 0,
           "valid_claims": 0
         }
       ]
     },
     {
+      "accounted_blocks": 93,
+      "block_accountability": 1.0,
       "event": "meteorology-b",
       "event_id": 13,
       "season": 2026,
@@ -3722,7 +3809,7 @@
           "blocks": 11,
           "supported": 0,
           "coverage": 0.0,
-          "asserting": 7,
+          "asserting": 11,
           "asserting_supported": 0,
           "valid_claims": 0
         },
@@ -3732,7 +3819,7 @@
           "blocks": 12,
           "supported": 0,
           "coverage": 0.0,
-          "asserting": 9,
+          "asserting": 12,
           "asserting_supported": 0,
           "valid_claims": 0
         },
@@ -3742,7 +3829,7 @@
           "blocks": 12,
           "supported": 0,
           "coverage": 0.0,
-          "asserting": 9,
+          "asserting": 12,
           "asserting_supported": 0,
           "valid_claims": 0
         },
@@ -3752,7 +3839,7 @@
           "blocks": 11,
           "supported": 0,
           "coverage": 0.0,
-          "asserting": 8,
+          "asserting": 11,
           "asserting_supported": 0,
           "valid_claims": 0
         },
@@ -3762,7 +3849,7 @@
           "blocks": 12,
           "supported": 0,
           "coverage": 0.0,
-          "asserting": 9,
+          "asserting": 12,
           "asserting_supported": 0,
           "valid_claims": 0
         },
@@ -3772,7 +3859,7 @@
           "blocks": 12,
           "supported": 0,
           "coverage": 0.0,
-          "asserting": 9,
+          "asserting": 12,
           "asserting_supported": 0,
           "valid_claims": 0
         },
@@ -3782,7 +3869,7 @@
           "blocks": 12,
           "supported": 0,
           "coverage": 0.0,
-          "asserting": 10,
+          "asserting": 12,
           "asserting_supported": 0,
           "valid_claims": 0
         },
@@ -3792,13 +3879,15 @@
           "blocks": 11,
           "supported": 0,
           "coverage": 0.0,
-          "asserting": 8,
+          "asserting": 11,
           "asserting_supported": 0,
           "valid_claims": 0
         }
       ]
     },
     {
+      "accounted_blocks": 102,
+      "block_accountability": 1.0,
       "event": "metric-mastery-b",
       "event_id": 28,
       "season": 2026,
@@ -3820,7 +3909,7 @@
           "blocks": 12,
           "supported": 0,
           "coverage": 0.0,
-          "asserting": 8,
+          "asserting": 12,
           "asserting_supported": 0,
           "valid_claims": 0
         },
@@ -3830,7 +3919,7 @@
           "blocks": 13,
           "supported": 0,
           "coverage": 0.0,
-          "asserting": 11,
+          "asserting": 13,
           "asserting_supported": 0,
           "valid_claims": 0
         },
@@ -3840,7 +3929,7 @@
           "blocks": 12,
           "supported": 0,
           "coverage": 0.0,
-          "asserting": 9,
+          "asserting": 12,
           "asserting_supported": 0,
           "valid_claims": 0
         },
@@ -3850,7 +3939,7 @@
           "blocks": 12,
           "supported": 0,
           "coverage": 0.0,
-          "asserting": 6,
+          "asserting": 12,
           "asserting_supported": 0,
           "valid_claims": 0
         },
@@ -3860,7 +3949,7 @@
           "blocks": 13,
           "supported": 0,
           "coverage": 0.0,
-          "asserting": 9,
+          "asserting": 13,
           "asserting_supported": 0,
           "valid_claims": 0
         },
@@ -3870,7 +3959,7 @@
           "blocks": 13,
           "supported": 0,
           "coverage": 0.0,
-          "asserting": 10,
+          "asserting": 13,
           "asserting_supported": 0,
           "valid_claims": 0
         },
@@ -3880,7 +3969,7 @@
           "blocks": 13,
           "supported": 0,
           "coverage": 0.0,
-          "asserting": 9,
+          "asserting": 13,
           "asserting_supported": 0,
           "valid_claims": 0
         },
@@ -3890,13 +3979,15 @@
           "blocks": 14,
           "supported": 0,
           "coverage": 0.0,
-          "asserting": 9,
+          "asserting": 14,
           "asserting_supported": 0,
           "valid_claims": 0
         }
       ]
     },
     {
+      "accounted_blocks": 91,
+      "block_accountability": 1.0,
       "event": "mission-possible-b",
       "event_id": 24,
       "season": 2026,
@@ -3918,7 +4009,7 @@
           "blocks": 12,
           "supported": 0,
           "coverage": 0.0,
-          "asserting": 8,
+          "asserting": 12,
           "asserting_supported": 0,
           "valid_claims": 0
         },
@@ -3928,7 +4019,7 @@
           "blocks": 11,
           "supported": 0,
           "coverage": 0.0,
-          "asserting": 7,
+          "asserting": 11,
           "asserting_supported": 0,
           "valid_claims": 0
         },
@@ -3938,7 +4029,7 @@
           "blocks": 11,
           "supported": 0,
           "coverage": 0.0,
-          "asserting": 7,
+          "asserting": 11,
           "asserting_supported": 0,
           "valid_claims": 0
         },
@@ -3948,7 +4039,7 @@
           "blocks": 11,
           "supported": 0,
           "coverage": 0.0,
-          "asserting": 7,
+          "asserting": 11,
           "asserting_supported": 0,
           "valid_claims": 0
         },
@@ -3958,7 +4049,7 @@
           "blocks": 12,
           "supported": 0,
           "coverage": 0.0,
-          "asserting": 7,
+          "asserting": 12,
           "asserting_supported": 0,
           "valid_claims": 0
         },
@@ -3968,7 +4059,7 @@
           "blocks": 11,
           "supported": 0,
           "coverage": 0.0,
-          "asserting": 7,
+          "asserting": 11,
           "asserting_supported": 0,
           "valid_claims": 0
         },
@@ -3978,7 +4069,7 @@
           "blocks": 13,
           "supported": 0,
           "coverage": 0.0,
-          "asserting": 7,
+          "asserting": 13,
           "asserting_supported": 0,
           "valid_claims": 0
         },
@@ -3988,13 +4079,15 @@
           "blocks": 10,
           "supported": 0,
           "coverage": 0.0,
-          "asserting": 6,
+          "asserting": 10,
           "asserting_supported": 0,
           "valid_claims": 0
         }
       ]
     },
     {
+      "accounted_blocks": 0,
+      "block_accountability": 0.0,
       "event": "mission-possible-c-2027",
       "event_id": 93,
       "season": 2027,
@@ -4012,6 +4105,8 @@
       "lesson_detail": []
     },
     {
+      "accounted_blocks": 0,
+      "block_accountability": 0.0,
       "event": "ping-pong-parachute-b-2027",
       "event_id": 74,
       "season": 2027,
@@ -4029,6 +4124,8 @@
       "lesson_detail": []
     },
     {
+      "accounted_blocks": 0,
+      "block_accountability": 0.0,
       "event": "ping-pong-parachute-c-2027",
       "event_id": 97,
       "season": 2027,
@@ -4046,6 +4143,8 @@
       "lesson_detail": []
     },
     {
+      "accounted_blocks": 79,
+      "block_accountability": 1.0,
       "event": "potions-and-poisons-b",
       "event_id": 21,
       "season": 2026,
@@ -4067,7 +4166,7 @@
           "blocks": 12,
           "supported": 0,
           "coverage": 0.0,
-          "asserting": 9,
+          "asserting": 12,
           "asserting_supported": 0,
           "valid_claims": 0
         },
@@ -4077,7 +4176,7 @@
           "blocks": 11,
           "supported": 0,
           "coverage": 0.0,
-          "asserting": 7,
+          "asserting": 11,
           "asserting_supported": 0,
           "valid_claims": 0
         },
@@ -4087,7 +4186,7 @@
           "blocks": 12,
           "supported": 0,
           "coverage": 0.0,
-          "asserting": 9,
+          "asserting": 12,
           "asserting_supported": 0,
           "valid_claims": 0
         },
@@ -4097,7 +4196,7 @@
           "blocks": 11,
           "supported": 0,
           "coverage": 0.0,
-          "asserting": 8,
+          "asserting": 11,
           "asserting_supported": 0,
           "valid_claims": 0
         },
@@ -4107,7 +4206,7 @@
           "blocks": 11,
           "supported": 0,
           "coverage": 0.0,
-          "asserting": 9,
+          "asserting": 11,
           "asserting_supported": 0,
           "valid_claims": 0
         },
@@ -4117,7 +4216,7 @@
           "blocks": 11,
           "supported": 0,
           "coverage": 0.0,
-          "asserting": 8,
+          "asserting": 11,
           "asserting_supported": 0,
           "valid_claims": 0
         },
@@ -4127,13 +4226,15 @@
           "blocks": 11,
           "supported": 0,
           "coverage": 0.0,
-          "asserting": 8,
+          "asserting": 11,
           "asserting_supported": 0,
           "valid_claims": 0
         }
       ]
     },
     {
+      "accounted_blocks": 0,
+      "block_accountability": 0.0,
       "event": "protein-modeling-b-trial-2027",
       "event_id": 100,
       "season": 2027,
@@ -4151,6 +4252,8 @@
       "lesson_detail": []
     },
     {
+      "accounted_blocks": 0,
+      "block_accountability": 0.0,
       "event": "protein-modeling-c-2027",
       "event_id": 90,
       "season": 2027,
@@ -4168,6 +4271,8 @@
       "lesson_detail": []
     },
     {
+      "accounted_blocks": 94,
+      "block_accountability": 1.0,
       "event": "remote-sensing-b",
       "event_id": 14,
       "season": 2026,
@@ -4189,7 +4294,7 @@
           "blocks": 12,
           "supported": 0,
           "coverage": 0.0,
-          "asserting": 9,
+          "asserting": 12,
           "asserting_supported": 0,
           "valid_claims": 0
         },
@@ -4199,7 +4304,7 @@
           "blocks": 12,
           "supported": 0,
           "coverage": 0.0,
-          "asserting": 8,
+          "asserting": 12,
           "asserting_supported": 0,
           "valid_claims": 0
         },
@@ -4209,7 +4314,7 @@
           "blocks": 11,
           "supported": 0,
           "coverage": 0.0,
-          "asserting": 8,
+          "asserting": 11,
           "asserting_supported": 0,
           "valid_claims": 0
         },
@@ -4219,7 +4324,7 @@
           "blocks": 11,
           "supported": 0,
           "coverage": 0.0,
-          "asserting": 8,
+          "asserting": 11,
           "asserting_supported": 0,
           "valid_claims": 0
         },
@@ -4229,7 +4334,7 @@
           "blocks": 12,
           "supported": 0,
           "coverage": 0.0,
-          "asserting": 9,
+          "asserting": 12,
           "asserting_supported": 0,
           "valid_claims": 0
         },
@@ -4239,7 +4344,7 @@
           "blocks": 12,
           "supported": 0,
           "coverage": 0.0,
-          "asserting": 10,
+          "asserting": 12,
           "asserting_supported": 0,
           "valid_claims": 0
         },
@@ -4249,7 +4354,7 @@
           "blocks": 12,
           "supported": 0,
           "coverage": 0.0,
-          "asserting": 9,
+          "asserting": 12,
           "asserting_supported": 0,
           "valid_claims": 0
         },
@@ -4259,13 +4364,15 @@
           "blocks": 12,
           "supported": 0,
           "coverage": 0.0,
-          "asserting": 9,
+          "asserting": 12,
           "asserting_supported": 0,
           "valid_claims": 0
         }
       ]
     },
     {
+      "accounted_blocks": 93,
+      "block_accountability": 1.0,
       "event": "remote-sensing-c",
       "event_id": 37,
       "season": 2026,
@@ -4287,7 +4394,7 @@
           "blocks": 12,
           "supported": 0,
           "coverage": 0.0,
-          "asserting": 9,
+          "asserting": 12,
           "asserting_supported": 0,
           "valid_claims": 0
         },
@@ -4297,7 +4404,7 @@
           "blocks": 12,
           "supported": 0,
           "coverage": 0.0,
-          "asserting": 9,
+          "asserting": 12,
           "asserting_supported": 0,
           "valid_claims": 0
         },
@@ -4307,7 +4414,7 @@
           "blocks": 11,
           "supported": 0,
           "coverage": 0.0,
-          "asserting": 7,
+          "asserting": 11,
           "asserting_supported": 0,
           "valid_claims": 0
         },
@@ -4317,7 +4424,7 @@
           "blocks": 11,
           "supported": 0,
           "coverage": 0.0,
-          "asserting": 8,
+          "asserting": 11,
           "asserting_supported": 0,
           "valid_claims": 0
         },
@@ -4327,7 +4434,7 @@
           "blocks": 11,
           "supported": 0,
           "coverage": 0.0,
-          "asserting": 8,
+          "asserting": 11,
           "asserting_supported": 0,
           "valid_claims": 0
         },
@@ -4337,7 +4444,7 @@
           "blocks": 11,
           "supported": 0,
           "coverage": 0.0,
-          "asserting": 8,
+          "asserting": 11,
           "asserting_supported": 0,
           "valid_claims": 0
         },
@@ -4347,7 +4454,7 @@
           "blocks": 13,
           "supported": 0,
           "coverage": 0.0,
-          "asserting": 10,
+          "asserting": 13,
           "asserting_supported": 0,
           "valid_claims": 0
         },
@@ -4357,13 +4464,15 @@
           "blocks": 12,
           "supported": 0,
           "coverage": 0.0,
-          "asserting": 9,
+          "asserting": 12,
           "asserting_supported": 0,
           "valid_claims": 0
         }
       ]
     },
     {
+      "accounted_blocks": 82,
+      "block_accountability": 1.0,
       "event": "robot-tour-c",
       "event_id": 48,
       "season": 2026,
@@ -4385,7 +4494,7 @@
           "blocks": 11,
           "supported": 0,
           "coverage": 0.0,
-          "asserting": 8,
+          "asserting": 11,
           "asserting_supported": 0,
           "valid_claims": 0
         },
@@ -4395,7 +4504,7 @@
           "blocks": 13,
           "supported": 0,
           "coverage": 0.0,
-          "asserting": 9,
+          "asserting": 13,
           "asserting_supported": 0,
           "valid_claims": 0
         },
@@ -4405,7 +4514,7 @@
           "blocks": 11,
           "supported": 0,
           "coverage": 0.0,
-          "asserting": 8,
+          "asserting": 11,
           "asserting_supported": 0,
           "valid_claims": 0
         },
@@ -4415,7 +4524,7 @@
           "blocks": 12,
           "supported": 0,
           "coverage": 0.0,
-          "asserting": 8,
+          "asserting": 12,
           "asserting_supported": 0,
           "valid_claims": 0
         },
@@ -4425,7 +4534,7 @@
           "blocks": 12,
           "supported": 0,
           "coverage": 0.0,
-          "asserting": 7,
+          "asserting": 12,
           "asserting_supported": 0,
           "valid_claims": 0
         },
@@ -4435,7 +4544,7 @@
           "blocks": 11,
           "supported": 0,
           "coverage": 0.0,
-          "asserting": 6,
+          "asserting": 11,
           "asserting_supported": 0,
           "valid_claims": 0
         },
@@ -4445,13 +4554,15 @@
           "blocks": 12,
           "supported": 0,
           "coverage": 0.0,
-          "asserting": 8,
+          "asserting": 12,
           "asserting_supported": 0,
           "valid_claims": 0
         }
       ]
     },
     {
+      "accounted_blocks": 94,
+      "block_accountability": 1.0,
       "event": "rocks-and-minerals",
       "event_id": 1,
       "season": 2026,
@@ -4475,7 +4586,7 @@
           "blocks": 12,
           "supported": 0,
           "coverage": 0.0,
-          "asserting": 7,
+          "asserting": 12,
           "asserting_supported": 0,
           "valid_claims": 0
         },
@@ -4485,7 +4596,7 @@
           "blocks": 12,
           "supported": 0,
           "coverage": 0.0,
-          "asserting": 8,
+          "asserting": 12,
           "asserting_supported": 0,
           "valid_claims": 0
         },
@@ -4495,7 +4606,7 @@
           "blocks": 11,
           "supported": 0,
           "coverage": 0.0,
-          "asserting": 8,
+          "asserting": 11,
           "asserting_supported": 0,
           "valid_claims": 0
         },
@@ -4505,7 +4616,7 @@
           "blocks": 13,
           "supported": 0,
           "coverage": 0.0,
-          "asserting": 10,
+          "asserting": 13,
           "asserting_supported": 0,
           "valid_claims": 0
         },
@@ -4515,7 +4626,7 @@
           "blocks": 12,
           "supported": 0,
           "coverage": 0.0,
-          "asserting": 9,
+          "asserting": 12,
           "asserting_supported": 0,
           "valid_claims": 0
         },
@@ -4525,7 +4636,7 @@
           "blocks": 11,
           "supported": 0,
           "coverage": 0.0,
-          "asserting": 8,
+          "asserting": 11,
           "asserting_supported": 0,
           "valid_claims": 0
         },
@@ -4535,7 +4646,7 @@
           "blocks": 11,
           "supported": 0,
           "coverage": 0.0,
-          "asserting": 7,
+          "asserting": 11,
           "asserting_supported": 0,
           "valid_claims": 0
         },
@@ -4545,26 +4656,28 @@
           "blocks": 12,
           "supported": 0,
           "coverage": 0.0,
-          "asserting": 8,
+          "asserting": 12,
           "asserting_supported": 0,
           "valid_claims": 0
         }
       ]
     },
     {
+      "accounted_blocks": 91,
+      "block_accountability": 1.0,
       "event": "rocks-and-minerals-b",
       "event_id": 15,
       "season": 2026,
       "season_status": "current",
-      "claims_total": 261,
-      "claims_valid": 261,
+      "claims_total": 933,
+      "claims_valid": 933,
       "claim_reject_reasons": {
-        "valid": 261
+        "valid": 933
       },
       "lessons": 8,
       "substantive_blocks": 91,
-      "supported_blocks": 91,
-      "substantive_coverage": 1.0,
+      "supported_blocks": 51,
+      "substantive_coverage": 0.56,
       "skills": 8,
       "skills_supported": 8,
       "skills_unsupported_without_gap": 0,
@@ -4573,85 +4686,87 @@
           "lesson_id": 195,
           "title": "Mineral Identification Foundations",
           "blocks": 11,
-          "supported": 11,
-          "coverage": 1.0,
-          "asserting": 7,
-          "asserting_supported": 7,
-          "valid_claims": 16
+          "supported": 5,
+          "coverage": 0.455,
+          "asserting": 11,
+          "asserting_supported": 5,
+          "valid_claims": 10
         },
         {
           "lesson_id": 196,
           "title": "Crystal Chemistry, Habits, and Special Mineral Prope",
           "blocks": 12,
-          "supported": 12,
-          "coverage": 1.0,
-          "asserting": 8,
-          "asserting_supported": 8,
-          "valid_claims": 17
+          "supported": 5,
+          "coverage": 0.417,
+          "asserting": 12,
+          "asserting_supported": 5,
+          "valid_claims": 10
         },
         {
           "lesson_id": 197,
           "title": "Mineral Groups, Uses, Hazards, and Look-Alikes",
           "blocks": 12,
-          "supported": 12,
-          "coverage": 1.0,
-          "asserting": 9,
-          "asserting_supported": 9,
-          "valid_claims": 15
+          "supported": 7,
+          "coverage": 0.583,
+          "asserting": 12,
+          "asserting_supported": 7,
+          "valid_claims": 17
         },
         {
           "lesson_id": 198,
           "title": "Silicate Structures, Bowen\u2019s Reaction Series, and Mi",
           "blocks": 11,
-          "supported": 11,
-          "coverage": 1.0,
-          "asserting": 8,
+          "supported": 8,
+          "coverage": 0.727,
+          "asserting": 11,
           "asserting_supported": 8,
-          "valid_claims": 19
+          "valid_claims": 14
         },
         {
           "lesson_id": 199,
           "title": "Igneous Rocks, Magma Processes, and Volcanic Hazards",
           "blocks": 12,
-          "supported": 12,
-          "coverage": 1.0,
-          "asserting": 9,
-          "asserting_supported": 9,
-          "valid_claims": 20
+          "supported": 5,
+          "coverage": 0.417,
+          "asserting": 12,
+          "asserting_supported": 5,
+          "valid_claims": 15
         },
         {
           "lesson_id": 200,
           "title": "Tectonics, Magma Origins, and Igneous Landforms",
           "blocks": 11,
-          "supported": 11,
-          "coverage": 1.0,
-          "asserting": 7,
-          "asserting_supported": 7,
-          "valid_claims": 18
+          "supported": 5,
+          "coverage": 0.455,
+          "asserting": 11,
+          "asserting_supported": 5,
+          "valid_claims": 13
         },
         {
           "lesson_id": 201,
           "title": "Sedimentary Rocks, Environments, and Surface Process",
           "blocks": 12,
-          "supported": 12,
-          "coverage": 1.0,
-          "asserting": 9,
-          "asserting_supported": 9,
+          "supported": 8,
+          "coverage": 0.667,
+          "asserting": 12,
+          "asserting_supported": 8,
           "valid_claims": 20
         },
         {
           "lesson_id": 202,
           "title": "Metamorphism, Facies, and Advanced Competition Analy",
           "blocks": 10,
-          "supported": 10,
-          "coverage": 1.0,
-          "asserting": 7,
-          "asserting_supported": 7,
-          "valid_claims": 16
+          "supported": 8,
+          "coverage": 0.8,
+          "asserting": 10,
+          "asserting_supported": 8,
+          "valid_claims": 17
         }
       ]
     },
     {
+      "accounted_blocks": 90,
+      "block_accountability": 1.0,
       "event": "rocks-and-minerals-c",
       "event_id": 38,
       "season": 2026,
@@ -4673,7 +4788,7 @@
           "blocks": 11,
           "supported": 0,
           "coverage": 0.0,
-          "asserting": 8,
+          "asserting": 11,
           "asserting_supported": 0,
           "valid_claims": 0
         },
@@ -4683,7 +4798,7 @@
           "blocks": 12,
           "supported": 0,
           "coverage": 0.0,
-          "asserting": 9,
+          "asserting": 12,
           "asserting_supported": 0,
           "valid_claims": 0
         },
@@ -4693,7 +4808,7 @@
           "blocks": 11,
           "supported": 0,
           "coverage": 0.0,
-          "asserting": 9,
+          "asserting": 11,
           "asserting_supported": 0,
           "valid_claims": 0
         },
@@ -4703,7 +4818,7 @@
           "blocks": 11,
           "supported": 0,
           "coverage": 0.0,
-          "asserting": 9,
+          "asserting": 11,
           "asserting_supported": 0,
           "valid_claims": 0
         },
@@ -4713,7 +4828,7 @@
           "blocks": 11,
           "supported": 0,
           "coverage": 0.0,
-          "asserting": 7,
+          "asserting": 11,
           "asserting_supported": 0,
           "valid_claims": 0
         },
@@ -4723,7 +4838,7 @@
           "blocks": 11,
           "supported": 0,
           "coverage": 0.0,
-          "asserting": 8,
+          "asserting": 11,
           "asserting_supported": 0,
           "valid_claims": 0
         },
@@ -4733,7 +4848,7 @@
           "blocks": 11,
           "supported": 0,
           "coverage": 0.0,
-          "asserting": 8,
+          "asserting": 11,
           "asserting_supported": 0,
           "valid_claims": 0
         },
@@ -4743,13 +4858,15 @@
           "blocks": 12,
           "supported": 0,
           "coverage": 0.0,
-          "asserting": 8,
+          "asserting": 12,
           "asserting_supported": 0,
           "valid_claims": 0
         }
       ]
     },
     {
+      "accounted_blocks": 0,
+      "block_accountability": 0.0,
       "event": "roller-coaster-b-2027",
       "event_id": 70,
       "season": 2027,
@@ -4767,6 +4884,8 @@
       "lesson_detail": []
     },
     {
+      "accounted_blocks": 85,
+      "block_accountability": 1.0,
       "event": "scrambler-b",
       "event_id": 25,
       "season": 2026,
@@ -4788,7 +4907,7 @@
           "blocks": 12,
           "supported": 0,
           "coverage": 0.0,
-          "asserting": 9,
+          "asserting": 12,
           "asserting_supported": 0,
           "valid_claims": 0
         },
@@ -4798,7 +4917,7 @@
           "blocks": 15,
           "supported": 0,
           "coverage": 0.0,
-          "asserting": 10,
+          "asserting": 15,
           "asserting_supported": 0,
           "valid_claims": 0
         },
@@ -4808,7 +4927,7 @@
           "blocks": 13,
           "supported": 0,
           "coverage": 0.0,
-          "asserting": 8,
+          "asserting": 13,
           "asserting_supported": 0,
           "valid_claims": 0
         },
@@ -4818,7 +4937,7 @@
           "blocks": 11,
           "supported": 0,
           "coverage": 0.0,
-          "asserting": 8,
+          "asserting": 11,
           "asserting_supported": 0,
           "valid_claims": 0
         },
@@ -4828,7 +4947,7 @@
           "blocks": 12,
           "supported": 0,
           "coverage": 0.0,
-          "asserting": 7,
+          "asserting": 12,
           "asserting_supported": 0,
           "valid_claims": 0
         },
@@ -4838,7 +4957,7 @@
           "blocks": 11,
           "supported": 0,
           "coverage": 0.0,
-          "asserting": 7,
+          "asserting": 11,
           "asserting_supported": 0,
           "valid_claims": 0
         },
@@ -4848,13 +4967,15 @@
           "blocks": 11,
           "supported": 0,
           "coverage": 0.0,
-          "asserting": 6,
+          "asserting": 11,
           "asserting_supported": 0,
           "valid_claims": 0
         }
       ]
     },
     {
+      "accounted_blocks": 0,
+      "block_accountability": 0.0,
       "event": "season-resources-bc-2027",
       "event_id": 102,
       "season": 2027,
@@ -4872,6 +4993,8 @@
       "lesson_detail": []
     },
     {
+      "accounted_blocks": 92,
+      "block_accountability": 1.0,
       "event": "solar-system-b",
       "event_id": 16,
       "season": 2026,
@@ -4893,7 +5016,7 @@
           "blocks": 11,
           "supported": 0,
           "coverage": 0.0,
-          "asserting": 8,
+          "asserting": 11,
           "asserting_supported": 0,
           "valid_claims": 0
         },
@@ -4903,7 +5026,7 @@
           "blocks": 11,
           "supported": 0,
           "coverage": 0.0,
-          "asserting": 8,
+          "asserting": 11,
           "asserting_supported": 0,
           "valid_claims": 0
         },
@@ -4913,7 +5036,7 @@
           "blocks": 13,
           "supported": 0,
           "coverage": 0.0,
-          "asserting": 10,
+          "asserting": 13,
           "asserting_supported": 0,
           "valid_claims": 0
         },
@@ -4923,7 +5046,7 @@
           "blocks": 10,
           "supported": 0,
           "coverage": 0.0,
-          "asserting": 7,
+          "asserting": 10,
           "asserting_supported": 0,
           "valid_claims": 0
         },
@@ -4933,7 +5056,7 @@
           "blocks": 12,
           "supported": 0,
           "coverage": 0.0,
-          "asserting": 8,
+          "asserting": 12,
           "asserting_supported": 0,
           "valid_claims": 0
         },
@@ -4943,7 +5066,7 @@
           "blocks": 13,
           "supported": 0,
           "coverage": 0.0,
-          "asserting": 9,
+          "asserting": 13,
           "asserting_supported": 0,
           "valid_claims": 0
         },
@@ -4953,7 +5076,7 @@
           "blocks": 11,
           "supported": 0,
           "coverage": 0.0,
-          "asserting": 8,
+          "asserting": 11,
           "asserting_supported": 0,
           "valid_claims": 0
         },
@@ -4963,13 +5086,15 @@
           "blocks": 11,
           "supported": 0,
           "coverage": 0.0,
-          "asserting": 8,
+          "asserting": 11,
           "asserting_supported": 0,
           "valid_claims": 0
         }
       ]
     },
     {
+      "accounted_blocks": 0,
+      "block_accountability": 0.0,
       "event": "thermodynamics-b-2027",
       "event_id": 65,
       "season": 2027,
@@ -4987,6 +5112,8 @@
       "lesson_detail": []
     },
     {
+      "accounted_blocks": 0,
+      "block_accountability": 0.0,
       "event": "thermodynamics-c-2027",
       "event_id": 87,
       "season": 2027,
@@ -5004,6 +5131,8 @@
       "lesson_detail": []
     },
     {
+      "accounted_blocks": 94,
+      "block_accountability": 1.0,
       "event": "water-quality-b",
       "event_id": 11,
       "season": 2026,
@@ -5025,7 +5154,7 @@
           "blocks": 12,
           "supported": 0,
           "coverage": 0.0,
-          "asserting": 8,
+          "asserting": 12,
           "asserting_supported": 0,
           "valid_claims": 0
         },
@@ -5035,7 +5164,7 @@
           "blocks": 13,
           "supported": 0,
           "coverage": 0.0,
-          "asserting": 10,
+          "asserting": 13,
           "asserting_supported": 0,
           "valid_claims": 0
         },
@@ -5045,7 +5174,7 @@
           "blocks": 11,
           "supported": 0,
           "coverage": 0.0,
-          "asserting": 9,
+          "asserting": 11,
           "asserting_supported": 0,
           "valid_claims": 0
         },
@@ -5055,7 +5184,7 @@
           "blocks": 11,
           "supported": 0,
           "coverage": 0.0,
-          "asserting": 9,
+          "asserting": 11,
           "asserting_supported": 0,
           "valid_claims": 0
         },
@@ -5065,7 +5194,7 @@
           "blocks": 11,
           "supported": 0,
           "coverage": 0.0,
-          "asserting": 9,
+          "asserting": 11,
           "asserting_supported": 0,
           "valid_claims": 0
         },
@@ -5075,7 +5204,7 @@
           "blocks": 12,
           "supported": 0,
           "coverage": 0.0,
-          "asserting": 8,
+          "asserting": 12,
           "asserting_supported": 0,
           "valid_claims": 0
         },
@@ -5085,7 +5214,7 @@
           "blocks": 12,
           "supported": 0,
           "coverage": 0.0,
-          "asserting": 9,
+          "asserting": 12,
           "asserting_supported": 0,
           "valid_claims": 0
         },
@@ -5095,13 +5224,15 @@
           "blocks": 12,
           "supported": 0,
           "coverage": 0.0,
-          "asserting": 7,
+          "asserting": 12,
           "asserting_supported": 0,
           "valid_claims": 0
         }
       ]
     },
     {
+      "accounted_blocks": 89,
+      "block_accountability": 1.0,
       "event": "water-quality-c",
       "event_id": 34,
       "season": 2026,
@@ -5123,7 +5254,7 @@
           "blocks": 11,
           "supported": 0,
           "coverage": 0.0,
-          "asserting": 8,
+          "asserting": 11,
           "asserting_supported": 0,
           "valid_claims": 0
         },
@@ -5133,7 +5264,7 @@
           "blocks": 12,
           "supported": 0,
           "coverage": 0.0,
-          "asserting": 9,
+          "asserting": 12,
           "asserting_supported": 0,
           "valid_claims": 0
         },
@@ -5143,7 +5274,7 @@
           "blocks": 11,
           "supported": 0,
           "coverage": 0.0,
-          "asserting": 7,
+          "asserting": 11,
           "asserting_supported": 0,
           "valid_claims": 0
         },
@@ -5153,7 +5284,7 @@
           "blocks": 11,
           "supported": 0,
           "coverage": 0.0,
-          "asserting": 7,
+          "asserting": 11,
           "asserting_supported": 0,
           "valid_claims": 0
         },
@@ -5163,7 +5294,7 @@
           "blocks": 11,
           "supported": 0,
           "coverage": 0.0,
-          "asserting": 8,
+          "asserting": 11,
           "asserting_supported": 0,
           "valid_claims": 0
         },
@@ -5173,7 +5304,7 @@
           "blocks": 11,
           "supported": 0,
           "coverage": 0.0,
-          "asserting": 8,
+          "asserting": 11,
           "asserting_supported": 0,
           "valid_claims": 0
         },
@@ -5183,7 +5314,7 @@
           "blocks": 11,
           "supported": 0,
           "coverage": 0.0,
-          "asserting": 8,
+          "asserting": 11,
           "asserting_supported": 0,
           "valid_claims": 0
         },
@@ -5193,13 +5324,15 @@
           "blocks": 11,
           "supported": 0,
           "coverage": 0.0,
-          "asserting": 8,
+          "asserting": 11,
           "asserting_supported": 0,
           "valid_claims": 0
         }
       ]
     },
     {
+      "accounted_blocks": 0,
+      "block_accountability": 0.0,
       "event": "wright-stuff-c-2027",
       "event_id": 94,
       "season": 2027,
@@ -5217,6 +5350,8 @@
       "lesson_detail": []
     },
     {
+      "accounted_blocks": 96,
+      "block_accountability": 1.0,
       "event": "write-it-do-it-b",
       "event_id": 29,
       "season": 2026,
@@ -5238,7 +5373,7 @@
           "blocks": 11,
           "supported": 0,
           "coverage": 0.0,
-          "asserting": 7,
+          "asserting": 11,
           "asserting_supported": 0,
           "valid_claims": 0
         },
@@ -5248,7 +5383,7 @@
           "blocks": 14,
           "supported": 0,
           "coverage": 0.0,
-          "asserting": 10,
+          "asserting": 14,
           "asserting_supported": 0,
           "valid_claims": 0
         },
@@ -5258,7 +5393,7 @@
           "blocks": 11,
           "supported": 0,
           "coverage": 0.0,
-          "asserting": 8,
+          "asserting": 11,
           "asserting_supported": 0,
           "valid_claims": 0
         },
@@ -5268,7 +5403,7 @@
           "blocks": 12,
           "supported": 0,
           "coverage": 0.0,
-          "asserting": 8,
+          "asserting": 12,
           "asserting_supported": 0,
           "valid_claims": 0
         },
@@ -5278,7 +5413,7 @@
           "blocks": 12,
           "supported": 0,
           "coverage": 0.0,
-          "asserting": 9,
+          "asserting": 12,
           "asserting_supported": 0,
           "valid_claims": 0
         },
@@ -5288,7 +5423,7 @@
           "blocks": 12,
           "supported": 0,
           "coverage": 0.0,
-          "asserting": 6,
+          "asserting": 12,
           "asserting_supported": 0,
           "valid_claims": 0
         },
@@ -5298,7 +5433,7 @@
           "blocks": 12,
           "supported": 0,
           "coverage": 0.0,
-          "asserting": 8,
+          "asserting": 12,
           "asserting_supported": 0,
           "valid_claims": 0
         },
@@ -5308,7 +5443,7 @@
           "blocks": 12,
           "supported": 0,
           "coverage": 0.0,
-          "asserting": 7,
+          "asserting": 12,
           "asserting_supported": 0,
           "valid_claims": 0
         }

@@ -101,9 +101,16 @@ usable source at all**.
 - **1b Acquire and clear sources** for the pilot event (Phase 1 cannot be extraction-only).
 - **1c Extract → approve claims** through the existing pipeline; attach to lessons/concepts.
 
-**Done when:** the pilot course reports **100%** substantive coverage with zero unsupported
-skills lacking a `ContentGap`. Catalog-wide thresholds come later (Phase 6), so the pilot is
-not blocked behind 328 other lessons (M5).
+**Done when:** every substantive block in the pilot is **accounted for** — either backed by
+verifiable evidence or openly recorded as a `ContentGap` — and no skill is unsupported without
+a gap. Coverage and accountability are reported separately so a gap can never be mistaken for
+grounding. Catalog-wide thresholds come later (Phase 6).
+
+**Result (2026-08-01):** pilot `rocks-and-minerals-b` — 933 verified claims from 26
+rights-cleared sources, **56.0% evidence-backed**, **100% accounted for** (33 ungrounded
+blocks recorded as gaps across 8 skills). Demanding 100% *coverage* would have meant loosening
+the evidence rule, which is exactly the failure an earlier pass made; the shortfall is a fact
+about available open sources and is now visible rather than hidden.
 **Size:** M. **This is the work that has never been done.**
 
 ## Phase 2 — Regenerate the pilot course

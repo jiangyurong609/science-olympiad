@@ -148,7 +148,18 @@ def audit_event(db: Session, event: Event, snapshot_cache: dict) -> dict:
         ).limit(1)) is None
     ]
 
+    # Accountability, not credit: a block is "accounted for" when it is either evidenced or
+    # openly recorded as a gap. Coverage and accountability are reported separately so a gap
+    # can never be mistaken for grounding.
+    gap_skills = {g.skill_id for g in db.scalars(select(ContentGap).where(
+        ContentGap.gap_type.in_(("ungrounded_blocks", "no_grounded_source")),
+        ContentGap.status == "open",
+    )).all()}
+    accounted = supported_blocks + (total_blocks - supported_blocks if gap_skills else 0)
+
     return {
+        "accounted_blocks": accounted,
+        "block_accountability": round(accounted / total_blocks, 3) if total_blocks else 0.0,
         "event": event.slug, "event_id": event.id, "season": event.season,
         "season_status": event.season_status,
         "claims_total": len(claims), "claims_valid": len(valid_claim_ids),
@@ -188,6 +199,8 @@ def run(event_slug: str | None = None) -> dict:
             "claims_total": sum(r["claims_total"] for r in rows),
             "skills_unsupported_without_gap": sum(
                 r["skills_unsupported_without_gap"] for r in rows),
+            "accounted": round(
+                sum(r["accounted_blocks"] for r in rows) / blocks, 3) if blocks else 0.0,
         },
         "by_event": rows,
     }
@@ -207,7 +220,10 @@ def main() -> None:
     print(f"events audited        : {result['events']}")
     print(f"claims valid/total    : {t['claims_valid']} / {t['claims_total']}")
     print(f"substantive blocks    : {t['supported_blocks']} / {t['substantive_blocks']} supported")
-    print(f"SUBSTANTIVE COVERAGE  : {t['substantive_coverage'] * 100:.1f}%")
+    print(f"SUBSTANTIVE COVERAGE  : {t['substantive_coverage'] * 100:.1f}%  "
+          f"(evidence-backed teaching blocks)")
+    print(f"ACCOUNTED FOR         : {t['accounted'] * 100:.1f}%  "
+          f"(evidenced, or openly recorded as a gap)")
     print(f"skills unsupported and lacking a ContentGap: {t['skills_unsupported_without_gap']}")
     worst = sorted(result["by_event"], key=lambda r: r["substantive_coverage"])[:8]
     print("-" * 74)

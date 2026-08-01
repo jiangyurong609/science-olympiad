@@ -90,7 +90,11 @@ def _keywords(text: str, limit: int = 12) -> set[str]:
 def _fetch(url: str) -> tuple[str, str]:
     response = httpx.get(url, timeout=httpx.Timeout(45.0, connect=15.0),
                          follow_redirects=True,
-                         headers={"User-Agent": "FieldstoneEducationalBot/1.0"})
+                         # Wikipedia's policy requires a descriptive agent with contact
+                         # details; a generic bot string is refused with 403.
+                         headers={"User-Agent": (
+                             "FieldstoneEducationalBot/1.0 (Science Olympiad learning "
+                             "platform; +https://science-olympiad.com)")})
     response.raise_for_status()
     soup = BeautifulSoup(response.text, "html.parser")
     for tag in soup(["script", "style", "nav", "footer", "header", "aside"]):
@@ -120,14 +124,22 @@ def ensure_sources(db: Session, event: Event, apply: bool) -> list[Source]:
             if not apply:
                 print(f"   would register {url}")
                 continue
-            source = Source(url=url, title=f"{spec['publisher']} — {domain} reference",
-                            rights_status="public_domain", approved=True,
-                            license_name=spec["license"], publisher=spec["publisher"])
+            # Federal works are public domain; CC-BY-SA references are cleared for *fact*
+            # grounding with attribution, never for reproducing their expression.
+            wiki = "wikipedia.org" in url
+            source = Source(
+                url=url,
+                title=f"{'Wikipedia' if wiki else spec['publisher']} — {domain} reference",
+                rights_status="fact_grounding_allowed" if wiki else "public_domain",
+                approved=True,
+                license_name="CC-BY-SA 4.0 (facts used with attribution)" if wiki else spec["license"],
+                publisher="Wikipedia contributors" if wiki else spec["publisher"])
             db.add(source); db.flush()
         else:
             # these are federal works; make the rights explicit rather than assumed
             if apply:
-                source.rights_status = "public_domain"
+                source.rights_status = ("fact_grounding_allowed"
+                                        if "wikipedia.org" in source.url else "public_domain")
                 source.approved = True
         sources.append(source)
     return sources
@@ -250,6 +262,57 @@ def attach_to_blocks(db: Session, event: Event, claims: list[ScientificClaim], a
     return {"blocks": total, "supported": supported}
 
 
+def record_block_gaps(db: Session, event: Event, apply: bool) -> dict:
+    """Record an explicit ContentGap for every teaching block open sources cannot support.
+
+    Coverage below 100% is a fact about the available sources, not a reason to loosen the
+    rule. Recording the shortfall keeps it visible and stops the course implying mastery it
+    cannot yet support.
+    """
+    course = db.scalar(select(Course).where(Course.event_id == event.id))
+    if not course:
+        return {"unsupported": 0, "gaps": 0}
+    lessons = db.scalars(select(Lesson).where(Lesson.event_id == event.id)).all()
+    unsupported = gaps = 0
+    for lesson in lessons:
+        version = db.scalar(select(LessonVersion).where(
+            LessonVersion.lesson_id == lesson.id,
+            LessonVersion.version == lesson.current_version,
+        ))
+        if version is None:
+            continue
+        missing = [b for b in (version.content or [])
+                   if b.get("type") in SUBSTANTIVE_BLOCKS and not b.get("claim_ids")]
+        if not missing:
+            continue
+        unsupported += len(missing)
+        skill_link = db.scalar(select(LessonSkill).where(LessonSkill.lesson_id == lesson.id))
+        if not skill_link:
+            continue
+        existing = db.scalar(select(ContentGap).where(
+            ContentGap.skill_id == skill_link.skill_id,
+            ContentGap.gap_type == "ungrounded_blocks",
+        ))
+        gaps += 1
+        if apply and existing is None:
+            db.add(ContentGap(
+                course_id=course.id, skill_id=skill_link.skill_id,
+                gap_type="ungrounded_blocks", status="open", owner="content operations",
+                description=(
+                    f"{len(missing)} teaching block(s) in '{lesson.title[:60]}' have no "
+                    "rights-cleared source support"),
+                resolution_notes=(
+                    "Add rights-cleared sources covering these blocks before this skill can "
+                    "claim mastery."),
+            ))
+        elif apply and existing is not None:
+            existing.resolution_notes = (
+                f"{len(missing)} teaching block(s) in '{lesson.title[:60]}' have no "
+                "rights-cleared source support; add sources before claiming mastery.")
+            existing.status = "open"
+    return {"unsupported": unsupported, "gaps": gaps}
+
+
 def link_skills_and_record_gaps(db: Session, event: Event, apply: bool) -> dict:
     """Attach supporting claims to skills, and record an explicit ContentGap for any skill the
     open sources cannot support. A gap is an honest statement that mastery is not yet
@@ -291,8 +354,9 @@ def link_skills_and_record_gaps(db: Session, event: Event, apply: bool) -> dict:
                 db.add(ContentGap(
                     course_id=course.id, skill_id=skill.id, gap_type="no_grounded_source",
                     status="open", owner="content operations",
-                    resolution_notes=("No rights-cleared open source supports this skill yet; "
-                                      "mastery cannot be claimed until one is added."),
+                    description="No rights-cleared open source supports this skill yet",
+                    resolution_notes=("Mastery cannot be claimed until a cleared source is "
+                                      "added for this skill."),
                 ))
     return {"skills": len(skills), "supported": supported, "gaps": gaps}
 
@@ -317,6 +381,9 @@ def main() -> None:
         print(f"  verified claims: {len(claims)}")
         stats = attach_to_blocks(db, event, claims, apply)
         print(f"  blocks supported: {stats['supported']}/{stats['blocks']}")
+        block_gaps = record_block_gaps(db, event, apply)
+        print(f"  ungrounded blocks recorded as gaps: {block_gaps['unsupported']} "
+              f"across {block_gaps['gaps']} skill(s)")
         skill_stats = link_skills_and_record_gaps(db, event, apply)
         print(f"  skills supported: {skill_stats['supported']}/{skill_stats['skills']} "
               f"(content gaps recorded: {skill_stats['gaps']})")
