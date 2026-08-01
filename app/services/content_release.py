@@ -63,7 +63,12 @@ def build_manifest(db: Session, course: Course) -> dict:
                 f"lesson {lesson.id} ({lesson.title!r}) has no row for its current version "
                 f"{lesson.current_version}; a release cannot pin content that is missing"
             )
-        lessons.append({"id": lesson.id, "slug": lesson.slug, "version": lesson.current_version,
+        # `title` is here because a release rehearsal on real content caught its absence:
+        # renaming a lesson left the digest unchanged, so republishing was accepted and drift
+        # reported nothing, even though what a student sees had changed. Any served field
+        # missing from the manifest is a field the release cannot notice.
+        lessons.append({"id": lesson.id, "slug": lesson.slug, "title": lesson.title,
+                        "version": lesson.current_version,
                         "version_row_id": version.id, "status": lesson.status,
                         "estimated_minutes": lesson.estimated_minutes})
 

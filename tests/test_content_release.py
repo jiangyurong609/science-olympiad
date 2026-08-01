@@ -160,3 +160,35 @@ def test_a_lesson_missing_its_current_version_fails_the_release_loudly():
         db.flush()
         with pytest.raises(ReleaseError, match="no row for its current version"):
             build_manifest(db, course)
+
+
+def test_renaming_a_lesson_changes_the_digest():
+    """Caught by rehearsing on real content, not by these fixtures.
+
+    The manifest pinned id, slug, version and status but not the title, so renaming a lesson
+    left the digest identical: republishing was accepted and drift reported nothing, while
+    what a student sees had changed. The earlier immutability test only ever *added* a lesson,
+    which changes the count and would have passed either way.
+    """
+    with SessionLocal() as db:
+        course, actor, _, _ = _course(db)
+        publish_release(db, actor, course)
+        before = release_drift(db, course)
+        assert before["drifted"] is False
+
+        lesson = db.query(Lesson).filter(Lesson.slug.like("l-%")).first()
+        lesson.title = f"{lesson.title} — renamed"
+        db.flush()
+
+        assert release_drift(db, course)["drifted"] is True
+        with pytest.raises(ReleaseError, match="immutable"):
+            publish_release(db, actor, course)
+
+
+def test_every_served_lesson_field_is_pinned():
+    """A field the manifest omits is a change the release can never notice."""
+    with SessionLocal() as db:
+        course, actor, _, _ = _course(db)
+        row = build_manifest(db, course)["lessons"][0]
+    for field in ("id", "slug", "title", "version", "status", "estimated_minutes"):
+        assert field in row, f"{field} is served but not pinned"
