@@ -92,3 +92,41 @@ def test_staff_still_see_drafts(client, admin_token):
                       headers={"Authorization": f"Bearer {admin_token}"}).json()
     titles = {r["title"] for r in (rows if isinstance(rows, list) else rows.get("lessons", []))}
     assert f"Draft lesson {n}" in titles, "review is impossible if staff cannot see drafts"
+
+
+def test_video_is_gated_the_same_way_the_lesson_text_is(client, student_token):
+    """Video was gated on `lesson.status` alone while the text required review evidence —
+    a weaker rule for the same content, so a lesson refused as text could be watched."""
+    with SessionLocal() as db:
+        n = next(_UNIQUE)
+        event = Event(slug=f"vid-ev-{n}", name="E", division="B", season=2026)
+        db.add(event); db.flush()
+        db.add(Course(event_id=event.id, slug=f"vid-c-{n}", title="C", status="published"))
+        lesson = Lesson(event_id=event.id, slug=f"vid-l-{n}", title="Unreviewed",
+                        status="published", current_version=1)
+        db.add(lesson); db.flush()
+        db.add(LessonVersion(lesson_id=lesson.id, version=1, content=[]))
+        db.commit()
+        lesson_id = lesson.id
+
+    headers = {"Authorization": f"Bearer {student_token}"}
+    assert client.get(f"/api/lessons/{lesson_id}/videos", headers=headers).status_code == 404
+
+
+def test_staff_can_still_fetch_video_for_an_unreviewed_lesson(client, admin_token):
+    """Reviewing a render in context requires being able to load it."""
+    with SessionLocal() as db:
+        n = next(_UNIQUE)
+        event = Event(slug=f"vid-staff-{n}", name="E", division="B", season=2026)
+        db.add(event); db.flush()
+        db.add(Course(event_id=event.id, slug=f"vid-sc-{n}", title="C", status="draft"))
+        lesson = Lesson(event_id=event.id, slug=f"vid-sl-{n}", title="Draft",
+                        status="draft", current_version=1)
+        db.add(lesson); db.flush()
+        db.add(LessonVersion(lesson_id=lesson.id, version=1, content=[]))
+        db.commit()
+        lesson_id = lesson.id
+
+    response = client.get(f"/api/lessons/{lesson_id}/videos",
+                          headers={"Authorization": f"Bearer {admin_token}"})
+    assert response.status_code == 200

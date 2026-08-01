@@ -2291,7 +2291,13 @@ def list_lesson_videos(
     if not lesson:
         raise HTTPException(status_code=404, detail="Lesson not found")
     staff = user.role in {"admin", "editor", "sme", "calibrator"}
-    if lesson.status != "published" and not staff:
+    # Video was gated on `lesson.status` alone while the lesson's own text is gated on review
+    # evidence. That is a weaker rule for the same content: a lesson published without review
+    # and without the explicit `unreviewed_practice` grandfather would have refused its text
+    # and served its video. No lesson is in that state today — the 402 published ones all
+    # carry the disposition — so this is a latent inconsistency rather than a live leak, and
+    # it is the same shape as the `student_preview` bypass that was live.
+    if not _lesson_is_student_visible(db, user, lesson):
         raise HTTPException(status_code=404, detail="Lesson not found")
     try:
         chapters = video_library.lesson_chapters(db, lesson_id, include_pending=staff)

@@ -145,6 +145,27 @@ def test_video_endpoints_enforce_roles(client, student_token, admin_token, monke
     )
     with SessionLocal() as db:
         lesson_id, _ = _seed(db, chapters=[{"key": "foundations", "title": "Foundations"}])
+        # This test is about QA gating, so the lesson itself must be student-visible;
+        # otherwise the 404 from the review-evidence gate masks what is being tested.
+        # Video is now gated on the same rule as the lesson's text rather than on
+        # `lesson.status` alone.
+        from app.models.entities import Lesson, LessonVersion, ReviewDecision, User
+        lesson = db.get(Lesson, lesson_id)
+        lesson.status = "published"
+        # the gate needs a row for the lesson's current version; `_seed` creates none
+        db.add(LessonVersion(lesson_id=lesson.id, version=lesson.current_version,
+                             content=[]))
+        db.flush()
+        reviewer = db.scalar(vl.select(User).where(User.role.in_(("editor", "admin"))))
+        if reviewer is None:
+            reviewer = User(email="video-reviewer@example.com", full_name="R",
+                            password_hash="x", role="editor")
+            db.add(reviewer); db.flush()
+        for stage in ("editor", "sme"):
+            db.add(ReviewDecision(entity_type="lesson", entity_id=lesson.id,
+                                  entity_version=lesson.current_version, stage=stage,
+                                  decision="approved", reviewer_user_id=reviewer.id))
+        db.commit()
 
     # a student cannot reach the review queue
     assert client.get("/api/content/video-renders",
