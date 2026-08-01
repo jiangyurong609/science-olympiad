@@ -20,7 +20,9 @@ from app.models.entities import (
     SourceSnapshot,
 )
 from app.services.model_provider import ModelProviderError, OpenAICompatibleProvider
-from app.services.pdf_figures import attach_figures_to_items, extract_figures
+from app.services.pdf_figures import (
+    RESOLVING_MATCHES, attach_figures_to_items, extract_figures,
+)
 
 MAX_TEXT_CHARS = 30_000
 PROMPT_VERSION = "past-test-parse-v1"
@@ -392,7 +394,7 @@ def build_questions(
         # An `ambiguous` attachment does not qualify: several questions and several figures
         # shared that page, and guessing which pairs with which would make an unanswerable
         # item look answerable — the exact failure this is meant to end.
-        resolved = bool(figures) and item.get("figure_match") == "unique"
+        resolved = bool(figures) and item.get("figure_match") in RESOLVING_MATCHES
         # Only a verified pairing reaches `Question.assets`, which is what the exam snapshot
         # serves. Ambiguous candidates used to be copied there for *every* item on the page,
         # including plain text items the model never flagged as image-dependent — so a

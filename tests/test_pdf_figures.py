@@ -28,6 +28,14 @@ PAGED_TEXT = """[Page 1]
 """
 
 
+PAGE_TEXT_2 = """[Page 1]
+1. Identify the mineral shown in the photograph.
+
+[Page 2]
+3. Which sample is shown in the diagram?
+"""
+
+
 def _figure(page: int, sequence: int = 1, digest: str = "d") -> Figure:
     return Figure(page=page, sequence=sequence, content=b"x", content_type="image/png",
                   width=400, height=300, sha256=digest, storage_key=f"k{page}{sequence}")
@@ -71,21 +79,43 @@ def test_text_without_page_markers_yields_no_pages():
 
 # ---------------------------------------------------------------- attachment
 
-def test_a_lone_figure_with_a_lone_question_is_unambiguous():
-    items = [{"label": "3", "stem": "Which sample is a metamorphic rock?",
+def test_a_lone_figure_with_a_lone_figure_referencing_question_is_paired():
+    items = [{"label": "3", "stem": "Which sample is shown in the diagram?",
               "image_dependent": True}]
-    stats = attach_figures_to_items(PAGED_TEXT, items, [_figure(2)])
+    stats = attach_figures_to_items(PAGE_TEXT_2, items, [_figure(2)])
     assert items[0]["page"] == 2
-    assert items[0]["figure_match"] == "unique"
+    assert items[0]["figure_match"] == "sole_on_page"
     assert len(items[0]["figures"]) == 1
     assert stats["image_dependent_resolved"] == 1
 
 
+def test_an_item_that_never_mentions_a_figure_is_given_none():
+    """Attaching a figure because it shares a page is how a text question ends up
+    illustrated by its neighbour's diagram."""
+    items = [{"label": "3", "stem": "Which of these minerals is hardest?"}]
+    stats = attach_figures_to_items(PAGE_TEXT_2, items, [_figure(2)])
+    assert items[0]["figure_match"] == "no_figure_reference"
+    assert stats["no_figure_reference"] == 1
+    assert stats["image_dependent_resolved"] == 0
+
+
+def test_a_printed_label_is_a_stronger_anchor_than_adjacency():
+    """When the document itself ties question to picture, say so — and distinguish it from
+    a pairing that was merely inferred from sharing a page."""
+    text = "[Page 1]\n1. Identify the mineral in Figure 3.\n\nFigure 3. Specimen tray.\n"
+    items = [{"label": "1", "stem": "Identify the mineral in Figure 3.",
+              "image_dependent": True}]
+    stats = attach_figures_to_items(text, items, [_figure(1)])
+    assert items[0]["figure_match"] == "label_matched"
+    assert items[0]["figure_label"] == "3"
+    assert stats["label_matched"] == 1
+
+
 def test_two_questions_on_one_page_make_the_attachment_ambiguous():
-    """Both items get the figure, but neither may claim it is theirs."""
+    """Both items get the candidate, but neither may claim it is theirs."""
     items = [
         {"label": "1", "stem": "Identify the mineral shown in the photograph."},
-        {"label": "2", "stem": "What is its hardness on the Mohs scale?"},
+        {"label": "2", "stem": "What does the diagram above show?"},
     ]
     attach_figures_to_items(PAGED_TEXT, items, [_figure(1)])
     assert [i["figure_match"] for i in items] == ["ambiguous", "ambiguous"]

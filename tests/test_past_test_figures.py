@@ -59,7 +59,7 @@ def test_an_image_dependent_item_with_its_own_figure_is_no_longer_dropped():
         items = [{"label": "1", "stem": "Identify the mineral in the photograph above.",
                   "question_type": "short_answer", "reference_answer": "quartz",
                   "image_dependent": True, "figures": [_figure(1).descriptor],
-                  "figure_match": "unique"}]
+                  "figure_match": "label_matched"}]
         questions = build_questions(db, event, source, None, items)
     assert len(questions) == 1, "the figure is present and unambiguous, so it is answerable"
     assert questions[0].assets and questions[0].assets[0]["page"] == 1
@@ -155,10 +155,10 @@ def test_figures_are_attached_by_page_through_the_real_path(monkeypatch):
     assert stats["status"] == "ok"
     assert stats["figures_found"] == 2
     # page 1 holds one question and one figure; page 2 holds two questions and one figure
-    assert items[0]["figure_match"] == "unique"
-    assert items[1]["figure_match"] == "ambiguous"
-    assert items[2]["figure_match"] == "ambiguous"
-    assert stats["image_dependent_resolved"] == 2      # both were located on a page with art
+    assert items[0]["figure_match"] == "sole_on_page"   # alone with its figure
+    assert items[1]["figure_match"] == "no_figure_reference"  # never mentions one
+    assert items[2]["figure_match"] == "ambiguous"      # shares its page
+    assert stats["image_dependent_resolved"] == 1      # only the pairing we can defend
 
 
 # ---------------------------------------------------------------- reaching the student
@@ -227,14 +227,14 @@ def test_an_ambiguous_figure_is_never_written_to_served_assets():
         "but it is kept where a reviewer can see it"
 
 
-def test_a_unique_figure_is_the_only_kind_that_is_served():
+def test_only_a_resolving_match_is_served():
     with SessionLocal() as db:
         event = _event(db)
         source, _ = _source(db)
         items = [{"label": "1", "stem": "Identify the mineral in the photograph above.",
                   "question_type": "short_answer", "reference_answer": "quartz",
                   "image_dependent": True, "figures": [_figure(1).descriptor],
-                  "figure_match": "unique"}]
+                  "figure_match": "label_matched"}]
         questions = build_questions(db, event, source, None, items)
     assert len(questions[0].assets) == 1
     assert questions[0].generation_provenance["figure_candidates"] == []

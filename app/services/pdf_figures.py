@@ -152,6 +152,49 @@ def _content_type(name: str) -> str:
     return "application/octet-stream"
 
 
+# "Figure 3", "Fig. 2b", "Diagram A", "Image 4" — the labels a printed test actually uses to
+# tie a question to a picture. Matching on these is the only anchor the document itself
+# provides; everything else is adjacency.
+FIGURE_LABEL = re.compile(
+    r"\b(?:figure|fig\.?|diagram|image|photo|photograph|chart|graph|map)\s*"
+    r"([0-9]{1,3}[a-z]?|[A-Z])\b", re.I)
+
+# Which match kinds are strong enough to un-drop an image-dependent item. Adversarial review
+# noted that one raster and one item sharing a page proves only that — not that the raster is
+# the figure being referenced. `sole_on_page` is kept as resolving because the item must also
+# explicitly reference a figure and be alone with it, but it is reported separately so its
+# weaker basis stays visible rather than being folded into one "unique" number.
+RESOLVING_MATCHES = {"label_matched", "sole_on_page"}
+
+
+def figure_labels_in(text: str) -> set[str]:
+    """The figure labels a piece of text names, normalised."""
+    return {match.group(1).lower() for match in FIGURE_LABEL.finditer(text or "")}
+
+
+def page_figure_labels(text: str) -> dict[int, set[str]]:
+    """Which figure labels are printed on each page."""
+    offsets = page_offsets(text)
+    if not offsets:
+        return {}
+    out: dict[int, set[str]] = {}
+    for match in FIGURE_LABEL.finditer(text):
+        page = page_of_offset(offsets, match.start())
+        if page is not None:
+            out.setdefault(page, set()).add(match.group(1).lower())
+    return out
+
+
+def references_figure(stem: str) -> bool:
+    """Whether the stem points at a figure at all.
+
+    Reuses the scorer's definition so "needs a figure" means one thing across the codebase;
+    an item the scorer would not consider figure-dependent must not be handed a figure here.
+    """
+    from app.services.scoring import references_figure as _scorer_references_figure
+    return _scorer_references_figure(stem)
+
+
 def page_offsets(text: str) -> list[tuple[int, int]]:
     """Return (character_offset, page_number) for each `[Page N]` marker, in order."""
     return [(match.start(), int(match.group(1))) for match in PAGE_MARKER.finditer(text)]
@@ -226,12 +269,14 @@ def attach_figures_to_items(text: str, items: list[dict],
 
     pages = locate_items(text, items)
     stats = {"located": 0, "unlocated": 0, "with_figures": 0,
-             "unique": 0, "ambiguous": 0, "image_dependent_resolved": 0}
+             "label_matched": 0, "sole_on_page": 0, "ambiguous": 0,
+             "no_figure_reference": 0, "image_dependent_resolved": 0}
 
     items_on_page: dict[int, int] = {}
     for page in pages:
         if page is not None:
             items_on_page[page] = items_on_page.get(page, 0) + 1
+    labels_by_page = page_figure_labels(text)
 
     for item, page in zip(items, pages):
         item["page"] = page
@@ -247,13 +292,33 @@ def attach_figures_to_items(text: str, items: list[dict],
             item["figure_match"] = "none"
             continue
         stats["with_figures"] += 1
-        # one figure and one question on a page is the only unambiguous case
-        if len(page_figures) == 1 and items_on_page.get(page, 0) == 1:
-            item["figure_match"] = "unique"
-            stats["unique"] += 1
+
+        stem = str(item.get("stem") or "")
+        # An item that never mentions a figure has no figure to pair with. Attaching one
+        # because it happened to share a page is how a text question ends up illustrated by
+        # its neighbour's diagram.
+        if not references_figure(stem):
+            item["figure_match"] = "no_figure_reference"
+            stats["no_figure_reference"] += 1
+            continue
+
+        # Strongest anchor: the stem names a printed label ("Figure 3") and exactly one
+        # figure sits on the page carrying that label. This is the only case where the
+        # pairing is *stated by the document* rather than inferred from adjacency.
+        named = figure_labels_in(stem)
+        matched = named & labels_by_page.get(page, set())
+        if matched and len(page_figures) == 1:
+            item["figure_match"] = "label_matched"
+            item["figure_label"] = sorted(matched)[0]
+            stats["label_matched"] += 1
+        elif len(page_figures) == 1 and items_on_page.get(page, 0) == 1:
+            # One figure, one figure-referencing question, one page. Adjacency, not proof —
+            # kept separate from `label_matched` so review can tell them apart.
+            item["figure_match"] = "sole_on_page"
+            stats["sole_on_page"] += 1
         else:
             item["figure_match"] = "ambiguous"
             stats["ambiguous"] += 1
-        if item.get("image_dependent"):
+        if item.get("image_dependent") and item["figure_match"] in RESOLVING_MATCHES:
             stats["image_dependent_resolved"] += 1
     return stats
