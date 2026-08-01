@@ -472,25 +472,52 @@ We do not call an event production-ready until:
 
 ---
 
-## 9. Status against this plan — measured 2026-08-01
+## 9. Status against this plan — audited 2026-08-01
 
-Numbers below are measured (fleet scorecard, item audit, code read), not estimated. They say
-where this plan actually stands rather than where it was expected to be.
+**This plan is not done.** Measured against §8 Definition of Done, almost none of it is met.
+Numbers are counted from the database, not estimated.
 
-| Plan requirement | Measured state |
+| §8 criterion | Measured | Met |
+|---|---|---|
+| Every published lesson evidence-linked and human-reviewed | **0 of 410** lessons have review evidence | ✗ |
+| Every unit has enough approved practice for mastery | **0** questions are `published` (687 machine_validated, 5,270 draft) | ✗ |
+| Diagnostic, quiz, unit test, simulation all work | no diagnostic exists; `unit_quiz_missing` is a top audit blocker | ✗ |
+| Teacher can trace every sentence and answer to a locator | **0** published items are traceable | ✗ |
+| Minimum lesson/question volume per skill (§4.4) | **0 of 67** courses pass the release audit | ✗ |
+| Coverage ledger: every source has a destination | `source_review` is the #1 blocker (578 instances); 42 content gaps recorded | ✗ |
+| Release carries smoke/unit/contract/browser/audit evidence | **0** published `ContentRelease` records | ✗ |
+| Wrong answers produce explanations and remediation | remediation, misconception tags, spaced retests implemented | ✓ |
+| Existing content survives migration with traceable mapping | consolidation: 102 → 67 events, content conserved, archive + redirects | ✓ |
+
+### 9.0 Integrity finding — unreviewed items are already student-visible
+
+Phase 0's exit criterion is *"No generated lesson/question is student-visible without review
+evidence."* It is currently violated:
+
+- **150 exams are published** (97 `past_test`, 51 `foundational_practice`, 2 `reviewed_practice`)
+- every question they serve is `draft` or `machine_validated` — **none** is `published`
+- **0** questions carry editor + SME review; **0** carry a calibration decision
+
+So students can take exams built entirely from items that never passed review. This is the
+same root cause as the 410 unreviewed lessons: a generation path that published directly
+instead of entering the ladder. It should be treated as the first thing to fix, ahead of any
+new capability.
+
+### Phase-by-phase
+
+| Phase | State |
 |---|---|
-| §4.4 every skill has a teach lesson + formative check | **0 of 67** courses pass the release audit |
-| §4 "no unreviewed publication" | **410 of 424** lessons were auto-published, never reviewed |
-| Question contract: source claim IDs | **8.7%** of 5,957 questions are grounded |
-| Question contract: unambiguous, calibrated | 69.2% pass structural checks; 232 duplicate clusters; calibration unrun |
-| Phase 1 vertical slice (Rocks & Minerals B) | 14 hand-authored lessons exist, but on an event that consolidation archived |
-| Phase 4 legacy migration | consolidation done: 102 events → 67 active, content conserved, archive surface + redirects |
-| Phase 2 course map / mastery UX | mastery, remediation, spaced review, tutor, calibration all implemented |
-| Phase 5 teacher/team/assignment | implemented |
+| 0 — Freeze, inventory, content safety | **partial**: inventory and audits exist; the "no unreviewed student-visible content" exit criterion is violated (see §9.0) |
+| 1 — Rocks & Minerals B vertical slice | **not met**: 14 hand-authored lessons exist but sit on an event consolidation archived, and none is reviewed |
+| 2 — Course map and mastery UX | **mostly built**: mastery, remediation, spaced review, tutor, daily plan; resume-exact-state and one-click-next only partly delivered |
+| 3 — Authoring, review, release console | **partial**: review/calibration queues and release manager exist; the authoring approval gate is `HONEN_GAP_CLOSURE_PLAN.md` Phase 3 |
+| 4 — Legacy migration and expansion | **largely done** this session: consolidation, archive surface, canonical redirects, content conserved |
+| 5 — Teacher, team, assignments | **built** |
 
-**Conclusion:** the *mechanisms* in this plan are largely built; the **content does not meet
-the plan's own standard**. Closing that is `HONEN_GAP_CLOSURE_PLAN.md` Phases 1–2 (harden the
-generator, then regenerate through it) driven by the Phase Q backlog — not new mechanism work.
+**Conclusion:** the *mechanisms* are largely built and the *content is not*. The remaining
+work is not new machinery — it is (a) stop serving unreviewed items, (b) regenerate content
+through the rigorous path (`HONEN_GAP_CLOSURE_PLAN.md` Phases 1–2, ordered by the Phase Q
+backlog), and (c) drive it through the review and calibration ladder that already exists.
 
 ### 9.1 Capabilities added since this plan was written
 
