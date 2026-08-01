@@ -111,6 +111,14 @@ rights-cleared sources, **56.0% evidence-backed**, **100% accounted for** (33 un
 blocks recorded as gaps across 8 skills). Demanding 100% *coverage* would have meant loosening
 the evidence rule, which is exactly the failure an earlier pass made; the shortfall is a fact
 about available open sources and is now visible rather than hidden.
+
+**Re-measured after the Phase 3 lesson split: 47.2%** (58 of 123 blocks), accountability still
+100%. Splitting eight lessons into 24 added 48 generated openings and summaries, and those
+carry no evidence of their own. The number could be restored to 56% by letting each generated
+block cite its part's claims, and that is precisely the inheritance this audit removed after
+it was found crediting unevidenced summaries — so the dilution stands as measured. The
+teaching content did not get less grounded; there is simply more prose in front of it, and
+grounding that prose is real work rather than a counting choice.
 **Size:** M. **This is the work that has never been done.**
 
 ## Phase 2 — Regenerate the pilot course
@@ -271,7 +279,7 @@ Record the decision and its rationale here when made.
 | Exams without an explicit disposition | 150 | **0** | 0 | 0 |
 | In-progress attempts stranded | — | **0** | 0 | 0 |
 | Pilot blocks accounted for (evidenced or an open gap) | 0% | **100%** | 100% | 1 |
-| Pilot blocks evidence-backed | 0% | **56%** | — | 1 |
+| Pilot blocks evidence-backed | 0% | **47.2%** (was 56% pre-split) | — | 1 |
 | Pilot items passing validation | — | **93.1%** | ≥90% | 2 |
 | Pilot `audit_course` blockers needing no human | many | **0** | 0 | 3 |
 | Pilot `audit_course` blockers needing a human | — | **241** | 0 | 3 |
@@ -279,6 +287,8 @@ Record the decision and its rationale here when made.
 | Pilot lessons visible to a reviewer | 0 / 24 | **24 / 24** | all | 3 |
 | Release manifest + rehearsed rollback | absent | **built, 10 tests** | proven on pilot | 4 |
 | Courses `release_ready` | 0 / 67 | 0 / 67 | 1 | 4 |
+| Courses published while serving no lesson | unmeasured | **0** | 0 | 4 |
+| Courses published without a content release | unmeasured | **50** | 0 | 4/6 |
 | Pilot lessons with grounded video | 0 | 0 | all | 5 |
 | Live-event lessons meeting the grounding bar | 0 / 410 | — | ≥80% | 6 |
 | Imported items with usable figures | 0% | recovery built | ≥90% | 7 |
