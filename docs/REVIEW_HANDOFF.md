@@ -80,6 +80,13 @@ result of splitting 8 lessons that ran 19–27 minutes into parts of 8–12 minu
    assessment text and the only place in this course where a question was changed rather than
    moved. The remaining 23 are teaching blocks that read oddly but score nobody.
 
+4. **Checkpoints an independent solver disputed.** All 73 pilot checkpoints have now been
+   put through the same blind solver that gates every exam item — it sees the stem and the
+   choices, never the key. **71 agreed; 2 are flagged** in `disputed_checkpoints` on the queue
+   row. One of those had the solver pick the right index while still reporting the stem
+   underspecified, which is worth reading: agreement on the letter is not agreement on the
+   question. Start with those 2.
+
 ## 3. Sources — 21 dispositions to review
 
 ```

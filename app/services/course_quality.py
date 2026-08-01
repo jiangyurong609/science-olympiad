@@ -54,6 +54,29 @@ def block_text(block: dict) -> str:
     return " ".join(parts)
 
 
+def checkpoints_the_solver_disputed(content: list) -> list[dict]:
+    """Checkpoints where an independent blind solver did not reproduce the key.
+
+    Exam items cannot reach `machine_validated` without clearing this gate; lesson
+    checkpoints assess students the same way and never faced it. A disagreement is not proof
+    the key is wrong — it is the strongest available signal that a person should look.
+    """
+    disputed = []
+    for index, block in enumerate(content or []):
+        check = block.get("solver_check")
+        if not isinstance(check, dict) or check.get("agreed"):
+            continue
+        disputed.append({
+            "position": index + 1,
+            "heading": block.get("heading") or "",
+            "verdict": check.get("verdict"),
+            "solver_choice": check.get("chosen_index"),
+            "key": block.get("correct_index", block.get("answer_index")),
+            "model_written": bool(block.get("generated_by") or block.get("repaired_by")),
+        })
+    return disputed
+
+
 def blocks_citing_an_unavailable_source(content: list) -> list[dict]:
     """Blocks that send the student to material they were never given."""
     found = []
