@@ -469,3 +469,79 @@ We do not call an event production-ready until:
 - Existing courses, exams, attempts, mastery records, and error-notebook entries survive migration with a traceable mapping or an explicit withdrawal record.
 - The reconciliation report passes with no unexplained count delta from the prior release.
 - Production smoke tests, unit tests, API contract tests, browser tests, and content-audit checks are attached to the release.
+
+---
+
+## 9. Status against this plan — measured 2026-08-01
+
+Numbers below are measured (fleet scorecard, item audit, code read), not estimated. They say
+where this plan actually stands rather than where it was expected to be.
+
+| Plan requirement | Measured state |
+|---|---|
+| §4.4 every skill has a teach lesson + formative check | **0 of 67** courses pass the release audit |
+| §4 "no unreviewed publication" | **410 of 424** lessons were auto-published, never reviewed |
+| Question contract: source claim IDs | **8.7%** of 5,957 questions are grounded |
+| Question contract: unambiguous, calibrated | 69.2% pass structural checks; 232 duplicate clusters; calibration unrun |
+| Phase 1 vertical slice (Rocks & Minerals B) | 14 hand-authored lessons exist, but on an event that consolidation archived |
+| Phase 4 legacy migration | consolidation done: 102 events → 67 active, content conserved, archive surface + redirects |
+| Phase 2 course map / mastery UX | mastery, remediation, spaced review, tutor, calibration all implemented |
+| Phase 5 teacher/team/assignment | implemented |
+
+**Conclusion:** the *mechanisms* in this plan are largely built; the **content does not meet
+the plan's own standard**. Closing that is `HONEN_GAP_CLOSURE_PLAN.md` Phases 1–2 (harden the
+generator, then regenerate through it) driven by the Phase Q backlog — not new mechanism work.
+
+### 9.1 Capabilities added since this plan was written
+
+These are not in §3–§7 above and are now part of the lesson contract:
+
+- **Video lessons** — approved storyboard → Deepgram narration → Remotion render → MP4 with
+  word-synced captions. Chaptered per sub-topic (a single render tops out near a 5-minute
+  video at measured ~2.4s wall per video-second), QA-gated before students see it, and
+  versioned so a re-render supersedes rather than overwrites.
+- **Lesson sequence** — a chapter is a *step* that opens the section it teaches: video →
+  reading → next section, one progress spine, checkpoint gating on reading steps only.
+- **Data-driven diagrams** — flow, pyramid, bars and data tables rendered from data, so an
+  inverted biomass pyramid draws inverted instead of being normalised away.
+
+**Lesson contract addendum:** where a lesson has video, every chapter must map to the sections
+it teaches, and watching must count the same as reading for progress. A chapter that covers
+several sections opens once — it is not repeated per section.
+
+### 9.2 Track A — ingestion fidelity (the gap this plan did not cover)
+
+§4.3 assumes materials arrive usable. For uploaded past tests they do not, and this is the
+largest remaining content gap:
+
+- **A1 Figures survive import.** Extraction is text-only today; ~224 imported items reference
+  figures that do not exist and are **excluded from scoring**. Crop page figure regions into
+  `ExtractionAsset`, attach to the referencing item, keep `figure_missing` as a fallback and
+  not the norm. *Exit:* ≥90% of figure-referencing items import with a usable figure.
+- **A2 Upload becomes a reviewable exam.** An upload currently creates **zero** questions or
+  exams; the converter exists only as a CLI script. Wire it into the intake flow as a service
+  producing a **draft** exam behind the existing review gate, parsing stem/choices/points and
+  recording per-item parse confidence. Low-confidence answers route to
+  `/content/questions/needs-key` rather than being guessed. Never auto-publish — that is how
+  410 lessons reached students unreviewed.
+- **A3 Fidelity is measured.** Per-import report (items parsed, figures attached, keys found,
+  items excluded), and imported exams included in the Phase Q scorecard.
+
+For a station-based, image-heavy competition, A1 is the difference between "imported" and
+"usable".
+
+### 9.3 Verification discipline
+
+Added after a lesson screen needed three corrections: parallel structures, then content below
+the fold, then video hidden behind an icon.
+
+1. A capability is done when the intended person completes the intended task on a real screen
+   at a real viewport — not when its API returns correct data.
+2. Before adding a surface, state how it joins the surfaces that already exist. Two lists of
+   the same content is a design failure, not a layout detail.
+3. Where a known pattern exists (a course leads with video and advances with Continue), follow
+   it rather than inventing a layout.
+4. Test the contract, not just the unit. The lesson-sequence test exists because a person had
+   to click Continue sixteen times to find a broken one.
+5. **Check `docs/` before writing a plan.** This section exists because a duplicate plan was
+   written for work already specified here.
