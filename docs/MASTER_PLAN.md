@@ -210,6 +210,25 @@ Only now does a catalog-wide threshold make sense, because the pilot proved the 
 - **Done when:** ≥80% of live-event lessons meet the Phase 1 substantive-coverage bar and
   ≥N courses are `release_ready`.
 
+**Sized (2026-08-01) — `python -m scripts.audit_catalog_structure`.** The pilot's defects are
+not the pilot's. Of 67 live events, **exactly one is free of all of them**:
+
+| Defect | Events |
+|---|---:|
+| Skills with no `concept_id` — their items are invisible to the audit | **50** |
+| All skills in a single oversized unit | **50** |
+| No unit-quiz blueprint | **50** |
+| Course carrying no skills at all | **16** |
+| **Lessons over the 12-minute target** | **402 of 426 (94%)** |
+
+This is the number that decides Phase 6's shape. The per-event work is now scripted and
+proven on the pilot, but two parts do not automate: unit boundaries are a pedagogical
+decision (`build_course_structure` refuses to guess them and requires a declared plan), and
+every split lesson needs the same editor and SME review the pilot's 24 are waiting on. The
+engineering is ~50 declared unit plans; the review is ~1,200 lesson decisions at the pilot's
+rate. **Phase 6 is review-bound, not engineering-bound**, and no amount of further tooling
+changes that.
+
 ## Phase 7 — Ingestion fidelity (uploaded past tests)
 
 - **7a** figures survive import (today text-only; ~224 items reference figures that do not

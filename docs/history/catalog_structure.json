@@ -1,0 +1,901 @@
+{
+  "events": 67,
+  "totals": {
+    "no_course": 0,
+    "course_without_skills": 16,
+    "skills_without_a_concept": 50,
+    "unit_holding_too_many_skills": 50,
+    "no_unit_quiz_blueprint": 50,
+    "lessons": 426,
+    "lessons_over_target": 402,
+    "lessons_under_target": 0,
+    "clean_events": 1
+  },
+  "by_event": [
+    {
+      "event": "anatomy-and-physiology-b",
+      "skills": 8,
+      "units": 1,
+      "lessons": 8,
+      "lessons_over": 8,
+      "lessons_under": 0,
+      "problems": [
+        "skills_without_a_concept",
+        "unit_holding_too_many_skills",
+        "no_unit_quiz_blueprint",
+        "lessons_over_the_time_target"
+      ]
+    },
+    {
+      "event": "anatomy-and-physiology-c",
+      "skills": 8,
+      "units": 1,
+      "lessons": 8,
+      "lessons_over": 8,
+      "lessons_under": 0,
+      "problems": [
+        "skills_without_a_concept",
+        "unit_holding_too_many_skills",
+        "no_unit_quiz_blueprint",
+        "lessons_over_the_time_target"
+      ]
+    },
+    {
+      "event": "astronomy-c",
+      "skills": 8,
+      "units": 1,
+      "lessons": 8,
+      "lessons_over": 8,
+      "lessons_under": 0,
+      "problems": [
+        "skills_without_a_concept",
+        "unit_holding_too_many_skills",
+        "no_unit_quiz_blueprint",
+        "lessons_over_the_time_target"
+      ]
+    },
+    {
+      "event": "boomilever-b",
+      "skills": 8,
+      "units": 1,
+      "lessons": 8,
+      "lessons_over": 8,
+      "lessons_under": 0,
+      "problems": [
+        "skills_without_a_concept",
+        "unit_holding_too_many_skills",
+        "no_unit_quiz_blueprint",
+        "lessons_over_the_time_target"
+      ]
+    },
+    {
+      "event": "boomilever-c",
+      "skills": 7,
+      "units": 1,
+      "lessons": 7,
+      "lessons_over": 7,
+      "lessons_under": 0,
+      "problems": [
+        "skills_without_a_concept",
+        "unit_holding_too_many_skills",
+        "no_unit_quiz_blueprint",
+        "lessons_over_the_time_target"
+      ]
+    },
+    {
+      "event": "botany-b-2027",
+      "skills": 0,
+      "units": 1,
+      "lessons": 0,
+      "lessons_over": 0,
+      "lessons_under": 0,
+      "problems": [
+        "course_without_skills"
+      ]
+    },
+    {
+      "event": "botany-c-2027",
+      "skills": 0,
+      "units": 1,
+      "lessons": 0,
+      "lessons_over": 0,
+      "lessons_under": 0,
+      "problems": [
+        "course_without_skills"
+      ]
+    },
+    {
+      "event": "bungee-drop-c",
+      "skills": 8,
+      "units": 1,
+      "lessons": 8,
+      "lessons_over": 8,
+      "lessons_under": 0,
+      "problems": [
+        "skills_without_a_concept",
+        "unit_holding_too_many_skills",
+        "no_unit_quiz_blueprint",
+        "lessons_over_the_time_target"
+      ]
+    },
+    {
+      "event": "chemistry-lab-c",
+      "skills": 8,
+      "units": 1,
+      "lessons": 8,
+      "lessons_over": 8,
+      "lessons_under": 0,
+      "problems": [
+        "skills_without_a_concept",
+        "unit_holding_too_many_skills",
+        "no_unit_quiz_blueprint",
+        "lessons_over_the_time_target"
+      ]
+    },
+    {
+      "event": "circuit-lab-b",
+      "skills": 8,
+      "units": 1,
+      "lessons": 8,
+      "lessons_over": 8,
+      "lessons_under": 0,
+      "problems": [
+        "skills_without_a_concept",
+        "unit_holding_too_many_skills",
+        "no_unit_quiz_blueprint",
+        "lessons_over_the_time_target"
+      ]
+    },
+    {
+      "event": "circuit-lab-c",
+      "skills": 8,
+      "units": 1,
+      "lessons": 8,
+      "lessons_over": 8,
+      "lessons_under": 0,
+      "problems": [
+        "skills_without_a_concept",
+        "unit_holding_too_many_skills",
+        "no_unit_quiz_blueprint",
+        "lessons_over_the_time_target"
+      ]
+    },
+    {
+      "event": "code-craze-b-trial-2027",
+      "skills": 0,
+      "units": 1,
+      "lessons": 0,
+      "lessons_over": 0,
+      "lessons_under": 0,
+      "problems": [
+        "course_without_skills"
+      ]
+    },
+    {
+      "event": "code-craze-c-trial-2027",
+      "skills": 0,
+      "units": 1,
+      "lessons": 0,
+      "lessons_over": 0,
+      "lessons_under": 0,
+      "problems": [
+        "course_without_skills"
+      ]
+    },
+    {
+      "event": "codebusters-b",
+      "skills": 8,
+      "units": 1,
+      "lessons": 8,
+      "lessons_over": 8,
+      "lessons_under": 0,
+      "problems": [
+        "skills_without_a_concept",
+        "unit_holding_too_many_skills",
+        "no_unit_quiz_blueprint",
+        "lessons_over_the_time_target"
+      ]
+    },
+    {
+      "event": "codebusters-c",
+      "skills": 8,
+      "units": 1,
+      "lessons": 8,
+      "lessons_over": 8,
+      "lessons_under": 0,
+      "problems": [
+        "skills_without_a_concept",
+        "unit_holding_too_many_skills",
+        "no_unit_quiz_blueprint",
+        "lessons_over_the_time_target"
+      ]
+    },
+    {
+      "event": "crime-busters-b",
+      "skills": 8,
+      "units": 1,
+      "lessons": 8,
+      "lessons_over": 8,
+      "lessons_under": 0,
+      "problems": [
+        "skills_without_a_concept",
+        "unit_holding_too_many_skills",
+        "no_unit_quiz_blueprint",
+        "lessons_over_the_time_target"
+      ]
+    },
+    {
+      "event": "designer-genes-c",
+      "skills": 8,
+      "units": 1,
+      "lessons": 8,
+      "lessons_over": 8,
+      "lessons_under": 0,
+      "problems": [
+        "skills_without_a_concept",
+        "unit_holding_too_many_skills",
+        "no_unit_quiz_blueprint",
+        "lessons_over_the_time_target"
+      ]
+    },
+    {
+      "event": "disease-detectives-b",
+      "skills": 8,
+      "units": 1,
+      "lessons": 8,
+      "lessons_over": 8,
+      "lessons_under": 0,
+      "problems": [
+        "skills_without_a_concept",
+        "unit_holding_too_many_skills",
+        "no_unit_quiz_blueprint",
+        "lessons_over_the_time_target"
+      ]
+    },
+    {
+      "event": "disease-detectives-c",
+      "skills": 8,
+      "units": 1,
+      "lessons": 8,
+      "lessons_over": 8,
+      "lessons_under": 0,
+      "problems": [
+        "skills_without_a_concept",
+        "unit_holding_too_many_skills",
+        "no_unit_quiz_blueprint",
+        "lessons_over_the_time_target"
+      ]
+    },
+    {
+      "event": "dynamic-planet-b",
+      "skills": 8,
+      "units": 1,
+      "lessons": 8,
+      "lessons_over": 8,
+      "lessons_under": 0,
+      "problems": [
+        "skills_without_a_concept",
+        "unit_holding_too_many_skills",
+        "no_unit_quiz_blueprint",
+        "lessons_over_the_time_target"
+      ]
+    },
+    {
+      "event": "dynamic-planet-c",
+      "skills": 8,
+      "units": 1,
+      "lessons": 8,
+      "lessons_over": 8,
+      "lessons_under": 0,
+      "problems": [
+        "skills_without_a_concept",
+        "unit_holding_too_many_skills",
+        "no_unit_quiz_blueprint",
+        "lessons_over_the_time_target"
+      ]
+    },
+    {
+      "event": "ecology",
+      "skills": 8,
+      "units": 1,
+      "lessons": 8,
+      "lessons_over": 8,
+      "lessons_under": 0,
+      "problems": [
+        "skills_without_a_concept",
+        "unit_holding_too_many_skills",
+        "no_unit_quiz_blueprint",
+        "lessons_over_the_time_target"
+      ]
+    },
+    {
+      "event": "elastic-launch-glider-b-2027",
+      "skills": 0,
+      "units": 1,
+      "lessons": 0,
+      "lessons_over": 0,
+      "lessons_under": 0,
+      "problems": [
+        "course_without_skills"
+      ]
+    },
+    {
+      "event": "electric-vehicle-c",
+      "skills": 8,
+      "units": 1,
+      "lessons": 8,
+      "lessons_over": 8,
+      "lessons_under": 0,
+      "problems": [
+        "skills_without_a_concept",
+        "unit_holding_too_many_skills",
+        "no_unit_quiz_blueprint",
+        "lessons_over_the_time_target"
+      ]
+    },
+    {
+      "event": "engineering-cad-c",
+      "skills": 8,
+      "units": 1,
+      "lessons": 8,
+      "lessons_over": 8,
+      "lessons_under": 0,
+      "problems": [
+        "skills_without_a_concept",
+        "unit_holding_too_many_skills",
+        "no_unit_quiz_blueprint",
+        "lessons_over_the_time_target"
+      ]
+    },
+    {
+      "event": "entomology",
+      "skills": 8,
+      "units": 1,
+      "lessons": 8,
+      "lessons_over": 8,
+      "lessons_under": 0,
+      "problems": [
+        "skills_without_a_concept",
+        "unit_holding_too_many_skills",
+        "no_unit_quiz_blueprint",
+        "lessons_over_the_time_target"
+      ]
+    },
+    {
+      "event": "entomology-b",
+      "skills": 8,
+      "units": 1,
+      "lessons": 8,
+      "lessons_over": 8,
+      "lessons_under": 0,
+      "problems": [
+        "skills_without_a_concept",
+        "unit_holding_too_many_skills",
+        "no_unit_quiz_blueprint",
+        "lessons_over_the_time_target"
+      ]
+    },
+    {
+      "event": "entomology-c",
+      "skills": 8,
+      "units": 1,
+      "lessons": 8,
+      "lessons_over": 8,
+      "lessons_under": 0,
+      "problems": [
+        "skills_without_a_concept",
+        "unit_holding_too_many_skills",
+        "no_unit_quiz_blueprint",
+        "lessons_over_the_time_target"
+      ]
+    },
+    {
+      "event": "experimental-design",
+      "skills": 7,
+      "units": 1,
+      "lessons": 7,
+      "lessons_over": 7,
+      "lessons_under": 0,
+      "problems": [
+        "skills_without_a_concept",
+        "unit_holding_too_many_skills",
+        "no_unit_quiz_blueprint",
+        "lessons_over_the_time_target"
+      ]
+    },
+    {
+      "event": "experimental-design-b",
+      "skills": 8,
+      "units": 1,
+      "lessons": 8,
+      "lessons_over": 8,
+      "lessons_under": 0,
+      "problems": [
+        "skills_without_a_concept",
+        "unit_holding_too_many_skills",
+        "no_unit_quiz_blueprint",
+        "lessons_over_the_time_target"
+      ]
+    },
+    {
+      "event": "experimental-design-c",
+      "skills": 8,
+      "units": 1,
+      "lessons": 8,
+      "lessons_over": 8,
+      "lessons_under": 0,
+      "problems": [
+        "skills_without_a_concept",
+        "unit_holding_too_many_skills",
+        "no_unit_quiz_blueprint",
+        "lessons_over_the_time_target"
+      ]
+    },
+    {
+      "event": "food-science-b-2027",
+      "skills": 0,
+      "units": 1,
+      "lessons": 0,
+      "lessons_over": 0,
+      "lessons_under": 0,
+      "problems": [
+        "course_without_skills"
+      ]
+    },
+    {
+      "event": "forensics-c",
+      "skills": 8,
+      "units": 1,
+      "lessons": 8,
+      "lessons_over": 8,
+      "lessons_under": 0,
+      "problems": [
+        "skills_without_a_concept",
+        "unit_holding_too_many_skills",
+        "no_unit_quiz_blueprint",
+        "lessons_over_the_time_target"
+      ]
+    },
+    {
+      "event": "helicopter-b",
+      "skills": 8,
+      "units": 1,
+      "lessons": 8,
+      "lessons_over": 8,
+      "lessons_under": 0,
+      "problems": [
+        "skills_without_a_concept",
+        "unit_holding_too_many_skills",
+        "no_unit_quiz_blueprint",
+        "lessons_over_the_time_target"
+      ]
+    },
+    {
+      "event": "helicopter-c",
+      "skills": 8,
+      "units": 1,
+      "lessons": 8,
+      "lessons_over": 8,
+      "lessons_under": 0,
+      "problems": [
+        "skills_without_a_concept",
+        "unit_holding_too_many_skills",
+        "no_unit_quiz_blueprint",
+        "lessons_over_the_time_target"
+      ]
+    },
+    {
+      "event": "heredity-b",
+      "skills": 8,
+      "units": 1,
+      "lessons": 16,
+      "lessons_over": 16,
+      "lessons_under": 0,
+      "problems": [
+        "skills_without_a_concept",
+        "unit_holding_too_many_skills",
+        "no_unit_quiz_blueprint",
+        "lessons_over_the_time_target"
+      ]
+    },
+    {
+      "event": "hovercraft-b",
+      "skills": 8,
+      "units": 1,
+      "lessons": 8,
+      "lessons_over": 8,
+      "lessons_under": 0,
+      "problems": [
+        "skills_without_a_concept",
+        "unit_holding_too_many_skills",
+        "no_unit_quiz_blueprint",
+        "lessons_over_the_time_target"
+      ]
+    },
+    {
+      "event": "hovercraft-c",
+      "skills": 8,
+      "units": 1,
+      "lessons": 8,
+      "lessons_over": 8,
+      "lessons_under": 0,
+      "problems": [
+        "skills_without_a_concept",
+        "unit_holding_too_many_skills",
+        "no_unit_quiz_blueprint",
+        "lessons_over_the_time_target"
+      ]
+    },
+    {
+      "event": "machines-b",
+      "skills": 8,
+      "units": 1,
+      "lessons": 8,
+      "lessons_over": 8,
+      "lessons_under": 0,
+      "problems": [
+        "skills_without_a_concept",
+        "unit_holding_too_many_skills",
+        "no_unit_quiz_blueprint",
+        "lessons_over_the_time_target"
+      ]
+    },
+    {
+      "event": "machines-c",
+      "skills": 8,
+      "units": 1,
+      "lessons": 8,
+      "lessons_over": 8,
+      "lessons_under": 0,
+      "problems": [
+        "skills_without_a_concept",
+        "unit_holding_too_many_skills",
+        "no_unit_quiz_blueprint",
+        "lessons_over_the_time_target"
+      ]
+    },
+    {
+      "event": "materials-science-c",
+      "skills": 7,
+      "units": 1,
+      "lessons": 7,
+      "lessons_over": 7,
+      "lessons_under": 0,
+      "problems": [
+        "skills_without_a_concept",
+        "unit_holding_too_many_skills",
+        "no_unit_quiz_blueprint",
+        "lessons_over_the_time_target"
+      ]
+    },
+    {
+      "event": "meteorology",
+      "skills": 8,
+      "units": 1,
+      "lessons": 8,
+      "lessons_over": 8,
+      "lessons_under": 0,
+      "problems": [
+        "skills_without_a_concept",
+        "unit_holding_too_many_skills",
+        "no_unit_quiz_blueprint",
+        "lessons_over_the_time_target"
+      ]
+    },
+    {
+      "event": "meteorology-b",
+      "skills": 8,
+      "units": 1,
+      "lessons": 8,
+      "lessons_over": 8,
+      "lessons_under": 0,
+      "problems": [
+        "skills_without_a_concept",
+        "unit_holding_too_many_skills",
+        "no_unit_quiz_blueprint",
+        "lessons_over_the_time_target"
+      ]
+    },
+    {
+      "event": "metric-mastery-b",
+      "skills": 8,
+      "units": 1,
+      "lessons": 8,
+      "lessons_over": 8,
+      "lessons_under": 0,
+      "problems": [
+        "skills_without_a_concept",
+        "unit_holding_too_many_skills",
+        "no_unit_quiz_blueprint",
+        "lessons_over_the_time_target"
+      ]
+    },
+    {
+      "event": "mission-possible-b",
+      "skills": 8,
+      "units": 1,
+      "lessons": 8,
+      "lessons_over": 8,
+      "lessons_under": 0,
+      "problems": [
+        "skills_without_a_concept",
+        "unit_holding_too_many_skills",
+        "no_unit_quiz_blueprint",
+        "lessons_over_the_time_target"
+      ]
+    },
+    {
+      "event": "mission-possible-c-2027",
+      "skills": 0,
+      "units": 1,
+      "lessons": 0,
+      "lessons_over": 0,
+      "lessons_under": 0,
+      "problems": [
+        "course_without_skills"
+      ]
+    },
+    {
+      "event": "ping-pong-parachute-b-2027",
+      "skills": 0,
+      "units": 1,
+      "lessons": 0,
+      "lessons_over": 0,
+      "lessons_under": 0,
+      "problems": [
+        "course_without_skills"
+      ]
+    },
+    {
+      "event": "ping-pong-parachute-c-2027",
+      "skills": 0,
+      "units": 1,
+      "lessons": 0,
+      "lessons_over": 0,
+      "lessons_under": 0,
+      "problems": [
+        "course_without_skills"
+      ]
+    },
+    {
+      "event": "potions-and-poisons-b",
+      "skills": 7,
+      "units": 1,
+      "lessons": 7,
+      "lessons_over": 7,
+      "lessons_under": 0,
+      "problems": [
+        "skills_without_a_concept",
+        "unit_holding_too_many_skills",
+        "no_unit_quiz_blueprint",
+        "lessons_over_the_time_target"
+      ]
+    },
+    {
+      "event": "protein-modeling-b-trial-2027",
+      "skills": 0,
+      "units": 1,
+      "lessons": 0,
+      "lessons_over": 0,
+      "lessons_under": 0,
+      "problems": [
+        "course_without_skills"
+      ]
+    },
+    {
+      "event": "protein-modeling-c-2027",
+      "skills": 0,
+      "units": 1,
+      "lessons": 0,
+      "lessons_over": 0,
+      "lessons_under": 0,
+      "problems": [
+        "course_without_skills"
+      ]
+    },
+    {
+      "event": "remote-sensing-b",
+      "skills": 8,
+      "units": 1,
+      "lessons": 8,
+      "lessons_over": 8,
+      "lessons_under": 0,
+      "problems": [
+        "skills_without_a_concept",
+        "unit_holding_too_many_skills",
+        "no_unit_quiz_blueprint",
+        "lessons_over_the_time_target"
+      ]
+    },
+    {
+      "event": "remote-sensing-c",
+      "skills": 8,
+      "units": 1,
+      "lessons": 8,
+      "lessons_over": 8,
+      "lessons_under": 0,
+      "problems": [
+        "skills_without_a_concept",
+        "unit_holding_too_many_skills",
+        "no_unit_quiz_blueprint",
+        "lessons_over_the_time_target"
+      ]
+    },
+    {
+      "event": "robot-tour-c",
+      "skills": 7,
+      "units": 1,
+      "lessons": 7,
+      "lessons_over": 7,
+      "lessons_under": 0,
+      "problems": [
+        "skills_without_a_concept",
+        "unit_holding_too_many_skills",
+        "no_unit_quiz_blueprint",
+        "lessons_over_the_time_target"
+      ]
+    },
+    {
+      "event": "rocks-and-minerals",
+      "skills": 8,
+      "units": 1,
+      "lessons": 8,
+      "lessons_over": 8,
+      "lessons_under": 0,
+      "problems": [
+        "skills_without_a_concept",
+        "unit_holding_too_many_skills",
+        "no_unit_quiz_blueprint",
+        "lessons_over_the_time_target"
+      ]
+    },
+    {
+      "event": "rocks-and-minerals-b",
+      "skills": 8,
+      "units": 3,
+      "lessons": 24,
+      "lessons_over": 0,
+      "lessons_under": 0,
+      "problems": []
+    },
+    {
+      "event": "rocks-and-minerals-c",
+      "skills": 8,
+      "units": 1,
+      "lessons": 8,
+      "lessons_over": 8,
+      "lessons_under": 0,
+      "problems": [
+        "skills_without_a_concept",
+        "unit_holding_too_many_skills",
+        "no_unit_quiz_blueprint",
+        "lessons_over_the_time_target"
+      ]
+    },
+    {
+      "event": "roller-coaster-b-2027",
+      "skills": 0,
+      "units": 1,
+      "lessons": 0,
+      "lessons_over": 0,
+      "lessons_under": 0,
+      "problems": [
+        "course_without_skills"
+      ]
+    },
+    {
+      "event": "scrambler-b",
+      "skills": 7,
+      "units": 1,
+      "lessons": 7,
+      "lessons_over": 7,
+      "lessons_under": 0,
+      "problems": [
+        "skills_without_a_concept",
+        "unit_holding_too_many_skills",
+        "no_unit_quiz_blueprint",
+        "lessons_over_the_time_target"
+      ]
+    },
+    {
+      "event": "season-resources-bc-2027",
+      "skills": 0,
+      "units": 1,
+      "lessons": 0,
+      "lessons_over": 0,
+      "lessons_under": 0,
+      "problems": [
+        "course_without_skills"
+      ]
+    },
+    {
+      "event": "solar-system-b",
+      "skills": 8,
+      "units": 1,
+      "lessons": 8,
+      "lessons_over": 8,
+      "lessons_under": 0,
+      "problems": [
+        "skills_without_a_concept",
+        "unit_holding_too_many_skills",
+        "no_unit_quiz_blueprint",
+        "lessons_over_the_time_target"
+      ]
+    },
+    {
+      "event": "thermodynamics-b-2027",
+      "skills": 0,
+      "units": 1,
+      "lessons": 0,
+      "lessons_over": 0,
+      "lessons_under": 0,
+      "problems": [
+        "course_without_skills"
+      ]
+    },
+    {
+      "event": "thermodynamics-c-2027",
+      "skills": 0,
+      "units": 1,
+      "lessons": 0,
+      "lessons_over": 0,
+      "lessons_under": 0,
+      "problems": [
+        "course_without_skills"
+      ]
+    },
+    {
+      "event": "water-quality-b",
+      "skills": 8,
+      "units": 1,
+      "lessons": 8,
+      "lessons_over": 8,
+      "lessons_under": 0,
+      "problems": [
+        "skills_without_a_concept",
+        "unit_holding_too_many_skills",
+        "no_unit_quiz_blueprint",
+        "lessons_over_the_time_target"
+      ]
+    },
+    {
+      "event": "water-quality-c",
+      "skills": 8,
+      "units": 1,
+      "lessons": 8,
+      "lessons_over": 8,
+      "lessons_under": 0,
+      "problems": [
+        "skills_without_a_concept",
+        "unit_holding_too_many_skills",
+        "no_unit_quiz_blueprint",
+        "lessons_over_the_time_target"
+      ]
+    },
+    {
+      "event": "wright-stuff-c-2027",
+      "skills": 0,
+      "units": 1,
+      "lessons": 0,
+      "lessons_over": 0,
+      "lessons_under": 0,
+      "problems": [
+        "course_without_skills"
+      ]
+    },
+    {
+      "event": "write-it-do-it-b",
+      "skills": 8,
+      "units": 1,
+      "lessons": 8,
+      "lessons_over": 8,
+      "lessons_under": 0,
+      "problems": [
+        "skills_without_a_concept",
+        "unit_holding_too_many_skills",
+        "no_unit_quiz_blueprint",
+        "lessons_over_the_time_target"
+      ]
+    }
+  ]
+}
