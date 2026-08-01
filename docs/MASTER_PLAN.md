@@ -252,6 +252,14 @@ changes that.
 
 **Status (2026-08-01): complete.**
 
+- **7a limitation, measured.** Recovery works — 76 figures from 8 real PDFs, furniture
+  correctly rejected — but **0 of the 43 currently-blocked items can be recovered**, and that
+  is the right answer rather than a tuning failure. Science Olympiad tests reference images
+  that are mostly **vector drawings** (`page.images` sees rasters only: one exam references 21
+  images and yields 2) and print them on a **separate image sheet**, so page adjacency carries
+  no information. Label counts and figure counts across three documents (21/2, 18/25, 3/13)
+  rule out an ordinal mapping too. Closing this needs vector-region rendering and caption OCR.
+  `scripts/backfill_figures.py` records the breakdown.
 - **7a** — `pdf_figures` recovers embedded figures from the retained PDF bytes. Furniture is
   rejected by dimensions, aspect, and cross-page repetition. Only an *unambiguous* attachment
   (one figure, one question, one page) un-drops an item; `ambiguous` attaches for review but

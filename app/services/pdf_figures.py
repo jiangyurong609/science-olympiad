@@ -155,9 +155,13 @@ def _content_type(name: str) -> str:
 # "Figure 3", "Fig. 2b", "Diagram A", "Image 4" — the labels a printed test actually uses to
 # tie a question to a picture. Matching on these is the only anchor the document itself
 # provides; everything else is adjacency.
+# The separator is `\s+`, not `\s*`, and the noun group carries its own case-insensitivity
+# rather than the whole pattern. With `re.I` on the whole pattern `[A-Z]` matched lowercase,
+# so "images", "figures" and "maps" all parsed as a label named "s" — page 2 of one real exam
+# reported ten labels, most of them noise.
 FIGURE_LABEL = re.compile(
-    r"\b(?:figure|fig\.?|diagram|image|photo|photograph|chart|graph|map)\s*"
-    r"([0-9]{1,3}[a-z]?|[A-Z])\b", re.I)
+    r"\b(?i:figure|fig\.?|diagram|image|photo|photograph|chart|graph|map)\s+"
+    r"(\d{1,3}[a-z]?|[A-Z])\b")
 
 # Which match kinds are strong enough to un-drop an image-dependent item. Adversarial review
 # noted that one raster and one item sharing a page proves only that — not that the raster is
@@ -226,14 +230,21 @@ def locate_items(text: str, items: list[dict]) -> list[int | None]:
     pages: list[int | None] = []
     cursor = 0
     for item in items:
-        stem = (item.get("stem") or "").strip()
-        probe = _probe(stem)
-        found = text.find(probe, cursor) if probe else -1
-        if found < 0 and probe:
-            found = text.find(probe)          # items may be reordered relative to the text
+        # The printed label is tried first because it is the one field the parser is told to
+        # preserve verbatim ("preserve the printed numbering"), while the stem is explicitly
+        # rewritten — the prompt asks for it to be expanded so it reads standalone. Matching
+        # the stem first therefore failed on exactly the items that were expanded most, which
+        # a backfill run measured directly: 11 of 43 could not be located at all.
+        label = str(item.get("label") or "").strip()
+        found = _find_label(text, label, cursor) if label else -1
+        if found < 0 and label:
+            found = _find_label(text, label, 0)
         if found < 0:
-            label = str(item.get("label") or "").strip()
-            found = _find_label(text, label, cursor) if label else -1
+            stem = (item.get("stem") or "").strip()
+            probe = _probe(stem)
+            found = text.find(probe, cursor) if probe else -1
+            if found < 0 and probe:
+                found = text.find(probe)      # items may be reordered relative to the text
         if found < 0:
             pages.append(None)
             continue
@@ -280,6 +291,31 @@ def attach_figures_to_items(text: str, items: list[dict],
 
     for item, page in zip(items, pages):
         item["page"] = page
+        stem = str(item.get("stem") or "")
+
+        # A named label anchors an item on its own, so this is tried before page location.
+        # It has to be: a backfill run showed 11 of 43 items unlocatable, and their stems read
+        # "Image 1 shows Enceladus…" — they named the figure explicitly while their rewritten
+        # text matched nothing in the source. Requiring page location first meant the
+        # strongest available anchor was never consulted for exactly the items that had one.
+        named = figure_labels_in(stem)
+        if named:
+            pages_with_label = [p for p, labels in labels_by_page.items() if named & labels]
+            if len(pages_with_label) == 1:
+                anchor_page = pages_with_label[0]
+                anchored = by_page.get(anchor_page, [])
+                if len(anchored) == 1:
+                    item["page"] = anchor_page
+                    item["figures"] = [anchored[0].descriptor]
+                    item["figure_match"] = "label_matched"
+                    item["figure_label"] = sorted(named & labels_by_page[anchor_page])[0]
+                    stats["located"] += 1
+                    stats["with_figures"] += 1
+                    stats["label_matched"] += 1
+                    if item.get("image_dependent"):
+                        stats["image_dependent_resolved"] += 1
+                    continue
+
         if page is None:
             stats["unlocated"] += 1
             item["figures"] = []
@@ -293,7 +329,6 @@ def attach_figures_to_items(text: str, items: list[dict],
             continue
         stats["with_figures"] += 1
 
-        stem = str(item.get("stem") or "")
         # An item that never mentions a figure has no figure to pair with. Attaching one
         # because it happened to share a page is how a text question ends up illustrated by
         # its neighbour's diagram.
@@ -302,10 +337,8 @@ def attach_figures_to_items(text: str, items: list[dict],
             stats["no_figure_reference"] += 1
             continue
 
-        # Strongest anchor: the stem names a printed label ("Figure 3") and exactly one
-        # figure sits on the page carrying that label. This is the only case where the
-        # pairing is *stated by the document* rather than inferred from adjacency.
-        named = figure_labels_in(stem)
+        # A label on the item's own page, where the global lookup above was inconclusive
+        # because the label appears on more than one page.
         matched = named & labels_by_page.get(page, set())
         if matched and len(page_figures) == 1:
             item["figure_match"] = "label_matched"
