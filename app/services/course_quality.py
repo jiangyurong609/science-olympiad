@@ -40,7 +40,11 @@ def block_text(block: dict) -> str:
             parts.append(node)
         elif isinstance(node, dict):
             for key, value in node.items():
-                if key not in {"type", "claim_ids", "passage_ids", "id", "generated_by"}:
+                # `superseded` archives the block's previous version so review can diff it.
+                # Searching it would keep reporting a defect that has already been repaired,
+                # sending a reviewer after a false alarm.
+                if key not in {"type", "claim_ids", "passage_ids", "id", "generated_by",
+                               "superseded", "repaired_by"}:
                     walk(value)
         elif isinstance(node, list):
             for item in node:

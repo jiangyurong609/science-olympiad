@@ -62,3 +62,28 @@ def test_position_and_heading_are_reported_so_a_reviewer_can_find_it():
 def test_clean_content_produces_nothing():
     assert blocks_citing_an_unavailable_source(
         [{"type": "summary", "points": ["Streak is more reliable than colour."]}]) == []
+
+
+def test_an_archived_original_does_not_keep_flagging_a_repaired_block():
+    """`superseded` keeps the pre-repair block so a reviewer can diff it. Searching that
+    archive would report a defect that has already been fixed."""
+    repaired = {
+        "type": "checkpoint",
+        "question": "A barite specimen does nothing in acid. Which statement fits?",
+        "choices": ["It is a sulfate", "It is a carbonate"],
+        "correct_index": 0,
+        "repaired_by": "repair_dangling_checkpoints",
+        "superseded": {"type": "checkpoint",
+                       "question": "Which statement best follows from the source packet?"},
+    }
+    assert blocks_citing_an_unavailable_source([repaired]) == []
+
+
+def test_a_block_that_still_dangles_is_flagged_even_if_it_has_an_archive():
+    still_bad = {
+        "type": "checkpoint",
+        "question": "According to the source, which mineral fizzes?",
+        "repaired_by": "repair_dangling_checkpoints",
+        "superseded": {"question": "old"},
+    }
+    assert len(blocks_citing_an_unavailable_source([still_bad])) == 1
