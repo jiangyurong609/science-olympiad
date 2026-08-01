@@ -35,9 +35,13 @@ from app.models.entities import (
     Concept, ContentGap, Course, Event, Lesson, LessonSkill, LessonVersion, ScientificClaim,
     Skill, Source, SourceSnapshot,
 )
-from scripts.open_sources import DOMAIN_SOURCES, EVENT_DOMAIN
+from scripts.open_sources import BLOCKED_HOSTS, DOMAIN_SOURCES, EVENT_DOMAIN, rights_for
 
-SUBSTANTIVE_BLOCKS = {"opening", "property_cards", "steps", "worked_example", "summary"}
+# Imported, not redeclared. These two scripts drifted: the audit began counting `checkpoint`
+# as substantive while the grounder kept its own older set, so the grounder was not even
+# attempting to ground the blocks the gate measures. A metric and the work aimed at it must
+# read the same definition.
+from scripts.audit_grounding import SUBSTANTIVE_BLOCKS
 STOPWORDS = {
     "the", "and", "are", "for", "that", "with", "this", "from", "have", "which", "their",
     "when", "into", "than", "then", "them", "these", "those", "such", "each", "also", "can",
@@ -118,29 +122,34 @@ def ensure_sources(db: Session, event: Event, apply: bool) -> list[Source]:
         raise SystemExit(f"no open-source domain mapped for {event.slug!r}")
     spec = DOMAIN_SOURCES[domain]
     sources: list[Source] = []
+    from urllib.parse import urlparse
     for url in spec["urls"]:
+        if urlparse(url).netloc.lower() in BLOCKED_HOSTS:
+            print(f"   skipping {url} — host refuses this crawler")
+            continue
+        # Rights come from a declared per-host rule, never from a hostname test at this call
+        # site: federal works are public domain, CC-BY-SA references are cleared for *fact*
+        # grounding with attribution and never for reproducing their expression, and anything
+        # else must be declared before it can be used.
+        rights = rights_for(url, spec)
         source = db.scalar(select(Source).where(Source.url == url))
         if source is None:
             if not apply:
                 print(f"   would register {url}")
                 continue
-            # Federal works are public domain; CC-BY-SA references are cleared for *fact*
-            # grounding with attribution, never for reproducing their expression.
-            wiki = "wikipedia.org" in url
             source = Source(
                 url=url,
-                title=f"{'Wikipedia' if wiki else spec['publisher']} — {domain} reference",
-                rights_status="fact_grounding_allowed" if wiki else "public_domain",
+                title=f"{rights['publisher']} — {domain} reference",
+                rights_status=rights["rights_status"],
                 approved=True,
-                license_name="CC-BY-SA 4.0 (facts used with attribution)" if wiki else spec["license"],
-                publisher="Wikipedia contributors" if wiki else spec["publisher"])
+                license_name=rights["license_name"],
+                publisher=rights["publisher"])
             db.add(source); db.flush()
-        else:
-            # these are federal works; make the rights explicit rather than assumed
-            if apply:
-                source.rights_status = ("fact_grounding_allowed"
-                                        if "wikipedia.org" in source.url else "public_domain")
-                source.approved = True
+        elif apply:
+            # make the rights explicit rather than assumed, and correct any earlier guess
+            source.rights_status = rights["rights_status"]
+            source.license_name = rights["license_name"]
+            source.approved = True
         sources.append(source)
     return sources
 

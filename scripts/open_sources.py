@@ -9,6 +9,39 @@ Each event maps to one domain; the domain's source provides the factual groundin
 for that event's generated course and exam.
 """
 
+# Rights are declared per host rather than inferred at the call site. `ensure_sources` used to
+# decide with `"wikipedia.org" in url` and default everything else to public domain, which is
+# only correct while every non-Wikipedia entry is a federal work. Adding a CC-BY open textbook
+# under that rule would have silently labelled it public domain — a rights error, and the kind
+# that stays invisible until someone relies on it.
+HOST_RIGHTS = {
+    "en.wikipedia.org": {
+        "rights_status": "fact_grounding_allowed",
+        "license_name": "CC-BY-SA 4.0 (facts used with attribution)",
+        "publisher": "Wikipedia contributors",
+    },
+    "www.usgs.gov": {"rights_status": "public_domain", "license_name": "public_domain",
+                     "publisher": "U.S. Geological Survey"},
+    "www.nps.gov": {"rights_status": "public_domain", "license_name": "public_domain",
+                    "publisher": "U.S. National Park Service"},
+}
+
+# Hosts that refuse our crawler, recorded so the same URLs are not tried again. opentextbc.ca
+# hosts an ideal CC-BY geology textbook and returns 403 to this user agent; using it would
+# need permission or a different access route, not a retry.
+BLOCKED_HOSTS = {"opentextbc.ca"}
+
+
+def rights_for(url: str, spec: dict) -> dict:
+    """Rights for one URL: an explicit host rule, else the domain's declared default."""
+    from urllib.parse import urlparse
+    host = urlparse(url).netloc.lower()
+    if host in HOST_RIGHTS:
+        return dict(HOST_RIGHTS[host])
+    return {"rights_status": "public_domain", "license_name": spec["license"],
+            "publisher": spec["publisher"]}
+
+
 # domain -> {publisher, license, urls[]}
 DOMAIN_SOURCES = {
     "geology": {
@@ -44,6 +77,31 @@ DOMAIN_SOURCES = {
             "https://en.wikipedia.org/wiki/Plate_tectonics",
             "https://en.wikipedia.org/wiki/Solid_solution",
             "https://en.wikipedia.org/wiki/Streak_(mineralogy)",
+            # Added to close the eight recorded ContentGaps on rocks-and-minerals-b: the
+            # originals are overview pages, and the ungrounded blocks teach specifics
+            # (hazards, differentiation, depositional settings, facies) they never reach.
+            "https://en.wikipedia.org/wiki/Mineralogy",
+            "https://en.wikipedia.org/wiki/Lustre_(mineralogy)",
+            "https://en.wikipedia.org/wiki/Crystal_system",
+            "https://en.wikipedia.org/wiki/Specific_gravity",
+            "https://en.wikipedia.org/wiki/Crystal_structure",
+            "https://en.wikipedia.org/wiki/Polymorphism_(materials_science)",
+            "https://en.wikipedia.org/wiki/Carbonate_mineral",
+            "https://en.wikipedia.org/wiki/Sulfide_mineral",
+            "https://en.wikipedia.org/wiki/Oxide_mineral",
+            "https://en.wikipedia.org/wiki/Asbestos",
+            "https://en.wikipedia.org/wiki/Fractional_crystallization_(geology)",
+            "https://en.wikipedia.org/wiki/Igneous_differentiation",
+            "https://en.wikipedia.org/wiki/Types_of_volcanic_eruptions",
+            "https://en.wikipedia.org/wiki/Lava",
+            "https://en.wikipedia.org/wiki/Subduction",
+            "https://en.wikipedia.org/wiki/Mid-ocean_ridge",
+            "https://en.wikipedia.org/wiki/Hotspot_(geology)",
+            "https://en.wikipedia.org/wiki/Depositional_environment",
+            "https://en.wikipedia.org/wiki/Clastic_rock",
+            "https://en.wikipedia.org/wiki/Diagenesis",
+            "https://en.wikipedia.org/wiki/Foliation_(geology)",
+            "https://en.wikipedia.org/wiki/Contact_metamorphism",
         ],
     },
     "meteorology": {

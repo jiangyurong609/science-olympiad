@@ -112,7 +112,7 @@ blocks recorded as gaps across 8 skills). Demanding 100% *coverage* would have m
 the evidence rule, which is exactly the failure an earlier pass made; the shortfall is a fact
 about available open sources and is now visible rather than hidden.
 
-**Re-measured after the Phase 3 lesson split, and again after adversarial review: 29.6%**
+**Raised to 65.3% by acquiring more sources (2026-08-01).** Before that: 29.6%,
 (58 of 196 blocks), accountability still 100%. The first re-measure said 47.2% because the
 audit excluded `checkpoint` blocks on the reasoning that a question asserts nothing — true of
 a bare question, false of a generated one, which carries choices and an explanation of why
@@ -317,7 +317,7 @@ Record the decision and its rationale here when made.
 | Exams without an explicit disposition | 150 | **0** | 0 | 0 |
 | In-progress attempts stranded | — | **0** | 0 | 0 |
 | Pilot blocks accounted for (evidenced or an open gap) | 0% | **100%** | 100% | 1 |
-| Pilot blocks evidence-backed | 0% | **29.6%** (56% pre-split; 47.2% before checkpoints counted) | — | 1 |
+| Pilot blocks evidence-backed | 0% | **65.3%** (128/196) | — | 1 |
 | Pilot items passing validation | — | **93.1%** | ≥90% | 2 |
 | Pilot `audit_course` blockers needing no human | many | **0** | 0 | 3 |
 | Pilot `audit_course` blockers needing a human | — | **252** | 0 | 3 |
