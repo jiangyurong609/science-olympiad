@@ -727,3 +727,19 @@ details[open] summary { color: var(--forest); }
 .inline-video-note { font-size: .8rem; opacity: .7; margin: .45rem 0 0; }
 .lesson-video-hint { font-size: .82rem; opacity: .75; margin: .5rem 0 0; }
 @media (prefers-color-scheme: dark) { .outline-play { color: #3fb87e; } }
+
+/* The lesson must be visible when it opens: video is a slim offer, then it plays in flow
+   above the section it teaches — never a full-viewport player pushing the lesson below. */
+.lesson-video-bar { display: flex; flex-wrap: wrap; align-items: center; gap: .6rem 1rem; margin: 0 0 1rem; }
+.watch-all { display: inline-flex; align-items: center; gap: .55rem; font: inherit; font-size: .9rem;
+  padding: .45rem .8rem; border-radius: 999px; cursor: pointer; color: #0f6d49;
+  background: rgba(31, 138, 91, .12); border: 1px solid rgba(31, 138, 91, .35); }
+.watch-all:hover { background: rgba(31, 138, 91, .2); }
+.watch-all-icon { font-size: .78rem; }
+.watch-all-meta { opacity: .75; font-variant-numeric: tabular-nums; font-size: .82rem; }
+.watch-all-hint { margin: 0; font-size: .8rem; opacity: .7; }
+/* Cap the player so the reading content stays on screen with it. */
+.inline-video-player { max-height: 46vh; }
+.visually-hidden { position: absolute; width: 1px; height: 1px; overflow: hidden;
+  clip: rect(0 0 0 0); clip-path: inset(50%); white-space: nowrap; }
+@media (prefers-color-scheme: dark) { .watch-all { color: #3fb87e; } }

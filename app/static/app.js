@@ -3513,23 +3513,19 @@ async function loadLessonVideo(lessonId) {
   const section = $('lesson-video');
   if (!section) return;
   section.hidden = true;
+  state.lessonVideoChapters = [];
   try {
     const data = await api(`/lessons/${lessonId}/videos`);
     const chapters = data.chapters || [];
     if (!chapters.length) return;
     state.lessonVideoChapters = chapters;
-    const count = $('lesson-video-count');
-    const totalMinutes = Math.round(chapters.reduce((sum, c) => sum + (c.duration_seconds || 0), 0) / 60);
-    count.textContent = `${chapters.length} chapter${chapters.length === 1 ? '' : 's'}` +
-      (totalMinutes ? ` · about ${totalMinutes} min` : '');
-    // The outline owns chapter navigation; this is only a "start watching" entry point.
-    $('lesson-video-chapters').innerHTML = '';
-    playVideoChapter(0, false);
+    const total = chapters.reduce((sum, c) => sum + (c.duration_seconds || 0), 0);
+    $('lesson-video-count').textContent =
+      `${chapters.length} chapter${chapters.length === 1 ? '' : 's'} · ${formatClock(total)}`;
     section.hidden = false;
-    renderLessonOutline();
+    renderLessonOutline();   // the outline is where chapters actually live
   } catch (error) {
-    // A missing video must never break the lesson itself.
-    section.hidden = true;
+    section.hidden = true;   // a missing video must never break the lesson
   }
 }
 
@@ -3537,34 +3533,6 @@ function formatClock(seconds) {
   const total = Math.max(0, Math.round(seconds || 0));
   return `${Math.floor(total / 60)}:${String(total % 60).padStart(2, '0')}`;
 }
-
-function playVideoChapter(index, autoplay = true) {
-  const chapters = state.lessonVideoChapters || [];
-  const chapter = chapters[index];
-  if (!chapter) return;
-  const player = $('lesson-video-player');
-  player.src = chapter.playback_url;
-  if (autoplay) player.play().catch(() => {});
-  document.querySelectorAll('[data-video-chapter]').forEach(button => {
-    button.setAttribute('aria-pressed', String(Number(button.dataset.videoChapter) === index));
-  });
-  state.currentVideoChapter = index;
-}
-
-document.addEventListener('click', event => {
-  const button = event.target.closest('[data-video-chapter]');
-  if (button) playVideoChapter(Number(button.dataset.videoChapter));
-});
-
-// Roll straight into the next chapter, the way a lesson should flow.
-document.addEventListener('DOMContentLoaded', () => {
-  const player = $('lesson-video-player');
-  if (!player) return;
-  player.addEventListener('ended', () => {
-    const next = (state.currentVideoChapter ?? 0) + 1;
-    if ((state.lessonVideoChapters || [])[next]) playVideoChapter(next);
-  });
-});
 
 // --- Staff: video review queue ----------------------------------------------
 async function renderVideoReviewQueue() {
@@ -3627,4 +3595,9 @@ document.addEventListener('click', event => {
     const host = $('lesson-inline-video');
     host.hidden = true; host.innerHTML = '';
   }
+});
+
+
+document.addEventListener('click', event => {
+  if (event.target.closest('#lesson-watch-all')) playChapterInline(0);
 });
