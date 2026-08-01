@@ -730,7 +730,9 @@ function renderEventCatalog() {
   }
   chips.forEach(chip => chip.setAttribute('aria-pressed', String(chip.dataset.catalogDivision === state.catalogDivision)));
   const catalog = (state.events || [])
-    .filter(event => event.category && event.season_status === 'current')
+    // Prior-season events rotated out of the current slate but still hold real lessons and
+    // exams, so they stay in the catalog and are labelled rather than hidden.
+    .filter(event => event.category && ['current', 'prior_season_practice'].includes(event.season_status))
     .filter(event => state.catalogDivision === 'all' || event.division === state.catalogDivision)
     .sort((a, b) => a.category.localeCompare(b.category) || a.name.localeCompare(b.name));
   $('event-catalog-count').textContent = catalog.length
@@ -753,7 +755,7 @@ function renderEventCatalog() {
         if (event.lesson_count > 0) actions.push(`<button type="button" data-open-course="${event.id}" data-course-slug="${escapeHtml(event.slug)}" class="catalog-course-link">Start Course</button>`);
         if (event.exam_count > 0 || event.material_count > 0) actions.push(`<button type="button" data-open-exam-event="${escapeHtml(event.slug)}" data-event-name="${escapeHtml(event.name)}" class="catalog-exam-link">${event.exam_count > 0 ? 'Practice & Resources' : 'View Resources'}</button>`);
         return `<article class="catalog-event surface">
-          <header><h4>${escapeHtml(event.name)}</h4><span class="division-badge">Div ${escapeHtml(event.division)}</span></header>
+          <header><h4>${escapeHtml(event.name)}</h4><span class="division-badge">Div ${escapeHtml(event.division)}</span>${event.season_status === 'prior_season_practice' ? '<span class="prior-season-badge">Prior season</span>' : ''}</header>
           ${event.topic_focus ? `<p>${escapeHtml(event.topic_focus)}</p>` : ''}
           ${(event.lesson_count > 0 || event.exam_count > 0 || event.material_count > 0) ? `<div class="catalog-content-badge"><span aria-hidden="true">✦</span> ${event.material_count} resource${event.material_count === 1 ? '' : 's'} · ${event.lesson_count} lesson${event.lesson_count === 1 ? '' : 's'} · ${event.exam_count} exam${event.exam_count === 1 ? '' : 's'}</div>` : ''}
           <footer>

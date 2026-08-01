@@ -19,12 +19,29 @@ def _seed(db):
     return live.id, prior.id, twin.id
 
 
-def test_live_catalog_excludes_prior_and_archived(client):
+def test_catalog_keeps_prior_season_events_and_drops_only_retired_twins(client):
+    """Prior-season events rotated out of the slate but still hold real lessons and exams —
+    hiding them made content-rich events look deleted. Only retired duplicates are dropped."""
     with SessionLocal() as db:
         _seed(db)
     rows = client.get("/api/events").json()
     slugs = {r["slug"] for r in rows}
-    assert slugs == {"astronomy-c"}
+    assert slugs == {"astronomy-c", "entomology-c"}, "prior-season practice must stay visible"
+    prior = next(r for r in rows if r["slug"] == "entomology-c")
+    assert prior["season_status"] == "prior_season_practice", "and be labelled as such"
+
+
+def test_content_bearing_prior_event_is_not_lost_from_the_catalog(client):
+    """Regression: a prior-season event holding lessons/questions must remain reachable."""
+    with SessionLocal() as db:
+        live, prior, twin = _seed(db)
+        from app.models.entities import Question
+        db.add(Question(event_id=prior, stem="A prior-season question about insects here.",
+                        choices=["a", "b", "c", "d"], answer_spec={"correct_index": 0},
+                        status="published"))
+        db.commit()
+    slugs = {r["slug"] for r in client.get("/api/events").json()}
+    assert "entomology-c" in slugs
 
 
 def test_archive_requires_auth(client):

@@ -708,3 +708,9 @@ details[open] summary { color: var(--forest); }
   border: 1px solid rgba(128, 145, 140, .35); background: transparent; color: inherit; resize: vertical; }
 .video-review-actions { display: flex; gap: .6rem; justify-content: flex-end; flex-wrap: wrap; }
 @media (max-width: 560px) { .video-chapter { grid-template-columns: auto 1fr auto; } .video-chapter-flag { display: none; } }
+
+/* Prior-season events still carry real practice content; label them rather than hide them. */
+.prior-season-badge { font-size: .64rem; text-transform: uppercase; letter-spacing: .07em;
+  padding: .12rem .42rem; border-radius: 4px; margin-left: .4rem; white-space: nowrap;
+  background: rgba(169, 118, 31, .16); color: #a9761f; border: 1px solid rgba(169, 118, 31, .35); }
+@media (prefers-color-scheme: dark) { .prior-season-badge { color: #d7a24a; } }

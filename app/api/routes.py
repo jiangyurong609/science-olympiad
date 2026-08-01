@@ -443,8 +443,12 @@ def bootstrap_firebase_profile(
 
 import re as _re
 
-# Events with these statuses are not part of the live catalog (R-C6): prior_season_practice
-# is reachable via the archive surface; archived_superseded are retired consolidation twins.
+# Retired consolidation twins are the only events removed from the catalog: they are exact
+# duplicates of a canonical event, so showing them would be noise.
+RETIRED_SEASON_STATUSES = {"archived_superseded"}
+# Prior-season practice is NOT retired — those events rotated out of the current season but
+# still hold real lessons, questions and exams, so they stay in the catalog (labelled by
+# season_status) rather than disappearing. Both appear on the archive surface.
 ARCHIVE_SEASON_STATUSES = {"prior_season_practice", "archived_superseded"}
 
 
@@ -468,7 +472,7 @@ def _canonical_event_for(db: Session, event: Event) -> Event | None:
 def list_events(db: Session = Depends(get_db)):
     events = db.scalars(select(Event).where(
         Event.active.is_(True),
-        Event.season_status.notin_(ARCHIVE_SEASON_STATUSES),
+        Event.season_status.notin_(RETIRED_SEASON_STATUSES),
     ).order_by(Event.name)).all()
     lesson_counts = dict(db.execute(
         select(Lesson.event_id, func.count(Lesson.id))
