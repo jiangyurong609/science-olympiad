@@ -16,7 +16,8 @@ from sqlalchemy.orm import Session
 
 from app.services.student_visibility import DISPOSITION_UNREVIEWED_PRACTICE
 from app.models.entities import (
-    Event, Exam, ExamItem, Question, QuestionStatus, Source, SourceSnapshot,
+    Event, EventSourceMap, Exam, ExamItem, Question, QuestionStatus, Source,
+    SourceSnapshot,
 )
 from app.services.model_provider import ModelProviderError, OpenAICompatibleProvider
 from app.services.pdf_figures import attach_figures_to_items, extract_figures
@@ -126,7 +127,8 @@ def _stem_title(title: str) -> str:
     return _TRIM.sub(" ", without_role.lower()).strip()
 
 
-def find_key_source(db: Session, exam_source: Source) -> Source | None:
+def find_key_source(db: Session, exam_source: Source,
+                    event: "Event | None" = None) -> Source | None:
     """Find the answer key that belongs to this test.
 
     27 of 96 imports ran with no key at all — 1,226 items — while the matching key sat in the
@@ -138,6 +140,11 @@ def find_key_source(db: Session, exam_source: Source) -> Source | None:
     normalisation. A fuzzy match here would attach one event's key to another event's test,
     which produces confidently wrong grading — strictly worse than the missing key it
     replaces. When two candidates tie, none is chosen.
+
+    Normalised titles are not unique across the catalog, so title alone is not enough:
+    adversarial review pointed out that two events can own identically-named files and the
+    sole match would then be another event's key. When the event is known, candidates are
+    restricted to sources mapped to it.
     """
     if not _TEST_TOKENS.search(exam_source.title or ""):
         # not named as a test; there is no role word to swap, so nothing reliable to match on
@@ -150,6 +157,21 @@ def find_key_source(db: Session, exam_source: Source) -> Source | None:
             Source.id != exam_source.id)).all()
         if _KEY_TOKENS.search(source.title or "") and _stem_title(source.title) == wanted
     ]
+    if event is not None:
+        mapped = set(db.scalars(select(EventSourceMap.source_id).where(
+            EventSourceMap.event_id == event.id)).all())
+        if mapped:
+            scoped = [c for c in candidates if c.id in mapped]
+            # only narrow when the mapping actually knows about this event's sources; an
+            # empty intersection means the mapping is incomplete, not that the key is wrong
+            if scoped:
+                candidates = scoped
+        exam_mapped = db.scalar(select(EventSourceMap).where(
+            EventSourceMap.event_id == event.id,
+            EventSourceMap.source_id == exam_source.id))
+        if exam_mapped is not None and mapped:
+            # the test is mapped to this event, so a key that is not is a different event's
+            candidates = [c for c in candidates if c.id in mapped]
     if len(candidates) != 1:
         return None
     return candidates[0]
@@ -229,21 +251,66 @@ def parse_confidence(item: dict) -> tuple[float, list[str]]:
     return max(0.0, round(score, 3)), reasons
 
 
+def answer_confidence(item: dict) -> tuple[float, list[str]]:
+    """Score only whether the *answer* was established — not whether the stem was.
+
+    These were one number, and adversarial review showed the conflation cut both ways: a
+    perfectly good official answer was erased because its stem could not be located in the
+    extracted text (a PDF-extraction artefact, not an answer problem), while a multiple-choice
+    item with equally poor signals kept a valid-looking index and stayed gradeable. So a
+    correct key was discarded and an unverified one was not.
+
+    Stem signals belong to segmentation and are scored by `parse_confidence`. This looks only
+    at answer provenance.
+    """
+    reasons: list[str] = []
+    score = 1.0
+    qtype = item.get("question_type") or "short_answer"
+    choices = [c for c in (item.get("choices") or []) if str(c).strip()]
+    correct_index = item.get("correct_index")
+
+    if qtype == "single_choice":
+        if len(choices) < 2:
+            score -= 0.6
+            reasons.append("multiple_choice_without_choices")
+        if not isinstance(correct_index, int) or not 0 <= correct_index < len(choices):
+            score -= 0.6
+            reasons.append("no_valid_correct_index")
+    else:
+        reference = str(item.get("reference_answer") or "").strip()
+        if not reference:
+            score -= 0.6
+            reasons.append("no_reference_answer")
+        elif len(reference) > 400:
+            # a paragraph is a passage the parser lifted, not an answer it isolated
+            score -= 0.3
+            reasons.append("reference_answer_looks_like_prose")
+    if not item.get("has_key_source", True):
+        # no answer key was supplied, so any answer came from the test paper itself
+        score -= 0.2
+        reasons.append("no_answer_key_supplied")
+    return max(0.0, round(score, 3)), reasons
+
+
 def _withhold_untrusted_answer(item: dict, spec: dict, qtype: str,
                                reasons: list[str]) -> dict:
-    """Blank an answer the parse did not establish, so it reaches the needs-key queue.
+    """Make an unestablished answer ungradeable, whatever the question type.
 
-    A low-confidence short answer is worse than a missing one: a student is graded against a
-    guess and told they are wrong. Emptying it makes the item ungradeable, which is what
-    `/content/questions/needs-key` selects on, so it surfaces for an editor instead of
-    silently scoring.
+    This used to blank short answers only, leaving a low-confidence multiple-choice item with
+    a plausible-looking index that scoring would happily use. Every type is now made
+    ungradeable, and the parsed value is kept in `withheld_answer` rather than destroyed —
+    an editor confirming the key needs to see what the parser proposed, and deleting it would
+    make review harder than it needs to be.
     """
-    if qtype != "short_answer":
-        return spec
     withheld = dict(spec)
-    withheld["answer"] = ""
-    withheld["accepted"] = []
-    withheld["withheld_reason"] = ", ".join(reasons) or "low_parse_confidence"
+    withheld["withheld_reason"] = ", ".join(reasons) or "low_answer_confidence"
+    if qtype == "single_choice":
+        withheld["withheld_answer"] = spec.get("correct_index")
+        withheld.pop("correct_index", None)
+    else:
+        withheld["withheld_answer"] = spec.get("answer")
+        withheld["answer"] = ""
+        withheld["accepted"] = []
     return withheld
 
 
@@ -326,6 +393,13 @@ def build_questions(
         # shared that page, and guessing which pairs with which would make an unanswerable
         # item look answerable — the exact failure this is meant to end.
         resolved = bool(figures) and item.get("figure_match") == "unique"
+        # Only a verified pairing reaches `Question.assets`, which is what the exam snapshot
+        # serves. Ambiguous candidates used to be copied there for *every* item on the page,
+        # including plain text items the model never flagged as image-dependent — so a
+        # question could be served a figure that belongs to its neighbour. Candidates are kept
+        # in provenance for review instead, where they inform an editor without being shown.
+        served_assets = list(figures) if resolved else []
+        candidate_figures = [] if resolved else list(figures)
         if image_dependent and not resolved and not include_image_dependent:
             continue
         stem = str(item.get("stem") or "").strip()
@@ -333,10 +407,14 @@ def build_questions(
             continue
         qtype, choices, answer_spec = _answer_spec(item)
         confidence, confidence_reasons = parse_confidence(item)
-        trustworthy = is_trustworthy(confidence, confidence_reasons)
+        item.setdefault("has_key_source", key_source is not None)
+        ans_confidence, ans_reasons = answer_confidence(item)
+        # segmentation quality and answer quality are judged separately: an unlocated stem is
+        # a reason to review the item, not a reason to throw away a valid official key
+        trustworthy = is_trustworthy(ans_confidence, ans_reasons)
         if not trustworthy:
             answer_spec = _withhold_untrusted_answer(
-                item, answer_spec, qtype, confidence_reasons)
+                item, answer_spec, qtype, ans_reasons)
         question = Question(
             event_id=event.id,
             source_id=exam_source.id,
@@ -344,7 +422,7 @@ def build_questions(
             question_type=qtype,
             stem=stem,
             choices=choices,
-            assets=list(figures),
+            assets=served_assets,
             answer_spec=answer_spec,
             explanation=str(item.get("acceptance_notes") or item.get("reference_answer") or ""),
             citations=[{"source_id": exam_source.id}],
@@ -362,9 +440,12 @@ def build_questions(
                 "figure_match": item.get("figure_match", "none"),
                 "source_page": item.get("page"),
                 "figure_resolved": resolved,
+                "figure_candidates": candidate_figures,
                 "parse_confidence": confidence,
                 "parse_confidence_reasons": confidence_reasons,
-                "answer_withheld": not trustworthy and qtype == "short_answer",
+                "answer_confidence": ans_confidence,
+                "answer_confidence_reasons": ans_reasons,
+                "answer_withheld": not trustworthy,
                 "unverified_auto_import": True,
             },
         )
@@ -432,7 +513,7 @@ def import_past_test(
         raise ValueError(f"Source {exam_source.id} has no retained text to parse")
     # the caller may not know a key exists; look for the obvious sibling before giving up on
     # answers entirely, which is how 1,226 items were imported with an empty key
-    key_source = key_source or find_key_source(db, exam_source)
+    key_source = key_source or find_key_source(db, exam_source, event)
     key_snapshot = _latest_snapshot(db, key_source.id) if key_source else None
     key_text = (key_snapshot.extracted_text if key_snapshot else "") or ""
 
@@ -462,6 +543,8 @@ def import_past_test(
         "image_dependent_items": image_dependent,
         "low_confidence_items": sum(
             1 for i in items if not is_trustworthy(*parse_confidence(i))),
+        "answers_withheld": sum(
+            1 for i in items if not is_trustworthy(*answer_confidence(i))),
         "image_dependent_recovered": sum(
             1 for i in items
             if i.get("image_dependent") and i.get("figure_match") == "unique"),

@@ -192,3 +192,77 @@ def test_every_served_lesson_field_is_pinned():
         row = build_manifest(db, course)["lessons"][0]
     for field in ("id", "slug", "title", "version", "status", "estimated_minutes"):
         assert field in row, f"{field} is served but not pinned"
+
+
+# --------------------------------------------- rollback must restore content, not a pointer
+
+def _served_lesson_state(db, lesson_id):
+    """What a student read resolves: lesson.current_version, not the manifest."""
+    lesson = db.get(Lesson, lesson_id)
+    return (lesson.current_version, lesson.title, lesson.status)
+
+
+def test_rollback_restores_the_lesson_version_a_student_actually_reads():
+    """The finding that made the Phase 4 gate false.
+
+    Rollback moved `course.current_version` and marked a prior manifest active, and stopped.
+    Student lesson reads resolve `lesson.current_version`, so a lesson edited to v2 kept being
+    served after rolling back to release v1 — the audit record said one thing and the product
+    served another.
+    """
+    with SessionLocal() as db:
+        course, actor, _, _ = _course(db)
+        lesson = db.query(Lesson).filter(Lesson.slug.like("l-%")).first()
+        before = _served_lesson_state(db, lesson.id)
+        publish_release(db, actor, course, notes="v1")
+
+        # edit the lesson the way a content change really happens, and release again
+        db.add(LessonVersion(lesson_id=lesson.id, version=2,
+                             content=[{"type": "opening"}, {"type": "summary"}]))
+        lesson.current_version = 2
+        lesson.title = "Rewritten"
+        db.flush()
+        course.current_version = 2
+        publish_release(db, actor, course, notes="v2")
+        db.flush()
+        assert _served_lesson_state(db, lesson.id) != before
+
+        rollback_release(db, actor, course)
+        db.flush()
+
+        assert _served_lesson_state(db, lesson.id) == before, \
+            "rollback must restore what is served, not only the course pointer"
+
+
+def test_rollback_withdraws_items_published_after_the_release():
+    """An item published after release v1 was never part of it."""
+    with SessionLocal() as db:
+        course, actor, skill, event = _course(db)
+        publish_release(db, actor, course, notes="v1")
+
+        later = Question(event_id=event.id, concept_id=skill.concept_id, stem="Added later",
+                         question_type="single_choice", choices=["a", "b"],
+                         answer_spec={"correct_index": 0}, status="published")
+        db.add(later); db.flush()
+        course.current_version = 2
+        publish_release(db, actor, course, notes="v2")
+        db.flush()
+
+        rollback_release(db, actor, course)
+        db.flush()
+        assert db.get(Question, later.id).status != "published", \
+            "an item that was not in the restored release must not stay published"
+
+
+def test_rollback_reports_what_it_could_not_restore():
+    """A lesson deleted since the release cannot be brought back by moving a pointer, and
+    silently succeeding would recreate the false confidence this fix removes."""
+    from app.services.content_release import restore_from_manifest
+    with SessionLocal() as db:
+        course, actor, _, _ = _course(db)
+        manifest = build_manifest(db, course)
+        manifest["lessons"].append({"id": 999_999, "slug": "gone", "title": "Gone",
+                                    "version": 1, "status": "published"})
+        result = restore_from_manifest(db, manifest)
+    assert result["unrestorable"], "a missing lesson must be reported, not ignored"
+    assert "999999" in result["unrestorable"][0]

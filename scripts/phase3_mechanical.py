@@ -200,12 +200,21 @@ def record_student_destinations(db: Session, course: Course, versions: dict,
             continue
         reached = sorted(source_to_lessons.get(row.source_id, set()))
         if not reached:
-            out["demoted_to_reference_only"] += 1
+            # This used to set `instructional_role = "reference_only"`, which `course_quality`
+            # exempts from the `source_destination` check — so the blocker vanished without
+            # anything being fixed. Adversarial review flagged it as relabelling, correctly:
+            # "no lesson cites it" is evidence that the source is *unused*, not evidence about
+            # what it was for. It may be an instructional source whose content was lost in a
+            # regeneration, which is exactly the case worth surfacing.
+            #
+            # The finding is now recorded and the blocker deliberately left standing. Only a
+            # reviewer can say whether this source should be connected to a lesson or withdrawn.
+            out["unused_left_blocking_for_review"] += 1
             if apply:
-                row.instructional_role = "reference_only"
                 row.decision_reason = (
-                    "No lesson in the current course version cites a claim from this source, "
-                    "so it is reference material rather than instructional content."
+                    "No lesson in the current course version cites a claim from this source. "
+                    "Its intended role is preserved; a reviewer must either connect it to "
+                    "student content or withdraw it with a reason."
                 )
             continue
         titles = [lesson_by_id[lid].title for lid in reached if lid in lesson_by_id]

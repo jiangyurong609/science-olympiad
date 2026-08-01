@@ -19,6 +19,13 @@ from app.services.past_test_import import find_key_source
 _UNIQUE = itertools.count(1)
 
 
+def _map(db, event, source):
+    """EventSourceMap has several NOT NULL columns; keep the requirement in one place."""
+    from app.models.entities import EventSourceMap
+    db.add(EventSourceMap(event_id=event.id, source_id=source.id, purpose="past_test",
+                          source_tier="official", source_universe_version="test"))
+
+
 def _source(db, title):
     source = Source(url=f"local://{title}-{next(_UNIQUE)}", title=title,
                     rights_status="public_domain", approved=True)
@@ -88,3 +95,61 @@ def test_a_title_that_is_only_a_role_word_matches_nothing():
         test = _source(db, "TEST")
         _source(db, "KEY")
         assert find_key_source(db, test) is None
+
+
+# ------------------------------------------------- event scoping (adversarial review finding)
+
+def test_identically_titled_keys_on_different_events_do_not_cross():
+    """Normalised titles are not unique across the catalog.
+
+    `find_key_source` matched on title alone, so if another event owned the only same-titled
+    key it was accepted and sent to the parser — students graded against a different test's
+    answers. The earlier "another event" test used a *different* title, so it never exercised
+    this collision.
+    """
+    from app.models.entities import Event
+    with SessionLocal() as db:
+        n = next(_UNIQUE)
+        mine = Event(slug=f"mine-{n}", name="Mine", division="B", season=2026)
+        theirs = Event(slug=f"theirs-{n}", name="Theirs", division="C", season=2026)
+        db.add_all([mine, theirs]); db.flush()
+
+        test = _source(db, "Regional Invitational 2026 TEST")
+        their_key = _source(db, "Regional Invitational 2026 KEY")
+        _map(db, mine, test)
+        _map(db, theirs, their_key)
+        db.flush()
+
+        assert find_key_source(db, test, mine) is None, \
+            "a key belonging to another event must never be used"
+
+
+def test_the_event_scoped_key_is_still_found():
+    from app.models.entities import Event
+    with SessionLocal() as db:
+        n = next(_UNIQUE)
+        mine = Event(slug=f"scoped-{n}", name="Mine", division="B", season=2026)
+        other = Event(slug=f"other-{n}", name="Other", division="C", season=2026)
+        db.add_all([mine, other]); db.flush()
+
+        test = _source(db, "Scoped Invitational 2026 TEST")
+        my_key = _source(db, "Scoped Invitational 2026 KEY")
+        _map(db, mine, test)
+        _map(db, mine, my_key)
+        db.flush()
+
+        assert find_key_source(db, test, mine).id == my_key.id
+
+
+def test_an_unmapped_catalog_still_matches_by_title():
+    """Source mapping is incomplete for much of the catalog; scoping must not turn an
+    incomplete mapping into "no key exists"."""
+    with SessionLocal() as db:
+        from app.models.entities import Event
+        n = next(_UNIQUE)
+        event = Event(slug=f"unmapped-{n}", name="E", division="B", season=2026)
+        db.add(event); db.flush()
+        test = _source(db, "Unmapped Invitational 2026 TEST")
+        key = _source(db, "Unmapped Invitational 2026 KEY")
+        db.flush()
+        assert find_key_source(db, test, event).id == key.id

@@ -201,3 +201,40 @@ def test_attaching_a_figure_makes_a_previously_ungradeable_item_servable():
     figure = [_figure(1).descriptor]
     assert is_figure_missing(stem, figure) is False
     assert is_servable("short_answer", spec, stem, figure) is True
+
+
+# ------------------------------------------ ambiguity must not reach the student (review find)
+
+def test_an_ambiguous_figure_is_never_written_to_served_assets():
+    """`Question.assets` is what the exam snapshot serves.
+
+    Ambiguous candidates were copied there for every located item on the page — including
+    plain text items the model never flagged as image-dependent — so a question could be
+    served its neighbour's figure. Candidates now live in provenance, visible to review only.
+    """
+    with SessionLocal() as db:
+        event = _event(db)
+        source, _ = _source(db)
+        items = [{"label": "2", "stem": "Which of these is a silicate?",
+                  "question_type": "single_choice", "choices": ["Quartz", "Halite"],
+                  "correct_index": 0, "image_dependent": False,
+                  "figures": [_figure(2).descriptor], "figure_match": "ambiguous"}]
+        questions = build_questions(db, event, source, None, items)
+
+    question = questions[0]
+    assert question.assets == [], "an unverified figure must not be served"
+    assert question.generation_provenance["figure_candidates"], \
+        "but it is kept where a reviewer can see it"
+
+
+def test_a_unique_figure_is_the_only_kind_that_is_served():
+    with SessionLocal() as db:
+        event = _event(db)
+        source, _ = _source(db)
+        items = [{"label": "1", "stem": "Identify the mineral in the photograph above.",
+                  "question_type": "short_answer", "reference_answer": "quartz",
+                  "image_dependent": True, "figures": [_figure(1).descriptor],
+                  "figure_match": "unique"}]
+        questions = build_questions(db, event, source, None, items)
+    assert len(questions[0].assets) == 1
+    assert questions[0].generation_provenance["figure_candidates"] == []

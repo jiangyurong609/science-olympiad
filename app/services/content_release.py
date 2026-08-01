@@ -153,12 +153,84 @@ def publish_release(db: Session, actor: User, course: Course, notes: str = "") -
     return release
 
 
-def rollback_release(db: Session, actor: User, course: Course) -> ContentRelease:
-    """Re-point the course at the most recent superseded release.
+def restore_from_manifest(db: Session, manifest: dict) -> dict:
+    """Put the rows a student reads back to what the manifest pinned.
 
-    This restores a *manifest*, not just a version number. What the prior release contained is
-    read back from its own record, so the rollback describes the content that was actually
-    live rather than whatever the current tables happen to hold.
+    Rollback used to move `course.current_version` and mark a manifest active, and stop there.
+    Student lesson reads resolve `lesson.current_version`, not the manifest, so a lesson edited
+    to v2 kept being served after a rollback to release v1: the audit record said one thing and
+    the product served another. Adversarial review called this correctly — the rollback gate
+    was not satisfied by what the manifest alone could do.
+
+    Restoring is therefore explicit, and it reports what it could not restore instead of
+    silently succeeding. A lesson deleted since the release cannot be brought back by moving a
+    pointer, and pretending otherwise would recreate the same false confidence.
+    """
+    restored = {"lessons": 0, "questions": 0}
+    missing: list[str] = []
+
+    for row in manifest.get("lessons") or []:
+        lesson = db.get(Lesson, row.get("id"))
+        if lesson is None:
+            missing.append(f"lesson {row.get('id')} ({row.get('slug')}) no longer exists")
+            continue
+        version_row = db.scalar(select(LessonVersion).where(
+            LessonVersion.lesson_id == lesson.id,
+            LessonVersion.version == row.get("version")))
+        if version_row is None:
+            missing.append(
+                f"lesson {lesson.id} has no version {row.get('version')} to restore")
+            continue
+        changed = (
+            lesson.current_version != row["version"]
+            or lesson.title != row.get("title", lesson.title)
+            or lesson.status != row.get("status", lesson.status)
+        )
+        lesson.current_version = row["version"]
+        if row.get("title") is not None:
+            lesson.title = row["title"]
+        if row.get("status") is not None:
+            lesson.status = row["status"]
+        if row.get("estimated_minutes") is not None:
+            lesson.estimated_minutes = row["estimated_minutes"]
+        if changed:
+            restored["lessons"] += 1
+
+    # the manifest lists only the items that were *published* at release time; anything
+    # published since was not part of it and is withdrawn from the restored release
+    pinned = {row["id"]: row for row in (manifest.get("questions") or [])}
+    for row in manifest.get("questions") or []:
+        question = db.get(Question, row["id"])
+        if question is None:
+            missing.append(f"question {row['id']} no longer exists")
+            continue
+        if question.status != row.get("status"):
+            question.status = row["status"]
+            restored["questions"] += 1
+    course_id = (manifest.get("course") or {}).get("id")
+    if course_id is not None:
+        concept_ids = [s["concept_id"] for s in (manifest.get("skills") or [])
+                       if s.get("concept_id")]
+        if concept_ids:
+            for question in db.scalars(select(Question).where(
+                Question.concept_id.in_(concept_ids),
+                Question.status == "published",
+            )).all():
+                if question.id not in pinned:
+                    # published after the release being restored: it was never part of it
+                    question.status = "machine_validated"
+                    restored["questions"] += 1
+
+    db.flush()
+    restored["unrestorable"] = missing
+    return restored
+
+
+def rollback_release(db: Session, actor: User, course: Course) -> ContentRelease:
+    """Re-point the course at the most recent superseded release, content included.
+
+    This restores a *manifest*, not just a version number, and then restores the rows that
+    manifest pinned — because the pointer alone changed nothing a student could see.
     """
     current = db.scalar(select(ContentRelease).where(
         ContentRelease.course_id == course.id,
@@ -177,6 +249,15 @@ def rollback_release(db: Session, actor: User, course: Course) -> ContentRelease
     previous.published_by_user_id = actor.id if actor else None
     previous.published_at = now_utc()
     course.current_version = previous.version
+    # the pointer is not the rollback; restoring what the manifest pinned is
+    restored = restore_from_manifest(db, previous.manifest or {})
+    notes = (previous.release_notes or "").strip()
+    previous.release_notes = (
+        f"{notes}\n[rollback] restored {restored['lessons']} lesson(s), "
+        f"{restored['questions']} item(s)"
+        + (f"; UNRESTORABLE: {'; '.join(restored['unrestorable'])}"
+           if restored["unrestorable"] else "")
+    ).strip()
     db.flush()
     return previous
 

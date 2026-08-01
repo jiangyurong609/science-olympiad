@@ -124,16 +124,36 @@ def test_coverage_counts_teaching_blocks_not_claims():
             {"type": "opening", "claim_ids": [claim.id]},   # supported
             {"type": "property_cards"},                      # not supported
             {"type": "steps"},                               # not supported
-            {"type": "checkpoint"},                          # not substantive
         ]
         _lesson(db, e, blocks, claim_ids=[claim.id])
         db.commit()
         row = audit_event(db, e, {})
-    assert row["substantive_blocks"] == 3, "checkpoints assert nothing and are excluded"
+    assert row["substantive_blocks"] == 3
     # only the opening is evidenced; property_cards is not, and steps cannot inherit because
     # the lesson's asserting blocks are only 50% supported
     assert row["supported_blocks"] == 1
     assert row["substantive_coverage"] == pytest.approx(1 / 3, abs=0.01)
+
+
+def test_a_checkpoint_is_substantive_because_its_explanation_asserts():
+    """Checkpoints were excluded on the reasoning that a question asserts nothing.
+
+    That holds for a question alone and fails for a generated one: `split_lessons` writes the
+    prompt, the choices and an explanation of why the answer is right, and a student is
+    examined on all three. Excluding them kept generated assessment content outside the
+    grounding denominator entirely, which understated the dilution the lesson split caused.
+    """
+    with SessionLocal() as db:
+        e = _event(db)
+        claim = _claim(db, e)
+        _lesson(db, e, [
+            {"type": "opening", "claim_ids": [claim.id]},
+            {"type": "checkpoint", "explanation": "Streak is more reliable than colour."},
+        ], claim_ids=[claim.id])
+        db.commit()
+        row = audit_event(db, e, {})
+    assert row["substantive_blocks"] == 2, "the checkpoint counts"
+    assert row["supported_blocks"] == 1, "and it is not evidenced, so it is not credited"
 
 
 def test_a_block_citing_an_invalid_claim_is_not_supported():
@@ -170,7 +190,7 @@ def test_an_empty_population_is_a_failure_not_full_coverage():
 def test_a_lesson_with_no_substantive_blocks_scores_zero_not_one():
     with SessionLocal() as db:
         e = _event(db)
-        _lesson(db, e, [{"type": "checkpoint"}])
+        _lesson(db, e, [{"type": "divider"}])
         db.commit()
         row = audit_event(db, e, {})
     assert row["substantive_coverage"] == 0.0

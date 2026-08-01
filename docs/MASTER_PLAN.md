@@ -112,8 +112,12 @@ blocks recorded as gaps across 8 skills). Demanding 100% *coverage* would have m
 the evidence rule, which is exactly the failure an earlier pass made; the shortfall is a fact
 about available open sources and is now visible rather than hidden.
 
-**Re-measured after the Phase 3 lesson split: 47.2%** (58 of 123 blocks), accountability still
-100%. Splitting eight lessons into 24 added 48 generated openings and summaries, and those
+**Re-measured after the Phase 3 lesson split, and again after adversarial review: 29.6%**
+(58 of 196 blocks), accountability still 100%. The first re-measure said 47.2% because the
+audit excluded `checkpoint` blocks on the reasoning that a question asserts nothing — true of
+a bare question, false of a generated one, which carries choices and an explanation of why
+the answer is right. Generated assessment content was therefore sitting outside the
+denominator entirely. Splitting eight lessons into 24 added 48 generated openings and summaries, and those
 carry no evidence of their own. The number could be restored to 56% by letting each generated
 block cite its part's claims, and that is precisely the inheritance this audit removed after
 it was found crediting unevidenced summaries — so the dilution stands as measured. The
@@ -156,11 +160,18 @@ deliberately not:
 |---|---|---|
 | 90 `claim_passage_missing` | claims stored an excerpt and a snapshot but no retained passage | passage reconstructed by locating the excerpt in the snapshot; unlocatable ⇒ still blocking |
 | 16 `source_unreconciled` | mapped sources had no course disposition | role and extraction status recorded from what each source produced |
-| 11 `source_destination` | instructional sources no lesson reached | demoted to `reference_only` — the truth about them |
+| 11 `source_destination` | instructional sources no lesson reached | **reverted** — see below |
 | 8 `lesson_duration` | lessons ran 19–27 min against a 5–12 min target | split into 24 parts of 8–12 min |
 | 8 `lesson_transfer` | parts had no check above recall | one application/transfer check generated per part |
 | 1 `unit_skill_volume`, 1 `unit_quiz_missing` | all 8 skills in one "Legacy Learning Path" unit | 3 units of 2–3 skills, each with a quiz blueprint |
 | 8 `question_volume` reported 0 items | **no skill had a `concept_id`**, and the audit reads items through it | one concept per skill; 72 items now reachable |
+
+**Reverted after adversarial review.** The 11 `source_destination` blockers were cleared by
+setting `instructional_role = "reference_only"`, a role `course_quality` exempts from that
+very check. "No lesson cites it" is evidence a source is *unused*, not evidence of what it
+was for — it may be instructional content lost in a regeneration, which is the case most
+worth surfacing. The demotion was relabelling by the plan's own operating rule 3, the roles
+are restored, and 9 blockers correctly stand awaiting a reviewer.
 
 **Not fixed, on purpose:** `lesson_review` (24), `question_review` (72),
 `question_calibration` (72), `source_review` (21), `content_gap` (8),
@@ -298,10 +309,10 @@ Record the decision and its rationale here when made.
 | Exams without an explicit disposition | 150 | **0** | 0 | 0 |
 | In-progress attempts stranded | — | **0** | 0 | 0 |
 | Pilot blocks accounted for (evidenced or an open gap) | 0% | **100%** | 100% | 1 |
-| Pilot blocks evidence-backed | 0% | **47.2%** (was 56% pre-split) | — | 1 |
+| Pilot blocks evidence-backed | 0% | **29.6%** (56% pre-split; 47.2% before checkpoints counted) | — | 1 |
 | Pilot items passing validation | — | **93.1%** | ≥90% | 2 |
 | Pilot `audit_course` blockers needing no human | many | **0** | 0 | 3 |
-| Pilot `audit_course` blockers needing a human | — | **241** | 0 | 3 |
+| Pilot `audit_course` blockers needing a human | — | **252** | 0 | 3 |
 | Pilot lessons within the 5–12 min target | 0 / 8 | **24 / 24** | all | 3 |
 | Pilot lessons visible to a reviewer | 0 / 24 | **24 / 24** | all | 3 |
 | Release manifest + rehearsed rollback | absent | **built, 10 tests** | proven on pilot | 4 |

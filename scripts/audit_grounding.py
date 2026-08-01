@@ -39,7 +39,13 @@ from app.services.rights import can_use_for_generation
 # from a lesson that was 80% grounded; inspection showed inherited blocks asserting mineral
 # formulas and pressure-temperature relationships with no evidence at all. Inheritance is
 # removed rather than tuned: a recap that introduces a fact is asserting it.
-SUBSTANTIVE_BLOCKS = {"opening", "property_cards", "worked_example", "summary", "steps"}
+# `checkpoint` was excluded on the reasoning that a question asserts nothing. That is wrong
+# for generated ones: `split_lessons` writes checkpoint prompts, choices and explanations, and
+# an explanation stating why an answer is right is as factual as any teaching block — a
+# student is examined on it. Excluding them let generated assessment content sit outside the
+# grounding denominator entirely, so the measured post-split dilution was understated.
+SUBSTANTIVE_BLOCKS = {"opening", "property_cards", "worked_example", "summary", "steps",
+                      "checkpoint"}
 
 
 def _norm(text: str) -> str:
