@@ -1,0 +1,4496 @@
+{
+  "events": 67,
+  "totals": {
+    "substantive_blocks": 4822,
+    "supported_blocks": 0,
+    "substantive_coverage": 0.0,
+    "claims_valid": 10,
+    "claims_total": 23,
+    "skills_unsupported_without_gap": 402
+  },
+  "by_event": [
+    {
+      "event": "anatomy-and-physiology-b",
+      "event_id": 7,
+      "season": 2026,
+      "season_status": "current",
+      "claims_total": 0,
+      "claims_valid": 0,
+      "claim_reject_reasons": {},
+      "lessons": 8,
+      "substantive_blocks": 94,
+      "supported_blocks": 0,
+      "substantive_coverage": 0.0,
+      "skills": 8,
+      "skills_supported": 0,
+      "skills_unsupported_without_gap": 8,
+      "lesson_detail": [
+        {
+          "lesson_id": 219,
+          "title": "Nervous System Organization and Brain Anatomy",
+          "blocks": 11,
+          "supported": 0,
+          "coverage": 0.0,
+          "valid_claims": 0
+        },
+        {
+          "lesson_id": 220,
+          "title": "Neurons, Glia, and Neural Communication",
+          "blocks": 13,
+          "supported": 0,
+          "coverage": 0.0,
+          "valid_claims": 0
+        },
+        {
+          "lesson_id": 221,
+          "title": "Brain Development, Plasticity, and Neurogenesis",
+          "blocks": 12,
+          "supported": 0,
+          "coverage": 0.0,
+          "valid_claims": 0
+        },
+        {
+          "lesson_id": 222,
+          "title": "Sensation, Perception, and Integration of Informatio",
+          "blocks": 12,
+          "supported": 0,
+          "coverage": 0.0,
+          "valid_claims": 0
+        },
+        {
+          "lesson_id": 223,
+          "title": "Learning, Memory, Language, Emotion, and Sleep",
+          "blocks": 10,
+          "supported": 0,
+          "coverage": 0.0,
+          "valid_claims": 0
+        },
+        {
+          "lesson_id": 224,
+          "title": "Movement, Reflexes, and Behavioral Control",
+          "blocks": 12,
+          "supported": 0,
+          "coverage": 0.0,
+          "valid_claims": 0
+        },
+        {
+          "lesson_id": 225,
+          "title": "Lifespan, Stress, Aging, and Nervous System Disorder",
+          "blocks": 13,
+          "supported": 0,
+          "coverage": 0.0,
+          "valid_claims": 0
+        },
+        {
+          "lesson_id": 226,
+          "title": "Neuroscience Research, Treatments, and Neuroethics",
+          "blocks": 11,
+          "supported": 0,
+          "coverage": 0.0,
+          "valid_claims": 0
+        }
+      ]
+    },
+    {
+      "event": "anatomy-and-physiology-c",
+      "event_id": 30,
+      "season": 2026,
+      "season_status": "current",
+      "claims_total": 0,
+      "claims_valid": 0,
+      "claim_reject_reasons": {},
+      "lessons": 8,
+      "substantive_blocks": 96,
+      "supported_blocks": 0,
+      "substantive_coverage": 0.0,
+      "skills": 8,
+      "skills_supported": 0,
+      "skills_unsupported_without_gap": 8,
+      "lesson_detail": [
+        {
+          "lesson_id": 389,
+          "title": "Musculoskeletal System Foundations: Bones, Joints, a",
+          "blocks": 12,
+          "supported": 0,
+          "coverage": 0.0,
+          "valid_claims": 0
+        },
+        {
+          "lesson_id": 390,
+          "title": "Skeletal Muscle Anatomy and Regional Actions",
+          "blocks": 12,
+          "supported": 0,
+          "coverage": 0.0,
+          "valid_claims": 0
+        },
+        {
+          "lesson_id": 391,
+          "title": "Muscle Physiology, Contraction, Adaptation, and Prop",
+          "blocks": 12,
+          "supported": 0,
+          "coverage": 0.0,
+          "valid_claims": 0
+        },
+        {
+          "lesson_id": 392,
+          "title": "Peripheral Nerves, Neuromuscular Junctions, and Moto",
+          "blocks": 11,
+          "supported": 0,
+          "coverage": 0.0,
+          "valid_claims": 0
+        },
+        {
+          "lesson_id": 393,
+          "title": "Bone Remodeling, Mineral Homeostasis, and Metabolic ",
+          "blocks": 12,
+          "supported": 0,
+          "coverage": 0.0,
+          "valid_claims": 0
+        },
+        {
+          "lesson_id": 394,
+          "title": "Musculoskeletal Clinical Syndromes and Sports Medici",
+          "blocks": 12,
+          "supported": 0,
+          "coverage": 0.0,
+          "valid_claims": 0
+        },
+        {
+          "lesson_id": 395,
+          "title": "Integumentary System Foundations: Skin Layers, Appen",
+          "blocks": 12,
+          "supported": 0,
+          "coverage": 0.0,
+          "valid_claims": 0
+        },
+        {
+          "lesson_id": 396,
+          "title": "Integumentary Pathology: Rashes, Infections, Burns, ",
+          "blocks": 13,
+          "supported": 0,
+          "coverage": 0.0,
+          "valid_claims": 0
+        }
+      ]
+    },
+    {
+      "event": "astronomy-c",
+      "event_id": 35,
+      "season": 2026,
+      "season_status": "current",
+      "claims_total": 0,
+      "claims_valid": 0,
+      "claim_reject_reasons": {},
+      "lessons": 8,
+      "substantive_blocks": 93,
+      "supported_blocks": 0,
+      "substantive_coverage": 0.0,
+      "skills": 8,
+      "skills_supported": 0,
+      "skills_unsupported_without_gap": 8,
+      "lesson_detail": [
+        {
+          "lesson_id": 429,
+          "title": "Astronomy Event Orientation and Observational Founda",
+          "blocks": 11,
+          "supported": 0,
+          "coverage": 0.0,
+          "valid_claims": 0
+        },
+        {
+          "lesson_id": 430,
+          "title": "Stellar Properties, Spectral Classification, and the",
+          "blocks": 11,
+          "supported": 0,
+          "coverage": 0.0,
+          "valid_claims": 0
+        },
+        {
+          "lesson_id": 431,
+          "title": "Stellar Evolution from Formation to Stellar Remnants",
+          "blocks": 13,
+          "supported": 0,
+          "coverage": 0.0,
+          "valid_claims": 0
+        },
+        {
+          "lesson_id": 432,
+          "title": "Variable Stars, Light Curves, and Distance Indicator",
+          "blocks": 11,
+          "supported": 0,
+          "coverage": 0.0,
+          "valid_claims": 0
+        },
+        {
+          "lesson_id": 433,
+          "title": "Exoplanet Detection Methods and Orbital Mechanics",
+          "blocks": 12,
+          "supported": 0,
+          "coverage": 0.0,
+          "valid_claims": 0
+        },
+        {
+          "lesson_id": 434,
+          "title": "Deep Sky Objects I: Star Formation and Young Planeta",
+          "blocks": 11,
+          "supported": 0,
+          "coverage": 0.0,
+          "valid_claims": 0
+        },
+        {
+          "lesson_id": 435,
+          "title": "Deep Sky Objects II: Exoplanet Classes, Host Stars, ",
+          "blocks": 12,
+          "supported": 0,
+          "coverage": 0.0,
+          "valid_claims": 0
+        },
+        {
+          "lesson_id": 436,
+          "title": "Advanced Integrated Analysis, JS9 Skills, and Compet",
+          "blocks": 12,
+          "supported": 0,
+          "coverage": 0.0,
+          "valid_claims": 0
+        }
+      ]
+    },
+    {
+      "event": "boomilever-b",
+      "event_id": 22,
+      "season": 2026,
+      "season_status": "current",
+      "claims_total": 0,
+      "claims_valid": 0,
+      "claim_reject_reasons": {},
+      "lessons": 8,
+      "substantive_blocks": 94,
+      "supported_blocks": 0,
+      "substantive_coverage": 0.0,
+      "skills": 8,
+      "skills_supported": 0,
+      "skills_unsupported_without_gap": 8,
+      "lesson_detail": [
+        {
+          "lesson_id": 315,
+          "title": "Boomilever Division B: Event Goal, Scoring, Geometry",
+          "blocks": 12,
+          "supported": 0,
+          "coverage": 0.0,
+          "valid_claims": 0
+        },
+        {
+          "lesson_id": 316,
+          "title": "Cantilever Forces and Load Paths",
+          "blocks": 11,
+          "supported": 0,
+          "coverage": 0.0,
+          "valid_claims": 0
+        },
+        {
+          "lesson_id": 317,
+          "title": "Reading and Using the 2026 Division B Boomilever Tem",
+          "blocks": 12,
+          "supported": 0,
+          "coverage": 0.0,
+          "valid_claims": 0
+        },
+        {
+          "lesson_id": 318,
+          "title": "Materials, Member Selection, and Wood Screening",
+          "blocks": 11,
+          "supported": 0,
+          "coverage": 0.0,
+          "valid_claims": 0
+        },
+        {
+          "lesson_id": 319,
+          "title": "Truss Geometry and Compression Substructure Design",
+          "blocks": 12,
+          "supported": 0,
+          "coverage": 0.0,
+          "valid_claims": 0
+        },
+        {
+          "lesson_id": 320,
+          "title": "Joints, Adhesives, and Build Accuracy",
+          "blocks": 11,
+          "supported": 0,
+          "coverage": 0.0,
+          "valid_claims": 0
+        },
+        {
+          "lesson_id": 321,
+          "title": "Testing Setup, Failure Analysis, and Iterative Impro",
+          "blocks": 13,
+          "supported": 0,
+          "coverage": 0.0,
+          "valid_claims": 0
+        },
+        {
+          "lesson_id": 322,
+          "title": "Advanced Optimization and Competition Strategy for D",
+          "blocks": 12,
+          "supported": 0,
+          "coverage": 0.0,
+          "valid_claims": 0
+        }
+      ]
+    },
+    {
+      "event": "boomilever-c",
+      "event_id": 45,
+      "season": 2026,
+      "season_status": "current",
+      "claims_total": 0,
+      "claims_valid": 0,
+      "claim_reject_reasons": {},
+      "lessons": 7,
+      "substantive_blocks": 82,
+      "supported_blocks": 0,
+      "substantive_coverage": 0.0,
+      "skills": 7,
+      "skills_supported": 0,
+      "skills_unsupported_without_gap": 7,
+      "lesson_detail": [
+        {
+          "lesson_id": 516,
+          "title": "Boomilever Orientation: Task, Scoring Priorities, an",
+          "blocks": 12,
+          "supported": 0,
+          "coverage": 0.0,
+          "valid_claims": 0
+        },
+        {
+          "lesson_id": 517,
+          "title": "Forces in a Cantilevered Boomilever",
+          "blocks": 11,
+          "supported": 0,
+          "coverage": 0.0,
+          "valid_claims": 0
+        },
+        {
+          "lesson_id": 518,
+          "title": "Truss Geometry and Structural Layouts",
+          "blocks": 11,
+          "supported": 0,
+          "coverage": 0.0,
+          "valid_claims": 0
+        },
+        {
+          "lesson_id": 519,
+          "title": "Material Strength and Wood Selection",
+          "blocks": 11,
+          "supported": 0,
+          "coverage": 0.0,
+          "valid_claims": 0
+        },
+        {
+          "lesson_id": 520,
+          "title": "Member Sizing, Buckling, and Structural Optimization",
+          "blocks": 13,
+          "supported": 0,
+          "coverage": 0.0,
+          "valid_claims": 0
+        },
+        {
+          "lesson_id": 521,
+          "title": "Joints, Adhesives, and Build Quality",
+          "blocks": 11,
+          "supported": 0,
+          "coverage": 0.0,
+          "valid_claims": 0
+        },
+        {
+          "lesson_id": 522,
+          "title": "Testing, Simulation, and Competition Readiness",
+          "blocks": 13,
+          "supported": 0,
+          "coverage": 0.0,
+          "valid_claims": 0
+        }
+      ]
+    },
+    {
+      "event": "botany-b-2027",
+      "event_id": 56,
+      "season": 2027,
+      "season_status": "current",
+      "claims_total": 0,
+      "claims_valid": 0,
+      "claim_reject_reasons": {},
+      "lessons": 0,
+      "substantive_blocks": 0,
+      "supported_blocks": 0,
+      "substantive_coverage": 0.0,
+      "skills": 0,
+      "skills_supported": 0,
+      "skills_unsupported_without_gap": 0,
+      "lesson_detail": []
+    },
+    {
+      "event": "botany-c-2027",
+      "event_id": 79,
+      "season": 2027,
+      "season_status": "current",
+      "claims_total": 0,
+      "claims_valid": 0,
+      "claim_reject_reasons": {},
+      "lessons": 0,
+      "substantive_blocks": 0,
+      "supported_blocks": 0,
+      "substantive_coverage": 0.0,
+      "skills": 0,
+      "skills_supported": 0,
+      "skills_unsupported_without_gap": 0,
+      "lesson_detail": []
+    },
+    {
+      "event": "bungee-drop-c",
+      "event_id": 51,
+      "season": 2026,
+      "season_status": "prior_season_practice",
+      "claims_total": 0,
+      "claims_valid": 0,
+      "claim_reject_reasons": {},
+      "lessons": 8,
+      "substantive_blocks": 92,
+      "supported_blocks": 0,
+      "substantive_coverage": 0.0,
+      "skills": 8,
+      "skills_supported": 0,
+      "skills_unsupported_without_gap": 8,
+      "lesson_detail": [
+        {
+          "lesson_id": 559,
+          "title": "Bungee Drop Event Overview, Objective, and Competiti",
+          "blocks": 12,
+          "supported": 0,
+          "coverage": 0.0,
+          "valid_claims": 0
+        },
+        {
+          "lesson_id": 560,
+          "title": "Rules Constraints, Impound, and Legal Construction",
+          "blocks": 11,
+          "supported": 0,
+          "coverage": 0.0,
+          "valid_claims": 0
+        },
+        {
+          "lesson_id": 561,
+          "title": "Elasticity Test and Cord Material Behavior",
+          "blocks": 10,
+          "supported": 0,
+          "coverage": 0.0,
+          "valid_claims": 0
+        },
+        {
+          "lesson_id": 562,
+          "title": "Measurement Geometry and Event Setup Parameters",
+          "blocks": 13,
+          "supported": 0,
+          "coverage": 0.0,
+          "valid_claims": 0
+        },
+        {
+          "lesson_id": 563,
+          "title": "Physics of the Bungee Drop",
+          "blocks": 11,
+          "supported": 0,
+          "coverage": 0.0,
+          "valid_claims": 0
+        },
+        {
+          "lesson_id": 564,
+          "title": "Calibration Data Collection and Predictive Modeling",
+          "blocks": 11,
+          "supported": 0,
+          "coverage": 0.0,
+          "valid_claims": 0
+        },
+        {
+          "lesson_id": 565,
+          "title": "Drop Execution, Measurement, and Scoring Strategy",
+          "blocks": 11,
+          "supported": 0,
+          "coverage": 0.0,
+          "valid_claims": 0
+        },
+        {
+          "lesson_id": 566,
+          "title": "Advanced Competition Optimization and Bonus Drop Pla",
+          "blocks": 13,
+          "supported": 0,
+          "coverage": 0.0,
+          "valid_claims": 0
+        }
+      ]
+    },
+    {
+      "event": "chemistry-lab-c",
+      "event_id": 42,
+      "season": 2026,
+      "season_status": "current",
+      "claims_total": 0,
+      "claims_valid": 0,
+      "claim_reject_reasons": {},
+      "lessons": 8,
+      "substantive_blocks": 99,
+      "supported_blocks": 0,
+      "substantive_coverage": 0.0,
+      "skills": 8,
+      "skills_supported": 0,
+      "skills_unsupported_without_gap": 8,
+      "lesson_detail": [
+        {
+          "lesson_id": 493,
+          "title": "Core Chemical Language: Formulas, Nomenclature, and ",
+          "blocks": 12,
+          "supported": 0,
+          "coverage": 0.0,
+          "valid_claims": 0
+        },
+        {
+          "lesson_id": 494,
+          "title": "Stoichiometry and Quantitative Composition",
+          "blocks": 13,
+          "supported": 0,
+          "coverage": 0.0,
+          "valid_claims": 0
+        },
+        {
+          "lesson_id": 495,
+          "title": "Reaction Kinetics Foundations",
+          "blocks": 13,
+          "supported": 0,
+          "coverage": 0.0,
+          "valid_claims": 0
+        },
+        {
+          "lesson_id": 496,
+          "title": "Advanced Kinetics, Enzymes, and Temperature Effects",
+          "blocks": 12,
+          "supported": 0,
+          "coverage": 0.0,
+          "valid_claims": 0
+        },
+        {
+          "lesson_id": 497,
+          "title": "Thermochemistry, Entropy, Gibbs Free Energy, and Equ",
+          "blocks": 13,
+          "supported": 0,
+          "coverage": 0.0,
+          "valid_claims": 0
+        },
+        {
+          "lesson_id": 498,
+          "title": "Redox Chemistry, Titrations, and Electrochemical Rea",
+          "blocks": 12,
+          "supported": 0,
+          "coverage": 0.0,
+          "valid_claims": 0
+        },
+        {
+          "lesson_id": 499,
+          "title": "Inorganic, Coordination, and Main-Group Reaction Che",
+          "blocks": 12,
+          "supported": 0,
+          "coverage": 0.0,
+          "valid_claims": 0
+        },
+        {
+          "lesson_id": 500,
+          "title": "Integrated Lab Applications: Gas Collection, Combust",
+          "blocks": 12,
+          "supported": 0,
+          "coverage": 0.0,
+          "valid_claims": 0
+        }
+      ]
+    },
+    {
+      "event": "circuit-lab-b",
+      "event_id": 18,
+      "season": 2026,
+      "season_status": "current",
+      "claims_total": 0,
+      "claims_valid": 0,
+      "claim_reject_reasons": {},
+      "lessons": 8,
+      "substantive_blocks": 99,
+      "supported_blocks": 0,
+      "substantive_coverage": 0.0,
+      "skills": 8,
+      "skills_supported": 0,
+      "skills_unsupported_without_gap": 8,
+      "lesson_detail": [
+        {
+          "lesson_id": 299,
+          "title": "Electrical Quantities, Units, Components, and Measur",
+          "blocks": 11,
+          "supported": 0,
+          "coverage": 0.0,
+          "valid_claims": 0
+        },
+        {
+          "lesson_id": 300,
+          "title": "Electrostatics: Charges, Electric Fields, Potential,",
+          "blocks": 14,
+          "supported": 0,
+          "coverage": 0.0,
+          "valid_claims": 0
+        },
+        {
+          "lesson_id": 301,
+          "title": "Ohm's Law, Power, and Series-Parallel Resistive Circ",
+          "blocks": 13,
+          "supported": 0,
+          "coverage": 0.0,
+          "valid_claims": 0
+        },
+        {
+          "lesson_id": 302,
+          "title": "Kirchhoff's Laws and Multi-Loop Circuit Solving",
+          "blocks": 12,
+          "supported": 0,
+          "coverage": 0.0,
+          "valid_claims": 0
+        },
+        {
+          "lesson_id": 303,
+          "title": "Network Theorems and Advanced Resistive Transformati",
+          "blocks": 13,
+          "supported": 0,
+          "coverage": 0.0,
+          "valid_claims": 0
+        },
+        {
+          "lesson_id": 304,
+          "title": "Capacitors, Dielectrics, RC Transients, and Charge S",
+          "blocks": 13,
+          "supported": 0,
+          "coverage": 0.0,
+          "valid_claims": 0
+        },
+        {
+          "lesson_id": 305,
+          "title": "Magnetism, Magnetic Forces, Solenoids, and Electroma",
+          "blocks": 12,
+          "supported": 0,
+          "coverage": 0.0,
+          "valid_claims": 0
+        },
+        {
+          "lesson_id": 306,
+          "title": "AC Signals, Generators, Scientists, and Hands-On Exp",
+          "blocks": 11,
+          "supported": 0,
+          "coverage": 0.0,
+          "valid_claims": 0
+        }
+      ]
+    },
+    {
+      "event": "circuit-lab-c",
+      "event_id": 39,
+      "season": 2026,
+      "season_status": "current",
+      "claims_total": 0,
+      "claims_valid": 0,
+      "claim_reject_reasons": {},
+      "lessons": 8,
+      "substantive_blocks": 97,
+      "supported_blocks": 0,
+      "substantive_coverage": 0.0,
+      "skills": 8,
+      "skills_supported": 0,
+      "skills_unsupported_without_gap": 8,
+      "lesson_detail": [
+        {
+          "lesson_id": 477,
+          "title": "Electrical Quantities, Units, History, and Measureme",
+          "blocks": 10,
+          "supported": 0,
+          "coverage": 0.0,
+          "valid_claims": 0
+        },
+        {
+          "lesson_id": 478,
+          "title": "2. Electrostatics, Electric Fields, Potential, and C",
+          "blocks": 11,
+          "supported": 0,
+          "coverage": 0.0,
+          "valid_claims": 0
+        },
+        {
+          "lesson_id": 479,
+          "title": "3. Resistors, Materials, Breadboards, and Series-Par",
+          "blocks": 13,
+          "supported": 0,
+          "coverage": 0.0,
+          "valid_claims": 0
+        },
+        {
+          "lesson_id": 480,
+          "title": "Kirchhoff's Laws, Dividers, Bridges, and Multi-Sourc",
+          "blocks": 12,
+          "supported": 0,
+          "coverage": 0.0,
+          "valid_claims": 0
+        },
+        {
+          "lesson_id": 481,
+          "title": "Capacitors, Inductors, RC Behavior, and Energy Stora",
+          "blocks": 12,
+          "supported": 0,
+          "coverage": 0.0,
+          "valid_claims": 0
+        },
+        {
+          "lesson_id": 482,
+          "title": "6. Magnetism, Electromagnetism, Motors, and AC Power",
+          "blocks": 13,
+          "supported": 0,
+          "coverage": 0.0,
+          "valid_claims": 0
+        },
+        {
+          "lesson_id": 483,
+          "title": "7. Advanced Circuit Tools and Specialty Devices",
+          "blocks": 13,
+          "supported": 0,
+          "coverage": 0.0,
+          "valid_claims": 0
+        },
+        {
+          "lesson_id": 484,
+          "title": "8. Competition Integration: Lab Construction, Safety",
+          "blocks": 13,
+          "supported": 0,
+          "coverage": 0.0,
+          "valid_claims": 0
+        }
+      ]
+    },
+    {
+      "event": "code-craze-b-trial-2027",
+      "event_id": 99,
+      "season": 2027,
+      "season_status": "trial",
+      "claims_total": 0,
+      "claims_valid": 0,
+      "claim_reject_reasons": {},
+      "lessons": 0,
+      "substantive_blocks": 0,
+      "supported_blocks": 0,
+      "substantive_coverage": 0.0,
+      "skills": 0,
+      "skills_supported": 0,
+      "skills_unsupported_without_gap": 0,
+      "lesson_detail": []
+    },
+    {
+      "event": "code-craze-c-trial-2027",
+      "event_id": 101,
+      "season": 2027,
+      "season_status": "trial",
+      "claims_total": 0,
+      "claims_valid": 0,
+      "claim_reject_reasons": {},
+      "lessons": 0,
+      "substantive_blocks": 0,
+      "supported_blocks": 0,
+      "substantive_coverage": 0.0,
+      "skills": 0,
+      "skills_supported": 0,
+      "skills_unsupported_without_gap": 0,
+      "lesson_detail": []
+    },
+    {
+      "event": "codebusters-b",
+      "event_id": 26,
+      "season": 2026,
+      "season_status": "current",
+      "claims_total": 0,
+      "claims_valid": 0,
+      "claim_reject_reasons": {},
+      "lessons": 8,
+      "substantive_blocks": 94,
+      "supported_blocks": 0,
+      "substantive_coverage": 0.0,
+      "skills": 8,
+      "skills_supported": 0,
+      "skills_unsupported_without_gap": 8,
+      "lesson_detail": [
+        {
+          "lesson_id": 357,
+          "title": "Codebusters Foundations and Contest Workflow",
+          "blocks": 12,
+          "supported": 0,
+          "coverage": 0.0,
+          "valid_claims": 0
+        },
+        {
+          "lesson_id": 358,
+          "title": "Fast Introductory Substitution: AtBash and Caesar",
+          "blocks": 12,
+          "supported": 0,
+          "coverage": 0.0,
+          "valid_claims": 0
+        },
+        {
+          "lesson_id": 359,
+          "title": "Aristocrats and Core Monoalphabetic Cryptanalysis",
+          "blocks": 11,
+          "supported": 0,
+          "coverage": 0.0,
+          "valid_claims": 0
+        },
+        {
+          "lesson_id": 360,
+          "title": "Harder Monoalphabetic Variants: Misspelled Aristocra",
+          "blocks": 12,
+          "supported": 0,
+          "coverage": 0.0,
+          "valid_claims": 0
+        },
+        {
+          "lesson_id": 361,
+          "title": "Affine Cipher and Modular Arithmetic",
+          "blocks": 11,
+          "supported": 0,
+          "coverage": 0.0,
+          "valid_claims": 0
+        },
+        {
+          "lesson_id": 362,
+          "title": "Polyalphabetic and Polybius-Based Systems: Porta and",
+          "blocks": 12,
+          "supported": 0,
+          "coverage": 0.0,
+          "valid_claims": 0
+        },
+        {
+          "lesson_id": 363,
+          "title": "Concealment, Morse Fractionation, and Transposition",
+          "blocks": 13,
+          "supported": 0,
+          "coverage": 0.0,
+          "valid_claims": 0
+        },
+        {
+          "lesson_id": 364,
+          "title": "Cryptarithms and Advanced Competition Integration",
+          "blocks": 11,
+          "supported": 0,
+          "coverage": 0.0,
+          "valid_claims": 0
+        }
+      ]
+    },
+    {
+      "event": "codebusters-c",
+      "event_id": 49,
+      "season": 2026,
+      "season_status": "current",
+      "claims_total": 0,
+      "claims_valid": 0,
+      "claim_reject_reasons": {},
+      "lessons": 8,
+      "substantive_blocks": 99,
+      "supported_blocks": 0,
+      "substantive_coverage": 0.0,
+      "skills": 8,
+      "skills_supported": 0,
+      "skills_unsupported_without_gap": 8,
+      "lesson_detail": [
+        {
+          "lesson_id": 543,
+          "title": "Codebusters Foundations: Alphabets, Notation, and So",
+          "blocks": 12,
+          "supported": 0,
+          "coverage": 0.0,
+          "valid_claims": 0
+        },
+        {
+          "lesson_id": 544,
+          "title": "2. Simple Substitution Foundations: Caesar, AtBash, ",
+          "blocks": 12,
+          "supported": 0,
+          "coverage": 0.0,
+          "valid_claims": 0
+        },
+        {
+          "lesson_id": 545,
+          "title": "3. Aristocrats and General Monoalphabetic Cryptanaly",
+          "blocks": 13,
+          "supported": 0,
+          "coverage": 0.0,
+          "valid_claims": 0
+        },
+        {
+          "lesson_id": 546,
+          "title": "Harder Monoalphabetic Variants: Misspelled Aristocra",
+          "blocks": 11,
+          "supported": 0,
+          "coverage": 0.0,
+          "valid_claims": 0
+        },
+        {
+          "lesson_id": 547,
+          "title": "5. Polyalphabetic Ciphers: Vigen\u00e8re, Porta, and Nihi",
+          "blocks": 13,
+          "supported": 0,
+          "coverage": 0.0,
+          "valid_claims": 0
+        },
+        {
+          "lesson_id": 548,
+          "title": "6. Mathematical Ciphers and Puzzles: Hill 2x2, Hill ",
+          "blocks": 13,
+          "supported": 0,
+          "coverage": 0.0,
+          "valid_claims": 0
+        },
+        {
+          "lesson_id": 549,
+          "title": "Concealment, Morse, and Transposition Ciphers",
+          "blocks": 14,
+          "supported": 0,
+          "coverage": 0.0,
+          "valid_claims": 0
+        },
+        {
+          "lesson_id": 550,
+          "title": "8. Integrated Competition Strategy and Advanced Prac",
+          "blocks": 11,
+          "supported": 0,
+          "coverage": 0.0,
+          "valid_claims": 0
+        }
+      ]
+    },
+    {
+      "event": "crime-busters-b",
+      "event_id": 20,
+      "season": 2026,
+      "season_status": "current",
+      "claims_total": 0,
+      "claims_valid": 0,
+      "claim_reject_reasons": {},
+      "lessons": 8,
+      "substantive_blocks": 91,
+      "supported_blocks": 0,
+      "substantive_coverage": 0.0,
+      "skills": 8,
+      "skills_supported": 0,
+      "skills_unsupported_without_gap": 8,
+      "lesson_detail": [
+        {
+          "lesson_id": 307,
+          "title": "Crime Busters Event Framework and Forensic Reasoning",
+          "blocks": 12,
+          "supported": 0,
+          "coverage": 0.0,
+          "valid_claims": 0
+        },
+        {
+          "lesson_id": 308,
+          "title": "Qualitative Analysis I: Powders, Solubility, pH, and",
+          "blocks": 14,
+          "supported": 0,
+          "coverage": 0.0,
+          "valid_claims": 0
+        },
+        {
+          "lesson_id": 309,
+          "title": "Qualitative Analysis II: Formulas, Mixtures, Liquids",
+          "blocks": 11,
+          "supported": 0,
+          "coverage": 0.0,
+          "valid_claims": 0
+        },
+        {
+          "lesson_id": 310,
+          "title": "Polymers, Plastics, Fibers, and Hair Evidence",
+          "blocks": 12,
+          "supported": 0,
+          "coverage": 0.0,
+          "valid_claims": 0
+        },
+        {
+          "lesson_id": 311,
+          "title": "Paper Chromatography and Ink Comparison",
+          "blocks": 10,
+          "supported": 0,
+          "coverage": 0.0,
+          "valid_claims": 0
+        },
+        {
+          "lesson_id": 312,
+          "title": "Fingerprint Evidence: Patterns, Minutiae, and Matchi",
+          "blocks": 10,
+          "supported": 0,
+          "coverage": 0.0,
+          "valid_claims": 0
+        },
+        {
+          "lesson_id": 313,
+          "title": "Blood Spatter and Footwear Impression Evidence",
+          "blocks": 12,
+          "supported": 0,
+          "coverage": 0.0,
+          "valid_claims": 0
+        },
+        {
+          "lesson_id": 314,
+          "title": "Full Case Analysis and Competition Strategy",
+          "blocks": 10,
+          "supported": 0,
+          "coverage": 0.0,
+          "valid_claims": 0
+        }
+      ]
+    },
+    {
+      "event": "designer-genes-c",
+      "event_id": 31,
+      "season": 2026,
+      "season_status": "current",
+      "claims_total": 0,
+      "claims_valid": 0,
+      "claim_reject_reasons": {},
+      "lessons": 8,
+      "substantive_blocks": 96,
+      "supported_blocks": 0,
+      "substantive_coverage": 0.0,
+      "skills": 8,
+      "skills_supported": 0,
+      "skills_unsupported_without_gap": 8,
+      "lesson_detail": [
+        {
+          "lesson_id": 397,
+          "title": "Cellular Foundations and Model Organisms",
+          "blocks": 10,
+          "supported": 0,
+          "coverage": 0.0,
+          "valid_claims": 0
+        },
+        {
+          "lesson_id": 398,
+          "title": "DNA, Chromosomes, and Nucleic Acid Structure",
+          "blocks": 13,
+          "supported": 0,
+          "coverage": 0.0,
+          "valid_claims": 0
+        },
+        {
+          "lesson_id": 399,
+          "title": "DNA Replication, Repair, and Genome Maintenance",
+          "blocks": 13,
+          "supported": 0,
+          "coverage": 0.0,
+          "valid_claims": 0
+        },
+        {
+          "lesson_id": 400,
+          "title": "Transcription and RNA Processing",
+          "blocks": 12,
+          "supported": 0,
+          "coverage": 0.0,
+          "valid_claims": 0
+        },
+        {
+          "lesson_id": 401,
+          "title": "Proteins, Translation, and Gene Product Function",
+          "blocks": 12,
+          "supported": 0,
+          "coverage": 0.0,
+          "valid_claims": 0
+        },
+        {
+          "lesson_id": 402,
+          "title": "Classical Genetics, Mutation, Recombination, and Map",
+          "blocks": 12,
+          "supported": 0,
+          "coverage": 0.0,
+          "valid_claims": 0
+        },
+        {
+          "lesson_id": 403,
+          "title": "Recombinant DNA, Cloning, Sequencing, and Molecular ",
+          "blocks": 12,
+          "supported": 0,
+          "coverage": 0.0,
+          "valid_claims": 0
+        },
+        {
+          "lesson_id": 404,
+          "title": "Advanced Gene Regulation, Genome Dynamics, Developme",
+          "blocks": 12,
+          "supported": 0,
+          "coverage": 0.0,
+          "valid_claims": 0
+        }
+      ]
+    },
+    {
+      "event": "disease-detectives-b",
+      "event_id": 8,
+      "season": 2026,
+      "season_status": "current",
+      "claims_total": 0,
+      "claims_valid": 0,
+      "claim_reject_reasons": {},
+      "lessons": 8,
+      "substantive_blocks": 100,
+      "supported_blocks": 0,
+      "substantive_coverage": 0.0,
+      "skills": 8,
+      "skills_supported": 0,
+      "skills_unsupported_without_gap": 8,
+      "lesson_detail": [
+        {
+          "lesson_id": 227,
+          "title": "Foundations of Epidemiology and Public Health",
+          "blocks": 12,
+          "supported": 0,
+          "coverage": 0.0,
+          "valid_claims": 0
+        },
+        {
+          "lesson_id": 228,
+          "title": "Measuring Health, Disease, and Population Risk",
+          "blocks": 14,
+          "supported": 0,
+          "coverage": 0.0,
+          "valid_claims": 0
+        },
+        {
+          "lesson_id": 229,
+          "title": "Descriptive Epidemiology and Data Display",
+          "blocks": 11,
+          "supported": 0,
+          "coverage": 0.0,
+          "valid_claims": 0
+        },
+        {
+          "lesson_id": 230,
+          "title": "Epidemiologic Study Designs",
+          "blocks": 13,
+          "supported": 0,
+          "coverage": 0.0,
+          "valid_claims": 0
+        },
+        {
+          "lesson_id": 231,
+          "title": "5. Bias, Confounding, and Basic Biostatistics",
+          "blocks": 13,
+          "supported": 0,
+          "coverage": 0.0,
+          "valid_claims": 0
+        },
+        {
+          "lesson_id": 232,
+          "title": "6. Causation, Risk Factors, and Prevention Strategie",
+          "blocks": 12,
+          "supported": 0,
+          "coverage": 0.0,
+          "valid_claims": 0
+        },
+        {
+          "lesson_id": 233,
+          "title": "Communicable Disease Surveillance and Outbreak Inves",
+          "blocks": 13,
+          "supported": 0,
+          "coverage": 0.0,
+          "valid_claims": 0
+        },
+        {
+          "lesson_id": 234,
+          "title": "8. Applied Epidemiology, Policy, and Advanced Event ",
+          "blocks": 12,
+          "supported": 0,
+          "coverage": 0.0,
+          "valid_claims": 0
+        }
+      ]
+    },
+    {
+      "event": "disease-detectives-c",
+      "event_id": 32,
+      "season": 2026,
+      "season_status": "current",
+      "claims_total": 0,
+      "claims_valid": 0,
+      "claim_reject_reasons": {},
+      "lessons": 8,
+      "substantive_blocks": 93,
+      "supported_blocks": 0,
+      "substantive_coverage": 0.0,
+      "skills": 8,
+      "skills_supported": 0,
+      "skills_unsupported_without_gap": 8,
+      "lesson_detail": [
+        {
+          "lesson_id": 405,
+          "title": "Foundations of Epidemiology and Public Health Thinki",
+          "blocks": 11,
+          "supported": 0,
+          "coverage": 0.0,
+          "valid_claims": 0
+        },
+        {
+          "lesson_id": 406,
+          "title": "Disease Causation, Transmission, and Prevention",
+          "blocks": 11,
+          "supported": 0,
+          "coverage": 0.0,
+          "valid_claims": 0
+        },
+        {
+          "lesson_id": 407,
+          "title": "Surveillance Systems and Public Health Data",
+          "blocks": 12,
+          "supported": 0,
+          "coverage": 0.0,
+          "valid_claims": 0
+        },
+        {
+          "lesson_id": 408,
+          "title": "Descriptive Epidemiology and Data Visualization",
+          "blocks": 12,
+          "supported": 0,
+          "coverage": 0.0,
+          "valid_claims": 0
+        },
+        {
+          "lesson_id": 409,
+          "title": "Core Epidemiologic Measures and Calculations",
+          "blocks": 12,
+          "supported": 0,
+          "coverage": 0.0,
+          "valid_claims": 0
+        },
+        {
+          "lesson_id": 410,
+          "title": "Outbreak Investigation Methods",
+          "blocks": 12,
+          "supported": 0,
+          "coverage": 0.0,
+          "valid_claims": 0
+        },
+        {
+          "lesson_id": 411,
+          "title": "Analytic Study Designs, Bias, and Confounding",
+          "blocks": 12,
+          "supported": 0,
+          "coverage": 0.0,
+          "valid_claims": 0
+        },
+        {
+          "lesson_id": 412,
+          "title": "Advanced Application: Causality, Molecular Epidemiol",
+          "blocks": 11,
+          "supported": 0,
+          "coverage": 0.0,
+          "valid_claims": 0
+        }
+      ]
+    },
+    {
+      "event": "dynamic-planet-b",
+      "event_id": 12,
+      "season": 2026,
+      "season_status": "current",
+      "claims_total": 0,
+      "claims_valid": 0,
+      "claim_reject_reasons": {},
+      "lessons": 8,
+      "substantive_blocks": 98,
+      "supported_blocks": 0,
+      "substantive_coverage": 0.0,
+      "skills": 8,
+      "skills_supported": 0,
+      "skills_unsupported_without_gap": 8,
+      "lesson_detail": [
+        {
+          "lesson_id": 259,
+          "title": "Ocean Basin, Seafloor, and Glacial Landscape Foundat",
+          "blocks": 12,
+          "supported": 0,
+          "coverage": 0.0,
+          "valid_claims": 0
+        },
+        {
+          "lesson_id": 260,
+          "title": "Seawater Properties, Density, and Vertical Structure",
+          "blocks": 11,
+          "supported": 0,
+          "coverage": 0.0,
+          "valid_claims": 0
+        },
+        {
+          "lesson_id": 261,
+          "title": "Ocean Chemistry, Carbonate System, and Ocean Acidifi",
+          "blocks": 13,
+          "supported": 0,
+          "coverage": 0.0,
+          "valid_claims": 0
+        },
+        {
+          "lesson_id": 262,
+          "title": "Wind-Driven Ocean Circulation and Rotating-Fluid Dyn",
+          "blocks": 13,
+          "supported": 0,
+          "coverage": 0.0,
+          "valid_claims": 0
+        },
+        {
+          "lesson_id": 263,
+          "title": "Water Masses, Deep Circulation, and Biogeochemical T",
+          "blocks": 12,
+          "supported": 0,
+          "coverage": 0.0,
+          "valid_claims": 0
+        },
+        {
+          "lesson_id": 264,
+          "title": "Waves, Tides, Estuaries, and Coastal Processes",
+          "blocks": 12,
+          "supported": 0,
+          "coverage": 0.0,
+          "valid_claims": 0
+        },
+        {
+          "lesson_id": 265,
+          "title": "Ocean-Atmosphere Climate Variability and Marine Ecos",
+          "blocks": 12,
+          "supported": 0,
+          "coverage": 0.0,
+          "valid_claims": 0
+        },
+        {
+          "lesson_id": 266,
+          "title": "Ocean Observing Systems, Data Interpretation, and In",
+          "blocks": 13,
+          "supported": 0,
+          "coverage": 0.0,
+          "valid_claims": 0
+        }
+      ]
+    },
+    {
+      "event": "dynamic-planet-c",
+      "event_id": 36,
+      "season": 2026,
+      "season_status": "current",
+      "claims_total": 0,
+      "claims_valid": 0,
+      "claim_reject_reasons": {},
+      "lessons": 8,
+      "substantive_blocks": 94,
+      "supported_blocks": 0,
+      "substantive_coverage": 0.0,
+      "skills": 8,
+      "skills_supported": 0,
+      "skills_unsupported_without_gap": 8,
+      "lesson_detail": [
+        {
+          "lesson_id": 437,
+          "title": "Cryosphere Foundations: Snow, Firn, Ice, and Glacier",
+          "blocks": 11,
+          "supported": 0,
+          "coverage": 0.0,
+          "valid_claims": 0
+        },
+        {
+          "lesson_id": 438,
+          "title": "Glacier Types, Structure, and Movement: Evidence-Lim",
+          "blocks": 12,
+          "supported": 0,
+          "coverage": 0.0,
+          "valid_claims": 0
+        },
+        {
+          "lesson_id": 439,
+          "title": "Glacial Erosion, Deposition, and Landforms",
+          "blocks": 11,
+          "supported": 0,
+          "coverage": 0.0,
+          "valid_claims": 0
+        },
+        {
+          "lesson_id": 440,
+          "title": "Permafrost, Paleoclimate, and Glacier Observation Me",
+          "blocks": 11,
+          "supported": 0,
+          "coverage": 0.0,
+          "valid_claims": 0
+        },
+        {
+          "lesson_id": 441,
+          "title": "Ocean Water Properties and Vertical Structure",
+          "blocks": 11,
+          "supported": 0,
+          "coverage": 0.0,
+          "valid_claims": 0
+        },
+        {
+          "lesson_id": 442,
+          "title": "Wind-Driven and Density-Driven Ocean Circulation",
+          "blocks": 13,
+          "supported": 0,
+          "coverage": 0.0,
+          "valid_claims": 0
+        },
+        {
+          "lesson_id": 443,
+          "title": "Waves, Tides, and Nearshore Processes",
+          "blocks": 12,
+          "supported": 0,
+          "coverage": 0.0,
+          "valid_claims": 0
+        },
+        {
+          "lesson_id": 444,
+          "title": "Integrated Ocean-Climate and Coastal Geology Applica",
+          "blocks": 13,
+          "supported": 0,
+          "coverage": 0.0,
+          "valid_claims": 0
+        }
+      ]
+    },
+    {
+      "event": "ecology",
+      "event_id": 2,
+      "season": 2026,
+      "season_status": "prior_season_practice",
+      "claims_total": 5,
+      "claims_valid": 5,
+      "claim_reject_reasons": {
+        "valid": 5
+      },
+      "lessons": 8,
+      "substantive_blocks": 95,
+      "supported_blocks": 0,
+      "substantive_coverage": 0.0,
+      "skills": 8,
+      "skills_supported": 0,
+      "skills_unsupported_without_gap": 8,
+      "lesson_detail": [
+        {
+          "lesson_id": 590,
+          "title": "Foundations of Ecosystems and Human Dependence",
+          "blocks": 12,
+          "supported": 0,
+          "coverage": 0.0,
+          "valid_claims": 0
+        },
+        {
+          "lesson_id": 591,
+          "title": "Ecological Condition and Ecosystem Stressors",
+          "blocks": 13,
+          "supported": 0,
+          "coverage": 0.0,
+          "valid_claims": 0
+        },
+        {
+          "lesson_id": 592,
+          "title": "Extent, Distribution, Land Cover, and Connectivity I",
+          "blocks": 12,
+          "supported": 0,
+          "coverage": 0.0,
+          "valid_claims": 0
+        },
+        {
+          "lesson_id": 593,
+          "title": "Biodiversity and Ecosystem Health Indicators",
+          "blocks": 12,
+          "supported": 0,
+          "coverage": 0.0,
+          "valid_claims": 0
+        },
+        {
+          "lesson_id": 594,
+          "title": "Physical, Chemical, and Process Indicators of Ecosys",
+          "blocks": 11,
+          "supported": 0,
+          "coverage": 0.0,
+          "valid_claims": 0
+        },
+        {
+          "lesson_id": 595,
+          "title": "Contaminant Exposure and Ecological Risk Assessment",
+          "blocks": 12,
+          "supported": 0,
+          "coverage": 0.0,
+          "valid_claims": 0
+        },
+        {
+          "lesson_id": 596,
+          "title": "Ecosystem Goods, Services, and Benefits to People",
+          "blocks": 11,
+          "supported": 0,
+          "coverage": 0.0,
+          "valid_claims": 0
+        },
+        {
+          "lesson_id": 597,
+          "title": "Decision Support, Scenario Analysis, and Applied Eco",
+          "blocks": 12,
+          "supported": 0,
+          "coverage": 0.0,
+          "valid_claims": 0
+        }
+      ]
+    },
+    {
+      "event": "elastic-launch-glider-b-2027",
+      "event_id": 69,
+      "season": 2027,
+      "season_status": "current",
+      "claims_total": 0,
+      "claims_valid": 0,
+      "claim_reject_reasons": {},
+      "lessons": 0,
+      "substantive_blocks": 0,
+      "supported_blocks": 0,
+      "substantive_coverage": 0.0,
+      "skills": 0,
+      "skills_supported": 0,
+      "skills_unsupported_without_gap": 0,
+      "lesson_detail": []
+    },
+    {
+      "event": "electric-vehicle-c",
+      "event_id": 46,
+      "season": 2026,
+      "season_status": "current",
+      "claims_total": 0,
+      "claims_valid": 0,
+      "claim_reject_reasons": {},
+      "lessons": 8,
+      "substantive_blocks": 96,
+      "supported_blocks": 0,
+      "substantive_coverage": 0.0,
+      "skills": 8,
+      "skills_supported": 0,
+      "skills_unsupported_without_gap": 8,
+      "lesson_detail": [
+        {
+          "lesson_id": 523,
+          "title": "Event Goals, Track Geometry, and Scoring Basics",
+          "blocks": 13,
+          "supported": 0,
+          "coverage": 0.0,
+          "valid_claims": 0
+        },
+        {
+          "lesson_id": 524,
+          "title": "Rules Compliance, Impound, and Safety Constraints",
+          "blocks": 11,
+          "supported": 0,
+          "coverage": 0.0,
+          "valid_claims": 0
+        },
+        {
+          "lesson_id": 525,
+          "title": "Vehicle Size, Chassis Layout, and Measurement Point ",
+          "blocks": 11,
+          "supported": 0,
+          "coverage": 0.0,
+          "valid_claims": 0
+        },
+        {
+          "lesson_id": 526,
+          "title": "Electric Power System and Motor Control Foundations",
+          "blocks": 11,
+          "supported": 0,
+          "coverage": 0.0,
+          "valid_claims": 0
+        },
+        {
+          "lesson_id": 527,
+          "title": "Mechanical Drivetrain, Traction, and Straight-Line S",
+          "blocks": 15,
+          "supported": 0,
+          "coverage": 0.0,
+          "valid_claims": 0
+        },
+        {
+          "lesson_id": 528,
+          "title": "Start Trigger, Automatic Stopping, and Distance Cont",
+          "blocks": 12,
+          "supported": 0,
+          "coverage": 0.0,
+          "valid_claims": 0
+        },
+        {
+          "lesson_id": 529,
+          "title": "Testing, Calibration Data, and Run Prediction",
+          "blocks": 12,
+          "supported": 0,
+          "coverage": 0.0,
+          "valid_claims": 0
+        },
+        {
+          "lesson_id": 530,
+          "title": "Competition Execution and Advanced Optimization Stra",
+          "blocks": 11,
+          "supported": 0,
+          "coverage": 0.0,
+          "valid_claims": 0
+        }
+      ]
+    },
+    {
+      "event": "engineering-cad-c",
+      "event_id": 52,
+      "season": 2026,
+      "season_status": "current",
+      "claims_total": 0,
+      "claims_valid": 0,
+      "claim_reject_reasons": {},
+      "lessons": 8,
+      "substantive_blocks": 94,
+      "supported_blocks": 0,
+      "substantive_coverage": 0.0,
+      "skills": 8,
+      "skills_supported": 0,
+      "skills_unsupported_without_gap": 8,
+      "lesson_detail": [
+        {
+          "lesson_id": 567,
+          "title": "Event Workflow and Onshape Setup",
+          "blocks": 11,
+          "supported": 0,
+          "coverage": 0.0,
+          "valid_claims": 0
+        },
+        {
+          "lesson_id": 568,
+          "title": "Reading Engineering Drawings and Extracting Design I",
+          "blocks": 11,
+          "supported": 0,
+          "coverage": 0.0,
+          "valid_claims": 0
+        },
+        {
+          "lesson_id": 569,
+          "title": "Parametric Sketching Foundations",
+          "blocks": 12,
+          "supported": 0,
+          "coverage": 0.0,
+          "valid_claims": 0
+        },
+        {
+          "lesson_id": 570,
+          "title": "Core 3D Part Modeling Features",
+          "blocks": 11,
+          "supported": 0,
+          "coverage": 0.0,
+          "valid_claims": 0
+        },
+        {
+          "lesson_id": 571,
+          "title": "Advanced Features, Patterns, and Reference Geometry",
+          "blocks": 13,
+          "supported": 0,
+          "coverage": 0.0,
+          "valid_claims": 0
+        },
+        {
+          "lesson_id": 572,
+          "title": "Materials, Mass Properties, and Model Verification",
+          "blocks": 12,
+          "supported": 0,
+          "coverage": 0.0,
+          "valid_claims": 0
+        },
+        {
+          "lesson_id": 573,
+          "title": "Assemblies with Provided Components in Onshape",
+          "blocks": 13,
+          "supported": 0,
+          "coverage": 0.0,
+          "valid_claims": 0
+        },
+        {
+          "lesson_id": 574,
+          "title": "Timed Competition Strategy and Full Practice Builds",
+          "blocks": 11,
+          "supported": 0,
+          "coverage": 0.0,
+          "valid_claims": 0
+        }
+      ]
+    },
+    {
+      "event": "entomology",
+      "event_id": 3,
+      "season": 2026,
+      "season_status": "prior_season_practice",
+      "claims_total": 5,
+      "claims_valid": 1,
+      "claim_reject_reasons": {
+        "no_snapshot": 4,
+        "valid": 1
+      },
+      "lessons": 8,
+      "substantive_blocks": 94,
+      "supported_blocks": 0,
+      "substantive_coverage": 0.0,
+      "skills": 8,
+      "skills_supported": 0,
+      "skills_unsupported_without_gap": 8,
+      "lesson_detail": [
+        {
+          "lesson_id": 211,
+          "title": "Event Scope, Insect Foundations, and Taxonomic Think",
+          "blocks": 11,
+          "supported": 0,
+          "coverage": 0.0,
+          "valid_claims": 0
+        },
+        {
+          "lesson_id": 212,
+          "title": "External and Internal Insect Morphology",
+          "blocks": 12,
+          "supported": 0,
+          "coverage": 0.0,
+          "valid_claims": 0
+        },
+        {
+          "lesson_id": 213,
+          "title": "Development, Metamorphosis, and Immature Insects",
+          "blocks": 12,
+          "supported": 0,
+          "coverage": 0.0,
+          "valid_claims": 0
+        },
+        {
+          "lesson_id": 214,
+          "title": "Recognition of Major North American Insect Orders",
+          "blocks": 11,
+          "supported": 0,
+          "coverage": 0.0,
+          "valid_claims": 0
+        },
+        {
+          "lesson_id": 215,
+          "title": "Family-Level Identification Strategies",
+          "blocks": 12,
+          "supported": 0,
+          "coverage": 0.0,
+          "valid_claims": 0
+        },
+        {
+          "lesson_id": 216,
+          "title": "Insect Ecology, Behavior, and Interactions",
+          "blocks": 11,
+          "supported": 0,
+          "coverage": 0.0,
+          "valid_claims": 0
+        },
+        {
+          "lesson_id": 217,
+          "title": "Specimen Study, Collecting, Preservation, and Dichot",
+          "blocks": 12,
+          "supported": 0,
+          "coverage": 0.0,
+          "valid_claims": 0
+        },
+        {
+          "lesson_id": 218,
+          "title": "Advanced Identification and Tournament Application",
+          "blocks": 13,
+          "supported": 0,
+          "coverage": 0.0,
+          "valid_claims": 0
+        }
+      ]
+    },
+    {
+      "event": "entomology-b",
+      "event_id": 9,
+      "season": 2026,
+      "season_status": "prior_season_practice",
+      "claims_total": 0,
+      "claims_valid": 0,
+      "claim_reject_reasons": {},
+      "lessons": 8,
+      "substantive_blocks": 94,
+      "supported_blocks": 0,
+      "substantive_coverage": 0.0,
+      "skills": 8,
+      "skills_supported": 0,
+      "skills_unsupported_without_gap": 8,
+      "lesson_detail": [
+        {
+          "lesson_id": 235,
+          "title": "Insect Diversity, Classification, and Identification",
+          "blocks": 11,
+          "supported": 0,
+          "coverage": 0.0,
+          "valid_claims": 0
+        },
+        {
+          "lesson_id": 236,
+          "title": "External Anatomy: Body Regions, Thorax, Head, and Ap",
+          "blocks": 12,
+          "supported": 0,
+          "coverage": 0.0,
+          "valid_claims": 0
+        },
+        {
+          "lesson_id": 237,
+          "title": "Mouthparts, Feeding Strategies, and Antennae",
+          "blocks": 12,
+          "supported": 0,
+          "coverage": 0.0,
+          "valid_claims": 0
+        },
+        {
+          "lesson_id": 238,
+          "title": "Wings, Legs, and Functional Morphology",
+          "blocks": 12,
+          "supported": 0,
+          "coverage": 0.0,
+          "valid_claims": 0
+        },
+        {
+          "lesson_id": 239,
+          "title": "Development, Metamorphosis, and Life Histories",
+          "blocks": 12,
+          "supported": 0,
+          "coverage": 0.0,
+          "valid_claims": 0
+        },
+        {
+          "lesson_id": 240,
+          "title": "Major Orders and Families for Specimen Identificatio",
+          "blocks": 12,
+          "supported": 0,
+          "coverage": 0.0,
+          "valid_claims": 0
+        },
+        {
+          "lesson_id": 241,
+          "title": "Physiology, Senses, Communication, and Behavior",
+          "blocks": 11,
+          "supported": 0,
+          "coverage": 0.0,
+          "valid_claims": 0
+        },
+        {
+          "lesson_id": 242,
+          "title": "Ecology, Human Impacts, Conservation, and Applied Pe",
+          "blocks": 12,
+          "supported": 0,
+          "coverage": 0.0,
+          "valid_claims": 0
+        }
+      ]
+    },
+    {
+      "event": "entomology-c",
+      "event_id": 33,
+      "season": 2026,
+      "season_status": "prior_season_practice",
+      "claims_total": 0,
+      "claims_valid": 0,
+      "claim_reject_reasons": {},
+      "lessons": 8,
+      "substantive_blocks": 97,
+      "supported_blocks": 0,
+      "substantive_coverage": 0.0,
+      "skills": 8,
+      "skills_supported": 0,
+      "skills_unsupported_without_gap": 8,
+      "lesson_detail": [
+        {
+          "lesson_id": 413,
+          "title": "Insect Anatomy Foundations for Identification",
+          "blocks": 12,
+          "supported": 0,
+          "coverage": 0.0,
+          "valid_claims": 0
+        },
+        {
+          "lesson_id": 414,
+          "title": "Mouthparts, Feeding Modes, and Ecological Roles",
+          "blocks": 12,
+          "supported": 0,
+          "coverage": 0.0,
+          "valid_claims": 0
+        },
+        {
+          "lesson_id": 415,
+          "title": "Predators, Parasites, Parasitoids, and Defense Theor",
+          "blocks": 13,
+          "supported": 0,
+          "coverage": 0.0,
+          "valid_claims": 0
+        },
+        {
+          "lesson_id": 416,
+          "title": "Primary Defenses: Crypsis, Camouflage, and Mimesis",
+          "blocks": 11,
+          "supported": 0,
+          "coverage": 0.0,
+          "valid_claims": 0
+        },
+        {
+          "lesson_id": 417,
+          "title": "Aposematism and Mimicry Systems",
+          "blocks": 12,
+          "supported": 0,
+          "coverage": 0.0,
+          "valid_claims": 0
+        },
+        {
+          "lesson_id": 418,
+          "title": "Secondary Defenses: Startle, Mechanical, and Physica",
+          "blocks": 13,
+          "supported": 0,
+          "coverage": 0.0,
+          "valid_claims": 0
+        },
+        {
+          "lesson_id": 419,
+          "title": "Chemical Defenses: Types, Effects, and Origins",
+          "blocks": 12,
+          "supported": 0,
+          "coverage": 0.0,
+          "valid_claims": 0
+        },
+        {
+          "lesson_id": 420,
+          "title": "Advanced Defense Ecology: Chemical Acquisition, Beha",
+          "blocks": 12,
+          "supported": 0,
+          "coverage": 0.0,
+          "valid_claims": 0
+        }
+      ]
+    },
+    {
+      "event": "experimental-design",
+      "event_id": 6,
+      "season": 2026,
+      "season_status": "prior_season_practice",
+      "claims_total": 3,
+      "claims_valid": 0,
+      "claim_reject_reasons": {
+        "no_snapshot": 3
+      },
+      "lessons": 7,
+      "substantive_blocks": 82,
+      "supported_blocks": 0,
+      "substantive_coverage": 0.0,
+      "skills": 7,
+      "skills_supported": 0,
+      "skills_unsupported_without_gap": 7,
+      "lesson_detail": [
+        {
+          "lesson_id": 606,
+          "title": "Purpose and Logic of Experimental Design",
+          "blocks": 11,
+          "supported": 0,
+          "coverage": 0.0,
+          "valid_claims": 0
+        },
+        {
+          "lesson_id": 607,
+          "title": "Variables, Factors, Responses, and Experimental Scop",
+          "blocks": 11,
+          "supported": 0,
+          "coverage": 0.0,
+          "valid_claims": 0
+        },
+        {
+          "lesson_id": 608,
+          "title": "Experimental Questions, Hypotheses, and Comparisons",
+          "blocks": 12,
+          "supported": 0,
+          "coverage": 0.0,
+          "valid_claims": 0
+        },
+        {
+          "lesson_id": 609,
+          "title": "Exploratory Data Analysis and Data Quality Checks",
+          "blocks": 11,
+          "supported": 0,
+          "coverage": 0.0,
+          "valid_claims": 0
+        },
+        {
+          "lesson_id": 610,
+          "title": "Statistical Inference for Experimental Results",
+          "blocks": 12,
+          "supported": 0,
+          "coverage": 0.0,
+          "valid_claims": 0
+        },
+        {
+          "lesson_id": 611,
+          "title": "Process Models, Effects, and Interactions",
+          "blocks": 12,
+          "supported": 0,
+          "coverage": 0.0,
+          "valid_claims": 0
+        },
+        {
+          "lesson_id": 612,
+          "title": "8. Advanced DOE: Screening, Response Surfaces, and O",
+          "blocks": 13,
+          "supported": 0,
+          "coverage": 0.0,
+          "valid_claims": 0
+        }
+      ]
+    },
+    {
+      "event": "experimental-design-b",
+      "event_id": 27,
+      "season": 2026,
+      "season_status": "current",
+      "claims_total": 0,
+      "claims_valid": 0,
+      "claim_reject_reasons": {},
+      "lessons": 8,
+      "substantive_blocks": 101,
+      "supported_blocks": 0,
+      "substantive_coverage": 0.0,
+      "skills": 8,
+      "skills_supported": 0,
+      "skills_unsupported_without_gap": 8,
+      "lesson_detail": [
+        {
+          "lesson_id": 365,
+          "title": "Event Structure, Scoring, and Scientific Question Fo",
+          "blocks": 12,
+          "supported": 0,
+          "coverage": 0.0,
+          "valid_claims": 0
+        },
+        {
+          "lesson_id": 366,
+          "title": "Hypotheses and Experimental Variables",
+          "blocks": 13,
+          "supported": 0,
+          "coverage": 0.0,
+          "valid_claims": 0
+        },
+        {
+          "lesson_id": 367,
+          "title": "Materials, Procedure, Trials, and Set-Up Diagrams",
+          "blocks": 12,
+          "supported": 0,
+          "coverage": 0.0,
+          "valid_claims": 0
+        },
+        {
+          "lesson_id": 368,
+          "title": "Observation and Data Collection During the Experimen",
+          "blocks": 12,
+          "supported": 0,
+          "coverage": 0.0,
+          "valid_claims": 0
+        },
+        {
+          "lesson_id": 369,
+          "title": "Graphing Experimental Results",
+          "blocks": 15,
+          "supported": 0,
+          "coverage": 0.0,
+          "valid_claims": 0
+        },
+        {
+          "lesson_id": 370,
+          "title": "Statistics for Central Tendency, Best Fit, and Varia",
+          "blocks": 13,
+          "supported": 0,
+          "coverage": 0.0,
+          "valid_claims": 0
+        },
+        {
+          "lesson_id": 371,
+          "title": "Claim-Evidence-Reasoning Analysis: Variation, Outlie",
+          "blocks": 13,
+          "supported": 0,
+          "coverage": 0.0,
+          "valid_claims": 0
+        },
+        {
+          "lesson_id": 372,
+          "title": "Errors, Conclusions, Recommendations, and Competitio",
+          "blocks": 11,
+          "supported": 0,
+          "coverage": 0.0,
+          "valid_claims": 0
+        }
+      ]
+    },
+    {
+      "event": "experimental-design-c",
+      "event_id": 50,
+      "season": 2026,
+      "season_status": "current",
+      "claims_total": 0,
+      "claims_valid": 0,
+      "claim_reject_reasons": {},
+      "lessons": 8,
+      "substantive_blocks": 85,
+      "supported_blocks": 0,
+      "substantive_coverage": 0.0,
+      "skills": 8,
+      "skills_supported": 0,
+      "skills_unsupported_without_gap": 8,
+      "lesson_detail": [
+        {
+          "lesson_id": 551,
+          "title": "Event Framework and Scoring Priorities",
+          "blocks": 11,
+          "supported": 0,
+          "coverage": 0.0,
+          "valid_claims": 0
+        },
+        {
+          "lesson_id": 552,
+          "title": "Testable Questions and Directional Hypotheses",
+          "blocks": 11,
+          "supported": 0,
+          "coverage": 0.0,
+          "valid_claims": 0
+        },
+        {
+          "lesson_id": 553,
+          "title": "Variables, Levels, Controls, and Constants",
+          "blocks": 12,
+          "supported": 0,
+          "coverage": 0.0,
+          "valid_claims": 0
+        },
+        {
+          "lesson_id": 554,
+          "title": "Materials, Experimental Setup, and Reproducible Proc",
+          "blocks": 11,
+          "supported": 0,
+          "coverage": 0.0,
+          "valid_claims": 0
+        },
+        {
+          "lesson_id": 555,
+          "title": "Set-Up Diagrams and Qualitative Observations",
+          "blocks": 7,
+          "supported": 0,
+          "coverage": 0.0,
+          "valid_claims": 0
+        },
+        {
+          "lesson_id": 556,
+          "title": "Quantitative Data Tables and Derived Values",
+          "blocks": 10,
+          "supported": 0,
+          "coverage": 0.0,
+          "valid_claims": 0
+        },
+        {
+          "lesson_id": 557,
+          "title": "Graphing, Statistics, and Significant Figures",
+          "blocks": 11,
+          "supported": 0,
+          "coverage": 0.0,
+          "valid_claims": 0
+        },
+        {
+          "lesson_id": 558,
+          "title": "Advanced Analysis with Claim-Evidence-Reasoning",
+          "blocks": 12,
+          "supported": 0,
+          "coverage": 0.0,
+          "valid_claims": 0
+        }
+      ]
+    },
+    {
+      "event": "food-science-b-2027",
+      "event_id": 67,
+      "season": 2027,
+      "season_status": "current",
+      "claims_total": 0,
+      "claims_valid": 0,
+      "claim_reject_reasons": {},
+      "lessons": 0,
+      "substantive_blocks": 0,
+      "supported_blocks": 0,
+      "substantive_coverage": 0.0,
+      "skills": 0,
+      "skills_supported": 0,
+      "skills_unsupported_without_gap": 0,
+      "lesson_detail": []
+    },
+    {
+      "event": "forensics-c",
+      "event_id": 43,
+      "season": 2026,
+      "season_status": "current",
+      "claims_total": 0,
+      "claims_valid": 0,
+      "claim_reject_reasons": {},
+      "lessons": 8,
+      "substantive_blocks": 94,
+      "supported_blocks": 0,
+      "substantive_coverage": 0.0,
+      "skills": 8,
+      "skills_supported": 0,
+      "skills_unsupported_without_gap": 8,
+      "lesson_detail": [
+        {
+          "lesson_id": 501,
+          "title": "Event Workflow, Safety, and Evidence Logic",
+          "blocks": 11,
+          "supported": 0,
+          "coverage": 0.0,
+          "valid_claims": 0
+        },
+        {
+          "lesson_id": 502,
+          "title": "2. Powder Identification Foundations",
+          "blocks": 15,
+          "supported": 0,
+          "coverage": 0.0,
+          "valid_claims": 0
+        },
+        {
+          "lesson_id": 503,
+          "title": "3. Powder Chemistry, Reactions, and Food Evidence",
+          "blocks": 12,
+          "supported": 0,
+          "coverage": 0.0,
+          "valid_claims": 0
+        },
+        {
+          "lesson_id": 504,
+          "title": "4. Fibers and Textile Evidence",
+          "blocks": 10,
+          "supported": 0,
+          "coverage": 0.0,
+          "valid_claims": 0
+        },
+        {
+          "lesson_id": 505,
+          "title": "5. Hair Microscopy and Biological Trace Evidence",
+          "blocks": 12,
+          "supported": 0,
+          "coverage": 0.0,
+          "valid_claims": 0
+        },
+        {
+          "lesson_id": 506,
+          "title": "6. Plastics, Polymers, and Density Evidence",
+          "blocks": 12,
+          "supported": 0,
+          "coverage": 0.0,
+          "valid_claims": 0
+        },
+        {
+          "lesson_id": 507,
+          "title": "7. Instrumental and Separation Analysis: Ink, Rf, Li",
+          "blocks": 11,
+          "supported": 0,
+          "coverage": 0.0,
+          "valid_claims": 0
+        },
+        {
+          "lesson_id": 508,
+          "title": "Pollen, Seeds, Entomology, and Final Case Write-Up",
+          "blocks": 11,
+          "supported": 0,
+          "coverage": 0.0,
+          "valid_claims": 0
+        }
+      ]
+    },
+    {
+      "event": "helicopter-b",
+      "event_id": 23,
+      "season": 2026,
+      "season_status": "prior_season_practice",
+      "claims_total": 0,
+      "claims_valid": 0,
+      "claim_reject_reasons": {},
+      "lessons": 8,
+      "substantive_blocks": 89,
+      "supported_blocks": 0,
+      "substantive_coverage": 0.0,
+      "skills": 8,
+      "skills_supported": 0,
+      "skills_unsupported_without_gap": 8,
+      "lesson_detail": [
+        {
+          "lesson_id": 334,
+          "title": "Helicopter Event Mindset and Flight Environment",
+          "blocks": 10,
+          "supported": 0,
+          "coverage": 0.0,
+          "valid_claims": 0
+        },
+        {
+          "lesson_id": 335,
+          "title": "Lightweight Balsa Construction and Joint Quality",
+          "blocks": 11,
+          "supported": 0,
+          "coverage": 0.0,
+          "valid_claims": 0
+        },
+        {
+          "lesson_id": 336,
+          "title": "Glue Selection and Application Techniques",
+          "blocks": 12,
+          "supported": 0,
+          "coverage": 0.0,
+          "valid_claims": 0
+        },
+        {
+          "lesson_id": 337,
+          "title": "Rubber Motor Basics and Measurement",
+          "blocks": 11,
+          "supported": 0,
+          "coverage": 0.0,
+          "valid_claims": 0
+        },
+        {
+          "lesson_id": 338,
+          "title": "Winders, Turns, and Safe Stretch Winding",
+          "blocks": 11,
+          "supported": 0,
+          "coverage": 0.0,
+          "valid_claims": 0
+        },
+        {
+          "lesson_id": 339,
+          "title": "Basic Flight Testing Procedure",
+          "blocks": 12,
+          "supported": 0,
+          "coverage": 0.0,
+          "valid_claims": 0
+        },
+        {
+          "lesson_id": 340,
+          "title": "Data Logging and Flight Interpretation",
+          "blocks": 11,
+          "supported": 0,
+          "coverage": 0.0,
+          "valid_claims": 0
+        },
+        {
+          "lesson_id": 341,
+          "title": "Motor Optimization and Next-Level Preparation",
+          "blocks": 11,
+          "supported": 0,
+          "coverage": 0.0,
+          "valid_claims": 0
+        }
+      ]
+    },
+    {
+      "event": "helicopter-c",
+      "event_id": 47,
+      "season": 2026,
+      "season_status": "prior_season_practice",
+      "claims_total": 0,
+      "claims_valid": 0,
+      "claim_reject_reasons": {},
+      "lessons": 8,
+      "substantive_blocks": 92,
+      "supported_blocks": 0,
+      "substantive_coverage": 0.0,
+      "skills": 8,
+      "skills_supported": 0,
+      "skills_unsupported_without_gap": 8,
+      "lesson_detail": [
+        {
+          "lesson_id": 531,
+          "title": "Event Orientation, Scoring Goals, and Rule Framework",
+          "blocks": 12,
+          "supported": 0,
+          "coverage": 0.0,
+          "valid_claims": 0
+        },
+        {
+          "lesson_id": 532,
+          "title": "Helicopter Anatomy and Basic Flight Principles",
+          "blocks": 11,
+          "supported": 0,
+          "coverage": 0.0,
+          "valid_claims": 0
+        },
+        {
+          "lesson_id": 533,
+          "title": "Materials, Tools, and Precision Building Habits",
+          "blocks": 11,
+          "supported": 0,
+          "coverage": 0.0,
+          "valid_claims": 0
+        },
+        {
+          "lesson_id": 534,
+          "title": "Lightweight Balsa Joint Design and Gluing Technique",
+          "blocks": 11,
+          "supported": 0,
+          "coverage": 0.0,
+          "valid_claims": 0
+        },
+        {
+          "lesson_id": 535,
+          "title": "Rubber Motors: Selection, Measurement, and Preparati",
+          "blocks": 11,
+          "supported": 0,
+          "coverage": 0.0,
+          "valid_claims": 0
+        },
+        {
+          "lesson_id": 536,
+          "title": "Winding, Torque, Launch, and Motor Energy Management",
+          "blocks": 12,
+          "supported": 0,
+          "coverage": 0.0,
+          "valid_claims": 0
+        },
+        {
+          "lesson_id": 537,
+          "title": "Flight Logging, Required Data, and Experimental Desi",
+          "blocks": 11,
+          "supported": 0,
+          "coverage": 0.0,
+          "valid_claims": 0
+        },
+        {
+          "lesson_id": 538,
+          "title": "Trimming, Data Analysis, Optimization, and Tournamen",
+          "blocks": 13,
+          "supported": 0,
+          "coverage": 0.0,
+          "valid_claims": 0
+        }
+      ]
+    },
+    {
+      "event": "heredity-b",
+      "event_id": 10,
+      "season": 2026,
+      "season_status": "current",
+      "claims_total": 3,
+      "claims_valid": 0,
+      "claim_reject_reasons": {
+        "no_snapshot": 3
+      },
+      "lessons": 16,
+      "substantive_blocks": 186,
+      "supported_blocks": 0,
+      "substantive_coverage": 0.0,
+      "skills": 8,
+      "skills_supported": 0,
+      "skills_unsupported_without_gap": 8,
+      "lesson_detail": [
+        {
+          "lesson_id": 243,
+          "title": "Foundations of Heredity and the Cell Basis of Geneti",
+          "blocks": 11,
+          "supported": 0,
+          "coverage": 0.0,
+          "valid_claims": 0
+        },
+        {
+          "lesson_id": 598,
+          "title": "DNA as the Molecule of Heredity",
+          "blocks": 12,
+          "supported": 0,
+          "coverage": 0.0,
+          "valid_claims": 0
+        },
+        {
+          "lesson_id": 244,
+          "title": "Cell Ultrastructure, Organelles, and Chromosome Orga",
+          "blocks": 12,
+          "supported": 0,
+          "coverage": 0.0,
+          "valid_claims": 0
+        },
+        {
+          "lesson_id": 599,
+          "title": "Genes, Alleles, and Chromosomes",
+          "blocks": 10,
+          "supported": 0,
+          "coverage": 0.0,
+          "valid_claims": 0
+        },
+        {
+          "lesson_id": 245,
+          "title": "Mitosis, Meiosis, and the Chromosomal Basis of Inher",
+          "blocks": 12,
+          "supported": 0,
+          "coverage": 0.0,
+          "valid_claims": 0
+        },
+        {
+          "lesson_id": 600,
+          "title": "From Gene to Protein",
+          "blocks": 11,
+          "supported": 0,
+          "coverage": 0.0,
+          "valid_claims": 0
+        },
+        {
+          "lesson_id": 246,
+          "title": "Mendelian Inheritance and Classical Genetic Analysis",
+          "blocks": 13,
+          "supported": 0,
+          "coverage": 0.0,
+          "valid_claims": 0
+        },
+        {
+          "lesson_id": 601,
+          "title": "Genomes and Genomics",
+          "blocks": 11,
+          "supported": 0,
+          "coverage": 0.0,
+          "valid_claims": 0
+        },
+        {
+          "lesson_id": 247,
+          "title": "Extensions and Exceptions to Mendelian Ratios",
+          "blocks": 13,
+          "supported": 0,
+          "coverage": 0.0,
+          "valid_claims": 0
+        },
+        {
+          "lesson_id": 602,
+          "title": "Classic Single-Gene Inheritance Patterns",
+          "blocks": 11,
+          "supported": 0,
+          "coverage": 0.0,
+          "valid_claims": 0
+        },
+        {
+          "lesson_id": 248,
+          "title": "Polygenic, Quantitative, and Environmentally Influen",
+          "blocks": 12,
+          "supported": 0,
+          "coverage": 0.0,
+          "valid_claims": 0
+        },
+        {
+          "lesson_id": 603,
+          "title": "Sex-Linked, Y-Linked, and Mitochondrial Inheritance",
+          "blocks": 12,
+          "supported": 0,
+          "coverage": 0.0,
+          "valid_claims": 0
+        },
+        {
+          "lesson_id": 249,
+          "title": "Molecular Genetics: DNA, RNA, Gene Expression, and R",
+          "blocks": 12,
+          "supported": 0,
+          "coverage": 0.0,
+          "valid_claims": 0
+        },
+        {
+          "lesson_id": 604,
+          "title": "Complex Inheritance and Modifiers of Genetic Risk",
+          "blocks": 11,
+          "supported": 0,
+          "coverage": 0.0,
+          "valid_claims": 0
+        },
+        {
+          "lesson_id": 250,
+          "title": "Linkage, Crossing Over, Mutation, and Chromosomal Ab",
+          "blocks": 12,
+          "supported": 0,
+          "coverage": 0.0,
+          "valid_claims": 0
+        },
+        {
+          "lesson_id": 605,
+          "title": "DNA Sequencing, the Human Genome Project, and Genomi",
+          "blocks": 11,
+          "supported": 0,
+          "coverage": 0.0,
+          "valid_claims": 0
+        }
+      ]
+    },
+    {
+      "event": "hovercraft-b",
+      "event_id": 17,
+      "season": 2026,
+      "season_status": "current",
+      "claims_total": 0,
+      "claims_valid": 0,
+      "claim_reject_reasons": {},
+      "lessons": 8,
+      "substantive_blocks": 89,
+      "supported_blocks": 0,
+      "substantive_coverage": 0.0,
+      "skills": 8,
+      "skills_supported": 0,
+      "skills_unsupported_without_gap": 8,
+      "lesson_detail": [
+        {
+          "lesson_id": 291,
+          "title": "Event Orientation, Constraints, and Compliance Map",
+          "blocks": 11,
+          "supported": 0,
+          "coverage": 0.0,
+          "valid_claims": 0
+        },
+        {
+          "lesson_id": 292,
+          "title": "Hovercraft Physics Foundations",
+          "blocks": 11,
+          "supported": 0,
+          "coverage": 0.0,
+          "valid_claims": 0
+        },
+        {
+          "lesson_id": 293,
+          "title": "Chassis, Skirt, and Air-Cushion Design",
+          "blocks": 11,
+          "supported": 0,
+          "coverage": 0.0,
+          "valid_claims": 0
+        },
+        {
+          "lesson_id": 294,
+          "title": "Propulsion, Directional Control, and Timing Dowel Ge",
+          "blocks": 11,
+          "supported": 0,
+          "coverage": 0.0,
+          "valid_claims": 0
+        },
+        {
+          "lesson_id": 295,
+          "title": "Legal Electrical Systems and Power Safety",
+          "blocks": 11,
+          "supported": 0,
+          "coverage": 0.0,
+          "valid_claims": 0
+        },
+        {
+          "lesson_id": 296,
+          "title": "Testing Track Procedures and Run Validity",
+          "blocks": 11,
+          "supported": 0,
+          "coverage": 0.0,
+          "valid_claims": 0
+        },
+        {
+          "lesson_id": 297,
+          "title": "Calibration, Data Collection, and Design Log Scoring",
+          "blocks": 11,
+          "supported": 0,
+          "coverage": 0.0,
+          "valid_claims": 0
+        },
+        {
+          "lesson_id": 298,
+          "title": "Competition Optimization and Final Readiness",
+          "blocks": 12,
+          "supported": 0,
+          "coverage": 0.0,
+          "valid_claims": 0
+        }
+      ]
+    },
+    {
+      "event": "hovercraft-c",
+      "event_id": 40,
+      "season": 2026,
+      "season_status": "current",
+      "claims_total": 0,
+      "claims_valid": 0,
+      "claim_reject_reasons": {},
+      "lessons": 8,
+      "substantive_blocks": 98,
+      "supported_blocks": 0,
+      "substantive_coverage": 0.0,
+      "skills": 8,
+      "skills_supported": 0,
+      "skills_unsupported_without_gap": 8,
+      "lesson_detail": [
+        {
+          "lesson_id": 462,
+          "title": "Event Orientation and Rule-Based Design Planning for",
+          "blocks": 12,
+          "supported": 0,
+          "coverage": 0.0,
+          "valid_claims": 0
+        },
+        {
+          "lesson_id": 463,
+          "title": "Hovercraft Physics Foundations",
+          "blocks": 12,
+          "supported": 0,
+          "coverage": 0.0,
+          "valid_claims": 0
+        },
+        {
+          "lesson_id": 464,
+          "title": "Track Construction, Geometry, and Competition Enviro",
+          "blocks": 12,
+          "supported": 0,
+          "coverage": 0.0,
+          "valid_claims": 0
+        },
+        {
+          "lesson_id": 465,
+          "title": "Vehicle Structure, Chassis, and Skirt Design",
+          "blocks": 13,
+          "supported": 0,
+          "coverage": 0.0,
+          "valid_claims": 0
+        },
+        {
+          "lesson_id": 466,
+          "title": "Lift System and Airflow Optimization",
+          "blocks": 11,
+          "supported": 0,
+          "coverage": 0.0,
+          "valid_claims": 0
+        },
+        {
+          "lesson_id": 467,
+          "title": "Propulsion, Electronics, and Power Management",
+          "blocks": 13,
+          "supported": 0,
+          "coverage": 0.0,
+          "valid_claims": 0
+        },
+        {
+          "lesson_id": 468,
+          "title": "Calibration, Testing, and Data-Driven Iteration",
+          "blocks": 12,
+          "supported": 0,
+          "coverage": 0.0,
+          "valid_claims": 0
+        },
+        {
+          "lesson_id": 469,
+          "title": "Competition Readiness, Troubleshooting, and Advanced",
+          "blocks": 13,
+          "supported": 0,
+          "coverage": 0.0,
+          "valid_claims": 0
+        }
+      ]
+    },
+    {
+      "event": "machines-b",
+      "event_id": 19,
+      "season": 2026,
+      "season_status": "prior_season_practice",
+      "claims_total": 0,
+      "claims_valid": 0,
+      "claim_reject_reasons": {},
+      "lessons": 8,
+      "substantive_blocks": 97,
+      "supported_blocks": 0,
+      "substantive_coverage": 0.0,
+      "skills": 8,
+      "skills_supported": 0,
+      "skills_unsupported_without_gap": 8,
+      "lesson_detail": [
+        {
+          "lesson_id": 323,
+          "title": "Machines, Energy, and Mechanical Advantage Foundatio",
+          "blocks": 12,
+          "supported": 0,
+          "coverage": 0.0,
+          "valid_claims": 0
+        },
+        {
+          "lesson_id": 324,
+          "title": "Levers and Torque Balance",
+          "blocks": 12,
+          "supported": 0,
+          "coverage": 0.0,
+          "valid_claims": 0
+        },
+        {
+          "lesson_id": 325,
+          "title": "Pulleys, Blocks, and Tackle Systems",
+          "blocks": 12,
+          "supported": 0,
+          "coverage": 0.0,
+          "valid_claims": 0
+        },
+        {
+          "lesson_id": 326,
+          "title": "Wheel and Axle, Winches, and Rotational Machines",
+          "blocks": 13,
+          "supported": 0,
+          "coverage": 0.0,
+          "valid_claims": 0
+        },
+        {
+          "lesson_id": 327,
+          "title": "Inclined Planes, Wedges, and Screws",
+          "blocks": 13,
+          "supported": 0,
+          "coverage": 0.0,
+          "valid_claims": 0
+        },
+        {
+          "lesson_id": 328,
+          "title": "Gears and Gear Trains",
+          "blocks": 11,
+          "supported": 0,
+          "coverage": 0.0,
+          "valid_claims": 0
+        },
+        {
+          "lesson_id": 329,
+          "title": "Work, Power, Force, Pressure, and Hydraulics",
+          "blocks": 13,
+          "supported": 0,
+          "coverage": 0.0,
+          "valid_claims": 0
+        },
+        {
+          "lesson_id": 330,
+          "title": "Integrated Mechanisms, Engines, Power Trains, and Co",
+          "blocks": 11,
+          "supported": 0,
+          "coverage": 0.0,
+          "valid_claims": 0
+        }
+      ]
+    },
+    {
+      "event": "machines-c",
+      "event_id": 41,
+      "season": 2026,
+      "season_status": "prior_season_practice",
+      "claims_total": 0,
+      "claims_valid": 0,
+      "claim_reject_reasons": {},
+      "lessons": 8,
+      "substantive_blocks": 94,
+      "supported_blocks": 0,
+      "substantive_coverage": 0.0,
+      "skills": 8,
+      "skills_supported": 0,
+      "skills_unsupported_without_gap": 8,
+      "lesson_detail": [
+        {
+          "lesson_id": 485,
+          "title": "Foundations of Machines, Forces, Work, and Energy",
+          "blocks": 12,
+          "supported": 0,
+          "coverage": 0.0,
+          "valid_claims": 0
+        },
+        {
+          "lesson_id": 486,
+          "title": "Mechanical Advantage, Efficiency, and Machine Calcul",
+          "blocks": 13,
+          "supported": 0,
+          "coverage": 0.0,
+          "valid_claims": 0
+        },
+        {
+          "lesson_id": 487,
+          "title": "Torque and Lever Systems",
+          "blocks": 11,
+          "supported": 0,
+          "coverage": 0.0,
+          "valid_claims": 0
+        },
+        {
+          "lesson_id": 488,
+          "title": "Lever-Based Measuring Device and Mass Ratios",
+          "blocks": 11,
+          "supported": 0,
+          "coverage": 0.0,
+          "valid_claims": 0
+        },
+        {
+          "lesson_id": 489,
+          "title": "Pulleys, Block-and-Tackle Systems, and Rope Machines",
+          "blocks": 11,
+          "supported": 0,
+          "coverage": 0.0,
+          "valid_claims": 0
+        },
+        {
+          "lesson_id": 490,
+          "title": "Wheel and Axle, Gears, and Rotational Compound Machi",
+          "blocks": 12,
+          "supported": 0,
+          "coverage": 0.0,
+          "valid_claims": 0
+        },
+        {
+          "lesson_id": 491,
+          "title": "Inclined Planes, Wedges, and Screws",
+          "blocks": 12,
+          "supported": 0,
+          "coverage": 0.0,
+          "valid_claims": 0
+        },
+        {
+          "lesson_id": 492,
+          "title": "Friction, Angle of Repose, and Integrated Machine De",
+          "blocks": 12,
+          "supported": 0,
+          "coverage": 0.0,
+          "valid_claims": 0
+        }
+      ]
+    },
+    {
+      "event": "materials-science-c",
+      "event_id": 44,
+      "season": 2026,
+      "season_status": "prior_season_practice",
+      "claims_total": 0,
+      "claims_valid": 0,
+      "claim_reject_reasons": {},
+      "lessons": 7,
+      "substantive_blocks": 76,
+      "supported_blocks": 0,
+      "substantive_coverage": 0.0,
+      "skills": 7,
+      "skills_supported": 0,
+      "skills_unsupported_without_gap": 7,
+      "lesson_detail": [
+        {
+          "lesson_id": 509,
+          "title": "Materials Science Foundations and Material Classes",
+          "blocks": 13,
+          "supported": 0,
+          "coverage": 0.0,
+          "valid_claims": 0
+        },
+        {
+          "lesson_id": 510,
+          "title": "Ceramic Structures, Crystals, and Defects",
+          "blocks": 10,
+          "supported": 0,
+          "coverage": 0.0,
+          "valid_claims": 0
+        },
+        {
+          "lesson_id": 511,
+          "title": "Mechanical Behavior: Stress, Strain, and Elasticity",
+          "blocks": 11,
+          "supported": 0,
+          "coverage": 0.0,
+          "valid_claims": 0
+        },
+        {
+          "lesson_id": 512,
+          "title": "Thermal Properties, Phase Behavior, and Processing K",
+          "blocks": 10,
+          "supported": 0,
+          "coverage": 0.0,
+          "valid_claims": 0
+        },
+        {
+          "lesson_id": 513,
+          "title": "Glasses and Glass-Ceramics",
+          "blocks": 10,
+          "supported": 0,
+          "coverage": 0.0,
+          "valid_claims": 0
+        },
+        {
+          "lesson_id": 514,
+          "title": "Ceramic Fabrication, Microstructure, and Application",
+          "blocks": 12,
+          "supported": 0,
+          "coverage": 0.0,
+          "valid_claims": 0
+        },
+        {
+          "lesson_id": 515,
+          "title": "Characterization, Data Analysis, and Lab Practical S",
+          "blocks": 10,
+          "supported": 0,
+          "coverage": 0.0,
+          "valid_claims": 0
+        }
+      ]
+    },
+    {
+      "event": "meteorology",
+      "event_id": 4,
+      "season": 2026,
+      "season_status": "prior_season_practice",
+      "claims_total": 3,
+      "claims_valid": 0,
+      "claim_reject_reasons": {
+        "no_snapshot": 3
+      },
+      "lessons": 8,
+      "substantive_blocks": 93,
+      "supported_blocks": 0,
+      "substantive_coverage": 0.0,
+      "skills": 8,
+      "skills_supported": 0,
+      "skills_unsupported_without_gap": 8,
+      "lesson_detail": [
+        {
+          "lesson_id": 582,
+          "title": "Atmospheric Structure and Meteorological Foundations",
+          "blocks": 13,
+          "supported": 0,
+          "coverage": 0.0,
+          "valid_claims": 0
+        },
+        {
+          "lesson_id": 583,
+          "title": "Energy, Heat Transfer, and Earth\u2019s Weather Engine",
+          "blocks": 12,
+          "supported": 0,
+          "coverage": 0.0,
+          "valid_claims": 0
+        },
+        {
+          "lesson_id": 584,
+          "title": "Air Pressure: Units, Causes, and Measurement",
+          "blocks": 11,
+          "supported": 0,
+          "coverage": 0.0,
+          "valid_claims": 0
+        },
+        {
+          "lesson_id": 585,
+          "title": "Vertical Pressure Patterns and Sea-Level Reduction",
+          "blocks": 11,
+          "supported": 0,
+          "coverage": 0.0,
+          "valid_claims": 0
+        },
+        {
+          "lesson_id": 586,
+          "title": "Pressure Systems, Winds, and Weather Interpretation",
+          "blocks": 12,
+          "supported": 0,
+          "coverage": 0.0,
+          "valid_claims": 0
+        },
+        {
+          "lesson_id": 587,
+          "title": "Water in the Atmosphere and Precipitation Formation",
+          "blocks": 11,
+          "supported": 0,
+          "coverage": 0.0,
+          "valid_claims": 0
+        },
+        {
+          "lesson_id": 588,
+          "title": "Hydrologic Observations, Gauges, and Flood Forecasti",
+          "blocks": 12,
+          "supported": 0,
+          "coverage": 0.0,
+          "valid_claims": 0
+        },
+        {
+          "lesson_id": 589,
+          "title": "Global Circulation, Jet Streams, and Climate-Scale P",
+          "blocks": 11,
+          "supported": 0,
+          "coverage": 0.0,
+          "valid_claims": 0
+        }
+      ]
+    },
+    {
+      "event": "meteorology-b",
+      "event_id": 13,
+      "season": 2026,
+      "season_status": "current",
+      "claims_total": 0,
+      "claims_valid": 0,
+      "claim_reject_reasons": {},
+      "lessons": 8,
+      "substantive_blocks": 93,
+      "supported_blocks": 0,
+      "substantive_coverage": 0.0,
+      "skills": 8,
+      "skills_supported": 0,
+      "skills_unsupported_without_gap": 8,
+      "lesson_detail": [
+        {
+          "lesson_id": 267,
+          "title": "Weather, Climate, and the Atmosphere",
+          "blocks": 11,
+          "supported": 0,
+          "coverage": 0.0,
+          "valid_claims": 0
+        },
+        {
+          "lesson_id": 268,
+          "title": "Earth\u2019s Radiative Energy Balance",
+          "blocks": 12,
+          "supported": 0,
+          "coverage": 0.0,
+          "valid_claims": 0
+        },
+        {
+          "lesson_id": 269,
+          "title": "Global Atmospheric Circulation and Wind Belts",
+          "blocks": 12,
+          "supported": 0,
+          "coverage": 0.0,
+          "valid_claims": 0
+        },
+        {
+          "lesson_id": 270,
+          "title": "Ocean Circulation and Ocean-Atmosphere Connections",
+          "blocks": 11,
+          "supported": 0,
+          "coverage": 0.0,
+          "valid_claims": 0
+        },
+        {
+          "lesson_id": 271,
+          "title": "Climate Controls and K\u00f6ppen Classification",
+          "blocks": 12,
+          "supported": 0,
+          "coverage": 0.0,
+          "valid_claims": 0
+        },
+        {
+          "lesson_id": 272,
+          "title": "Local Climate: Urban, Rural, and Vegetated Environme",
+          "blocks": 12,
+          "supported": 0,
+          "coverage": 0.0,
+          "valid_claims": 0
+        },
+        {
+          "lesson_id": 273,
+          "title": "Climate Change, Impacts, and Historical Climate Even",
+          "blocks": 12,
+          "supported": 0,
+          "coverage": 0.0,
+          "valid_claims": 0
+        },
+        {
+          "lesson_id": 274,
+          "title": "Paleoclimate Evidence and ENSO Applications",
+          "blocks": 11,
+          "supported": 0,
+          "coverage": 0.0,
+          "valid_claims": 0
+        }
+      ]
+    },
+    {
+      "event": "metric-mastery-b",
+      "event_id": 28,
+      "season": 2026,
+      "season_status": "prior_season_practice",
+      "claims_total": 0,
+      "claims_valid": 0,
+      "claim_reject_reasons": {},
+      "lessons": 8,
+      "substantive_blocks": 102,
+      "supported_blocks": 0,
+      "substantive_coverage": 0.0,
+      "skills": 8,
+      "skills_supported": 0,
+      "skills_unsupported_without_gap": 8,
+      "lesson_detail": [
+        {
+          "lesson_id": 373,
+          "title": "Event Format, SI Foundations, and Unit Discipline",
+          "blocks": 12,
+          "supported": 0,
+          "coverage": 0.0,
+          "valid_claims": 0
+        },
+        {
+          "lesson_id": 374,
+          "title": "Metric Prefixes and One-Dimensional Conversions for ",
+          "blocks": 13,
+          "supported": 0,
+          "coverage": 0.0,
+          "valid_claims": 0
+        },
+        {
+          "lesson_id": 375,
+          "title": "Squared, Cubed, and Volume Unit Conversions",
+          "blocks": 12,
+          "supported": 0,
+          "coverage": 0.0,
+          "valid_claims": 0
+        },
+        {
+          "lesson_id": 376,
+          "title": "Measurement Tools, Precision, and Station Technique",
+          "blocks": 12,
+          "supported": 0,
+          "coverage": 0.0,
+          "valid_claims": 0
+        },
+        {
+          "lesson_id": 377,
+          "title": "Estimation Benchmarks for Everyday Objects",
+          "blocks": 13,
+          "supported": 0,
+          "coverage": 0.0,
+          "valid_claims": 0
+        },
+        {
+          "lesson_id": 378,
+          "title": "Geometry for Area, Surface Area, Perimeter, and Volu",
+          "blocks": 13,
+          "supported": 0,
+          "coverage": 0.0,
+          "valid_claims": 0
+        },
+        {
+          "lesson_id": 379,
+          "title": "Derived Quantities: Density, Force, Pressure, Veloci",
+          "blocks": 13,
+          "supported": 0,
+          "coverage": 0.0,
+          "valid_claims": 0
+        },
+        {
+          "lesson_id": 380,
+          "title": "Advanced Competition Practice and Error Reduction",
+          "blocks": 14,
+          "supported": 0,
+          "coverage": 0.0,
+          "valid_claims": 0
+        }
+      ]
+    },
+    {
+      "event": "mission-possible-b",
+      "event_id": 24,
+      "season": 2026,
+      "season_status": "prior_season_practice",
+      "claims_total": 0,
+      "claims_valid": 0,
+      "claim_reject_reasons": {},
+      "lessons": 8,
+      "substantive_blocks": 91,
+      "supported_blocks": 0,
+      "substantive_coverage": 0.0,
+      "skills": 8,
+      "skills_supported": 0,
+      "skills_unsupported_without_gap": 8,
+      "lesson_detail": [
+        {
+          "lesson_id": 342,
+          "title": "Event Rules, Scoring Priorities, and Competition Wor",
+          "blocks": 12,
+          "supported": 0,
+          "coverage": 0.0,
+          "valid_claims": 0
+        },
+        {
+          "lesson_id": 343,
+          "title": "Functional Design Before Structure",
+          "blocks": 11,
+          "supported": 0,
+          "coverage": 0.0,
+          "valid_claims": 0
+        },
+        {
+          "lesson_id": 344,
+          "title": "Mechanical Foundations: Force, Motion, Friction, and",
+          "blocks": 11,
+          "supported": 0,
+          "coverage": 0.0,
+          "valid_claims": 0
+        },
+        {
+          "lesson_id": 345,
+          "title": "Simple Machine Actions I: Wheel and Axle, Wedges, an",
+          "blocks": 11,
+          "supported": 0,
+          "coverage": 0.0,
+          "valid_claims": 0
+        },
+        {
+          "lesson_id": 346,
+          "title": "Simple Machine Actions II: Levers, Pulley Systems, a",
+          "blocks": 12,
+          "supported": 0,
+          "coverage": 0.0,
+          "valid_claims": 0
+        },
+        {
+          "lesson_id": 347,
+          "title": "Fluid, Marble, Domino, and Paddlewheel Actions",
+          "blocks": 11,
+          "supported": 0,
+          "coverage": 0.0,
+          "valid_claims": 0
+        },
+        {
+          "lesson_id": 348,
+          "title": "Timing Systems and the Required Final Action",
+          "blocks": 13,
+          "supported": 0,
+          "coverage": 0.0,
+          "valid_claims": 0
+        },
+        {
+          "lesson_id": 349,
+          "title": "Tournament Readiness: ASL, Setup, Operation, Testing",
+          "blocks": 10,
+          "supported": 0,
+          "coverage": 0.0,
+          "valid_claims": 0
+        }
+      ]
+    },
+    {
+      "event": "mission-possible-c-2027",
+      "event_id": 93,
+      "season": 2027,
+      "season_status": "current",
+      "claims_total": 0,
+      "claims_valid": 0,
+      "claim_reject_reasons": {},
+      "lessons": 0,
+      "substantive_blocks": 0,
+      "supported_blocks": 0,
+      "substantive_coverage": 0.0,
+      "skills": 0,
+      "skills_supported": 0,
+      "skills_unsupported_without_gap": 0,
+      "lesson_detail": []
+    },
+    {
+      "event": "ping-pong-parachute-b-2027",
+      "event_id": 74,
+      "season": 2027,
+      "season_status": "current",
+      "claims_total": 0,
+      "claims_valid": 0,
+      "claim_reject_reasons": {},
+      "lessons": 0,
+      "substantive_blocks": 0,
+      "supported_blocks": 0,
+      "substantive_coverage": 0.0,
+      "skills": 0,
+      "skills_supported": 0,
+      "skills_unsupported_without_gap": 0,
+      "lesson_detail": []
+    },
+    {
+      "event": "ping-pong-parachute-c-2027",
+      "event_id": 97,
+      "season": 2027,
+      "season_status": "current",
+      "claims_total": 0,
+      "claims_valid": 0,
+      "claim_reject_reasons": {},
+      "lessons": 0,
+      "substantive_blocks": 0,
+      "supported_blocks": 0,
+      "substantive_coverage": 0.0,
+      "skills": 0,
+      "skills_supported": 0,
+      "skills_unsupported_without_gap": 0,
+      "lesson_detail": []
+    },
+    {
+      "event": "potions-and-poisons-b",
+      "event_id": 21,
+      "season": 2026,
+      "season_status": "prior_season_practice",
+      "claims_total": 0,
+      "claims_valid": 0,
+      "claim_reject_reasons": {},
+      "lessons": 7,
+      "substantive_blocks": 79,
+      "supported_blocks": 0,
+      "substantive_coverage": 0.0,
+      "skills": 7,
+      "skills_supported": 0,
+      "skills_unsupported_without_gap": 7,
+      "lesson_detail": [
+        {
+          "lesson_id": 470,
+          "title": "Matter, Atoms, and Chemical Identity",
+          "blocks": 12,
+          "supported": 0,
+          "coverage": 0.0,
+          "valid_claims": 0
+        },
+        {
+          "lesson_id": 471,
+          "title": "Bonding, Polarity, and Intermolecular Forces",
+          "blocks": 11,
+          "supported": 0,
+          "coverage": 0.0,
+          "valid_claims": 0
+        },
+        {
+          "lesson_id": 472,
+          "title": "Solutions, Ions, Conductivity, and Concentration",
+          "blocks": 12,
+          "supported": 0,
+          "coverage": 0.0,
+          "valid_claims": 0
+        },
+        {
+          "lesson_id": 473,
+          "title": "Chemical Reactions, Balancing, and Observable Eviden",
+          "blocks": 11,
+          "supported": 0,
+          "coverage": 0.0,
+          "valid_claims": 0
+        },
+        {
+          "lesson_id": 474,
+          "title": "Household Chemical Hazards and Spill Response",
+          "blocks": 11,
+          "supported": 0,
+          "coverage": 0.0,
+          "valid_claims": 0
+        },
+        {
+          "lesson_id": 475,
+          "title": "Major Poisons and Venoms: Plants, Animals, and Heavy",
+          "blocks": 11,
+          "supported": 0,
+          "coverage": 0.0,
+          "valid_claims": 0
+        },
+        {
+          "lesson_id": 476,
+          "title": "Analytical Lab Skills: Chromatography, pH, Extractio",
+          "blocks": 11,
+          "supported": 0,
+          "coverage": 0.0,
+          "valid_claims": 0
+        }
+      ]
+    },
+    {
+      "event": "protein-modeling-b-trial-2027",
+      "event_id": 100,
+      "season": 2027,
+      "season_status": "trial",
+      "claims_total": 0,
+      "claims_valid": 0,
+      "claim_reject_reasons": {},
+      "lessons": 0,
+      "substantive_blocks": 0,
+      "supported_blocks": 0,
+      "substantive_coverage": 0.0,
+      "skills": 0,
+      "skills_supported": 0,
+      "skills_unsupported_without_gap": 0,
+      "lesson_detail": []
+    },
+    {
+      "event": "protein-modeling-c-2027",
+      "event_id": 90,
+      "season": 2027,
+      "season_status": "current",
+      "claims_total": 0,
+      "claims_valid": 0,
+      "claim_reject_reasons": {},
+      "lessons": 0,
+      "substantive_blocks": 0,
+      "supported_blocks": 0,
+      "substantive_coverage": 0.0,
+      "skills": 0,
+      "skills_supported": 0,
+      "skills_unsupported_without_gap": 0,
+      "lesson_detail": []
+    },
+    {
+      "event": "remote-sensing-b",
+      "event_id": 14,
+      "season": 2026,
+      "season_status": "current",
+      "claims_total": 0,
+      "claims_valid": 0,
+      "claim_reject_reasons": {},
+      "lessons": 8,
+      "substantive_blocks": 94,
+      "supported_blocks": 0,
+      "substantive_coverage": 0.0,
+      "skills": 8,
+      "skills_supported": 0,
+      "skills_unsupported_without_gap": 8,
+      "lesson_detail": [
+        {
+          "lesson_id": 275,
+          "title": "Remote Sensing Foundations and the Electromagnetic S",
+          "blocks": 12,
+          "supported": 0,
+          "coverage": 0.0,
+          "valid_claims": 0
+        },
+        {
+          "lesson_id": 276,
+          "title": "Satellites, Sensors, Orbits, and Resolution",
+          "blocks": 12,
+          "supported": 0,
+          "coverage": 0.0,
+          "valid_claims": 0
+        },
+        {
+          "lesson_id": 277,
+          "title": "Spectral Signatures, False Color, and Vegetation/Wat",
+          "blocks": 11,
+          "supported": 0,
+          "coverage": 0.0,
+          "valid_claims": 0
+        },
+        {
+          "lesson_id": 278,
+          "title": "Atmospheric Optics, Scattering, Aerosols, and Greenh",
+          "blocks": 11,
+          "supported": 0,
+          "coverage": 0.0,
+          "valid_claims": 0
+        },
+        {
+          "lesson_id": 279,
+          "title": "Clouds, Precipitation, Radar, and Extreme Weather Re",
+          "blocks": 12,
+          "supported": 0,
+          "coverage": 0.0,
+          "valid_claims": 0
+        },
+        {
+          "lesson_id": 280,
+          "title": "Water, Oceans, Cryosphere, and Climate Oscillations",
+          "blocks": 12,
+          "supported": 0,
+          "coverage": 0.0,
+          "valid_claims": 0
+        },
+        {
+          "lesson_id": 281,
+          "title": "Climate Change Processes, Carbon Cycle, and Radiativ",
+          "blocks": 12,
+          "supported": 0,
+          "coverage": 0.0,
+          "valid_claims": 0
+        },
+        {
+          "lesson_id": 282,
+          "title": "Energy Balance Modeling and Integrated Remote Sensin",
+          "blocks": 12,
+          "supported": 0,
+          "coverage": 0.0,
+          "valid_claims": 0
+        }
+      ]
+    },
+    {
+      "event": "remote-sensing-c",
+      "event_id": 37,
+      "season": 2026,
+      "season_status": "current",
+      "claims_total": 0,
+      "claims_valid": 0,
+      "claim_reject_reasons": {},
+      "lessons": 8,
+      "substantive_blocks": 93,
+      "supported_blocks": 0,
+      "substantive_coverage": 0.0,
+      "skills": 8,
+      "skills_supported": 0,
+      "skills_unsupported_without_gap": 8,
+      "lesson_detail": [
+        {
+          "lesson_id": 445,
+          "title": "Remote Sensing Foundations and Electromagnetic Radia",
+          "blocks": 12,
+          "supported": 0,
+          "coverage": 0.0,
+          "valid_claims": 0
+        },
+        {
+          "lesson_id": 446,
+          "title": "Spectroscopy, Atmospheric Windows, and Gas Detection",
+          "blocks": 12,
+          "supported": 0,
+          "coverage": 0.0,
+          "valid_claims": 0
+        },
+        {
+          "lesson_id": 447,
+          "title": "Blackbody Radiation and Thermal Remote Sensing Physi",
+          "blocks": 11,
+          "supported": 0,
+          "coverage": 0.0,
+          "valid_claims": 0
+        },
+        {
+          "lesson_id": 448,
+          "title": "Satellite Orbits, Platforms, and Mission Design Trad",
+          "blocks": 11,
+          "supported": 0,
+          "coverage": 0.0,
+          "valid_claims": 0
+        },
+        {
+          "lesson_id": 449,
+          "title": "Imaging Resolution, Sensors, and Data Quality",
+          "blocks": 11,
+          "supported": 0,
+          "coverage": 0.0,
+          "valid_claims": 0
+        },
+        {
+          "lesson_id": 450,
+          "title": "Systematic Image Interpretation and Satellite Data P",
+          "blocks": 11,
+          "supported": 0,
+          "coverage": 0.0,
+          "valid_claims": 0
+        },
+        {
+          "lesson_id": 451,
+          "title": "Climate Processes Observable by Remote Sensing",
+          "blocks": 13,
+          "supported": 0,
+          "coverage": 0.0,
+          "valid_claims": 0
+        },
+        {
+          "lesson_id": 452,
+          "title": "Energy Balance, Radiative Forcing, and Climate Chang",
+          "blocks": 12,
+          "supported": 0,
+          "coverage": 0.0,
+          "valid_claims": 0
+        }
+      ]
+    },
+    {
+      "event": "robot-tour-c",
+      "event_id": 48,
+      "season": 2026,
+      "season_status": "prior_season_practice",
+      "claims_total": 0,
+      "claims_valid": 0,
+      "claim_reject_reasons": {},
+      "lessons": 7,
+      "substantive_blocks": 82,
+      "supported_blocks": 0,
+      "substantive_coverage": 0.0,
+      "skills": 7,
+      "skills_supported": 0,
+      "skills_unsupported_without_gap": 7,
+      "lesson_detail": [
+        {
+          "lesson_id": 575,
+          "title": "Event Overview, Rules, and Scoring Foundations",
+          "blocks": 11,
+          "supported": 0,
+          "coverage": 0.0,
+          "valid_claims": 0
+        },
+        {
+          "lesson_id": 576,
+          "title": "Robot Construction Requirements and Compliance",
+          "blocks": 13,
+          "supported": 0,
+          "coverage": 0.0,
+          "valid_claims": 0
+        },
+        {
+          "lesson_id": 577,
+          "title": "Autonomous Control, Programming Rules, and Ethical C",
+          "blocks": 11,
+          "supported": 0,
+          "coverage": 0.0,
+          "valid_claims": 0
+        },
+        {
+          "lesson_id": 578,
+          "title": "Drive System Design and Motion Accuracy",
+          "blocks": 12,
+          "supported": 0,
+          "coverage": 0.0,
+          "valid_claims": 0
+        },
+        {
+          "lesson_id": 579,
+          "title": "Path Planning Through Gates and Around Obstacles",
+          "blocks": 12,
+          "supported": 0,
+          "coverage": 0.0,
+          "valid_claims": 0
+        },
+        {
+          "lesson_id": 580,
+          "title": "Calibration, Testing, and Practice Log Development",
+          "blocks": 11,
+          "supported": 0,
+          "coverage": 0.0,
+          "valid_claims": 0
+        },
+        {
+          "lesson_id": 581,
+          "title": "Competition Execution and Advanced Score Optimizatio",
+          "blocks": 12,
+          "supported": 0,
+          "coverage": 0.0,
+          "valid_claims": 0
+        }
+      ]
+    },
+    {
+      "event": "rocks-and-minerals",
+      "event_id": 1,
+      "season": 2026,
+      "season_status": "prior_season_practice",
+      "claims_total": 4,
+      "claims_valid": 4,
+      "claim_reject_reasons": {
+        "valid": 4
+      },
+      "lessons": 8,
+      "substantive_blocks": 94,
+      "supported_blocks": 0,
+      "substantive_coverage": 0.0,
+      "skills": 8,
+      "skills_supported": 0,
+      "skills_unsupported_without_gap": 8,
+      "lesson_detail": [
+        {
+          "lesson_id": 203,
+          "title": "Event Foundations and Earth Materials Toolkit",
+          "blocks": 12,
+          "supported": 0,
+          "coverage": 0.0,
+          "valid_claims": 0
+        },
+        {
+          "lesson_id": 204,
+          "title": "Mineral Properties and Identification Methods",
+          "blocks": 12,
+          "supported": 0,
+          "coverage": 0.0,
+          "valid_claims": 0
+        },
+        {
+          "lesson_id": 205,
+          "title": "Mineral Classes, Chemistry, Ores, and Gems",
+          "blocks": 11,
+          "supported": 0,
+          "coverage": 0.0,
+          "valid_claims": 0
+        },
+        {
+          "lesson_id": 206,
+          "title": "Igneous Rocks and Igneous Formations",
+          "blocks": 13,
+          "supported": 0,
+          "coverage": 0.0,
+          "valid_claims": 0
+        },
+        {
+          "lesson_id": 207,
+          "title": "Sedimentary Rocks, Sedimentary Environments, and Fos",
+          "blocks": 12,
+          "supported": 0,
+          "coverage": 0.0,
+          "valid_claims": 0
+        },
+        {
+          "lesson_id": 208,
+          "title": "Metamorphic Rocks and Tectonic Transformation",
+          "blocks": 11,
+          "supported": 0,
+          "coverage": 0.0,
+          "valid_claims": 0
+        },
+        {
+          "lesson_id": 209,
+          "title": "The Rock Cycle, Plate Tectonics, and Interpreting Ea",
+          "blocks": 11,
+          "supported": 0,
+          "coverage": 0.0,
+          "valid_claims": 0
+        },
+        {
+          "lesson_id": 210,
+          "title": "Competition-Level Identification, Resource Analysis,",
+          "blocks": 12,
+          "supported": 0,
+          "coverage": 0.0,
+          "valid_claims": 0
+        }
+      ]
+    },
+    {
+      "event": "rocks-and-minerals-b",
+      "event_id": 15,
+      "season": 2026,
+      "season_status": "current",
+      "claims_total": 0,
+      "claims_valid": 0,
+      "claim_reject_reasons": {},
+      "lessons": 8,
+      "substantive_blocks": 91,
+      "supported_blocks": 0,
+      "substantive_coverage": 0.0,
+      "skills": 8,
+      "skills_supported": 0,
+      "skills_unsupported_without_gap": 8,
+      "lesson_detail": [
+        {
+          "lesson_id": 195,
+          "title": "Mineral Identification Foundations",
+          "blocks": 11,
+          "supported": 0,
+          "coverage": 0.0,
+          "valid_claims": 0
+        },
+        {
+          "lesson_id": 196,
+          "title": "Crystal Chemistry, Habits, and Special Mineral Prope",
+          "blocks": 12,
+          "supported": 0,
+          "coverage": 0.0,
+          "valid_claims": 0
+        },
+        {
+          "lesson_id": 197,
+          "title": "Mineral Groups, Uses, Hazards, and Look-Alikes",
+          "blocks": 12,
+          "supported": 0,
+          "coverage": 0.0,
+          "valid_claims": 0
+        },
+        {
+          "lesson_id": 198,
+          "title": "Silicate Structures, Bowen\u2019s Reaction Series, and Mi",
+          "blocks": 11,
+          "supported": 0,
+          "coverage": 0.0,
+          "valid_claims": 0
+        },
+        {
+          "lesson_id": 199,
+          "title": "Igneous Rocks, Magma Processes, and Volcanic Hazards",
+          "blocks": 12,
+          "supported": 0,
+          "coverage": 0.0,
+          "valid_claims": 0
+        },
+        {
+          "lesson_id": 200,
+          "title": "Tectonics, Magma Origins, and Igneous Landforms",
+          "blocks": 11,
+          "supported": 0,
+          "coverage": 0.0,
+          "valid_claims": 0
+        },
+        {
+          "lesson_id": 201,
+          "title": "Sedimentary Rocks, Environments, and Surface Process",
+          "blocks": 12,
+          "supported": 0,
+          "coverage": 0.0,
+          "valid_claims": 0
+        },
+        {
+          "lesson_id": 202,
+          "title": "Metamorphism, Facies, and Advanced Competition Analy",
+          "blocks": 10,
+          "supported": 0,
+          "coverage": 0.0,
+          "valid_claims": 0
+        }
+      ]
+    },
+    {
+      "event": "rocks-and-minerals-c",
+      "event_id": 38,
+      "season": 2026,
+      "season_status": "current",
+      "claims_total": 0,
+      "claims_valid": 0,
+      "claim_reject_reasons": {},
+      "lessons": 8,
+      "substantive_blocks": 90,
+      "supported_blocks": 0,
+      "substantive_coverage": 0.0,
+      "skills": 8,
+      "skills_supported": 0,
+      "skills_unsupported_without_gap": 8,
+      "lesson_detail": [
+        {
+          "lesson_id": 453,
+          "title": "Mineral Identification Foundations",
+          "blocks": 11,
+          "supported": 0,
+          "coverage": 0.0,
+          "valid_claims": 0
+        },
+        {
+          "lesson_id": 454,
+          "title": "Major Mineral Groups and Economic Minerals",
+          "blocks": 12,
+          "supported": 0,
+          "coverage": 0.0,
+          "valid_claims": 0
+        },
+        {
+          "lesson_id": 455,
+          "title": "Silicate Minerals, Feldspars, and Bowen\u2019s Reaction S",
+          "blocks": 11,
+          "supported": 0,
+          "coverage": 0.0,
+          "valid_claims": 0
+        },
+        {
+          "lesson_id": 456,
+          "title": "Igneous Rocks: Texture, Composition, and Tectonic Se",
+          "blocks": 11,
+          "supported": 0,
+          "coverage": 0.0,
+          "valid_claims": 0
+        },
+        {
+          "lesson_id": 457,
+          "title": "Sedimentary Rocks, Depositional Environments, and Co",
+          "blocks": 11,
+          "supported": 0,
+          "coverage": 0.0,
+          "valid_claims": 0
+        },
+        {
+          "lesson_id": 458,
+          "title": "Metamorphic Rocks, Protoliths, Grade, and Foliation",
+          "blocks": 11,
+          "supported": 0,
+          "coverage": 0.0,
+          "valid_claims": 0
+        },
+        {
+          "lesson_id": 459,
+          "title": "Sedimentary Structures, Rock Cycle Pathways, and Geo",
+          "blocks": 11,
+          "supported": 0,
+          "coverage": 0.0,
+          "valid_claims": 0
+        },
+        {
+          "lesson_id": 460,
+          "title": "Advanced Station Strategy: Relative Dating and Integ",
+          "blocks": 12,
+          "supported": 0,
+          "coverage": 0.0,
+          "valid_claims": 0
+        }
+      ]
+    },
+    {
+      "event": "roller-coaster-b-2027",
+      "event_id": 70,
+      "season": 2027,
+      "season_status": "current",
+      "claims_total": 0,
+      "claims_valid": 0,
+      "claim_reject_reasons": {},
+      "lessons": 0,
+      "substantive_blocks": 0,
+      "supported_blocks": 0,
+      "substantive_coverage": 0.0,
+      "skills": 0,
+      "skills_supported": 0,
+      "skills_unsupported_without_gap": 0,
+      "lesson_detail": []
+    },
+    {
+      "event": "scrambler-b",
+      "event_id": 25,
+      "season": 2026,
+      "season_status": "current",
+      "claims_total": 0,
+      "claims_valid": 0,
+      "claim_reject_reasons": {},
+      "lessons": 7,
+      "substantive_blocks": 85,
+      "supported_blocks": 0,
+      "substantive_coverage": 0.0,
+      "skills": 7,
+      "skills_supported": 0,
+      "skills_unsupported_without_gap": 7,
+      "lesson_detail": [
+        {
+          "lesson_id": 350,
+          "title": "Scrambler Overview: Objective, Runs, Measurements, a",
+          "blocks": 12,
+          "supported": 0,
+          "coverage": 0.0,
+          "valid_claims": 0
+        },
+        {
+          "lesson_id": 351,
+          "title": "Construction Constraints and Legal Device Architectu",
+          "blocks": 15,
+          "supported": 0,
+          "coverage": 0.0,
+          "valid_claims": 0
+        },
+        {
+          "lesson_id": 352,
+          "title": "Vehicle Chassis, Wheels, and Straight-Line Motion",
+          "blocks": 13,
+          "supported": 0,
+          "coverage": 0.0,
+          "valid_claims": 0
+        },
+        {
+          "lesson_id": 353,
+          "title": "Egg Mount, Backstop, and Impact Survival",
+          "blocks": 11,
+          "supported": 0,
+          "coverage": 0.0,
+          "valid_claims": 0
+        },
+        {
+          "lesson_id": 354,
+          "title": "Automatic Stopping Mechanisms and Terminal Barrier S",
+          "blocks": 12,
+          "supported": 0,
+          "coverage": 0.0,
+          "valid_claims": 0
+        },
+        {
+          "lesson_id": 355,
+          "title": "Launch, Alignment, and Competition Procedure",
+          "blocks": 11,
+          "supported": 0,
+          "coverage": 0.0,
+          "valid_claims": 0
+        },
+        {
+          "lesson_id": 356,
+          "title": "Testing Program, Calibration Data, and Tournament Op",
+          "blocks": 11,
+          "supported": 0,
+          "coverage": 0.0,
+          "valid_claims": 0
+        }
+      ]
+    },
+    {
+      "event": "season-resources-bc-2027",
+      "event_id": 102,
+      "season": 2027,
+      "season_status": "current",
+      "claims_total": 0,
+      "claims_valid": 0,
+      "claim_reject_reasons": {},
+      "lessons": 0,
+      "substantive_blocks": 0,
+      "supported_blocks": 0,
+      "substantive_coverage": 0.0,
+      "skills": 0,
+      "skills_supported": 0,
+      "skills_unsupported_without_gap": 0,
+      "lesson_detail": []
+    },
+    {
+      "event": "solar-system-b",
+      "event_id": 16,
+      "season": 2026,
+      "season_status": "current",
+      "claims_total": 0,
+      "claims_valid": 0,
+      "claim_reject_reasons": {},
+      "lessons": 8,
+      "substantive_blocks": 92,
+      "supported_blocks": 0,
+      "substantive_coverage": 0.0,
+      "skills": 8,
+      "skills_supported": 0,
+      "skills_unsupported_without_gap": 8,
+      "lesson_detail": [
+        {
+          "lesson_id": 283,
+          "title": "Solar System Architecture and Classification",
+          "blocks": 11,
+          "supported": 0,
+          "coverage": 0.0,
+          "valid_claims": 0
+        },
+        {
+          "lesson_id": 284,
+          "title": "Planetary Missions, Telescopes, and Instruments",
+          "blocks": 11,
+          "supported": 0,
+          "coverage": 0.0,
+          "valid_claims": 0
+        },
+        {
+          "lesson_id": 285,
+          "title": "Planetary Surfaces and Named Geologic Features",
+          "blocks": 13,
+          "supported": 0,
+          "coverage": 0.0,
+          "valid_claims": 0
+        },
+        {
+          "lesson_id": 286,
+          "title": "Planetary Atmospheres, Storms, and Magnetospheric Ph",
+          "blocks": 10,
+          "supported": 0,
+          "coverage": 0.0,
+          "valid_claims": 0
+        },
+        {
+          "lesson_id": 287,
+          "title": "Moons, Ices, and Geological Activity",
+          "blocks": 12,
+          "supported": 0,
+          "coverage": 0.0,
+          "valid_claims": 0
+        },
+        {
+          "lesson_id": 288,
+          "title": "Image Interpretation and Comparative Planetology Ski",
+          "blocks": 13,
+          "supported": 0,
+          "coverage": 0.0,
+          "valid_claims": 0
+        },
+        {
+          "lesson_id": 289,
+          "title": "Transits and Exoplanet Detection Methods",
+          "blocks": 11,
+          "supported": 0,
+          "coverage": 0.0,
+          "valid_claims": 0
+        },
+        {
+          "lesson_id": 290,
+          "title": "Planet Formation, Interiors, and Thermal Evolution",
+          "blocks": 11,
+          "supported": 0,
+          "coverage": 0.0,
+          "valid_claims": 0
+        }
+      ]
+    },
+    {
+      "event": "thermodynamics-b-2027",
+      "event_id": 65,
+      "season": 2027,
+      "season_status": "current",
+      "claims_total": 0,
+      "claims_valid": 0,
+      "claim_reject_reasons": {},
+      "lessons": 0,
+      "substantive_blocks": 0,
+      "supported_blocks": 0,
+      "substantive_coverage": 0.0,
+      "skills": 0,
+      "skills_supported": 0,
+      "skills_unsupported_without_gap": 0,
+      "lesson_detail": []
+    },
+    {
+      "event": "thermodynamics-c-2027",
+      "event_id": 87,
+      "season": 2027,
+      "season_status": "current",
+      "claims_total": 0,
+      "claims_valid": 0,
+      "claim_reject_reasons": {},
+      "lessons": 0,
+      "substantive_blocks": 0,
+      "supported_blocks": 0,
+      "substantive_coverage": 0.0,
+      "skills": 0,
+      "skills_supported": 0,
+      "skills_unsupported_without_gap": 0,
+      "lesson_detail": []
+    },
+    {
+      "event": "water-quality-b",
+      "event_id": 11,
+      "season": 2026,
+      "season_status": "current",
+      "claims_total": 0,
+      "claims_valid": 0,
+      "claim_reject_reasons": {},
+      "lessons": 8,
+      "substantive_blocks": 94,
+      "supported_blocks": 0,
+      "substantive_coverage": 0.0,
+      "skills": 8,
+      "skills_supported": 0,
+      "skills_unsupported_without_gap": 8,
+      "lesson_detail": [
+        {
+          "lesson_id": 251,
+          "title": "Event Scope, Organism List, and Study System",
+          "blocks": 12,
+          "supported": 0,
+          "coverage": 0.0,
+          "valid_claims": 0
+        },
+        {
+          "lesson_id": 252,
+          "title": "Freshwater Habitats and Where Macroinvertebrates Liv",
+          "blocks": 13,
+          "supported": 0,
+          "coverage": 0.0,
+          "valid_claims": 0
+        },
+        {
+          "lesson_id": 253,
+          "title": "Macroinvertebrate Biology, Adaptations, and Indicato",
+          "blocks": 11,
+          "supported": 0,
+          "coverage": 0.0,
+          "valid_claims": 0
+        },
+        {
+          "lesson_id": 254,
+          "title": "Class 1 Pollution-Sensitive Macroinvertebrates",
+          "blocks": 11,
+          "supported": 0,
+          "coverage": 0.0,
+          "valid_claims": 0
+        },
+        {
+          "lesson_id": 255,
+          "title": "Class 2 Moderately Sensitive Macroinvertebrates",
+          "blocks": 11,
+          "supported": 0,
+          "coverage": 0.0,
+          "valid_claims": 0
+        },
+        {
+          "lesson_id": 256,
+          "title": "Classes 3 and 4: Moderately Tolerant to Pollution To",
+          "blocks": 12,
+          "supported": 0,
+          "coverage": 0.0,
+          "valid_claims": 0
+        },
+        {
+          "lesson_id": 257,
+          "title": "Class 5 Air-Breathing Organisms and Aquatic Nuisance",
+          "blocks": 12,
+          "supported": 0,
+          "coverage": 0.0,
+          "valid_claims": 0
+        },
+        {
+          "lesson_id": 258,
+          "title": "Integrated Water Quality Analysis and Competition Ap",
+          "blocks": 12,
+          "supported": 0,
+          "coverage": 0.0,
+          "valid_claims": 0
+        }
+      ]
+    },
+    {
+      "event": "water-quality-c",
+      "event_id": 34,
+      "season": 2026,
+      "season_status": "current",
+      "claims_total": 0,
+      "claims_valid": 0,
+      "claim_reject_reasons": {},
+      "lessons": 8,
+      "substantive_blocks": 89,
+      "supported_blocks": 0,
+      "substantive_coverage": 0.0,
+      "skills": 8,
+      "skills_supported": 0,
+      "skills_unsupported_without_gap": 8,
+      "lesson_detail": [
+        {
+          "lesson_id": 421,
+          "title": "Freshwater Systems Foundations: Water Cycle, Watersh",
+          "blocks": 11,
+          "supported": 0,
+          "coverage": 0.0,
+          "valid_claims": 0
+        },
+        {
+          "lesson_id": 422,
+          "title": "Freshwater Ecology: Energy Flow, Populations, and Fo",
+          "blocks": 12,
+          "supported": 0,
+          "coverage": 0.0,
+          "valid_claims": 0
+        },
+        {
+          "lesson_id": 423,
+          "title": "Nutrient Cycles, Eutrophication, and Dissolved Oxyge",
+          "blocks": 11,
+          "supported": 0,
+          "coverage": 0.0,
+          "valid_claims": 0
+        },
+        {
+          "lesson_id": 424,
+          "title": "Pollution Sources, Sedimentation, and Human Impacts",
+          "blocks": 11,
+          "supported": 0,
+          "coverage": 0.0,
+          "valid_claims": 0
+        },
+        {
+          "lesson_id": 425,
+          "title": "Water Treatment: Potable Water and Wastewater System",
+          "blocks": 11,
+          "supported": 0,
+          "coverage": 0.0,
+          "valid_claims": 0
+        },
+        {
+          "lesson_id": 426,
+          "title": "Freshwater Macroinvertebrate Identification and Biol",
+          "blocks": 11,
+          "supported": 0,
+          "coverage": 0.0,
+          "valid_claims": 0
+        },
+        {
+          "lesson_id": 427,
+          "title": "Biotic Indices, Pollution Tolerance, and Nuisance Sp",
+          "blocks": 11,
+          "supported": 0,
+          "coverage": 0.0,
+          "valid_claims": 0
+        },
+        {
+          "lesson_id": 428,
+          "title": "Water Monitoring, Data Analysis, and Salinometer App",
+          "blocks": 11,
+          "supported": 0,
+          "coverage": 0.0,
+          "valid_claims": 0
+        }
+      ]
+    },
+    {
+      "event": "wright-stuff-c-2027",
+      "event_id": 94,
+      "season": 2027,
+      "season_status": "current",
+      "claims_total": 0,
+      "claims_valid": 0,
+      "claim_reject_reasons": {},
+      "lessons": 0,
+      "substantive_blocks": 0,
+      "supported_blocks": 0,
+      "substantive_coverage": 0.0,
+      "skills": 0,
+      "skills_supported": 0,
+      "skills_unsupported_without_gap": 0,
+      "lesson_detail": []
+    },
+    {
+      "event": "write-it-do-it-b",
+      "event_id": 29,
+      "season": 2026,
+      "season_status": "current",
+      "claims_total": 0,
+      "claims_valid": 0,
+      "claim_reject_reasons": {},
+      "lessons": 8,
+      "substantive_blocks": 96,
+      "supported_blocks": 0,
+      "substantive_coverage": 0.0,
+      "skills": 8,
+      "skills_supported": 0,
+      "skills_unsupported_without_gap": 8,
+      "lesson_detail": [
+        {
+          "lesson_id": 381,
+          "title": "Event Format, Roles, and Competition Rules",
+          "blocks": 11,
+          "supported": 0,
+          "coverage": 0.0,
+          "valid_claims": 0
+        },
+        {
+          "lesson_id": 382,
+          "title": "Object and Material Identification Vocabulary",
+          "blocks": 14,
+          "supported": 0,
+          "coverage": 0.0,
+          "valid_claims": 0
+        },
+        {
+          "lesson_id": 383,
+          "title": "Spatial Reference Systems for Models",
+          "blocks": 11,
+          "supported": 0,
+          "coverage": 0.0,
+          "valid_claims": 0
+        },
+        {
+          "lesson_id": 384,
+          "title": "Orientation, Order, and Layering Language",
+          "blocks": 12,
+          "supported": 0,
+          "coverage": 0.0,
+          "valid_claims": 0
+        },
+        {
+          "lesson_id": 385,
+          "title": "Writing Clear Construction Instructions",
+          "blocks": 12,
+          "supported": 0,
+          "coverage": 0.0,
+          "valid_claims": 0
+        },
+        {
+          "lesson_id": 386,
+          "title": "Builder Interpretation and Error Prevention",
+          "blocks": 12,
+          "supported": 0,
+          "coverage": 0.0,
+          "valid_claims": 0
+        },
+        {
+          "lesson_id": 387,
+          "title": "Scoring Rubrics and High-Value Model Features",
+          "blocks": 12,
+          "supported": 0,
+          "coverage": 0.0,
+          "valid_claims": 0
+        },
+        {
+          "lesson_id": 388,
+          "title": "Advanced Full-Round Strategy and Practice Cycle",
+          "blocks": 12,
+          "supported": 0,
+          "coverage": 0.0,
+          "valid_claims": 0
+        }
+      ]
+    }
+  ]
+}
