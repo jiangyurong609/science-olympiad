@@ -115,6 +115,46 @@ def _answer_spec(item: dict) -> tuple[str, list, dict]:
     }
 
 
+_TEST_TOKENS = re.compile(r"\b(TEST|EXAM|QUESTIONS?)\b", re.I)
+_KEY_TOKENS = re.compile(r"\b(KEY|ANSWERS?|SOLUTIONS?)\b", re.I)
+_TRIM = re.compile(r"[^a-z0-9]+")
+
+
+def _stem_title(title: str) -> str:
+    """The part of a title that identifies the test, with the role word removed."""
+    without_role = _KEY_TOKENS.sub(" ", _TEST_TOKENS.sub(" ", title or ""))
+    return _TRIM.sub(" ", without_role.lower()).strip()
+
+
+def find_key_source(db: Session, exam_source: Source) -> Source | None:
+    """Find the answer key that belongs to this test.
+
+    27 of 96 imports ran with no key at all — 1,226 items — while the matching key sat in the
+    database under a title differing by one word. `Astronomy … 2026 TEST` imported 55
+    multiple-choice items with an empty answer on every one, next to `Astronomy … 2026 KEY`
+    that nothing ever opened. The importer simply never looked.
+
+    Matching is on the title with the role word removed, and it must be exact after
+    normalisation. A fuzzy match here would attach one event's key to another event's test,
+    which produces confidently wrong grading — strictly worse than the missing key it
+    replaces. When two candidates tie, none is chosen.
+    """
+    if not _TEST_TOKENS.search(exam_source.title or ""):
+        # not named as a test; there is no role word to swap, so nothing reliable to match on
+        return None
+    wanted = _stem_title(exam_source.title)
+    if not wanted:
+        return None
+    candidates = [
+        source for source in db.scalars(select(Source).where(
+            Source.id != exam_source.id)).all()
+        if _KEY_TOKENS.search(source.title or "") and _stem_title(source.title) == wanted
+    ]
+    if len(candidates) != 1:
+        return None
+    return candidates[0]
+
+
 LOW_CONFIDENCE = 0.6
 
 # Some findings are not deductions, they are the absence of the thing being scored. Weighing
@@ -390,6 +430,9 @@ def import_past_test(
     exam_snapshot = _latest_snapshot(db, exam_source.id)
     if not exam_snapshot or not (exam_snapshot.extracted_text or "").strip():
         raise ValueError(f"Source {exam_source.id} has no retained text to parse")
+    # the caller may not know a key exists; look for the obvious sibling before giving up on
+    # answers entirely, which is how 1,226 items were imported with an empty key
+    key_source = key_source or find_key_source(db, exam_source)
     key_snapshot = _latest_snapshot(db, key_source.id) if key_source else None
     key_text = (key_snapshot.extracted_text if key_snapshot else "") or ""
 
