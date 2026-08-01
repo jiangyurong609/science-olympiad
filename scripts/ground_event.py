@@ -306,6 +306,7 @@ def record_block_gaps(db: Session, event: Event, apply: bool) -> dict:
         return {"unsupported": 0, "gaps": 0}
     lessons = db.scalars(select(Lesson).where(Lesson.event_id == event.id)).all()
     unsupported = gaps = 0
+    current: dict[int, tuple[int, str]] = {}      # skill_id -> (missing count, lesson title)
     for lesson in lessons:
         version = db.scalar(select(LessonVersion).where(
             LessonVersion.lesson_id == lesson.id,
@@ -321,27 +322,52 @@ def record_block_gaps(db: Session, event: Event, apply: bool) -> dict:
         skill_link = db.scalar(select(LessonSkill).where(LessonSkill.lesson_id == lesson.id))
         if not skill_link:
             continue
-        existing = db.scalar(select(ContentGap).where(
-            ContentGap.skill_id == skill_link.skill_id,
-            ContentGap.gap_type == "ungrounded_blocks",
-        ))
+        count, title = current.get(skill_link.skill_id, (0, lesson.title))
+        current[skill_link.skill_id] = (count + len(missing), title)
+
+    # Reconcile the whole ledger, rather than only adding to it. This used to `continue` past
+    # any skill with nothing missing, so a gap opened once stayed open forever even after its
+    # blocks were grounded — the records claimed 33 unsupported blocks while 9 actually were,
+    # and `content_gap` could never clear. A gap ledger that only grows is not a record of
+    # what is missing, it is a record of what was once missing.
+    existing_gaps = db.scalars(select(ContentGap).where(
+        ContentGap.course_id == course.id,
+        ContentGap.gap_type == "ungrounded_blocks",
+    )).all()
+    by_skill = {gap.skill_id: gap for gap in existing_gaps}
+
+    for skill_id, (count, title) in current.items():
         gaps += 1
-        if apply and existing is None:
+        description = (f"{count} teaching block(s) in '{title[:60]}' have no "
+                       "rights-cleared source support")
+        gap = by_skill.get(skill_id)
+        if not apply:
+            continue
+        if gap is None:
             db.add(ContentGap(
-                course_id=course.id, skill_id=skill_link.skill_id,
+                course_id=course.id, skill_id=skill_id,
                 gap_type="ungrounded_blocks", status="open", owner="content operations",
-                description=(
-                    f"{len(missing)} teaching block(s) in '{lesson.title[:60]}' have no "
-                    "rights-cleared source support"),
+                description=description,
                 resolution_notes=(
                     "Add rights-cleared sources covering these blocks before this skill can "
                     "claim mastery."),
             ))
-        elif apply and existing is not None:
-            existing.resolution_notes = (
-                f"{len(missing)} teaching block(s) in '{lesson.title[:60]}' have no "
-                "rights-cleared source support; add sources before claiming mastery.")
-            existing.status = "open"
+        else:
+            gap.description = description
+            gap.status = "open"
+            gap.resolution_notes = (
+                f"{count} block(s) still unsupported; add sources before claiming mastery.")
+
+    for skill_id, gap in by_skill.items():
+        if skill_id in current or gap.status == "resolved":
+            continue
+        # every block this gap was opened for now cites a valid claim
+        if apply:
+            gap.status = "resolved"
+            gap.description = f"{gap.description} — resolved: all blocks now cite a claim"
+            gap.resolution_notes = (
+                "Closed automatically: no teaching block for this skill lacks a claim. "
+                "Reopened by the next run if that stops being true.")
     return {"unsupported": unsupported, "gaps": gaps}
 
 
