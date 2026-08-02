@@ -216,6 +216,16 @@ def harvest_claims(db: Session, event: Event, sources: list[Source], apply: bool
                 ScientificClaim.evidence_excerpt == sentence,
             ))
             if duplicate is not None:
+                # A re-run must be able to change a claim's disposition. This used to `continue`
+                # before the approval below, so `--approve` silently did nothing for any claim
+                # that already existed: 187 claims sat on the right concepts, unapproved, and
+                # generation refused every event for want of approved grounding. A second run
+                # also re-files a claim whose concept assignment has since been corrected.
+                if apply:
+                    if approve and not duplicate.approved:
+                        duplicate.approved = True
+                    if duplicate.concept_id != concept.id:
+                        duplicate.concept_id = concept.id
                 made.append(duplicate)
                 continue
             if not apply:
