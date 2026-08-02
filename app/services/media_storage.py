@@ -8,6 +8,7 @@ from __future__ import annotations
 
 from dataclasses import dataclass
 from datetime import timedelta
+from threading import Lock
 
 from app.core.config import get_settings
 
@@ -24,13 +25,36 @@ class StoredObject:
     url: str
 
 
+# Signing is an IAM round trip; this bounds how many a single request may have in flight.
+# Kept modest because the cap is per request and concurrent requests multiply it.
+_SIGNING_CONCURRENCY = 8
+
+_CLIENT_LOCK = Lock()
+_CLIENT = None
+
+
 def _client():
     """A storage client whose credentials can *sign* URLs.
 
     Neither user ADC nor Cloud Run's metadata credentials carry a private key, so signing
     has to go through the IAM API. Impersonating a service account gives us credentials that
     do that, and works identically on a laptop and on Cloud Run.
+
+    Built once and shared. Every call used to construct a fresh client and a fresh
+    impersonation exchange, which was merely wasteful when signing was serial and became a
+    burst of identical token exchanges once it was not. Sharing one client also shares its
+    credential refresh instead of racing several.
     """
+    global _CLIENT
+    if _CLIENT is not None:
+        return _CLIENT
+    with _CLIENT_LOCK:
+        if _CLIENT is None:
+            _CLIENT = _build_client()
+        return _CLIENT
+
+
+def _build_client():
     settings = get_settings()
     try:
         from google.cloud import storage
@@ -118,6 +142,10 @@ def playback_urls(keys: list[str], ttl: timedelta = DEFAULT_TTL) -> dict[str, st
     There is no batch signing API, so the round trips overlap instead. Each link is still
     minted per request, which is what keeps a withdrawn video from staying reachable, and
     each one still goes through `playback_url` — one signing path, not two that can drift.
+
+    One key that fails to sign costs that key its link, not the caller its whole list: a
+    reviewer losing the entire queue because one object hiccuped is a worse failure than a
+    reviewer seeing 21 of 22 chapters. Callers already treat a missing key as "no link".
     """
     unique = list(dict.fromkeys(k for k in keys if k))
     if not unique:
@@ -127,5 +155,11 @@ def playback_urls(keys: list[str], ttl: timedelta = DEFAULT_TTL) -> dict[str, st
 
     from concurrent.futures import ThreadPoolExecutor
 
-    with ThreadPoolExecutor(max_workers=min(16, len(unique))) as pool:
-        return dict(zip(unique, pool.map(lambda k: playback_url(k, ttl=ttl), unique)))
+    def sign(key: str) -> tuple[str, str]:
+        try:
+            return key, playback_url(key, ttl=ttl)
+        except Exception:                      # noqa: BLE001 - one bad key, not one bad page
+            return key, ""
+
+    with ThreadPoolExecutor(max_workers=min(_SIGNING_CONCURRENCY, len(unique))) as pool:
+        return {key: url for key, url in pool.map(sign, unique) if url}

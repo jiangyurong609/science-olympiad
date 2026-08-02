@@ -14,6 +14,7 @@ from __future__ import annotations
 from sqlalchemy import select
 from sqlalchemy.orm import Session
 
+from app.services import lesson_blocks
 from app.models.entities import (
     Course, Exam, ExamItem, Lesson, LessonVersion, Question, QuestionStatus,
     ReviewDecision, User,
@@ -155,6 +156,20 @@ def lesson_is_student_visible(
 ) -> bool:
     if user.role in {"admin", "editor", "sme", "calibrator"}:
         return True
+    version = version or db.scalar(select(LessonVersion).where(
+        LessonVersion.lesson_id == lesson.id,
+        LessonVersion.version == lesson.current_version,
+    ))
+    if version is None:
+        return False
+    # A lesson holding a checkpoint nobody can answer correctly cannot be finished, so serving
+    # it promises work that cannot be completed. Refusing here — rather than dropping the
+    # checkpoint from the completion rule, which was the first attempt — keeps completion
+    # meaning "the student did what the lesson asks" instead of "the student did the parts
+    # that happened to be answerable". This runs ahead of the grandfather: that exemption is
+    # about review having happened, not about the content being coherent.
+    if lesson_blocks.ungradeable_checkpoints(version.content or []):
+        return False
     # Visibility was previously granted to every lesson on a pre-2027 event, so review
     # evidence was never consulted for most of the catalog. Legacy content is now
     # grandfathered by an explicit per-lesson decision instead of by season: a lesson marked
@@ -178,12 +193,6 @@ def lesson_is_student_visible(
     # shows. Grandfathered content is already handled explicitly above by the
     # `unreviewed_practice` disposition, so preview needs no exemption of its own: it governs
     # when a finished course becomes visible, not whether review happened.
-    version = version or db.scalar(select(LessonVersion).where(
-        LessonVersion.lesson_id == lesson.id,
-        LessonVersion.version == lesson.current_version,
-    ))
-    if version is None:
-        return False
     decisions = db.execute(select(
         ReviewDecision.stage, ReviewDecision.decision,
     ).where(

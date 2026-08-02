@@ -60,39 +60,43 @@ def lesson_chapters(db: Session, lesson_id: int, *, include_pending: bool = Fals
         query = query.where(VideoRender.qa_status == QA_APPROVED)
     renders = _latest_per_chapter(db.scalars(query).all())
 
-    # Rebuild the chapter plan the render was made from, rather than reading a `chapter`
-    # label off each scene. Scenes only carry that label when an author wrote one; when they
-    # don't, `plan_chapters` groups by duration budget and names the chapter after its first
-    # scene — which is how every pilot render was made. Reading the absent label instead left
-    # every chapter with no blocks, so the reader had no idea which sections a video covered
-    # and could not interleave them. The plan is deterministic on the scenes, and
-    # `render_lesson` derives `render.chapter` from the same call, so the keys line up.
-    order, blocks_by_chapter, titles = {}, {}, {}
-    for position, chapter in enumerate(plan_chapters(list(storyboard.scenes or []))):
-        key = chapter["key"]
-        order[key], titles[key] = position, chapter["title"]
-        blocks_by_chapter[key] = [i for scene in chapter["scenes"]
-                                  for i in (scene.get("block_indexes") or [])
-                                  if isinstance(i, int)]
+    # Which lesson blocks a chapter covers is pinned on the render itself at render time.
+    # Reading it off the storyboard's *current* scenes instead — as this did — is only right
+    # while the storyboard is untouched and the chapter budget unchanged; an edited storyboard
+    # or a non-default `max_chapter_seconds` produces different boundaries under the same
+    # chapter key, and the reader would then place the video against sections it does not
+    # cover. Renders made before that was recorded fall back to recomputing the plan, which is
+    # what they were in fact rendered from, and say so.
+    fallback = {}
+    if any("block_indexes" not in (r.provenance or {}) for r in renders):
+        for position, chapter in enumerate(plan_chapters(list(storyboard.scenes or []))):
+            fallback[chapter["key"]] = (position, chapter["title"], sorted({
+                i for scene in chapter["scenes"]
+                for i in (scene.get("block_indexes") or []) if isinstance(i, int)}))
 
     def sort_key(render: VideoRender) -> tuple:
-        return (order.get(render.chapter, len(order)), render.id)
+        return (fallback.get(render.chapter, (len(fallback),))[0], render.id)
 
     out = []
     links = media_storage.playback_urls([r.video_key for r in renders])
     for render in sorted(renders, key=sort_key):
+        provenance = render.provenance or {}
+        pinned = "block_indexes" in provenance
+        _, guessed_title, guessed_blocks = fallback.get(render.chapter, (0, "", []))
         out.append({
             "render_id": render.id,
             "chapter": render.chapter,
             # A render made before chaptering has no chapter key; it is the whole lesson.
-            "title": (titles.get(render.chapter)
-                      or (render.provenance or {}).get("chapter_title")
+            "title": (provenance.get("chapter_title") or guessed_title
                       or (render.chapter.replace("-", " ").title() if render.chapter
                           else "Full lesson")),
             "duration_seconds": render.duration_seconds,
             "version": render.version,
             "qa_status": render.qa_status,
-            "block_indexes": sorted(set(blocks_by_chapter.get(render.chapter, []))),
+            "block_indexes": (sorted(set(provenance.get("block_indexes") or []))
+                              if pinned else guessed_blocks),
+            # so a caller can tell a recorded fact from a reconstruction
+            "block_indexes_source": "render" if pinned else "recomputed",
             "playback_url": links.get(render.video_key, ""),
         })
     return out

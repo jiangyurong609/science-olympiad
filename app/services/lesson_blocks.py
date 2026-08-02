@@ -69,22 +69,67 @@ def is_gradeable(block: dict) -> bool:
 
 
 def checkpoint_ids(content: list) -> list[str]:
-    """Ids of every checkpoint in a lesson, in order.
+    """Ids of every checkpoint in a lesson, in order — all of them.
 
-    Only *gradeable* checkpoints count. A malformed one must not be able to hold a lesson
-    permanently incomplete, because a student has no way to answer it correctly.
+    An earlier version counted only *gradeable* checkpoints, reasoning that a malformed one
+    would otherwise hold a lesson permanently incomplete. That is true, and the conclusion was
+    still wrong: it let a lesson with one sound and one malformed checkpoint be completed, and
+    mastery awarded, by answering half the required work. It measured completion against
+    whatever happened to be answerable rather than against what the lesson asks.
+
+    A lesson carrying an ungradeable checkpoint is a defective lesson. That is handled where
+    defects belong — `ungradeable_checkpoints` keeps it away from students entirely — not by
+    quietly shrinking what completion means.
     """
     return [block_id(block, index) for index, block in enumerate(content or [])
-            if block.get("type") == CHECKPOINT and is_gradeable(block)]
+            if block.get("type") == CHECKPOINT]
+
+
+def ungradeable_checkpoints(content: list) -> list[str]:
+    """Ids of checkpoints a student could never answer correctly.
+
+    No stem, fewer than two choices, or no answer key under any name. A lesson holding one
+    cannot be finished, so it must not be served as if it could be.
+    """
+    return [block_id(block, index) for index, block in enumerate(content or [])
+            if block.get("type") == CHECKPOINT and not is_gradeable(block)]
+
+
+# What the reader actually renders, per block type. Everything else is authoring, review or
+# provenance metadata and has no business in a browser.
+_RENDERED_FIELDS: dict[str, set[str]] = {
+    "opening": {"heading", "kicker", "body"},
+    "property_cards": {"heading", "kicker", "body", "cards"},
+    "worked_example": {"heading", "kicker", "prompt", "steps"},
+    CHECKPOINT: {"heading", "kicker", "question", "choices"},
+    "steps": {"heading", "kicker", "body", "steps", "items"},
+    "image_gallery": {"heading", "kicker", "body", "images"},
+    "video": {"heading", "kicker", "body", "video_id"},
+    "summary": {"heading", "kicker", "body", "points", "items"},
+}
+# the fallback renderer draws these for a type nobody has written a renderer for yet
+_FALLBACK_FIELDS = {"heading", "body"}
 
 
 def student_safe(block: dict, index: int) -> dict:
-    """A block as the browser may see it: no answer key, one normalised stem, a stable id."""
-    safe = {key: value for key, value in block.items()
-            if key not in set(ANSWER_KEYS) | {"explanation", "misconception_by_choice"}}
+    """A block as the browser may see it.
+
+    This is an **allowlist**, and it is one because the denylist it replaced did not hold.
+    Removing the four fields that obviously carry an answer missed every field added later:
+    `solve_lesson_checkpoints` records a blind solver's verdict on each checkpoint, so
+    `solver_check.chosen_index` — with `agreed: true` beside it — restated the key in plain
+    JSON on **71 of the 73** published checkpoints, and `repair_dangling_checkpoints` keeps the
+    pre-repair block under `superseded`, answer key, explanation and all, on 6 more.
+
+    Neither was a mistake about those two fields; a denylist is wrong for this by construction.
+    Every field a student may see has to be named, and anything an author, a script or a
+    reviewer adds later is excluded until someone decides otherwise.
+    """
+    allowed = _RENDERED_FIELDS.get(str(block.get("type")), _FALLBACK_FIELDS)
+    safe = {key: value for key, value in block.items() if key in allowed}
+    safe["type"] = block.get("type")
     safe["id"] = block_id(block, index)
     if block.get("type") == CHECKPOINT:
-        # the reader reads `question`; give it one whichever name the author used, and leave
-        # `prompt` in place so a block that legitimately has both is unchanged
+        # the reader reads `question`; give it one whichever name the author used
         safe["question"] = checkpoint_stem(block)
     return safe

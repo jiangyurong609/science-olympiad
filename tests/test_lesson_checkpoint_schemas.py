@@ -65,6 +65,48 @@ def test_a_split_generated_checkpoint_does_not_ship_its_answer_key(client, stude
     assert "explanation" not in checkpoint
 
 
+def test_a_checkpoint_carrying_review_metadata_reveals_nothing(client, student_token):
+    """The published shape, not a convenient one.
+
+    An adversarial review found the denylist this replaced leaked the key on 71 of the 73
+    published checkpoints: `solve_lesson_checkpoints` records a blind solver's verdict on each
+    one, so `solver_check.chosen_index` with `agreed: true` beside it restates the answer, and
+    `repair_dangling_checkpoints` keeps the pre-repair block — key, explanation and all —
+    under `superseded`. The response is asserted by its exact key set, so a field added later
+    fails this test rather than silently shipping.
+    """
+    with SessionLocal() as db:
+        event = Event(slug="rocks-meta", name="Rocks", division="B", season=2026)
+        db.add(event); db.flush()
+        concept = Concept(event_id=event.id, name="Hardness", description="Scratch")
+        db.add(concept); db.flush()
+        lesson = Lesson(event_id=event.id, concept_id=concept.id, slug="hardness",
+                        title="Hardness", summary="Scratching.", status="published",
+                        disposition="unreviewed_practice", current_version=1, sequence=1)
+        db.add(lesson); db.flush()
+        db.add(LessonVersion(
+            lesson_id=lesson.id, version=1, review_status="sme_approved", claim_ids=[1],
+            citations=[{"title": "Government source"}],
+            content=[{
+                "type": "checkpoint", "heading": "Check",
+                "prompt": "Which mineral is hardest?", "choices": ["Talc", "Diamond"],
+                "answer_index": 1,
+                "explanation": "Diamond is 10 on the Mohs scale.",
+                "solver_check": {"chosen_index": 1, "agreed": True, "verdict": "agreed"},
+                "verifier_check": {"passed": True, "errors": [],
+                                   "warnings": ["Diamond is plainly the intended answer"]},
+                "superseded": {"prompt": "old", "answer_index": 1, "explanation": "old"},
+                "claim_ids": [1], "passage_ids": [1], "generated_by": "split_lessons",
+            }],
+        ))
+        db.commit()
+        lesson_id = lesson.id
+
+    started = client.post(f"/api/lessons/{lesson_id}/start", headers=auth(student_token))
+    checkpoint = next(b for b in started.json()["content"] if b["type"] == "checkpoint")
+    assert set(checkpoint) == {"type", "id", "heading", "question", "choices"}
+
+
 def test_a_split_generated_checkpoint_reaches_the_reader_with_its_question(client, student_token):
     """The reader renders `question`; these blocks carry the stem under `prompt`."""
     _, lesson_id = create_split_style_lesson()
@@ -99,12 +141,8 @@ def test_a_split_generated_checkpoint_can_be_answered_and_completes_the_lesson(
         assert mastery.evidence_count == 1
 
 
-def test_a_malformed_checkpoint_cannot_strand_a_lesson_incomplete(client, student_token):
-    """A checkpoint with no key under any name is ungradeable.
-
-    Counting it toward completion would hold the lesson permanently unfinished, since a
-    student has no answer that could ever be marked correct.
-    """
+def create_broken_lesson():
+    """One sound checkpoint beside one with no answer key under any name."""
     with SessionLocal() as db:
         event = Event(slug="rocks-broken", name="Rocks", division="B", season=2026)
         db.add(event); db.flush()
@@ -128,18 +166,39 @@ def test_a_malformed_checkpoint_cannot_strand_a_lesson_incomplete(client, studen
         ))
         db.commit()
         lesson_id = lesson.id
+    return lesson_id
+
+
+def test_a_lesson_with_an_ungradeable_checkpoint_is_not_served_to_students(
+        client, student_token):
+    """A checkpoint with no key under any name cannot be answered correctly.
+
+    The first attempt at this dropped such a checkpoint from the completion rule so it could
+    not strand the lesson. That let a lesson with one sound and one malformed checkpoint be
+    completed — and mastery awarded — for doing half the work it asks, which is measuring
+    completion against whatever happens to be answerable. The defect belongs to the lesson, so
+    the lesson is what is withheld.
+    """
+    lesson_id = create_broken_lesson()
 
     started = client.post(f"/api/lessons/{lesson_id}/start", headers=auth(student_token))
-    blocks = [b for b in started.json()["content"] if b["type"] == "checkpoint"]
+    assert started.status_code == 404, (
+        "a lesson a student cannot finish must not be served as though they could"
+    )
 
-    answered = client.post(f"/api/lessons/{lesson_id}/checkpoint", headers=auth(student_token),
-                           json={"checkpoint_id": blocks[0]["id"], "selected_index": 0})
-    assert answered.status_code == 200, "a broken neighbour must not break a sound checkpoint"
-    assert answered.json()["lesson_status"] == "completed"
+    with SessionLocal() as db:
+        from app.services import lesson_blocks as lb
+        version = db.scalar(select(LessonVersion).where(LessonVersion.lesson_id == lesson_id))
+        # every checkpoint still counts toward completion — nothing is quietly excused
+        assert len(lb.checkpoint_ids(version.content)) == 2
+        assert len(lb.ungradeable_checkpoints(version.content)) == 1
 
-    ungradeable = client.post(f"/api/lessons/{lesson_id}/checkpoint", headers=auth(student_token),
-                              json={"checkpoint_id": blocks[1]["id"], "selected_index": 0})
-    assert ungradeable.status_code == 422, "say it cannot be graded, don't call the answer wrong"
+
+def test_staff_can_still_open_a_lesson_with_an_ungradeable_checkpoint(client, admin_token):
+    """Withholding it from students must not hide it from the person who has to fix it."""
+    lesson_id = create_broken_lesson()
+    started = client.post(f"/api/lessons/{lesson_id}/start", headers=auth(admin_token))
+    assert started.status_code == 200
 
 
 def test_progress_cannot_mark_an_id_less_checkpoint_complete_unanswered(client, student_token):

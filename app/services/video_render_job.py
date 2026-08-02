@@ -51,6 +51,7 @@ def render_storyboard(
     storage=media_storage,
     scenes_override: list[dict] | None = None,
     chapter: str = "",
+    chapter_title: str = "",
 ) -> VideoRender:
     """Produce one MP4 for an approved storyboard, or for one chapter of it.
 
@@ -114,6 +115,18 @@ def render_storyboard(
             "bytes": result.bytes_written,
             "tts_model": narrator.model,
             "chapter": chapter,
+            # Pin what this render actually covers. The reader used to rebuild the chapter
+            # plan from the storyboard's *current* scenes to answer that, which is only right
+            # while the storyboard is untouched and the budget unchanged — an edited
+            # storyboard, or a render made with a non-default `max_chapter_seconds`, yields
+            # different boundaries under the same chapter key and would describe scenes this
+            # file does not contain.
+            "chapter_title": chapter_title or "",
+            # from `source_scenes`, not `scenes`: the latter is the render spec (slide and
+            # audio urls) and carries no block indexes at all
+            "block_indexes": sorted({i for scene in source_scenes
+                                     for i in (scene.get("block_indexes") or [])
+                                     if isinstance(i, int)}),
         }
     except Exception as exc:
         render.status = "failed"
@@ -155,5 +168,6 @@ def render_lesson(
         renders.append(render_storyboard(
             db, storyboard_id, narrator=narrator, client=client, storage=storage,
             scenes_override=chapter["scenes"], chapter=chapter["key"],
+            chapter_title=chapter["title"],
         ))
     return renders

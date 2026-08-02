@@ -9,14 +9,18 @@ This is the same shape as the course manifest: export from one database keyed by
 survive the crossing (event slug, lesson slug, claim *text*), import into the other. Primary
 keys do not survive; nothing here trusts one.
 
-Two checks refuse rather than guess:
+Two checks refuse rather than guess, and both fail closed on the whole lesson:
 
-  * a scene addresses `block_indexes` into the lesson version's content. If production's copy
+  * a scene addresses `block_indexes` into the lesson version's content. If the target's copy
     of that lesson has different blocks, those indexes point at different material and the
-    narration would be attached to the wrong section. The lesson is skipped and reported.
-  * `claim_ids` are local primary keys. They are remapped by claim text within the event; a
-    claim that cannot be found is dropped from the scene rather than left pointing at whatever
-    row happens to hold that id in production.
+    narration would be attached to the wrong section. Every block is compared by a hash of its
+    full content — an earlier version compared only type and heading, which let a block whose
+    body or choices had changed under an unchanged heading pass as identical.
+  * `claim_ids` are local primary keys, remapped by claim text within the event. Claim text is
+    not unique, so a text matching more than one claim is ambiguous and refused rather than
+    resolved by whichever row the database returned first. A claim that does not resolve
+    refuses the storyboard outright: dropping it would leave an approved storyboard citing
+    less than it was validated against, and nothing downstream re-runs that validation.
 
 Renders arrive at `qa_status="pending"`, which is where `render_lesson` leaves them. That is
 the gate: `video_library` serves only QA-approved chapters, so importing this puts the video in
@@ -29,6 +33,7 @@ front of a reviewer, not in front of a student.
 from __future__ import annotations
 
 import argparse
+import hashlib
 import json
 from collections import Counter
 
@@ -58,14 +63,17 @@ def _event_claims(db, event_id: int) -> list[ScientificClaim]:
 def _content_fingerprint(version: LessonVersion | None) -> list[str]:
     """What a scene's `block_indexes` actually resolve against.
 
-    Comparing whole block text would reject a lesson over a typo fix; comparing nothing would
-    let a scene narrate a section it was never written for. The block's type and heading, in
-    order, is the part the indexes depend on.
+    The first version of this hashed only each block's type and heading, on the reasoning that
+    the indexes depend on block *identity* and a typo fix should not reject a whole lesson.
+    That is too weak to make the promise it was making: a block whose body, choices or meaning
+    changed under an unchanged heading compared equal, and the narration — written for the old
+    text — would have been attached to the new. Since the claim being made is "this narration
+    was produced from this content", the whole block has to be in the comparison.
     """
     out = []
     for block in (version.content if version else None) or []:
-        heading = block.get("heading") or block.get("title") or ""
-        out.append(f"{block.get('type', '')}:{' '.join(str(heading).split()).lower()}")
+        canonical = json.dumps(block, sort_keys=True, ensure_ascii=False, default=str)
+        out.append(hashlib.sha256(canonical.encode("utf-8")).hexdigest()[:32])
     return out
 
 
@@ -132,9 +140,16 @@ def load(payload: dict, apply: bool) -> dict:
             raise SystemExit(f"target has no event {payload['event']!r}")
         lessons = {l.slug: l for l in db.scalars(select(Lesson).where(
             Lesson.event_id == event.id)).all()}
+        # Claim text is not unique by construction, and the query has no deterministic order,
+        # so `setdefault` silently picked whichever duplicate the database happened to return
+        # first. An ambiguous match is recorded as ambiguous and refused, not resolved by luck.
         claim_ids: dict[str, int] = {}
+        ambiguous: set[str] = set()
         for claim in _event_claims(db, event.id):
-            claim_ids.setdefault(" ".join((claim.claim_text or "").split()).lower(), claim.id)
+            key = " ".join((claim.claim_text or "").split()).lower()
+            if key in claim_ids and claim_ids[key] != claim.id:
+                ambiguous.add(key)
+            claim_ids.setdefault(key, claim.id)
         actor = db.scalar(select(User).where(User.role.in_(("editor", "admin"))))
 
         for entry in payload["storyboards"]:
@@ -163,17 +178,31 @@ def load(payload: dict, apply: bool) -> dict:
                 rows.append({"lesson": title, "outcome": "storyboard already present"})
                 continue
 
-            scenes, dropped = [], 0
+            # A storyboard's grounding is not partially importable. Dropping a claim that does
+            # not resolve left an approved storyboard citing less than it was validated
+            # against, and nothing downstream re-runs `validate_scenes`, so post-render QA
+            # would have approved a video whose provenance had quietly thinned. Refuse the
+            # whole lesson instead and say which claim.
+            scenes, unresolved = [], []
             for scene in entry["scenes"]:
                 scene = dict(scene)
-                texts = scene.pop("claim_texts", [])
-                mapped = [claim_ids[k] for k in
-                          (" ".join(str(t).split()).lower() for t in texts) if k in claim_ids]
-                dropped += len(texts) - len(mapped)
+                mapped = []
+                for text in scene.pop("claim_texts", []):
+                    key = " ".join(str(text).split()).lower()
+                    if key in ambiguous:
+                        unresolved.append(f"ambiguous: {str(text)[:60]}")
+                    elif key in claim_ids:
+                        mapped.append(claim_ids[key])
+                    else:
+                        unresolved.append(f"missing: {str(text)[:60]}")
                 scene["claim_ids"] = mapped
                 scenes.append(scene)
-            if dropped:
-                stats["claims_unmatched"] += dropped
+            if unresolved:
+                stats["claims_unresolved"] += len(unresolved)
+                rows.append({"lesson": title,
+                             "outcome": f"refused — {len(unresolved)} claim(s) do not resolve "
+                                        f"in the target ({unresolved[0]})"})
+                continue
 
             if not apply:
                 stats["would_import"] += 1
