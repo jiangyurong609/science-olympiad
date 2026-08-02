@@ -2025,11 +2025,22 @@ async function loadApplication() {
       const hashParams = new URLSearchParams(hashParts[1] || '');
       const statefulParams = new URLSearchParams(location.hash.slice(1));
       const explicitSlug = pathCourse?.slug || hashParams.get('event') || statefulParams.get('event');
-      // A URL explicitly naming a historical event is intentional. Remembered
-      // state, however, should always roll forward to the current catalog.
-      const requestedEvent = (explicitSlug
+      // A URL explicitly naming a historical event is intentional, so an exact match wins.
+      // Remembered state, however, always rolls forward to the current catalog.
+      let requestedEvent = (explicitSlug
         ? (state.events.find(event => event.slug === explicitSlug) || resolveEvent(explicitSlug))
         : resolveEvent(state.activeEventSlug)) || studentEvents()[0] || events[0];
+      // Honouring the link stops making sense when the archived event holds nothing: the
+      // reader lands on a "Course content" heading with an empty page and no sign that a
+      // live version exists. Consolidation left several such twins behind. Roll forward and
+      // say so, rather than serving a dead end.
+      if (explicitSlug && requestedEvent && requestedEvent.lesson_count === 0) {
+        const live = resolveEvent(requestedEvent.slug);
+        if (live && live.slug !== requestedEvent.slug && live.lesson_count > 0) {
+          toast(`${requestedEvent.name} ${requestedEvent.season} is archived — showing the current ${live.season} course.`);
+          requestedEvent = live;
+        }
+      }
       state.activeEventSlug = requestedEvent?.slug || '';
       if (requestedEvent) localStorage.setItem('activeEventSlug', requestedEvent.slug);
       const selectedEvent = activeEvent();
