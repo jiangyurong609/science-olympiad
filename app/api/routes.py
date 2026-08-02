@@ -36,6 +36,7 @@ from app.schemas.api import (
     SourceCreate, StudentContentFeedbackRequest, TeamCreateRequest, TeamMemberRequest, TransferAnswerRequest,
     TutorMessageRequest, TutorSessionCreateRequest,
 )
+from app.services import lesson_blocks
 from app.services.crawler import CrawlError, crawl_source
 from app.services.generation import generate_questions
 from app.services.claim_extraction import extract_claims
@@ -648,23 +649,12 @@ def _lesson_version_for_user(db: Session, lesson: Lesson, user: User) -> tuple[L
     return version, progress
 
 
-def _block_id(block: dict, index: int) -> str:
-    """Stable id for a lesson block. Only checkpoints are authored with an id;
-    every other block type gets a deterministic position id so the reader can
-    track completion for it too. Used identically on the serve and validate
-    paths so the client's ids always match what the server accepts."""
-    return str(block.get("id") or f"b{index}")
+_block_id = lesson_blocks.block_id
 
 
 def _student_lesson_content(content: list) -> list:
-    safe_blocks = []
-    for index, block in enumerate(content):
-        safe = {key: value for key, value in block.items() if key not in {
-            "correct_index", "explanation", "misconception_by_choice",
-        }}
-        safe["id"] = _block_id(block, index)
-        safe_blocks.append(safe)
-    return safe_blocks
+    return [lesson_blocks.student_safe(block, index)
+            for index, block in enumerate(content or [])]
 
 
 def _lesson_response(lesson: Lesson, version: LessonVersion, progress: LessonProgress | None) -> dict:
@@ -2216,10 +2206,9 @@ def save_lesson_progress(
     completed_ids = list(dict.fromkeys(payload.completed_block_ids))
     if not set(completed_ids).issubset(valid_ids):
         raise HTTPException(status_code=422, detail="Completed lesson block is invalid")
-    checkpoint_ids = {
-        str(block.get("id")) for block in version.content
-        if block.get("type") == "checkpoint" and block.get("id")
-    }
+    # Keyed off the raw `id`, this guard simply did not see checkpoints authored without one,
+    # so a student could mark those complete without ever answering them.
+    checkpoint_ids = set(lesson_blocks.checkpoint_ids(version.content))
     invalid_checkpoints = {
         block_id for block_id in completed_ids
         if block_id in checkpoint_ids
@@ -2330,14 +2319,23 @@ def submit_lesson_checkpoint(
         raise HTTPException(status_code=404, detail="Lesson not found")
     if not progress:
         raise HTTPException(status_code=409, detail="Start the lesson before answering checkpoints")
-    checkpoint = next((block for block in version.content
-                       if block.get("type") == "checkpoint" and block.get("id") == payload.checkpoint_id), None)
+    # Match on the id the student was actually served. Matching on the raw `id` field meant
+    # every checkpoint authored without one — 41 of the pilot's 73 — answered 404 to the only
+    # request that can ever be made about it.
+    checkpoint = next((block for index, block in enumerate(version.content)
+                       if block.get("type") == "checkpoint"
+                       and _block_id(block, index) == payload.checkpoint_id), None)
     if not checkpoint:
         raise HTTPException(status_code=404, detail="Checkpoint not found")
     choices = checkpoint.get("choices", [])
     if payload.selected_index >= len(choices):
         raise HTTPException(status_code=422, detail="Checkpoint answer is out of range")
-    correct = payload.selected_index == checkpoint.get("correct_index")
+    answer_index = lesson_blocks.checkpoint_answer_index(checkpoint)
+    if answer_index is None:
+        # No key under any name. Marking every answer wrong — which is what comparing against
+        # a missing `correct_index` did — is worse than admitting the block cannot be graded.
+        raise HTTPException(status_code=422, detail="This checkpoint has no answer key")
+    correct = payload.selected_index == answer_index
     results = dict(progress.checkpoint_results or {})
     previous = results.get(payload.checkpoint_id, {})
     results[payload.checkpoint_id] = {
@@ -2347,8 +2345,10 @@ def submit_lesson_checkpoint(
     }
     progress.checkpoint_results = results
     progress.last_viewed_at = datetime.now(timezone.utc)
-    checkpoint_ids = [block["id"] for block in version.content if block.get("type") == "checkpoint"]
-    completed = bool(checkpoint_ids) and all(results.get(checkpoint_id, {}).get("correct") for checkpoint_id in checkpoint_ids)
+    # `block["id"]` raised KeyError on any lesson holding an id-less checkpoint, which took
+    # down answering the *well-formed* checkpoints beside it too.
+    ids = lesson_blocks.checkpoint_ids(version.content)
+    completed = bool(ids) and all(results.get(cid, {}).get("correct") for cid in ids)
     if completed:
         progress.status = "completed"
         progress.completed_at = datetime.now(timezone.utc)
