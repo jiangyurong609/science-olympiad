@@ -213,6 +213,24 @@ Rendering was never the constraint (measured 3.1 h wall at 8× parallel for all 
 
 **Done when:** every lesson in the pilot has grounded, QA-approved video.
 
+**Status (2026-08-02): produced and in production; QA-approval outstanding.** All 24
+published lessons carry video — 24 chapters, 52.4 minutes. The renders were produced against
+the local database and the rows were carried across by `scripts/migrate_lesson_videos.py`
+(both environments already share the GCS bucket, so only the rows were missing); it matches on
+event slug, lesson slug and claim *text*, and refuses a lesson whose target content differs
+rather than let a scene narrate the wrong sections. Three chapters whose first render failed
+were re-rendered.
+
+Two defects surfaced only once the data existed. `lesson_chapters` worked out which lesson
+blocks a video covered by reading a `chapter` label off each scene; the pilot's scenes carry
+no such label, so every chapter reported **no blocks** and the reader could not interleave
+video with the reading it explains. It now rebuilds the same plan `render_lesson` rendered
+from. And building the 22-chapter review queue took 27.7s, of which 1.2s was the database —
+the rest was signing playback URLs serially through IAM; overlapping them gives 4.9s.
+
+**What remains is not engineering:** 25 chapters sit at `qa_status=pending`. Staff see them in
+context; students see none. Someone has to watch them.
+
 ## Phase 6 — Repeat at catalog scale
 
 Only now does a catalog-wide threshold make sense, because the pilot proved the pipeline.
@@ -281,6 +299,32 @@ changes that.
 Learn → practice → prove wired to lesson completion; scaffolding (hints, worked steps);
 progress legibility; placement diagnostic last.
 
+**Status (2026-08-02): the wiring was severed and is repaired; two parts are unbuilt and
+rule 4 holds them.**
+
+The chain existed but did not run for most of the published content. Checkpoints are written
+in two shapes — hand-authored (`question`/`correct_index`, with an `id`) and `split_lessons`
+output (`prompt`/`answer_index`, no `id`) — and nothing declared a canonical form, so serve,
+render and grade each picked a pair and ignored the other. **41 of the 73 published pilot
+checkpoints were the second shape**: they shipped their answer key to the browser, arrived
+with no question attached, could not be submitted, could not have been graded correct if they
+had been, and raised a `KeyError` that broke the well-formed checkpoints beside them. Since a
+lesson completes only when every checkpoint is correct, and lesson completion is the only
+mastery evidence reading produces, **no such lesson could ever complete and no mastery
+evidence was recorded from lesson work at all.**
+
+`app/services/lesson_blocks.py` now reads both shapes in one place and every path uses it —
+not a content migration, which would leave the same bug waiting for the next generator.
+Measured after: **73/73 checkpoints gradeable, 0 leaking a key, 24/24 lessons completable.**
+The existing lesson tests passed throughout because every fixture was built the hand-authored
+way; `tests/test_lesson_checkpoint_schemas.py` builds them the way the content is, and all
+five fail without the fix.
+
+Scaffolding is partly present as content — 18 `worked_example` and 19 `steps` blocks render
+today — but **0 checkpoints carry a hint and there is no hint endpoint**, and **no placement
+diagnostic exists**. Both are new student-facing capability, which operating rule 4 forbids
+until Phase 3 completes. They are engineering-ready, not engineering-blocked.
+
 ---
 
 ## 3. Pilot course selection (M5) — evidence, not preference
@@ -328,7 +372,10 @@ Record the decision and its rationale here when made.
 | Courses `release_ready` | 0 / 67 | 0 / 67 | 1 | 4 |
 | Courses published while serving no lesson | unmeasured | **0** | 0 | 4 |
 | Courses published without a content release | unmeasured | **50** | 0 | 4/6 |
-| Pilot lessons with grounded video | 0 | 0 | all | 5 |
+| Pilot lessons with grounded video | 0 | **24 / 24** (52.4 min) | all | 5 |
+| Pilot video chapters QA-approved | 0 | 0 / 25 | all | 5 |
+| Published pilot checkpoints a student can answer | — | **73 / 73** (was 32) | all | 8 |
+| Published pilot checkpoints shipping their answer key | — | **0** (was 41) | 0 | 8 |
 | Live-event lessons meeting the grounding bar | 0 / 410 | — | ≥80% | 6 |
 | Imported items with usable figures | 0% | recovery built | ≥90% | 7 |
 | Imported items gradeable | unmeasured | **83.2%** (4,755) | ≥90% | 7 |
@@ -337,3 +384,10 @@ Record the decision and its rationale here when made.
 
 **The one line that matters:** every blocker between the pilot and a finished course is now a
 review decision. There is no remaining engineering task standing in front of it.
+
+Restated after Phases 5 and 8 (2026-08-02): still true, and it survived two rounds of the same
+failure mode. Both defects closed since — video chapters reporting no blocks, and 41 published
+checkpoints unanswerable — were invisible to every gate because the gates and the fixtures were
+written against content shaped the way the *first* generator wrote it. Neither was found by a
+test; both were found by measuring the real published data. A gate that has never met the
+content it guards is not evidence.
