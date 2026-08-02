@@ -122,6 +122,16 @@ def record_placement(db: Session, user: User, event_slug: str,
                      responses: dict[int, int]) -> dict:
     """Seed mastery from a diagnostic, without ever overruling work the student did."""
     diagnostic = build_diagnostic(db, event_slug)
+    asked_ids = {i["id"] for i in diagnostic["items"]}
+    # `build_diagnostic` refuses below MIN_ITEMS/MIN_CONCEPTS, but nothing re-checked what was
+    # actually *answered*. A single response was enough to seed a concept, which reintroduces
+    # the exact "placement from too little evidence" this refuses to do at build time.
+    answered = {qid for qid in responses if qid in asked_ids}
+    if len(answered) < MIN_ITEMS:
+        raise PlacementError(
+            f"{len(answered)} item(s) answered; a placement needs {MIN_ITEMS}. Scoring fewer "
+            f"would report a placement the responses cannot support."
+        )
     questions = {q.id: q for q in db.scalars(select(Question).where(
         Question.id.in_([i["id"] for i in diagnostic["items"]] or [-1]))).all()}
 
@@ -139,8 +149,12 @@ def record_placement(db: Session, user: User, event_slug: str,
         share = correct / len(asked)
         per_concept[concept_id] = {"asked": len(asked), "correct": correct}
 
+        # Locked for the read-check-write below. Without it, a practice completion landing
+        # between the `evidence_count` check and this write is silently overwritten — the
+        # diagnostic would reset earned evidence to zero and revise the probability down.
         existing = db.scalar(select(MasteryState).where(
-            MasteryState.user_id == user.id, MasteryState.concept_id == concept_id))
+            MasteryState.user_id == user.id,
+            MasteryState.concept_id == concept_id).with_for_update())
         if existing is not None and existing.evidence_count > 0:
             # they have already shown what they can do; a diagnostic does not get to revise it
             skipped += 1

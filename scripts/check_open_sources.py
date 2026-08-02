@@ -59,10 +59,21 @@ def main() -> None:
         results = list(pool.map(check, pairs))
 
     bad = [r for r in results if r[2] != "200"]
+    # A timeout used to be excluded from the exit status as "transient". That let the script
+    # exit 0 while claiming "all urls answering", when a url that never answers is exactly as
+    # useless to `ground_event` as a 404. Timeouts are retried once; anything still not 200
+    # after that counts.
+    retried = []
+    for domain, url, status in bad:
+        if status in {"ReadTimeout", "ConnectTimeout", "ReadError"}:
+            retried.append(check((domain, url)))
+        else:
+            retried.append((domain, url, status))
+    bad = [r for r in retried if r[2] != "200"]
+    results = [r for r in results if r[2] == "200"] + retried
     by_domain: dict[str, int] = {}
     for domain, _, status in bad:
-        if status != "ReadTimeout":              # transient; not a broken source
-            by_domain[domain] = by_domain.get(domain, 0) + 1
+        by_domain[domain] = by_domain.get(domain, 0) + 1
 
     print("=" * 78)
     print(f"OPEN SOURCE CHECK — {len(results)} url(s)")

@@ -204,7 +204,13 @@ def harvest_claims(db: Session, event: Event, sources: list[Source], apply: bool
             words = _keywords(sentence)
             concept = max(concepts, key=lambda c: len(_keywords(c.name) & words))
             if not (_keywords(concept.name) & words):
-                concept = concepts[0]
+                # Falling back to `concepts[0]` filed the claim under whichever concept
+                # happened to sort first — by position, not by meaning. Those claims then read
+                # as grounding for a concept nobody connected them to, and generation treats
+                # them as authoritative context for it. A sentence that matches no concept is
+                # not evidence for an arbitrary one.
+                rejected["no_matching_concept"] += 1
+                continue
             duplicate = db.scalar(select(ScientificClaim).where(
                 ScientificClaim.source_id == source.id,
                 ScientificClaim.evidence_excerpt == sentence,

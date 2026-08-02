@@ -18,7 +18,7 @@ def auth(token):
 
 
 def create_lesson_with_hint(*, hint="Think about which property resists scratching.",
-                            too_revealing=False):
+                            too_revealing=False, verified=True):
     with SessionLocal() as db:
         event = Event(slug="hints-event", name="Hints", division="B", season=2026)
         db.add(event); db.flush()
@@ -34,6 +34,10 @@ def create_lesson_with_hint(*, hint="Think about which property resists scratchi
             "choices": ["Luster", "Hardness"], "answer_index": 1,
             "hint": hint,
         }
+        if verified:
+            from app.services.lesson_hints import hint_fingerprint
+            block["hint_check"] = {"too_revealing": too_revealing,
+                                   "fingerprint": hint_fingerprint(block)}
         if too_revealing:
             block["hint_too_revealing"] = True
         db.add(LessonVersion(
@@ -93,6 +97,40 @@ def test_a_hint_the_solver_showed_was_giving_the_answer_away_is_never_served(
     assert response.json() == {"available": False, "reason": "hint_withheld_pending_rewrite"}, (
         "review clearance must not override the answer-leak refusal"
     )
+
+
+def test_a_hint_with_no_recorded_check_is_never_served(client, student_token):
+    """Absence of the too-revealing flag is not evidence of safety.
+
+    The flag only appears when the solver ran *and* objected. A hint written by hand, or added
+    before the check existed, carried no record at all and was served unexamined.
+    """
+    lesson_id = create_lesson_with_hint(verified=False)
+    cid = _checkpoint_id(client, lesson_id, student_token)
+    _approve(lesson_id)
+    body = client.get(f"/api/lessons/{lesson_id}/checkpoint/{cid}/hint",
+                      headers=auth(student_token)).json()
+    assert body == {"available": False, "reason": "hint_not_verified"}
+
+
+def test_editing_a_hint_after_it_was_cleared_invalidates_the_clearance(client, student_token):
+    """`write_checkpoint_hints` edits content in place, so a cleared hint can be replaced."""
+    from sqlalchemy.orm.attributes import flag_modified
+
+    lesson_id = create_lesson_with_hint()
+    cid = _checkpoint_id(client, lesson_id, student_token)
+    _approve(lesson_id)
+    with SessionLocal() as db:
+        version = db.scalar(select(LessonVersion).where(LessonVersion.lesson_id == lesson_id))
+        content = list(version.content)
+        content[0]["hint"] = "Actually, the answer is Hardness."   # check no longer applies
+        version.content = content
+        flag_modified(version, "content")
+        db.commit()
+
+    body = client.get(f"/api/lessons/{lesson_id}/checkpoint/{cid}/hint",
+                      headers=auth(student_token)).json()
+    assert body == {"available": False, "reason": "hint_not_verified"}
 
 
 def test_asking_for_a_hint_is_recorded(client, student_token):

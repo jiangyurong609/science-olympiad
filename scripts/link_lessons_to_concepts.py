@@ -93,10 +93,17 @@ def run(apply: bool, limit: int | None = None) -> dict:
 
             for skill_id in links.get(lesson.id, []):
                 skill = skills.get(skill_id)
-                if skill and skill.concept_id:
-                    concept = db.get(Concept, skill.concept_id)
-                    how = "inherit"
-                    break
+                if not (skill and skill.concept_id):
+                    continue
+                candidate = db.get(Concept, skill.concept_id)
+                # A LessonSkill row can outlive a migration and point at another event's
+                # concept. Following it would file the lesson under an idea nobody chose for
+                # this event, and it would look deliberate in every report afterwards.
+                if candidate is None or candidate.event_id != lesson.event_id:
+                    stats["skill_concept_from_another_event"] += 1
+                    continue
+                concept, how = candidate, "inherit"
+                break
 
             if concept is None:
                 candidates = by_event.get(lesson.event_id, {})

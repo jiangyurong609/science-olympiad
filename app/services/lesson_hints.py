@@ -27,6 +27,7 @@ from sqlalchemy.orm import Session
 
 from app.models.entities import Lesson, LessonProgress, LessonVersion, ReviewDecision, User
 from app.services import lesson_blocks
+from app.services.lesson_blocks import checkpoint_answer_index, checkpoint_stem
 
 HINT_FIELD = "hint"
 REQUIRED_STAGES = {"editor", "sme"}
@@ -74,6 +75,13 @@ def hint_for(
     if block.get("hint_too_revealing"):
         # kept on the block rather than deleted, so a reviewer can see what was rejected
         return {"available": False, "reason": "hint_withheld_pending_rewrite"}
+    # Absence of the flag is not evidence of safety. A hint written by hand, or one added
+    # before the check existed, carries no `hint_check` at all and was served unexamined —
+    # the flag only appears when the solver *did* run and *did* object. Require the positive
+    # record, and require it to match the hint on the block: `write_checkpoint_hints` edits
+    # lesson content in place, so a hint can be replaced after it was cleared.
+    if not hint_verified(block):
+        return {"available": False, "reason": "hint_not_verified"}
 
     staff = user.role in {"admin", "editor", "sme", "calibrator"}
     if not staff and not lesson_is_review_cleared(db, lesson, version):
@@ -89,6 +97,29 @@ def hint_for(
         progress.checkpoint_results = used
         db.flush()
     return {"available": True, "hint": text}
+
+
+def hint_fingerprint(block: dict) -> str:
+    """Ties a verification to the exact hint, stem, choices and key it was run against."""
+    import hashlib
+
+    payload = "\u0000".join([
+        str(block.get(HINT_FIELD) or ""),
+        checkpoint_stem(block),
+        "\u0001".join(str(c) for c in (block.get("choices") or [])),
+        str(checkpoint_answer_index(block)),
+    ])
+    return hashlib.sha256(payload.encode("utf-8")).hexdigest()[:32]
+
+
+def hint_verified(block: dict) -> bool:
+    """A hint is servable only with a passing check recorded against this exact content."""
+    check = block.get("hint_check")
+    if not isinstance(check, dict):
+        return False
+    if check.get("too_revealing") is not False:
+        return False
+    return check.get("fingerprint") == hint_fingerprint(block)
 
 
 def hint_is_too_revealing(solver_choice: int | None, answer_index: int | None,

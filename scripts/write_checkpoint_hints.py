@@ -39,7 +39,7 @@ from app.core.database import SessionLocal
 from app.models.entities import Event, Lesson, LessonVersion
 from app.services import lesson_blocks
 from app.services.course_quality import block_text
-from app.services.lesson_hints import HINT_FIELD, hint_is_too_revealing
+from app.services.lesson_hints import HINT_FIELD, hint_fingerprint, hint_is_too_revealing
 from app.services.model_provider import ModelProviderError, OpenAICompatibleProvider
 
 HINT_SYSTEM = (
@@ -112,8 +112,8 @@ def run(event_slug: str, apply: bool, limit: int | None = None) -> dict:
                 if not lesson_blocks.is_gradeable(block):
                     stats["skipped_ungradeable"] += 1
                     continue
-                if str(block.get(HINT_FIELD) or "").strip():
-                    stats["already_had_a_hint"] += 1
+                if str(block.get(HINT_FIELD) or "").strip() and block.get("hint_check"):
+                    stats["already_had_a_verified_hint"] += 1
                     continue
                 stats["examined"] += 1
                 if not apply:
@@ -144,6 +144,9 @@ def run(event_slug: str, apply: bool, limit: int | None = None) -> dict:
                 block["hint_check"] = {
                     "baseline_choice": baseline, "hinted_choice": hinted,
                     "answer_index": answer_index, "too_revealing": too_revealing,
+                    # binds the verdict to the exact hint, stem, choices and key it was run
+                    # against, so editing any of them invalidates it rather than inheriting it
+                    "fingerprint": hint_fingerprint(block),
                 }
                 if too_revealing:
                     block["hint_too_revealing"] = True
