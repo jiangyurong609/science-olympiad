@@ -105,3 +105,27 @@ def playback_url(key: str, ttl: timedelta = DEFAULT_TTL) -> str:
     also means a withdrawn video stops being reachable once its last link lapses.
     """
     return _bucket().blob(key).generate_signed_url(version="v4", expiration=ttl, method="GET")
+
+
+def playback_urls(keys: list[str], ttl: timedelta = DEFAULT_TTL) -> dict[str, str]:
+    """Mint playback links for many objects at once.
+
+    Signing costs a round trip. The service account the app runs as has no local private key,
+    so `generate_signed_url` calls IAM `signBlob` — about a second each, measured against
+    production. A page listing 22 chapters paid that 22 times in series and took 28 seconds;
+    the database part of the same call took 1.2.
+
+    There is no batch signing API, so the round trips overlap instead. Each link is still
+    minted per request, which is what keeps a withdrawn video from staying reachable, and
+    each one still goes through `playback_url` — one signing path, not two that can drift.
+    """
+    unique = list(dict.fromkeys(k for k in keys if k))
+    if not unique:
+        return {}
+    if len(unique) == 1:
+        return {unique[0]: playback_url(unique[0], ttl=ttl)}
+
+    from concurrent.futures import ThreadPoolExecutor
+
+    with ThreadPoolExecutor(max_workers=min(16, len(unique))) as pool:
+        return dict(zip(unique, pool.map(lambda k: playback_url(k, ttl=ttl), unique)))

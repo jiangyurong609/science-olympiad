@@ -15,6 +15,7 @@ from sqlalchemy.orm import Session
 
 from app.models.entities import Lesson, VideoRender, VideoStoryboard
 from app.services import media_storage
+from app.services.video_chapters import plan_chapters
 
 QA_PENDING = "pending"
 QA_APPROVED = "approved"
@@ -59,36 +60,40 @@ def lesson_chapters(db: Session, lesson_id: int, *, include_pending: bool = Fals
         query = query.where(VideoRender.qa_status == QA_APPROVED)
     renders = _latest_per_chapter(db.scalars(query).all())
 
-    # keep the author's chapter order rather than an incidental database order, and collect
-    # which lesson blocks each chapter covers so the reader can show them together
-    order, blocks_by_chapter = {}, {}
-    for scene in storyboard.scenes or []:
-        label = str(scene.get("chapter", "")).strip()
-        if label and label not in order:
-            order[label] = len(order)
-        key = _slug_chapter(label)
-        covered = [i for i in (scene.get("block_indexes") or []) if isinstance(i, int)]
-        if covered:
-            blocks_by_chapter.setdefault(key, []).extend(covered)
+    # Rebuild the chapter plan the render was made from, rather than reading a `chapter`
+    # label off each scene. Scenes only carry that label when an author wrote one; when they
+    # don't, `plan_chapters` groups by duration budget and names the chapter after its first
+    # scene — which is how every pilot render was made. Reading the absent label instead left
+    # every chapter with no blocks, so the reader had no idea which sections a video covered
+    # and could not interleave them. The plan is deterministic on the scenes, and
+    # `render_lesson` derives `render.chapter` from the same call, so the keys line up.
+    order, blocks_by_chapter, titles = {}, {}, {}
+    for position, chapter in enumerate(plan_chapters(list(storyboard.scenes or []))):
+        key = chapter["key"]
+        order[key], titles[key] = position, chapter["title"]
+        blocks_by_chapter[key] = [i for scene in chapter["scenes"]
+                                  for i in (scene.get("block_indexes") or [])
+                                  if isinstance(i, int)]
 
     def sort_key(render: VideoRender) -> tuple:
-        title = render.provenance.get("chapter_title") if render.provenance else None
-        return (order.get(title or "", len(order)), render.id)
+        return (order.get(render.chapter, len(order)), render.id)
 
     out = []
+    links = media_storage.playback_urls([r.video_key for r in renders])
     for render in sorted(renders, key=sort_key):
         out.append({
             "render_id": render.id,
             "chapter": render.chapter,
             # A render made before chaptering has no chapter key; it is the whole lesson.
-            "title": ((render.provenance or {}).get("chapter_title")
+            "title": (titles.get(render.chapter)
+                      or (render.provenance or {}).get("chapter_title")
                       or (render.chapter.replace("-", " ").title() if render.chapter
                           else "Full lesson")),
             "duration_seconds": render.duration_seconds,
             "version": render.version,
             "qa_status": render.qa_status,
             "block_indexes": sorted(set(blocks_by_chapter.get(render.chapter, []))),
-            "playback_url": media_storage.playback_url(render.video_key),
+            "playback_url": links.get(render.video_key, ""),
         })
     return out
 
@@ -101,10 +106,16 @@ def review_queue(db: Session, *, status: str = QA_PENDING, limit: int = 50) -> l
         .order_by(VideoRender.id.desc())
         .limit(limit)
     ).all()
+    boards = {b.id: b for b in db.scalars(select(VideoStoryboard).where(
+        VideoStoryboard.id.in_({r.storyboard_id for r in renders} or {-1}))).all()}
+    lessons = {l.id: l for l in db.scalars(select(Lesson).where(
+        Lesson.id.in_({b.lesson_id for b in boards.values()} or {-1}))).all()}
+    links = media_storage.playback_urls([r.video_key for r in renders])
+
     out = []
     for render in renders:
-        storyboard = db.get(VideoStoryboard, render.storyboard_id)
-        lesson = db.get(Lesson, storyboard.lesson_id) if storyboard else None
+        storyboard = boards.get(render.storyboard_id)
+        lesson = lessons.get(storyboard.lesson_id) if storyboard else None
         out.append({
             "render_id": render.id,
             "chapter": render.chapter,
@@ -117,7 +128,7 @@ def review_queue(db: Session, *, status: str = QA_PENDING, limit: int = 50) -> l
             "lesson_id": lesson.id if lesson else None,
             "lesson_title": lesson.title if lesson else "",
             "scenes": (render.provenance or {}).get("scenes"),
-            "playback_url": media_storage.playback_url(render.video_key),
+            "playback_url": links.get(render.video_key, ""),
         })
     return out
 
