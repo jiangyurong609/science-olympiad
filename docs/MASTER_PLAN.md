@@ -233,6 +233,38 @@ context; students see none. Someone has to watch them.
 
 ## Phase 6 — Repeat at catalog scale
 
+**Executed on a ten-event launch slice (2026-08-02).** The plan sized Phase 6 as ~50 declared
+unit plans and ~1,200 lesson reviews. The measured production position was different and
+smaller: 474 published lessons across 92 events, but only 2 events with any grounding at all,
+so nothing downstream — items, exams, mastery — could be produced anywhere else.
+
+Two faults, one of them not a content gap. `EVENT_DOMAIN` is keyed on base slugs and
+`ground_event` looked up the full slug, so grounding refused 100 of 102 events with "no
+open-source domain mapped" — a lookup bug that read as missing sources. And the source
+catalogue itself was thin everywhere except geology: 64 curated URLs there against two
+everywhere else, with `physics` expected to ground ten different events. 22 URLs were dead and
+an entire domain (meteorology) was 403 on every page, so it could never have grounded at all.
+
+Both closed: one `domain_for_event`, 241 URLs all verified answering 200, and
+`scripts/check_open_sources.py` so a dead source is caught before a commit rather than by an
+empty run. Ten events then went through the proven pipeline end to end — ground → generate →
+gate → assemble:
+
+  claims 457 -> 2,525 across 17 events; items clearing every gate 66 -> 244 across 10 events;
+  practice exams 0 -> 11.
+
+**Exams are shaped by past tests, not made of them.** `derive_blueprint` reads the imported
+past-test pool for structure — item count, cognitive mix, difficulty bands, topic weights,
+which are facts — and the exam is then filled entirely with our own gated items. 247 items
+placed across 11 exams, **0 carrying `import_kind=past_test`**, pinned by a test. This is the
+form the "use their past exams" request takes that we can actually publish.
+
+**Phase 6 remains review-bound, and the number is now precise:** 244 items, 11 exams, 24
+lessons, 25 video chapters and 403 lesson→concept mappings are queued. `can_start_new_attempt`
+returns False for all 11 exams, which is Phase 0 working. Engineering has stopped being the
+constraint; it was replaced by a queue rather than by a launch.
+
+
 Only now does a catalog-wide threshold make sense, because the pilot proved the pipeline.
 
 - Phases 1–5 applied event by event, ordered by the Phase Q backlog (severity × usage).
@@ -418,7 +450,13 @@ Record the decision and its rationale here when made.
 | Pilot lessons with grounded video | 0 | **24 / 24** (52.4 min) | all | 5 |
 | Published lessons able to record mastery | — | **71 / 474** (was 24) | all | 6/8 |
 | Published lessons awaiting a concept mapping | — | **403** | 0 | 6 |
-| Production items a student may be scored on | — | **0 / 6,042** | — | 3 |
+| Production items a student may be scored on | — | **0 / 6,270** | — | 3 |
+| Events grounded (any approved claim) | 2 | **17** | ≥10 | 1/6 |
+| Grounded claims | 457 | **2,525** | — | 1/6 |
+| Curated source URLs answering 200 | 71 / 93 | **241 / 241** | all | 1 |
+| Items clearing every machine gate | 66 (1 event) | **244** (10 events) | — | 2/6 |
+| Practice exams assembled | 0 | **11** | ≥10 | 6 |
+| Imported past-test items placed in an exam | — | **0** | 0 | 7 |
 | Pilot video chapters QA-approved | 0 | 0 / 25 | all | 5 |
 | Published pilot checkpoints a student can answer | — | **73 / 73** (was 32) | all | 8 |
 | Published pilot checkpoints shipping their answer key | — | **0** (was 41) | 0 | 8 |
