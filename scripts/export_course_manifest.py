@@ -122,6 +122,25 @@ def export_manifest(db, event_slug: str) -> dict:
             "locator": passage.locator,
             "content_hash": passage.content_hash,
             "passage_type": passage.passage_type,
+            # The evidence has to travel. Carrying only hashes meant the manifest could be
+            # imported solely where byte-identical snapshots already existed — never true of
+            # a fresh environment, so importing the pilot into production resolved 0 of 239
+            # passages and silently did nothing. Grounding that cannot move is not portable.
+            "text": passage.text,
+            "sequence": passage.sequence,
+            "heading": passage.heading,
+            "snapshot": {
+                "final_url": snapshot.final_url,
+                "content_type": snapshot.content_type,
+                "extracted_text": snapshot.extracted_text or "",
+            },
+            "source": {
+                "title": source.title,
+                "publisher": source.publisher,
+                "rights_status": source.rights_status,
+                "license_name": source.license_name,
+                "approved": bool(source.approved),
+            },
         }
 
     def stable_blocks(blocks):

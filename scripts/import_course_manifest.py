@@ -57,6 +57,44 @@ def _resolve_passages(db, payload: dict):
             SourcePassage.locator == descriptor["locator"],
             SourcePassage.content_hash == descriptor["content_hash"],
         )) if snapshot else None
+        # Create what the manifest carries rather than demanding it already exist. Requiring
+        # byte-identical snapshots meant a manifest could only be imported where the content
+        # had independently been crawled to the same bytes — so the first real import
+        # resolved 0 of 239 passages and applied nothing. A passage is only created when the
+        # manifest carries its text, so nothing is invented.
+        if descriptor.get("text") and descriptor.get("snapshot", {}).get("extracted_text"):
+            source_meta = descriptor.get("source", {})
+            if source is None:
+                source = Source(
+                    url=descriptor["source_url"],
+                    title=source_meta.get("title") or descriptor.get("source_title", ""),
+                    publisher=source_meta.get("publisher", ""),
+                    rights_status=source_meta.get("rights_status", "metadata_only"),
+                    license_name=source_meta.get("license_name", "unknown"),
+                    approved=bool(source_meta.get("approved")),
+                )
+                db.add(source); db.flush()
+            if snapshot is None:
+                snap_meta = descriptor["snapshot"]
+                snapshot = SourceSnapshot(
+                    source_id=source.id,
+                    final_url=snap_meta.get("final_url") or source.url,
+                    content_hash=descriptor["snapshot_hash"],
+                    content_type=snap_meta.get("content_type", ""),
+                    extracted_text=snap_meta["extracted_text"],
+                )
+                db.add(snapshot); db.flush()
+            if passage is None:
+                passage = SourcePassage(
+                    source_id=source.id, source_snapshot_id=snapshot.id,
+                    sequence=descriptor.get("sequence", 0),
+                    locator=descriptor["locator"],
+                    heading=descriptor.get("heading", ""),
+                    passage_type=descriptor.get("passage_type", "text"),
+                    text=descriptor["text"],
+                    content_hash=descriptor["content_hash"],
+                )
+                db.add(passage); db.flush()
         if not source or not snapshot or not passage:
             missing.append({
                 "ref": ref, "source_url": descriptor["source_url"],
@@ -117,8 +155,12 @@ def import_manifest(db, payload: dict, *, apply: bool) -> dict:
         "passages_resolved": len(passages),
         "missing_passages": missing,
         "units": len(payload["course"]["units"]),
+        "skills": sum(len(unit["skills"]) for unit in payload["course"]["units"]),
+        # this counted skills and called them lessons, matching the same error in the
+        # exporter — so both ends of the migration agreed on a number neither was measuring
         "lessons": sum(
-            len(unit["skills"]) for unit in payload["course"]["units"]
+            len(skill.get("lessons") or ([skill["lesson"]] if skill.get("lesson") else []))
+            for unit in payload["course"]["units"] for skill in unit["skills"]
         ),
         "claims": len(payload.get("claims", [])),
         "questions": len(payload.get("questions", [])),

@@ -1585,9 +1585,27 @@ function renderLessonReviewQueue() {
     } else {
       actions = `<p class="review-waiting">Waiting for a ${escapeHtml(stage)} reviewer.</p>`;
     }
+    // Automated findings, shown before the reviewer opens anything. These were already in
+    // the API response and invisible on screen, which made a triaged queue read as a flat one.
+    const findingChips = [];
+    const disputed = lesson.disputed_checkpoints || [];
+    const danglingBlocks = lesson.unavailable_source_blocks || [];
+    const absentMedia = lesson.absent_media_blocks || [];
+    if (disputed.length) findingChips.push(`<span class="review-flag review-flag-strong">${disputed.length} checkpoint${disputed.length === 1 ? '' : 's'} an independent judge disputed</span>`);
+    if (absentMedia.length) findingChips.push(`<span class="review-flag">${absentMedia.length} block${absentMedia.length === 1 ? '' : 's'} read a figure this lesson never shows</span>`);
+    if (danglingBlocks.length) findingChips.push(`<span class="review-flag">${danglingBlocks.length} block${danglingBlocks.length === 1 ? '' : 's'} cite material the student was not given</span>`);
+    const findings = findingChips.length
+      ? `<div class="review-flags">${findingChips.join('')}</div>
+         <details class="lesson-review-detail"><summary>What the automated checks found (${disputed.length + absentMedia.length + danglingBlocks.length})</summary><ul class="lesson-review-findings">
+         ${disputed.map(item => `<li><strong>${escapeHtml(item.heading || 'Checkpoint')}</strong><small>${escapeHtml(item.verdict || 'disputed')}${item.solver_choice !== null && item.solver_choice !== undefined ? ` · solver chose ${item.solver_choice}, key is ${item.key}` : ''}${(item.verifier_errors || []).length ? ` · ${escapeHtml(String(item.verifier_errors[0]).slice(0, 140))}` : ''}${item.model_written ? ' · model-written' : ''}</small></li>`).join('')}
+         ${absentMedia.map(item => `<li><strong>${escapeHtml(item.heading || item.type)}</strong><small>reads a figure this lesson does not show${item.assessed ? ' · this one is assessed' : ''}</small></li>`).join('')}
+         ${danglingBlocks.map(item => `<li><strong>${escapeHtml(item.heading || item.type)}</strong><small>refers to “${escapeHtml(item.phrase || 'the source')}”${item.assessed ? ' · this one is assessed' : ''}</small></li>`).join('')}
+         </ul></details>`
+      : '<div class="review-flags"><span class="review-flag review-flag-clear">No automated finding on this lesson</span></div>';
     return `<article class="lesson-review-card surface" data-lesson-review-card="${lesson.id}">
       <header><div><span class="coverage-season">${escapeHtml(lesson.event.name)} · ${escapeHtml(lesson.unit?.title || 'Course')} · Version ${lesson.version}</span><h3>${escapeHtml(lesson.title)}</h3><p>${escapeHtml(lesson.summary)}</p></div><span class="coverage-release ${stage === 'complete' ? 'ready' : 'blocked'}">${escapeHtml(stageLabel)}</span></header>
       <div class="lesson-review-actions"><a class="button button-secondary button-compact" href="${escapeHtml(safeActionUrl(lesson.preview_url))}" target="_blank" rel="noopener">Preview lesson ↗</a><span>${lesson.estimated_minutes} min · ${lesson.blocks.length} sections · ${lesson.evidence.length} source passages</span></div>
+      ${findings}
       <details class="lesson-review-detail"><summary>Inspect lesson sequence</summary><ol class="lesson-review-blocks">${lessonBlocks}</ol></details>
       <details class="lesson-review-detail"><summary>Inspect exact source evidence (${lesson.evidence.length})</summary><div class="lesson-evidence-list">${evidence}</div></details>
       <details class="lesson-review-detail"><summary>Decision history (${lesson.decisions.length})</summary>${decisionHistory}</details>
@@ -1602,6 +1620,19 @@ function renderQuestionReviewQueue() {
   $('question-review-empty').hidden = questions.length > 0;
   $('question-review-queue').innerHTML = questions.map(question => {
     const stage = question.status === 'machine_validated' ? 'editor' : question.status === 'editor_reviewed' ? 'sme' : 'publish';
+    // The decisive signals, on the card. `gates_run` is shown rather than assumed: most of
+    // the catalog predates the blind solver, and an absent gate must not read as a passed one.
+    const ev = question.review_evidence || {};
+    const itemChips = [];
+    if (!ev.gates_run) itemChips.push('<span class="review-flag review-flag-strong">never blind-solved — no automated evidence</span>');
+    else {
+      itemChips.push(ev.solver_agreed
+        ? '<span class="review-flag review-flag-clear">blind solver reproduced the key</span>'
+        : `<span class="review-flag review-flag-strong">solver disagreed${ev.solver_verdict ? ` · ${escapeHtml(ev.solver_verdict.replaceAll('_', ' '))}` : ''}</span>`);
+      if (ev.verifier_passed === false) itemChips.push(`<span class="review-flag review-flag-strong">verifier objected${(ev.verifier_errors || []).length ? ` · ${escapeHtml(String(ev.verifier_errors[0]).slice(0, 120))}` : ''}</span>`);
+      if ((ev.max_similarity || 0) > 0.8) itemChips.push(`<span class="review-flag">near-duplicate ${Number(ev.max_similarity).toFixed(2)}</span>`);
+    }
+    const itemFindings = `<div class="review-flags">${itemChips.join('')}</div>`;
     const canReview = stage === 'editor' ? ['editor', 'admin'].includes(state.user.role) : stage === 'sme' ? ['sme', 'admin'].includes(state.user.role) : false;
     const correct = question.choices[question.answer_spec.correct_index] || 'Answer key unavailable';
     const citations = question.citation_evidence?.length ? question.citation_evidence.map(citation => `<article class="citation-evidence"><header><strong>${escapeHtml(citation.source_title)}</strong><span>${citation.approved && citation.snapshot_id ? 'Verified Snapshot' : 'Evidence Gap'}</span></header><p>${escapeHtml(citation.claim_text || 'Claim unavailable')}</p><blockquote>${escapeHtml(citation.evidence_excerpt || 'No evidence excerpt supplied.')}</blockquote><footer><span>${escapeHtml(citation.locator || 'No locator')}</span>${citation.source_url ? `<a href="${safeUrl(citation.source_url)}" target="_blank" rel="noopener noreferrer">Open Source <span aria-hidden="true">↗</span></a>` : ''}</footer><small translate="no">Snapshot ${escapeHtml((citation.snapshot_hash || 'missing').slice(0, 12))}</small></article>`).join('') : '<p class="citation-missing">No source evidence is attached. Publication will remain blocked.</p>';
@@ -1609,7 +1640,7 @@ function renderQuestionReviewQueue() {
     let actions = '<p class="review-waiting">Waiting for the next independent review role.</p>';
     if (canReview) actions = `<fieldset class="review-checklist"><legend>${stage === 'editor' ? 'Editorial checklist' : 'Scientific checklist'}</legend>${checks}</fieldset><label class="review-notes">Review Notes<textarea name="review-notes" rows="3" maxlength="4000" placeholder="Record evidence, ambiguity, or revision guidance…"></textarea></label><div class="review-actions"><button class="button button-secondary" type="button" data-review-decision="rewrite_required" data-question-id="${question.id}" data-review-stage="${stage}">Request Rewrite</button><button class="button button-primary" type="button" data-review-decision="approved" data-question-id="${question.id}" data-review-stage="${stage}">Approve ${stage === 'editor' ? 'Editorial Review' : 'Scientific Review'}</button></div>`;
     else if (stage === 'publish' && ['sme', 'admin'].includes(state.user.role)) actions = `<div class="review-actions"><button class="button button-primary" type="button" data-publish-question="${question.id}">Publish Question</button></div>`;
-    return `<article class="question-review-card surface" data-question-card="${question.id}"><header><div><span class="coverage-season">Version ${question.version}</span><h3>${escapeHtml(question.stem)}</h3></div><span class="coverage-release ${stage === 'publish' ? 'ready' : 'blocked'}">${escapeHtml(question.status.replaceAll('_', ' '))}</span></header><ol class="review-choices">${question.choices.map((choice, index) => `<li${index === question.answer_spec.correct_index ? ' class="correct"' : ''}>${escapeHtml(choice)}</li>`).join('')}</ol><details><summary>Answer, Rationale & Quality Signals</summary><div class="review-evidence"><p><strong>Key:</strong> ${escapeHtml(correct)}</p><p>${escapeHtml(question.explanation || 'No rationale supplied.')}</p><p><strong>Validation:</strong> ${question.validation_report.passed ? 'Passed' : 'Blocked'} · <strong>Similarity:</strong> ${escapeHtml((question.similarity_report || {}).outcome || 'Not calculated')} · <strong>Citations:</strong> ${question.citations.length}</p><div class="citation-evidence-list">${citations}</div></div></details>${actions}<div class="review-status" aria-live="polite"></div></article>`;
+    return `<article class="question-review-card surface" data-question-card="${question.id}"><header><div><span class="coverage-season">Version ${question.version}</span><h3>${escapeHtml(question.stem)}</h3></div><span class="coverage-release ${stage === 'publish' ? 'ready' : 'blocked'}">${escapeHtml(question.status.replaceAll('_', ' '))}</span></header>${itemFindings}<ol class="review-choices">${question.choices.map((choice, index) => `<li${index === question.answer_spec.correct_index ? ' class="correct"' : ''}>${escapeHtml(choice)}</li>`).join('')}</ol><details><summary>Answer, Rationale & Quality Signals</summary><div class="review-evidence"><p><strong>Key:</strong> ${escapeHtml(correct)}</p><p>${escapeHtml(question.explanation || 'No rationale supplied.')}</p><p><strong>Validation:</strong> ${question.validation_report.passed ? 'Passed' : 'Blocked'} · <strong>Similarity:</strong> ${escapeHtml((question.similarity_report || {}).outcome || 'Not calculated')} · <strong>Citations:</strong> ${question.citations.length}</p><div class="citation-evidence-list">${citations}</div></div></details>${actions}<div class="review-status" aria-live="polite"></div></article>`;
   }).join('');
 }
 

@@ -749,3 +749,26 @@ details[open] summary { color: var(--forest); }
 .lesson-step-video { width: 100%; max-height: 56vh; aspect-ratio: 16/9; border-radius: 10px;
   background: #0b1417; display: block; }
 .lesson-step-note { margin: 0; font-size: .84rem; opacity: .72; }
+
+/* Automated review findings. These already existed in the API and were invisible on screen,
+   which made a triaged queue read as a flat one — the reviewer could not see which of 24
+   lessons or 67 items deserved attention first. */
+.review-flags { display: flex; flex-wrap: wrap; gap: .4rem; margin: .6rem 0 .2rem; }
+.review-flag {
+  font-size: .78rem; line-height: 1.3; padding: .22rem .55rem; border-radius: 999px;
+  background: rgba(120, 105, 70, .12); color: #5b4b28; border: 1px solid rgba(120, 105, 70, .28);
+}
+.review-flag-strong {
+  background: rgba(150, 60, 45, .12); color: #7d2f22; border-color: rgba(150, 60, 45, .34);
+  font-weight: 600;
+}
+.review-flag-clear {
+  background: rgba(45, 90, 60, .10); color: #245239; border-color: rgba(45, 90, 60, .26);
+}
+.lesson-review-findings { list-style: none; margin: .5rem 0 0; padding: 0; display: grid; gap: .45rem; }
+.lesson-review-findings li {
+  padding: .45rem .6rem; border-left: 3px solid rgba(150, 60, 45, .38);
+  background: rgba(0, 0, 0, .025); border-radius: 0 6px 6px 0;
+}
+.lesson-review-findings strong { display: block; font-size: .9rem; }
+.lesson-review-findings small { color: #5a5346; }
