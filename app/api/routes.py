@@ -3029,9 +3029,32 @@ LESSON_REVIEW_CHECKS = {
 }
 
 
+def _passage_cache(db: Session, passage_ids) -> dict:
+    """Load every cited passage, source and snapshot in three queries.
+
+    The review queues fetched these one citation at a time — three `db.get()` calls each,
+    inside a loop over every lesson or item. Against a local SQLite file that is invisible;
+    against Cloud SQL it is thousands of round trips, and the admin page took 83 seconds for
+    38 lessons and 103 for 500 items.
+    """
+    ids = {p for p in passage_ids if p}
+    if not ids:
+        return {"passages": {}, "sources": {}, "snapshots": {}}
+    passages = {row.id: row for row in db.scalars(
+        select(SourcePassage).where(SourcePassage.id.in_(ids))).all()}
+    source_ids = {row.source_id for row in passages.values() if row.source_id}
+    snapshot_ids = {row.source_snapshot_id for row in passages.values() if row.source_snapshot_id}
+    sources = {row.id: row for row in db.scalars(
+        select(Source).where(Source.id.in_(source_ids))).all()} if source_ids else {}
+    snapshots = {row.id: row for row in db.scalars(
+        select(SourceSnapshot).where(SourceSnapshot.id.in_(snapshot_ids))).all()} if snapshot_ids else {}
+    return {"passages": passages, "sources": sources, "snapshots": snapshots}
+
+
 def _lesson_citation_evidence(
     db: Session,
     version: LessonVersion,
+    cache: dict | None = None,
 ) -> list[dict]:
     evidence = []
     seen = set()
@@ -3040,12 +3063,14 @@ def _lesson_citation_evidence(
         if not passage_id or passage_id in seen:
             continue
         seen.add(passage_id)
-        passage = db.get(SourcePassage, passage_id)
-        source = db.get(Source, passage.source_id) if passage else None
-        snapshot = db.get(
-            SourceSnapshot,
-            passage.source_snapshot_id,
-        ) if passage else None
+        if cache is not None:
+            passage = cache["passages"].get(passage_id)
+            source = cache["sources"].get(passage.source_id) if passage else None
+            snapshot = cache["snapshots"].get(passage.source_snapshot_id) if passage else None
+        else:
+            passage = db.get(SourcePassage, passage_id)
+            source = db.get(Source, passage.source_id) if passage else None
+            snapshot = db.get(SourceSnapshot, passage.source_snapshot_id) if passage else None
         evidence.append({
             "passage_id": passage.id if passage else passage_id,
             "text": passage.text if passage else "",
@@ -3077,21 +3102,51 @@ def lesson_review_queue(
     versions = db.scalars(select(LessonVersion).where(
         LessonVersion.review_status != "published",
     ).order_by(LessonVersion.lesson_id, LessonVersion.version)).all()
+    # one batch for the whole queue, instead of three round trips per citation per lesson
+    passage_cache = _passage_cache(db, [
+        row.get("source_passage_id")
+        for version in versions for row in (version.citations or [])
+        if isinstance(row, dict)
+    ])
+    # Everything the loop below used to fetch one lesson at a time. Seven round trips per
+    # lesson is unnoticeable locally and is most of a 14-second page against Cloud SQL.
+    lesson_ids = [v.lesson_id for v in versions]
+    lessons_by_id = {row.id: row for row in db.scalars(
+        select(Lesson).where(Lesson.id.in_(lesson_ids))).all()} if lesson_ids else {}
+    links_by_lesson: dict[int, list] = {}
+    for link in (db.scalars(select(LessonSkill).where(
+        LessonSkill.lesson_id.in_(lesson_ids),
+    ).order_by(LessonSkill.is_primary.desc(), LessonSkill.id)).all() if lesson_ids else []):
+        links_by_lesson.setdefault(link.lesson_id, []).append(link)
+    skills_by_id = {row.id: row for row in db.scalars(select(Skill).where(
+        Skill.id.in_({l.skill_id for group in links_by_lesson.values() for l in group} or {-1}),
+    )).all()}
+    units_by_id = {row.id: row for row in db.scalars(select(CourseUnit).where(
+        CourseUnit.id.in_({s.unit_id for s in skills_by_id.values() if s.unit_id} or {-1}))).all()}
+    courses_by_id = {row.id: row for row in db.scalars(select(Course).where(
+        Course.id.in_({s.course_id for s in skills_by_id.values() if s.course_id} or {-1}))).all()}
+    events_by_id = {row.id: row for row in db.scalars(select(Event).where(
+        Event.id.in_({c.event_id for c in courses_by_id.values()} or {-1}))).all()}
+    decisions_by_key: dict[tuple, list] = {}
+    for row in (db.scalars(select(ReviewDecision).where(
+        ReviewDecision.entity_type == "lesson",
+        ReviewDecision.entity_id.in_(lesson_ids),
+    ).order_by(ReviewDecision.created_at, ReviewDecision.id)).all() if lesson_ids else []):
+        decisions_by_key.setdefault((row.entity_id, row.entity_version), []).append(row)
+
     queue = []
     for version in versions:
-        lesson = db.get(Lesson, version.lesson_id)
+        lesson = lessons_by_id.get(version.lesson_id)
         if (
             not lesson
             or lesson.status == "withdrawn"
             or version.version != lesson.current_version
         ):
             continue
-        links = db.scalars(select(LessonSkill).where(
-            LessonSkill.lesson_id == lesson.id,
-        ).order_by(LessonSkill.is_primary.desc(), LessonSkill.id)).all()
-        skill = db.get(Skill, links[0].skill_id) if links else None
-        unit = db.get(CourseUnit, skill.unit_id) if skill else None
-        course = db.get(Course, skill.course_id) if skill else None
+        links = links_by_lesson.get(lesson.id, [])
+        skill = skills_by_id.get(links[0].skill_id) if links else None
+        unit = units_by_id.get(skill.unit_id) if skill else None
+        course = courses_by_id.get(skill.course_id) if skill else None
         # A published course used to be skipped here, on the assumption that publication
         # implies review. That is the inverse of the actual history: several write paths
         # published lessons that were never reviewed, so this filter hid precisely the
@@ -3099,16 +3154,12 @@ def lesson_review_queue(
         # editor and SME approvals exist, which is the real question.
         if not course:
             continue
-        event = db.get(Event, course.event_id)
+        event = events_by_id.get(course.event_id)
         # Reviewing lessons that belong to a retired duplicate is wasted work: whatever the
         # reviewer decides can never reach a student, because the event is not in the catalog.
         if not event or not event.active or event.season_status in RETIRED_SEASON_STATUSES:
             continue
-        decisions = db.scalars(select(ReviewDecision).where(
-            ReviewDecision.entity_type == "lesson",
-            ReviewDecision.entity_id == lesson.id,
-            ReviewDecision.entity_version == version.version,
-        ).order_by(ReviewDecision.created_at, ReviewDecision.id)).all()
+        decisions = decisions_by_key.get((lesson.id, version.version), [])
         latest_by_stage = {}
         for decision in decisions:
             latest_by_stage[decision.stage] = decision
@@ -3166,7 +3217,7 @@ def lesson_review_queue(
                 "heading": block.get("heading") or block.get("title") or "",
                 "checkpoint": block.get("question", ""),
             } for block in version.content or []],
-            "evidence": _lesson_citation_evidence(db, version),
+            "evidence": _lesson_citation_evidence(db, version, passage_cache),
             # blocks pointing the student at material they were never given; a checkpoint
             # doing it is unanswerable, which a reviewer should see before approving
             "unavailable_source_blocks": blocks_citing_an_unavailable_source(version.content),
@@ -3295,12 +3346,33 @@ def review_lesson(
     }
 
 
-def _citation_evidence(db: Session, question: Question) -> list[dict]:
+def _claim_cache(db: Session, questions) -> dict:
+    """Every cited claim, source and snapshot for a batch of items, in three queries."""
+    claim_ids = {c.get("claim_id") for q in questions for c in (q.citations or []) if c.get("claim_id")}
+    if not claim_ids:
+        return {"claims": {}, "sources": {}, "snapshots": {}}
+    claims = {row.id: row for row in db.scalars(
+        select(ScientificClaim).where(ScientificClaim.id.in_(claim_ids))).all()}
+    source_ids = {row.source_id for row in claims.values() if row.source_id}
+    snapshot_ids = {row.source_snapshot_id for row in claims.values() if row.source_snapshot_id}
+    sources = {row.id: row for row in db.scalars(
+        select(Source).where(Source.id.in_(source_ids))).all()} if source_ids else {}
+    snapshots = {row.id: row for row in db.scalars(
+        select(SourceSnapshot).where(SourceSnapshot.id.in_(snapshot_ids))).all()} if snapshot_ids else {}
+    return {"claims": claims, "sources": sources, "snapshots": snapshots}
+
+
+def _citation_evidence(db: Session, question: Question, cache: dict | None = None) -> list[dict]:
     evidence = []
     for citation in question.citations or []:
-        claim = db.get(ScientificClaim, citation.get("claim_id")) if citation.get("claim_id") else None
-        source = db.get(Source, claim.source_id) if claim else None
-        snapshot = db.get(SourceSnapshot, claim.source_snapshot_id) if claim and claim.source_snapshot_id else None
+        if cache is not None:
+            claim = cache["claims"].get(citation.get("claim_id"))
+            source = cache["sources"].get(claim.source_id) if claim else None
+            snapshot = cache["snapshots"].get(claim.source_snapshot_id) if claim else None
+        else:
+            claim = db.get(ScientificClaim, citation.get("claim_id")) if citation.get("claim_id") else None
+            source = db.get(Source, claim.source_id) if claim else None
+            snapshot = db.get(SourceSnapshot, claim.source_snapshot_id) if claim and claim.source_snapshot_id else None
         evidence.append({
             "claim_id": claim.id if claim else citation.get("claim_id"),
             "claim_text": claim.claim_text if claim else "",
@@ -3404,6 +3476,7 @@ def question_review_queue(
     # a number the client can derive.
     questions = db.scalars(
         query.order_by(Question.created_at).limit(limit).offset(offset)).all()
+    claim_cache = _claim_cache(db, questions)
     return [{
         "id": q.id, "version": q.version, "status": q.status, "event_id": q.event_id,
         "stem": q.stem, "choices": q.choices, "answer_spec": q.answer_spec,
