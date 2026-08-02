@@ -38,13 +38,41 @@ def _solver_verdict(solver: dict, correct_index) -> tuple[bool, str]:
     return True, "solver_agrees"
 
 
-def _grounding_context(db: Session, concept: Concept | None) -> tuple[Source, list[ScientificClaim]]:
-    stmt = select(ScientificClaim).where(
+def _grounding_context(db: Session, concept: Concept | None,
+                       event: Event | None = None) -> tuple[Source, list[ScientificClaim]]:
+    """Claims that may ground an item for this concept — and only this event.
+
+    This used to admit `concept_id IS NULL` alongside the concept's own claims, on the
+    reasoning that an unattached claim is generally useful. It is not: an unattached claim
+    belongs to whichever event harvested it, and nothing recorded which. So mineral claims
+    harvested for Rocks & Minerals grounded items for **Meteorology** and **Chemistry Lab** —
+    a chemistry exam asking which mineral effervesces in acid, and a meteorology item asking
+    for the definition of a mineral. 229 of 292 generated items shared no vocabulary with
+    their own event, and every one of them passed the solver, the verifier and the grounding
+    gate, because each of those asks whether the item is *supported*, never whether it is
+    *on topic*.
+
+    Scoping is now explicit and fails closed: the concept's own claims first, then other
+    claims of the same event, and never a claim whose event cannot be established.
+    """
+    base = select(ScientificClaim).where(
         ScientificClaim.approved.is_(True), ScientificClaim.source_snapshot_id.is_not(None)
     )
-    if concept:
-        stmt = stmt.where((ScientificClaim.concept_id == concept.id) | (ScientificClaim.concept_id.is_(None)))
-    claims = db.scalars(stmt.limit(8)).all()
+    claims: list[ScientificClaim] = []
+    if concept is not None:
+        claims = db.scalars(base.where(
+            ScientificClaim.concept_id == concept.id).limit(8)).all()
+    if not claims:
+        target_event = event.id if event is not None else (
+            concept.event_id if concept is not None else None)
+        if target_event is None:
+            raise ValueError("cannot ground generation without an event to scope claims to")
+        sibling_ids = db.scalars(select(Concept.id).where(
+            Concept.event_id == target_event)).all()
+        if not sibling_ids:
+            raise ValueError("no concepts for this event; nothing may ground its items")
+        claims = db.scalars(base.where(
+            ScientificClaim.concept_id.in_(sibling_ids)).limit(8)).all()
     for claim in claims:
         source = db.get(Source, claim.source_id)
         if source and can_use_for_generation(source.rights_status, source.approved):
@@ -62,7 +90,7 @@ def generate_model_questions(
     difficulty: float,
     cognitive_level: str,
 ) -> list[Question]:
-    source, claims = _grounding_context(db, concept)
+    source, claims = _grounding_context(db, concept, event)
     provider = OpenAICompatibleProvider()
     if not provider.configured:
         raise ModelProviderError("External model provider is not configured")
