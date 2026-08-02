@@ -23,8 +23,12 @@ def seed(slug="exam-event", ours=14, imported=12):
                 status=QuestionStatus.MACHINE_VALIDATED.value,
                 stem=f"Our question {i}", choices=["A", "B", "C", "D"],
                 answer_spec={"correct_index": 1},
-                validation_report={"passed": True,
-                                   "independent_solver": {"verdict": "solver_agrees"}},
+                citations=[{"title": "USGS", "url": "https://usgs.gov/x"}],
+                validation_report={
+                    "passed": True,
+                    "independent_solver": {"verdict": "solver_agrees"},
+                    "independent_verifier": {"passed": True, "errors": []},
+                    "factual_grounding": "approved_claims"},
                 generation_provenance={"generation_run": "launch-test"}))
         for i in range(imported):
             db.add(Question(
@@ -32,9 +36,13 @@ def seed(slug="exam-event", ours=14, imported=12):
                 status=QuestionStatus.MACHINE_VALIDATED.value,
                 stem=f"Imported past-test question {i}", choices=["A", "B", "C", "D"],
                 answer_spec={"correct_index": 0},
-                validation_report={"passed": True,
-                                   "independent_solver": {"verdict": "solver_agrees"}},
-                generation_provenance={"import_kind": "past_test"}))
+                citations=[{"title": "past test"}],
+                validation_report={
+                    "passed": True,
+                    "independent_solver": {"verdict": "solver_agrees"},
+                    "independent_verifier": {"passed": True, "errors": []},
+                    "factual_grounding": "approved_claims"},
+                generation_provenance={"import_kind": "past_test", "section": "Station 3"}))
         db.commit()
         return event.id, slug
 
@@ -99,3 +107,89 @@ def test_an_ungated_item_of_ours_is_not_exam_material():
                             generation_provenance={"generation_run": "x"}))
         db.commit()
         assert _our_items(db, event) == []
+
+
+def _item(**over):
+    from app.models.entities import Question, QuestionStatus
+    base = dict(
+        event_id=1, stem="q", choices=["A", "B"], answer_spec={"correct_index": 0},
+        status=QuestionStatus.MACHINE_VALIDATED.value,
+        citations=[{"title": "USGS"}],
+        validation_report={"passed": True,
+                           "independent_solver": {"verdict": "solver_agrees"},
+                           "independent_verifier": {"passed": True, "errors": []},
+                           "factual_grounding": "approved_claims"},
+        generation_provenance={"generation_run": "launch-test"})
+    base.update(over)
+    return Question(**base)
+
+
+def test_each_gate_is_required_on_its_own_terms():
+    """The first version checked `passed` plus a solver flag and called it "every gate".
+
+    An item can carry passed=true beside an absent or failed verifier, because
+    validation_report is an untyped blob several paths write. Each component is asserted
+    separately here so a future weakening fails a test rather than inflating a count.
+    """
+    from scripts.build_launch_exams import item_clears_every_gate as gate
+
+    assert gate(_item()) is True
+
+    report = lambda **o: {**{"passed": True,
+                            "independent_solver": {"verdict": "solver_agrees"},
+                            "independent_verifier": {"passed": True, "errors": []},
+                            "factual_grounding": "approved_claims"}, **o}
+
+    assert gate(_item(validation_report=report(independent_verifier=None))) is False, \
+        "never verified is not verified clean"
+    assert gate(_item(validation_report=report(
+        independent_verifier={"passed": False, "errors": ["wrong"]}))) is False
+    assert gate(_item(validation_report=report(
+        independent_verifier={"passed": True, "errors": ["still wrong"]}))) is False
+    assert gate(_item(validation_report=report(factual_grounding="none"))) is False
+    assert gate(_item(validation_report=report(independent_solver={"verdict": "disagrees"}))) is False
+    assert gate(_item(validation_report=report(passed=False))) is False
+    assert gate(_item(citations=[])) is False
+    assert gate(_item(status="draft")) is False
+    assert gate(_item(generation_provenance={"import_kind": "past_test"})) is False
+
+
+def test_the_persisted_blueprint_carries_no_text_from_a_past_test():
+    """`top_sections` holds raw section headings lifted from imported items."""
+    from sqlalchemy import select as _select
+    from app.models.entities import Exam as _Exam, Event as _Event
+
+    _, slug = seed(slug="exam-blueprint")
+    build(slug, size=30, apply=True)
+    with SessionLocal() as db:
+        event = db.scalar(_select(_Event).where(_Event.slug == slug))
+        exam = db.scalar(_select(_Exam).where(_Exam.event_id == event.id))
+        assert "top_sections" not in (exam.blueprint or {})
+        blob = str(exam.blueprint)
+        assert "Station 3" not in blob, "past-test section text reached the exam record"
+
+
+def test_rebuilding_an_exam_clears_its_snapshots_and_unpublishes_it():
+    """Replacing question_ids alone left the served snapshots — and publication — in place."""
+    from sqlalchemy import select as _select
+    from app.models.entities import Exam as _Exam, ExamItem as _ExamItem, Event as _Event
+
+    _, slug = seed(slug="exam-rebuild")
+    build(slug, size=30, apply=True)
+    with SessionLocal() as db:
+        event = db.scalar(_select(_Event).where(_Event.slug == slug))
+        exam = db.scalar(_select(_Exam).where(_Exam.event_id == event.id))
+        exam.published = True
+        exam.disposition = "reviewed"
+        db.add(_ExamItem(exam_id=exam.id, question_id=999, position=1,
+                         question_version=1, snapshot={"stem": "old past-test text"}))
+        db.commit()
+        exam_id = exam.id
+
+    build(slug, size=30, apply=True)
+    with SessionLocal() as db:
+        exam = db.get(_Exam, exam_id)
+        assert exam.published is False, "a rebuilt exam must not stay published"
+        assert exam.disposition == "pending_disposition"
+        stale = db.scalars(_select(_ExamItem).where(_ExamItem.exam_id == exam_id)).all()
+        assert stale == [], "stale snapshots would keep serving the old items"

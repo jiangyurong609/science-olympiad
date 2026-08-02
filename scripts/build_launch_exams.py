@@ -30,7 +30,7 @@ from collections import Counter
 from sqlalchemy import select
 
 from app.core.database import SessionLocal
-from app.models.entities import Event, Exam, Question
+from app.models.entities import Event, Exam, ExamItem, Question, QuestionStatus
 from app.services import student_visibility as sv
 from app.services.blueprint import derive_blueprint, select_for_blueprint
 
@@ -42,31 +42,74 @@ LAUNCH_SLICE = [
 ]
 
 
+def _structure_only(blueprint: dict) -> dict:
+    """Proportions and counts, never text lifted from an imported test.
+
+    `derive_blueprint` carries `top_sections` — raw `generation_provenance.section` strings.
+    When the blueprint is derived from the imported past-test pool those are *their* section
+    headings, and persisting them on the exam put past-test text into a published record while
+    the surrounding code claimed only numeric structure was kept. The counts are facts; the
+    headings are not ours to store.
+    """
+    return {k: v for k, v in (blueprint or {}).items() if k != "top_sections"}
+
+
 def _past_test_pool(db, event: Event) -> list[Question]:
     """Imported past-test items — read for their shape, never copied into an exam."""
     return [q for q in db.scalars(select(Question).where(Question.event_id == event.id)).all()
             if (q.generation_provenance or {}).get("import_kind") == "past_test"]
 
 
-def _our_items(db, event: Event) -> list[Question]:
-    """Items we generated and that cleared every machine gate.
+def item_clears_every_gate(question: Question) -> bool:
+    """Every gate, checked independently — not `passed` plus one of them.
 
-    Deliberately excludes anything imported: the blueprint may be learned from a past test, the
-    content may not come from one.
+    The first version of this checked `validation_report.passed` and a solver flag, and the
+    docstring claimed the item had "cleared every machine gate". It had not: the independent
+    verifier and the grounding requirement were never consulted. `validation_report` is an
+    untyped JSON blob written by several paths, so an item can carry `passed: true` beside an
+    absent or failed verifier. The accompanying test built exactly that weak report, so it
+    confirmed the relabelled gate rather than the real one — the precise failure this project
+    keeps having, committed here by the person cataloguing it.
+
+    Each component is now required on its own terms, and anything missing is a refusal rather
+    than a pass.
     """
-    out = []
-    for question in db.scalars(select(Question).where(Question.event_id == event.id)).all():
-        provenance = question.generation_provenance or {}
-        if provenance.get("import_kind") == "past_test":
-            continue
-        report = question.validation_report or {}
-        solver = report.get("independent_solver") or {}
-        if report.get("passed") is not True:
-            continue
-        if not (solver.get("verdict") == "solver_agrees" or solver.get("passed") is True):
-            continue
-        out.append(question)
-    return out
+    provenance = question.generation_provenance or {}
+    if provenance.get("import_kind") == "past_test":
+        return False
+    if question.status not in {QuestionStatus.MACHINE_VALIDATED.value,
+                               QuestionStatus.PUBLISHED.value,
+                               QuestionStatus.CALIBRATED.value}:
+        return False
+
+    report = question.validation_report or {}
+    if report.get("passed") is not True:
+        return False
+
+    solver = report.get("independent_solver") or {}
+    if not (solver.get("verdict") == "solver_agrees" or solver.get("passed") is True):
+        return False
+
+    verifier = report.get("independent_verifier")
+    if not verifier:
+        return False                        # never verified is not the same as verified clean
+    if verifier.get("errors"):
+        return False
+    verdict = verifier.get("passed")
+    if verdict is False:
+        return False
+    if not (verdict is True or isinstance(verdict, list)):
+        return False                        # unrecognised shape: refuse rather than assume
+
+    if report.get("factual_grounding") != "approved_claims":
+        return False
+    return bool(question.citations)
+
+
+def _our_items(db, event: Event) -> list[Question]:
+    """Our own items that clear every gate independently."""
+    return [q for q in db.scalars(select(Question).where(Question.event_id == event.id)).all()
+            if item_clears_every_gate(q)]
 
 
 def build(event_slug: str, size: int, apply: bool) -> dict:
@@ -77,7 +120,8 @@ def build(event_slug: str, size: int, apply: bool) -> dict:
 
         pool = _our_items(db, event)
         past = _past_test_pool(db, event)
-        blueprint = derive_blueprint(past) if len(past) >= 10 else derive_blueprint(pool)
+        blueprint = _structure_only(
+            derive_blueprint(past) if len(past) >= 10 else derive_blueprint(pool))
         shape = "past_test" if len(past) >= 10 else "our_own_pool"
 
         if len(pool) < 10:
@@ -94,7 +138,19 @@ def build(event_slug: str, size: int, apply: bool) -> dict:
                     f"would build a {len(chosen)}-item exam shaped by {shape}",
                     "our_items": len(pool), "past_pool": len(past)}
         if existing is not None:
+            # Replacing only `question_ids` left the exam's ExamItem snapshots — the rows
+            # `start_exam` actually serves — untouched, and left `published`/`disposition`
+            # alone. A previously published exam would have kept serving its old snapshots,
+            # which for these events could hold imported past-test text, while its declared id
+            # list pointed at new items. The snapshots are the exam; rebuild means rebuild.
+            for stale in db.scalars(select(ExamItem).where(ExamItem.exam_id == existing.id)).all():
+                db.delete(stale)
             existing.question_ids = [q.id for q in chosen]
+            existing.blueprint = {**blueprint, "shape_source": shape}
+            existing.published = False
+            existing.disposition = sv.DISPOSITION_PENDING
+            existing.published_at = None
+            existing.published_by_user_id = None
             exam = existing
         else:
             exam = Exam(
