@@ -341,10 +341,32 @@ The existing lesson tests passed throughout because every fixture was built the 
 way; `tests/test_lesson_checkpoint_schemas.py` builds them the way the content is, and all
 five fail without the fix.
 
-Scaffolding is partly present as content — 18 `worked_example` and 19 `steps` blocks render
-today — but **0 checkpoints carry a hint and there is no hint endpoint**, and **no placement
-diagnostic exists**. Both are new student-facing capability, which operating rule 4 forbids
-until Phase 3 completes. They are engineering-ready, not engineering-blocked.
+**Scaffolding and the placement diagnostic are now built, gated on review.** Rule 4 forbids
+new capability *on unreviewed content*, not the engineering that will serve reviewed content —
+the distinction Phase 7 was brought forward on. Both ship dark and light up per lesson as
+review completes, consuming no review capacity while they wait.
+
+- **Hints** (`app/services/lesson_hints.py`, `scripts/write_checkpoint_hints.py`). A hint is
+  requested, not delivered beside the question: asking is a signal about confidence, and it is
+  recorded on `LessonProgress`. Two refusals gate it. It is served only for a lesson with
+  editor **and** SME decisions on *that version* — the same evidence `student_visibility`
+  demands, not a parallel mechanism, because this codebase has already shipped three gates
+  that agreed only by coincidence of the data. And a hint faces the blind solver every other
+  assessment artefact faces, inverted: the hint is refused when a solver denied the lesson
+  could not pick the key without it and could with it. A solver that already knew the answer
+  proves nothing about the hint, so only a hint that *turns* a wrong answer into the key is
+  implicated. Refused hints are kept with `hint_too_revealing` so the reviewer sees what was
+  rejected.
+- **Placement diagnostic** (`app/services/placement.py`). Sequenced last because it depends on
+  everything else being real: concepts to place against, items a human accepted, lessons to
+  send people to. It refuses rather than running thin — below 2 concepts or 4 student-ready
+  items it reports nothing, because a placement from less claims a measurement it did not
+  make. It draws only `item_is_student_ready` items (Phase 0's rule, since a diagnostic
+  scores), excludes concepts with no student-visible lesson (placing someone where they cannot
+  then go is a dead end), and **never overwrites mastery a student earned by doing the work** —
+  it seeds with `evidence_count = 0`, because a diagnostic is the weakest evidence here.
+
+What remains in Phase 8 is content and review, not engineering.
 
 ---
 

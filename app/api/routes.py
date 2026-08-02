@@ -2299,6 +2299,80 @@ def review_video_render(
     return {"render_id": render.id, "qa_status": render.qa_status, "qa_notes": render.qa_notes}
 
 
+@router.get("/events/{event_slug}/placement")
+def placement_diagnostic(
+    event_slug: str,
+    db: Session = Depends(get_db),
+    user: User = Depends(current_user),
+):
+    """A short diagnostic that decides where to start, or a refusal saying what is missing.
+
+    It refuses rather than running thin: a placement drawn from too few items or too few
+    concepts reports a result with the authority of a measurement it did not make.
+    """
+    from app.services import placement
+
+    try:
+        return placement.build_diagnostic(db, event_slug)
+    except placement.PlacementError as exc:
+        raise HTTPException(status_code=409, detail=str(exc))
+
+
+@router.post("/events/{event_slug}/placement")
+def submit_placement(
+    event_slug: str,
+    payload: dict,
+    db: Session = Depends(get_db),
+    user: User = Depends(current_user),
+):
+    """Seed mastery from a diagnostic, never overruling evidence the student earned."""
+    from app.services import placement
+
+    responses = {int(k): int(v) for k, v in (payload.get("responses") or {}).items()}
+    try:
+        result = placement.record_placement(db, user, event_slug, responses)
+    except placement.PlacementError as exc:
+        raise HTTPException(status_code=409, detail=str(exc))
+    except (TypeError, ValueError):
+        raise HTTPException(status_code=422, detail="responses must map item id to choice index")
+    _audit(db, user, "placement.submit", "event", 0, event=event_slug,
+           seeded=result["concepts_seeded"])
+    db.commit()
+    return result
+
+
+@router.get("/lessons/{lesson_id}/checkpoint/{checkpoint_id}/hint")
+def lesson_checkpoint_hint(
+    lesson_id: int,
+    checkpoint_id: str,
+    db: Session = Depends(get_db),
+    user: User = Depends(current_user),
+):
+    """Scaffolding for one checkpoint, on request.
+
+    A separate request rather than a field on the block: a hint the student asked for says
+    something about their confidence, while one delivered beside the question is just part of
+    the question. Asking is recorded on their progress.
+
+    Refusals are reported, not hidden — an unreviewed lesson, or a hint an independent solver
+    showed was giving the answer away, both come back `available: false` with the reason.
+    """
+    from app.services import lesson_hints
+
+    lesson = db.get(Lesson, lesson_id)
+    if not lesson:
+        raise HTTPException(status_code=404, detail="Lesson not found")
+    version, _ = _lesson_version_for_user(db, lesson, user)
+    if version is None or not _lesson_is_student_visible(db, user, lesson, version):
+        raise HTTPException(status_code=404, detail="Lesson not found")
+    try:
+        result = lesson_hints.hint_for(db, user, lesson, version, checkpoint_id)
+    except lesson_hints.HintError as exc:
+        raise HTTPException(status_code=404, detail=str(exc))
+    db.commit()
+    return result
+
+
 @router.post("/lessons/{lesson_id}/checkpoint")
 def submit_lesson_checkpoint(
     lesson_id: int,
