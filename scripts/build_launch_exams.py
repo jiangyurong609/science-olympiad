@@ -133,7 +133,10 @@ def main() -> None:
     stats: Counter[str] = Counter()
     for slug in events:
         row = build(slug, args.size, args.apply)
-        stats["built" if "exam of" in row["outcome"] else "blocked"] += 1
+        # "would build" is a dry run succeeding, not a refusal; counting it as
+        # blocked made a clean dry run read like a failure.
+        ok = "exam of" in row["outcome"] or "would build" in row["outcome"]
+        stats["ready" if ok else "blocked"] += 1
         print(f"  {slug[:28]:30} ours={row.get('our_items', 0):<5} "
               f"past_pool={row.get('past_pool', 0):<5} {row['outcome']}")
     print("-" * 84)
