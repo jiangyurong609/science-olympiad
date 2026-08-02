@@ -1,4 +1,29 @@
-# Review handoff — pilot course `rocks-and-minerals-b`
+# Review handoff — eleven-event launch slice
+
+**Updated 2026-08-02.** The queue is no longer one course. Run
+`python -m scripts.review_worklist` for the live, risk-ordered list; the summary below is the
+shape of it.
+
+| queue | count | note |
+|---|---:|---|
+| generated items | 324 | **16 disputed by an independent judge — start here** |
+| practice exams | 11 | nearly free once their items are settled |
+| published lessons | 474 | 24 of them the pilot's, with video |
+| video chapters | 25 | watch before approving |
+| lessons with no concept | 403 | a pedagogical call, deliberately not guessed |
+
+**Review the 16 disputed items first.** Each is a case where the blind solver picked a
+different key or the verifier objected — the highest concentration of likely error in the
+queue, and each is quick to settle. Four of the first eight are in
+`anatomy-and-physiology-b`, which also has the thinnest grounding of the slice (88 claims) and
+the weakest gate rate (18 of 24). Judge that event's items harder than its pass rate suggests:
+the same gates clear more easily when there is less evidence available to contradict them.
+
+**An exam is sound if its items are.** Reviewing items first makes the 11 exams cheap.
+
+---
+
+# Original handoff — pilot course `rocks-and-minerals-b`
 
 **Prepared:** 2026-08-01 · **Blocking:** MASTER_PLAN Phases 3, 4, 5, 6
 
