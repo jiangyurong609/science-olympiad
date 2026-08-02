@@ -421,8 +421,11 @@ def _write_parts(db: Session, event: Event, lesson: Lesson, version: LessonVersi
             review_status="draft",
         ))
         for link in skill_links:
+            # Only the part that keeps the original lesson id stays primary. Copying the
+            # parent's flag onto every part gave each skill three "primary" lessons, and code
+            # that sorts by is_primary and takes the first then picks an arbitrary one.
             db.add(LessonSkill(lesson_id=new_lesson.id, skill_id=link.skill_id,
-                               is_primary=link.is_primary, weight=link.weight))
+                               is_primary=False, weight=link.weight))
         db.flush()
 
 

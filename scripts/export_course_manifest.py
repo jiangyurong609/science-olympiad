@@ -45,12 +45,17 @@ def export_manifest(db, event_slug: str) -> dict:
     links = db.scalars(select(LessonSkill).where(
         LessonSkill.skill_id.in_(skill_by_id)
     )).all()
+    # Every lesson a skill teaches, primary first. Keeping only the primary link silently
+    # dropped 16 of the pilot's 24 lessons: splitting an over-long lesson gives a skill three
+    # parts, and a migration that carries one of them is data loss reported as success.
     primary_link_by_skill = {}
+    links_by_skill: dict[int, list] = {}
     for link in sorted(links, key=lambda row: (not row.is_primary, row.id)):
         primary_link_by_skill.setdefault(link.skill_id, link)
+        links_by_skill.setdefault(link.skill_id, []).append(link)
     lessons = {}
     lesson_versions = {}
-    for link in primary_link_by_skill.values():
+    for link in [row for group in links_by_skill.values() for row in group]:
         lesson = db.get(Lesson, link.lesson_id)
         if not lesson:
             continue
@@ -154,7 +159,24 @@ def export_manifest(db, event_slug: str) -> dict:
             link = primary_link_by_skill.get(skill.id)
             lesson = lessons.get(link.lesson_id) if link else None
             lesson_version = lesson_versions.get(lesson.id) if lesson else None
+            skill_lessons = []
+            for row in links_by_skill.get(skill.id, []):
+                linked = lessons.get(row.lesson_id)
+                linked_version = lesson_versions.get(row.lesson_id) if linked else None
+                if linked is None or linked_version is None:
+                    continue
+                skill_lessons.append({
+                    "slug": linked.slug, "title": linked.title, "summary": linked.summary,
+                    "status": linked.status, "sequence": linked.sequence,
+                    "estimated_minutes": linked.estimated_minutes,
+                    "version": linked.current_version,
+                    "review_status": linked_version.review_status,
+                    "is_primary": bool(row.is_primary),
+                    "content": stable_blocks(linked_version.content),
+                    "citations": stable_citations(linked_version.citations),
+                })
             unit_skills.append({
+                "lessons": skill_lessons,
                 "slug": skill.slug,
                 "name": skill.name,
                 "description": skill.description,
@@ -293,7 +315,12 @@ def main() -> None:
         "output": str(args.output),
         "manifest_hash": manifest["manifest_hash"],
         "units": len(manifest["course"]["units"]),
-        "lessons": sum(len(unit["skills"]) for unit in manifest["course"]["units"]),
+        "skills": sum(len(unit["skills"]) for unit in manifest["course"]["units"]),
+        # this line used to count skills and label them lessons, so a manifest carrying 8 of
+        # 24 lessons reported "lessons: 8" and looked complete
+        "lessons": sum(len(skill.get("lessons", []))
+                       for unit in manifest["course"]["units"]
+                       for skill in unit["skills"]),
         "questions": len(manifest["questions"]),
         "claims": len(manifest["claims"]),
         "passages": len(manifest["passages"]),

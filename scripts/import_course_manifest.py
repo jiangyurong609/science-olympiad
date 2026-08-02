@@ -207,63 +207,73 @@ def import_manifest(db, payload: dict, *, apply: bool) -> dict:
             skill.status = "review_required"
             skill.prerequisites = skill_payload["prerequisites"]
             skills_by_slug[skill.slug] = skill
-            lesson_payload = skill_payload.get("lesson")
-            if not lesson_payload:
-                continue
-            lesson = db.scalar(select(Lesson).where(
-                Lesson.event_id == event.id,
-                Lesson.slug == lesson_payload["slug"],
-            ))
-            if lesson and lesson.status == "published":
-                raise ValueError(
-                    f"refusing to overwrite published lesson {lesson.slug}"
-                )
-            if lesson is None:
-                lesson = Lesson(
-                    event_id=event.id, slug=lesson_payload["slug"],
-                    title=lesson_payload["title"], status="draft",
-                )
-                db.add(lesson)
-                db.flush()
-            lesson.concept_id = concept.id
-            lesson.title = lesson_payload["title"]
-            lesson.summary = lesson_payload["summary"]
-            lesson.status = "draft"
-            lesson.current_version = lesson_payload["version"]
-            lesson.sequence = lesson_payload["sequence"]
-            lesson.estimated_minutes = lesson_payload["estimated_minutes"]
-            stable_content = _blocks(lesson_payload["content"], passages)
-            stable_citations = _citations(lesson_payload["citations"], passages)
-            lesson_version = db.scalar(select(LessonVersion).where(
-                LessonVersion.lesson_id == lesson.id,
-                LessonVersion.version == lesson.current_version,
-            ))
-            if lesson_version is None:
-                lesson_version = LessonVersion(
-                    lesson_id=lesson.id, version=lesson.current_version,
-                )
-                db.add(lesson_version)
-            elif (
-                lesson_version.content != stable_content
-                or lesson_version.citations != stable_citations
-            ):
-                raise ValueError(
-                    f"existing draft version differs for lesson {lesson.slug}"
-                )
-            lesson_version.content = stable_content
-            lesson_version.citations = stable_citations
-            lesson_version.claim_ids = []
-            lesson_version.review_status = "ai_draft"
-            link = db.scalar(select(LessonSkill).where(
-                LessonSkill.lesson_id == lesson.id,
-                LessonSkill.skill_id == skill.id,
-            ))
-            if link is None:
-                db.add(LessonSkill(
-                    lesson_id=lesson.id, skill_id=skill.id,
-                    is_primary=True, weight=1.0,
+            # A skill can teach several lessons — splitting an over-long one gives it three
+            # parts. Reading only `lesson` imported one of them and dropped the rest, which
+            # the exporter had already made easy to miss by reporting a skill count as a
+            # lesson count. `lessons` is preferred; `lesson` is still read so manifests
+            # written before this change still import.
+            lesson_payloads = skill_payload.get("lessons")
+            if not lesson_payloads:
+                single = skill_payload.get("lesson")
+                lesson_payloads = [single] if single else []
+            for index, lesson_payload in enumerate(lesson_payloads):
+                if not lesson_payload:
+                    continue
+                lesson = db.scalar(select(Lesson).where(
+                    Lesson.event_id == event.id,
+                    Lesson.slug == lesson_payload["slug"],
                 ))
-            lessons_by_slug[lesson.slug] = lesson
+                if lesson and lesson.status == "published":
+                    raise ValueError(
+                        f"refusing to overwrite published lesson {lesson.slug}"
+                    )
+                if lesson is None:
+                    lesson = Lesson(
+                        event_id=event.id, slug=lesson_payload["slug"],
+                        title=lesson_payload["title"], status="draft",
+                    )
+                    db.add(lesson)
+                    db.flush()
+                lesson.concept_id = concept.id
+                lesson.title = lesson_payload["title"]
+                lesson.summary = lesson_payload["summary"]
+                lesson.status = "draft"
+                lesson.current_version = lesson_payload["version"]
+                lesson.sequence = lesson_payload["sequence"]
+                lesson.estimated_minutes = lesson_payload["estimated_minutes"]
+                stable_content = _blocks(lesson_payload["content"], passages)
+                stable_citations = _citations(lesson_payload["citations"], passages)
+                lesson_version = db.scalar(select(LessonVersion).where(
+                    LessonVersion.lesson_id == lesson.id,
+                    LessonVersion.version == lesson.current_version,
+                ))
+                if lesson_version is None:
+                    lesson_version = LessonVersion(
+                        lesson_id=lesson.id, version=lesson.current_version,
+                    )
+                    db.add(lesson_version)
+                elif (
+                    lesson_version.content != stable_content
+                    or lesson_version.citations != stable_citations
+                ):
+                    raise ValueError(
+                        f"existing draft version differs for lesson {lesson.slug}"
+                    )
+                lesson_version.content = stable_content
+                lesson_version.citations = stable_citations
+                lesson_version.claim_ids = []
+                lesson_version.review_status = "ai_draft"
+                link = db.scalar(select(LessonSkill).where(
+                    LessonSkill.lesson_id == lesson.id,
+                    LessonSkill.skill_id == skill.id,
+                ))
+                if link is None:
+                    db.add(LessonSkill(
+                        lesson_id=lesson.id, skill_id=skill.id,
+                        is_primary=bool(lesson_payload.get("is_primary", index == 0)),
+                        weight=1.0,
+                    ))
+                lessons_by_slug[lesson.slug] = lesson
 
     claim_ids = {}
     for claim_payload in payload.get("claims", []):
