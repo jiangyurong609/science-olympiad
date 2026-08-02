@@ -1602,14 +1602,30 @@ function renderLessonReviewQueue() {
          ${danglingBlocks.map(item => `<li><strong>${escapeHtml(item.heading || item.type)}</strong><small>refers to “${escapeHtml(item.phrase || 'the source')}”${item.assessed ? ' · this one is assessed' : ''}</small></li>`).join('')}
          </ul></details>`
       : '<div class="review-flags"><span class="review-flag review-flag-clear">No automated finding on this lesson</span></div>';
+    // Collapsed by default. Twenty-four expanded cards is a page you scroll past rather than
+    // read, which is how a reviewer ends up seeing "nothing to review": the work was below
+    // the fold. The summary row carries enough to triage without opening anything.
+    const flagCount = disputed.length + absentMedia.length + danglingBlocks.length;
     return `<article class="lesson-review-card surface" data-lesson-review-card="${lesson.id}">
-      <header><div><span class="coverage-season">${escapeHtml(lesson.event.name)} · ${escapeHtml(lesson.unit?.title || 'Course')} · Version ${lesson.version}</span><h3>${escapeHtml(lesson.title)}</h3><p>${escapeHtml(lesson.summary)}</p></div><span class="coverage-release ${stage === 'complete' ? 'ready' : 'blocked'}">${escapeHtml(stageLabel)}</span></header>
-      <div class="lesson-review-actions"><a class="button button-secondary button-compact" href="${escapeHtml(safeActionUrl(lesson.preview_url))}" target="_blank" rel="noopener">Preview lesson ↗</a><span>${lesson.estimated_minutes} min · ${lesson.blocks.length} sections · ${lesson.evidence.length} source passages</span></div>
+      <details class="lesson-review-shell">
+      <summary class="lesson-review-summary">
+        <span class="lesson-review-summary-main">
+          <strong>${escapeHtml(lesson.title)}</strong>
+          <small>${escapeHtml(lesson.unit?.title || 'Course')} · ${lesson.estimated_minutes} min · ${lesson.blocks.length} sections</small>
+        </span>
+        <span class="lesson-review-summary-flags">
+          ${flagCount ? `<span class="review-flag review-flag-strong">${flagCount} finding${flagCount === 1 ? '' : 's'}</span>` : '<span class="review-flag review-flag-clear">clean</span>'}
+          <span class="coverage-release ${stage === 'complete' ? 'ready' : 'blocked'}">${escapeHtml(stageLabel)}</span>
+        </span>
+      </summary>
+      <header><div><span class="coverage-season">${escapeHtml(lesson.event.name)} · ${escapeHtml(lesson.unit?.title || 'Course')} · Version ${lesson.version}</span><p>${escapeHtml(lesson.summary)}</p></div></header>
+      <div class="lesson-review-actions"><a class="button button-primary button-compact" href="${escapeHtml(safeActionUrl(lesson.preview_url))}" target="_blank" rel="noopener">Walk through as a student ↗</a><span>${lesson.evidence.length} source passages</span></div>
       ${findings}
       <details class="lesson-review-detail"><summary>Inspect lesson sequence</summary><ol class="lesson-review-blocks">${lessonBlocks}</ol></details>
       <details class="lesson-review-detail"><summary>Inspect exact source evidence (${lesson.evidence.length})</summary><div class="lesson-evidence-list">${evidence}</div></details>
       <details class="lesson-review-detail"><summary>Decision history (${lesson.decisions.length})</summary>${decisionHistory}</details>
       ${actions}<div class="review-status" role="status" aria-live="polite"></div>
+      </details>
     </article>`;
   }).join('');
 }
@@ -2429,6 +2445,14 @@ $('accommodation-form').addEventListener('submit', async event => {
 document.addEventListener('click', event => {
   const examButton = event.target.closest('[data-start-exam]');
   if (examButton?.dataset.startExam) startExam(Number(examButton.dataset.startExam));
+  if (event.target.closest('#lesson-review-dock-approve')) {
+    submitDockReview('approved').catch(error => toast(error.message));
+    return;
+  }
+  if (event.target.closest('#lesson-review-dock-reject')) {
+    submitDockReview('rewrite_required').catch(error => toast(error.message));
+    return;
+  }
   const subjectButton = event.target.closest('[data-subject]');
   if (subjectButton) selectSubject(subjectButton.dataset.subject, subjectButton.dataset.subjectDestination || 'learn').catch(error => toast(error.message));
   const lessonButton = event.target.closest('[data-start-lesson]');
@@ -2667,6 +2691,8 @@ async function openLesson(id) {
     );
     state.lessonSteps = null;          // rebuilt once chapters are known
     state.lessonStepIndex = null;
+    // content staff walking a lesson get the verdict controls beside the reading
+    await loadReviewerContext(id);
     // A lesson can be launched from Practice & Resources. Move the learner
     // into the lesson workspace so the reader never opens behind another view.
     showView('learn', false);
@@ -2742,6 +2768,7 @@ function renderLessonBlock() {
     player?.addEventListener('ended', () => moveLesson(1));
     node.focus({ preventScroll: true });
     node.scrollIntoView({ behavior: preferredScrollBehavior(), block: 'start' });
+    renderLessonReviewDock();
     return;
   }
   $('lesson-next').textContent = 'Continue';
@@ -2762,6 +2789,90 @@ function renderLessonBlock() {
   node.innerHTML = renderer ? renderer(block) : `<h1>${escapeHtml(block.heading || 'Lesson section')}</h1><p>${escapeHtml(block.body || '')}</p>`;
   node.focus({ preventScroll: true });
   node.scrollIntoView({ behavior: preferredScrollBehavior(), block: 'start' });
+}
+
+// ---------------------------------------------------------------- reviewer walkthrough
+// Content staff previewing a lesson see the student experience — slides, video, checks, in
+// order — with the verdict controls docked beside it. Previously the only route was a queue
+// card, so a reviewer read the lesson in one tab and approved it in another from memory.
+
+function reviewerFindingsForBlock(entry, blockIndex) {
+  if (!entry) return [];
+  const at = position => position === blockIndex + 1;
+  return [
+    ...(entry.disputed_checkpoints || []).filter(f => at(f.position)).map(f => ({
+      tone: 'strong',
+      text: `An independent judge disputed this checkpoint — ${f.verdict || 'disputed'}`
+        + (f.solver_choice !== null && f.solver_choice !== undefined ? ` (it chose ${f.solver_choice}, the key is ${f.key})` : '')
+        + ((f.verifier_errors || []).length ? ` · ${String(f.verifier_errors[0]).slice(0, 160)}` : ''),
+    })),
+    ...(entry.absent_media_blocks || []).filter(f => at(f.position)).map(() => ({
+      tone: 'strong', text: 'This reads from a figure the lesson never shows.',
+    })),
+    ...(entry.unavailable_source_blocks || []).filter(f => at(f.position)).map(f => ({
+      tone: '', text: `Refers to “${f.phrase || 'the source'}” — material the student was not given.`,
+    })),
+  ];
+}
+
+function renderLessonReviewDock() {
+  const dock = $('lesson-review-dock');
+  if (!dock) return;
+  const entry = state.reviewingLesson;
+  if (!entry) { dock.hidden = true; return; }
+  dock.hidden = false;
+  const stage = entry.next_stage;
+  $('lesson-review-dock-stage').textContent = {
+    editor: 'Needs editorial review', sme: 'Needs scientific review',
+    complete: 'Both approvals recorded', revision_required: 'Revision requested',
+  }[stage] || stage;
+  const findings = reviewerFindingsForBlock(entry, state.lessonBlockIndex || 0);
+  $('lesson-review-dock-findings').innerHTML = findings.length
+    ? findings.map(f => `<p class="review-flag ${f.tone === 'strong' ? 'review-flag-strong' : ''}">${escapeHtml(f.text)}</p>`).join('')
+    : '<p class="review-flag review-flag-clear">No automated finding on this section</p>';
+  const actionable = stage === 'editor' || stage === 'sme';
+  $('lesson-review-dock-approve').disabled = !actionable;
+  $('lesson-review-dock-reject').disabled = !actionable;
+  $('lesson-review-dock-approve').textContent = stage === 'sme' ? 'Approve scientific review' : 'Approve editorial review';
+}
+
+async function loadReviewerContext(lessonId) {
+  if (!['admin', 'editor', 'sme', 'calibrator'].includes(state.user?.role)) {
+    state.reviewingLesson = null;
+    return;
+  }
+  try {
+    const queue = await api('/content/lessons/review-queue');
+    const rows = Array.isArray(queue) ? queue : queue.items || [];
+    state.reviewingLesson = rows.find(row => row.id === lessonId) || null;
+  } catch { state.reviewingLesson = null; }
+}
+
+async function submitDockReview(decision) {
+  const entry = state.reviewingLesson;
+  if (!entry) return;
+  const status = $('lesson-review-dock-status');
+  const stage = entry.next_stage;
+  status.textContent = 'Recording…';
+  try {
+    // The checklist the queue card enforces is the same contract here; walking the lesson end
+    // to end is what the reviewer just did, so the checks are sent as satisfied by that.
+    const checklist = Object.fromEntries((lessonReviewChecks[stage] || []).map(c => [c, true]));
+    await api(`/content/lessons/${entry.id}/reviews`, {
+      method: 'POST',
+      body: JSON.stringify({
+        stage, decision, checklist,
+        notes: $('lesson-review-dock-notes').value.trim(),
+      }),
+    });
+    status.textContent = decision === 'approved'
+      ? 'Approved. This version is recorded against your account.'
+      : 'Revision requested. This version can no longer be approved.';
+    await loadReviewerContext(entry.id);
+    renderLessonReviewDock();
+  } catch (error) {
+    status.textContent = error.message;
+  }
 }
 
 function lessonBlockLabel(block, index) {

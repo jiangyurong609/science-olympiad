@@ -772,3 +772,31 @@ details[open] summary { color: var(--forest); }
 }
 .lesson-review-findings strong { display: block; font-size: .9rem; }
 .lesson-review-findings small { color: #5a5346; }
+
+/* A review queue is a work list, not a document. Twenty-four expanded lesson cards is a page
+   a reviewer scrolls past rather than reads — which is exactly how the queue came to look
+   empty. Collapsed rows keep the whole queue on one screen; the findings stay visible so
+   triage does not require opening anything. */
+.lesson-review-shell > summary.lesson-review-summary {
+  display: flex; align-items: center; justify-content: space-between; gap: 1rem;
+  cursor: pointer; padding: .35rem 0; list-style: none;
+}
+.lesson-review-shell > summary::-webkit-details-marker { display: none; }
+.lesson-review-summary-main { display: flex; flex-direction: column; gap: .15rem; min-width: 0; }
+.lesson-review-summary-main strong { font-size: 1.02rem; }
+.lesson-review-summary-main small { color: #5a5346; }
+.lesson-review-summary-flags { display: flex; align-items: center; gap: .45rem; flex-shrink: 0; }
+.lesson-review-shell[open] > summary.lesson-review-summary { margin-bottom: .6rem; border-bottom: 1px solid rgba(0,0,0,.08); }
+
+/* The reviewer's verdict belongs beside the reading. Sending them back to a queue card means
+   approving from memory, which is the opposite of walking the lesson. */
+.lesson-review-dock {
+  position: sticky; bottom: 0; margin-top: 1rem; padding: .9rem 1rem;
+  background: #f6f3ea; border: 1px solid rgba(0,0,0,.12); border-radius: 10px;
+  box-shadow: 0 -6px 18px rgba(0,0,0,.06); display: grid; gap: .6rem;
+}
+.lesson-review-dock-head { display: flex; align-items: baseline; justify-content: space-between; gap: 1rem; }
+.lesson-review-dock-stage { font-weight: 600; }
+.lesson-review-dock-findings { display: grid; gap: .35rem; }
+.lesson-review-dock-findings .review-flag { display: block; }
+.lesson-review-dock .review-notes textarea { width: 100%; }

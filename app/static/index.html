@@ -9,8 +9,8 @@
   <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='16' fill='%231f5a45'/%3E%3Ctext x='32' y='44' text-anchor='middle' font-size='38' fill='white'%3EF%3C/text%3E%3C/svg%3E">
   <link rel="preload" href="/static/fonts/Fraunces.woff2" as="font" type="font/woff2" crossorigin>
   <link rel="preload" href="/static/fonts/AtkinsonHyperlegibleNext.woff2" as="font" type="font/woff2" crossorigin>
-  <link rel="stylesheet" href="/static/styles.css?v=18">
-  <link rel="stylesheet" href="/static/theme.css?v=18">
+  <link rel="stylesheet" href="/static/styles.css?v=19">
+  <link rel="stylesheet" href="/static/theme.css?v=19">
 </head>
 <body>
   <a class="skip-link" href="#main-content">Skip to Main Content</a>
@@ -248,6 +248,23 @@
                   <button id="lesson-finish" class="button button-primary" type="button" hidden>Finish Lesson</button>
                   <button id="lesson-feedback" class="button button-quiet" type="button">Give feedback</button>
                 </footer>
+                <!-- Shown only to content staff walking a lesson for review. The verdict
+                     belongs where the reading happens: a reviewer who has to leave the
+                     lesson, find its card in a queue and remember what they saw is a
+                     reviewer who approves from memory. -->
+                <aside id="lesson-review-dock" class="lesson-review-dock" hidden>
+                  <div class="lesson-review-dock-head">
+                    <p class="kicker">Reviewing as content staff</p>
+                    <p id="lesson-review-dock-stage" class="lesson-review-dock-stage"></p>
+                  </div>
+                  <div id="lesson-review-dock-findings" class="lesson-review-dock-findings"></div>
+                  <label class="review-notes">Review notes<textarea id="lesson-review-dock-notes" rows="2" maxlength="4000" placeholder="What did you check, and what needs changing?"></textarea></label>
+                  <div class="review-actions">
+                    <button id="lesson-review-dock-reject" class="button button-secondary" type="button">Request revision</button>
+                    <button id="lesson-review-dock-approve" class="button button-primary" type="button">Approve</button>
+                  </div>
+                  <p id="lesson-review-dock-status" class="review-status" role="status" aria-live="polite"></p>
+                </aside>
               </div>
             </div>
           </article>
@@ -510,6 +527,6 @@
       </div>
     </div>
   </div>
-  <script src="/static/app.js?v=18"></script>
+  <script src="/static/app.js?v=19"></script>
 </body>
 </html>
