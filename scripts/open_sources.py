@@ -1,3 +1,4 @@
+import re
 """Curated public-domain / open-license science sources per scientific domain.
 
 Every URL here is a U.S. government (public-domain) or clearly open educational
@@ -130,6 +131,22 @@ DOMAIN_SOURCES = {
         "urls": [
             "https://www.noaa.gov/education/resource-collections/weather-atmosphere",
             "https://www.weather.gov/jetstream/atmos_intro",
+            "https://www.weather.gov/jetstream/layers",
+            "https://www.weather.gov/jetstream/energy",
+            "https://www.weather.gov/jetstream/global",
+            "https://www.weather.gov/jetstream/circ",
+            "https://www.weather.gov/jetstream/synoptic",
+            "https://www.weather.gov/jetstream/clouds",
+            "https://www.weather.gov/jetstream/ll_analysis",
+            "https://www.weather.gov/jetstream/tstorms",
+            "https://www.weather.gov/jetstream/tornado",
+            "https://www.weather.gov/jetstream/hurricane",
+            "https://www.weather.gov/jetstream/doppler_intro",
+            "https://www.noaa.gov/jetstream/atmosphere/air-pressure",
+            "https://en.wikipedia.org/wiki/Weather_front",
+            "https://en.wikipedia.org/wiki/Atmospheric_circulation",
+            "https://en.wikipedia.org/wiki/Adiabatic_process",
+            "https://en.wikipedia.org/wiki/Relative_humidity",
         ],
     },
     "oceanography": {
@@ -138,6 +155,19 @@ DOMAIN_SOURCES = {
         "urls": [
             "https://oceanservice.noaa.gov/education/tutorial_currents/welcome.html",
             "https://www.noaa.gov/education/resource-collections/ocean-coasts",
+            "https://oceanservice.noaa.gov/education/tutorial_tides/welcome.html",
+            "https://oceanservice.noaa.gov/facts/thermohaline-circulation.html",
+            "https://oceanservice.noaa.gov/facts/upwelling.html",
+            "https://oceanservice.noaa.gov/facts/elnino.html",
+            "https://oceanservice.noaa.gov/facts/acidification.html",
+            "https://oceanservice.noaa.gov/facts/coriolis.html",
+            "https://www.usgs.gov/programs/earthquake-hazards/science-earthquakes",
+            "https://en.wikipedia.org/wiki/Ocean_current",
+            "https://en.wikipedia.org/wiki/Thermocline",
+            "https://en.wikipedia.org/wiki/Plate_tectonics",
+            "https://en.wikipedia.org/wiki/Mid-ocean_ridge",
+            "https://en.wikipedia.org/wiki/Ekman_transport",
+            "https://en.wikipedia.org/wiki/Salinity",
         ],
     },
     "astronomy": {
@@ -146,6 +176,18 @@ DOMAIN_SOURCES = {
         "urls": [
             "https://science.nasa.gov/solar-system/",
             "https://science.nasa.gov/universe/stars/",
+            "https://science.nasa.gov/universe/galaxies/",
+            "https://science.nasa.gov/universe/black-holes/",
+            "https://science.nasa.gov/sun/",
+            "https://en.wikipedia.org/wiki/Stellar_evolution",
+            "https://en.wikipedia.org/wiki/Hertzsprung%E2%80%93Russell_diagram",
+            "https://en.wikipedia.org/wiki/Main_sequence",
+            "https://en.wikipedia.org/wiki/Supernova",
+            "https://en.wikipedia.org/wiki/White_dwarf",
+            "https://en.wikipedia.org/wiki/Neutron_star",
+            "https://en.wikipedia.org/wiki/Redshift",
+            "https://en.wikipedia.org/wiki/Kepler%27s_laws_of_planetary_motion",
+            "https://en.wikipedia.org/wiki/Light_curve",
         ],
     },
     "remote_sensing": {
@@ -153,6 +195,18 @@ DOMAIN_SOURCES = {
         "license": "public_domain",
         "urls": [
             "https://www.earthdata.nasa.gov/learn/backgrounders/remote-sensing",
+            "https://www.earthdata.nasa.gov/learn/backgrounders/electromagnetic-spectrum",
+            "https://landsat.gsfc.nasa.gov/satellites/landsat-8/",
+            "https://www.usgs.gov/landsat-missions/landsat-satellite-missions",
+            "https://en.wikipedia.org/wiki/Remote_sensing",
+            "https://en.wikipedia.org/wiki/Electromagnetic_spectrum",
+            "https://en.wikipedia.org/wiki/Normalized_difference_vegetation_index",
+            "https://en.wikipedia.org/wiki/Blackbody_radiation",
+            "https://en.wikipedia.org/wiki/Albedo",
+            "https://en.wikipedia.org/wiki/Greenhouse_effect",
+            "https://en.wikipedia.org/wiki/Radiative_forcing",
+            "https://en.wikipedia.org/wiki/Wien%27s_displacement_law",
+            "https://en.wikipedia.org/wiki/Stefan%E2%80%93Boltzmann_law",
         ],
     },
     "anatomy": {
@@ -161,6 +215,20 @@ DOMAIN_SOURCES = {
         "urls": [
             "https://medlineplus.gov/hormones.html",
             "https://medlineplus.gov/bloodheartandcirculation.html",
+            "https://medlineplus.gov/lungsandbreathing.html",
+            "https://medlineplus.gov/digestivesystem.html",
+            "https://medlineplus.gov/bonesjointsandmuscles.html",
+            "https://medlineplus.gov/brainandnerves.html",
+            "https://medlineplus.gov/kidneysandurinarysystem.html",
+            "https://medlineplus.gov/immunesystemanddisorders.html",
+            "https://en.wikipedia.org/wiki/Nervous_system",
+            "https://en.wikipedia.org/wiki/Neuron",
+            "https://en.wikipedia.org/wiki/Action_potential",
+            "https://en.wikipedia.org/wiki/Central_nervous_system",
+            "https://en.wikipedia.org/wiki/Endocrine_system",
+            "https://en.wikipedia.org/wiki/Circulatory_system",
+            "https://en.wikipedia.org/wiki/Respiratory_system",
+            "https://en.wikipedia.org/wiki/Skeletal_muscle",
         ],
     },
     "genetics": {
@@ -169,6 +237,21 @@ DOMAIN_SOURCES = {
         "urls": [
             "https://www.genome.gov/about-genomics/fact-sheets/Introduction-to-Genomics",
             "https://www.genome.gov/genetics-glossary",
+            "https://www.genome.gov/about-genomics/fact-sheets/Deoxyribonucleic-Acid-Fact-Sheet",
+            "https://www.genome.gov/genetics-glossary/Mitosis",
+            "https://www.genome.gov/genetics-glossary/Meiosis",
+            "https://www.genome.gov/genetics-glossary/Allele",
+            "https://www.genome.gov/genetics-glossary/Genotype",
+            "https://www.genome.gov/genetics-glossary/Phenotype",
+            "https://www.genome.gov/genetics-glossary/Mutation",
+            "https://medlineplus.gov/genetics/understanding/basics/gene/",
+            "https://medlineplus.gov/genetics/understanding/inheritance/inheritancepatterns/",
+            "https://en.wikipedia.org/wiki/Mendelian_inheritance",
+            "https://en.wikipedia.org/wiki/Punnett_square",
+            "https://en.wikipedia.org/wiki/Genetic_linkage",
+            "https://en.wikipedia.org/wiki/Hardy%E2%80%93Weinberg_principle",
+            "https://en.wikipedia.org/wiki/Pedigree_chart",
+            "https://en.wikipedia.org/wiki/Epistasis",
         ],
     },
     "epidemiology": {
@@ -177,6 +260,19 @@ DOMAIN_SOURCES = {
         "urls": [
             "https://en.wikipedia.org/wiki/Epidemiology",
             "https://en.wikipedia.org/wiki/Outbreak_investigation",
+            "https://www.cdc.gov/epidemiology/php/data-and-training/index.html",
+            "https://en.wikipedia.org/wiki/Incidence_(epidemiology)",
+            "https://en.wikipedia.org/wiki/Prevalence",
+            "https://en.wikipedia.org/wiki/Case%E2%80%93control_study",
+            "https://en.wikipedia.org/wiki/Cohort_study",
+            "https://en.wikipedia.org/wiki/Odds_ratio",
+            "https://en.wikipedia.org/wiki/Relative_risk",
+            "https://en.wikipedia.org/wiki/Attack_rate",
+            "https://en.wikipedia.org/wiki/Epidemic_curve",
+            "https://en.wikipedia.org/wiki/Confounding",
+            "https://en.wikipedia.org/wiki/Basic_reproduction_number",
+            "https://en.wikipedia.org/wiki/Herd_immunity",
+            "https://en.wikipedia.org/wiki/Koch%27s_postulates",
         ],
     },
     "entomology": {
@@ -193,6 +289,18 @@ DOMAIN_SOURCES = {
         "urls": [
             "https://www.nist.gov/chemistry",
             "https://en.wikipedia.org/wiki/Chemical_reaction",
+            "https://en.wikipedia.org/wiki/Periodic_table",
+            "https://en.wikipedia.org/wiki/Stoichiometry",
+            "https://en.wikipedia.org/wiki/Chemical_bond",
+            "https://en.wikipedia.org/wiki/Acid%E2%80%93base_reaction",
+            "https://en.wikipedia.org/wiki/PH",
+            "https://en.wikipedia.org/wiki/Chemical_equilibrium",
+            "https://en.wikipedia.org/wiki/Thermochemistry",
+            "https://en.wikipedia.org/wiki/Ideal_gas_law",
+            "https://en.wikipedia.org/wiki/Molarity",
+            "https://en.wikipedia.org/wiki/Redox",
+            "https://en.wikipedia.org/wiki/Reaction_rate",
+            "https://en.wikipedia.org/wiki/Le_Chatelier%27s_principle",
         ],
     },
     "forensics": {
@@ -209,6 +317,25 @@ DOMAIN_SOURCES = {
         "urls": [
             "https://www1.grc.nasa.gov/beginners-guide-to-aeronautics/",
             "https://en.wikipedia.org/wiki/Simple_machine",
+            "https://www.grc.nasa.gov/www/k-12/airplane/newton.html",
+            "https://en.wikipedia.org/wiki/Newton%27s_laws_of_motion",
+            "https://en.wikipedia.org/wiki/Mechanical_advantage",
+            "https://en.wikipedia.org/wiki/Lever",
+            "https://en.wikipedia.org/wiki/Pulley",
+            "https://en.wikipedia.org/wiki/Inclined_plane",
+            "https://en.wikipedia.org/wiki/Torque",
+            "https://en.wikipedia.org/wiki/Work_(physics)",
+            "https://en.wikipedia.org/wiki/Conservation_of_energy",
+            "https://en.wikipedia.org/wiki/Ohm%27s_law",
+            "https://en.wikipedia.org/wiki/Series_and_parallel_circuits",
+            "https://en.wikipedia.org/wiki/Kirchhoff%27s_circuit_laws",
+            "https://en.wikipedia.org/wiki/Electrical_resistance_and_conductance",
+            "https://en.wikipedia.org/wiki/Capacitor",
+            "https://en.wikipedia.org/wiki/Magnetism",
+            "https://en.wikipedia.org/wiki/Center_of_mass",
+            "https://en.wikipedia.org/wiki/Structural_load",
+            "https://en.wikipedia.org/wiki/Truss",
+            "https://en.wikipedia.org/wiki/Friction",
         ],
     },
     "metrology": {
@@ -241,11 +368,43 @@ DOMAIN_SOURCES = {
         "urls": [
             "https://www.usgs.gov/special-topics/water-science-school/science/water-quality-information-topic",
             "https://en.wikipedia.org/wiki/Water_quality",
+            "https://www.usgs.gov/special-topics/water-science-school/science/dissolved-oxygen-and-water",
+            "https://www.usgs.gov/special-topics/water-science-school/science/ph-and-water",
+            "https://www.usgs.gov/special-topics/water-science-school/science/turbidity-and-water",
+            "https://www.usgs.gov/special-topics/water-science-school/science/nitrogen-and-water",
+            "https://www.usgs.gov/special-topics/water-science-school/science/phosphorus-and-water",
+            "https://www.usgs.gov/special-topics/water-science-school/science/hardness-water",
+            "https://www.usgs.gov/special-topics/water-science-school/science/water-density",
+            "https://www.epa.gov/nutrientpollution/problem",
+            "https://www.epa.gov/wqc/national-recommended-water-quality-criteria-aquatic-life-criteria-table",
+            "https://oceanservice.noaa.gov/facts/eutrophication.html",
+            "https://en.wikipedia.org/wiki/Biochemical_oxygen_demand",
+            "https://en.wikipedia.org/wiki/Trophic_state_index",
+            "https://en.wikipedia.org/wiki/Macroinvertebrate",
+            "https://en.wikipedia.org/wiki/Salinity",
         ],
     },
 }
 
 # event slug (division-agnostic) -> domain
+def domain_for_event(slug: str) -> str | None:
+    """The open-source domain for an event slug, division and season suffixes removed.
+
+    `EVENT_DOMAIN` is keyed on base slugs — `heredity`, not `heredity-b`. `build_courses`
+    already stripped the suffix before looking one up; `ground_event` did not, and looked up
+    the full slug. So grounding raised "no open-source domain mapped" for essentially the whole
+    catalog, because almost every real event carries a division suffix: of 102 active events
+    only the three unsuffixed rocks-and-minerals rows ever matched. Two call sites, two
+    spellings of the same key, and the mismatch read as "this event has no sources" — a content
+    gap — rather than as a lookup bug.
+
+    Seasoned slugs (`botany-b-2027`) are handled here too, for the same reason.
+    """
+    base = re.sub(r"-(19|20)\d{2}$", "", str(slug or ""))
+    base = re.sub(r"-[bc]$", "", base)
+    return EVENT_DOMAIN.get(base)
+
+
 EVENT_DOMAIN = {
     "rocks-and-minerals": "geology",
     "rocks-and-minerals-b": "geology",

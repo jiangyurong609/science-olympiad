@@ -35,7 +35,8 @@ from app.models.entities import (
     Concept, ContentGap, Course, Event, Lesson, LessonSkill, LessonVersion, ScientificClaim,
     Skill, Source, SourceSnapshot,
 )
-from scripts.open_sources import BLOCKED_HOSTS, DOMAIN_SOURCES, EVENT_DOMAIN, rights_for
+from scripts.open_sources import (
+    BLOCKED_HOSTS, DOMAIN_SOURCES, domain_for_event, rights_for)
 
 # Imported, not redeclared. These two scripts drifted: the audit began counting `checkpoint`
 # as substantive while the grounder kept its own older set, so the grounder was not even
@@ -117,7 +118,7 @@ def _sentences(text: str) -> list[str]:
 
 
 def ensure_sources(db: Session, event: Event, apply: bool) -> list[Source]:
-    domain = EVENT_DOMAIN.get(event.slug)
+    domain = domain_for_event(event.slug)
     if not domain or domain not in DOMAIN_SOURCES:
         raise SystemExit(f"no open-source domain mapped for {event.slug!r}")
     spec = DOMAIN_SOURCES[domain]

@@ -46,7 +46,7 @@ def _snapshot_question(q: Question) -> dict:
         "difficulty": q.difficulty, "cognitive_level": q.cognitive_level,
         "estimated_seconds": q.estimated_seconds,
     }
-from scripts.open_sources import DOMAIN_SOURCES, EVENT_DOMAIN
+from scripts.open_sources import DOMAIN_SOURCES, domain_for_event
 
 OPENAI_URL = "https://api.openai.com/v1/chat/completions"
 OPENAI_KEY = os.environ.get("OPENAI_API_KEY", "")
@@ -371,8 +371,7 @@ def generate(db, limit: int | None = None, only: str | None = None) -> None:
         events = [e for e in events if e.slug == only or re.sub(r"-[bc]$", "", e.slug) == only]
     made = 0
     for event in events:
-        base_slug = re.sub(r"-[bc]$", "", event.slug)
-        domain = EVENT_DOMAIN.get(base_slug)
+        domain = domain_for_event(event.slug)
         if not domain:
             print(f"  [{event.slug}] no domain mapping; skip")
             continue
