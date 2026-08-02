@@ -150,16 +150,21 @@ def playback_urls(keys: list[str], ttl: timedelta = DEFAULT_TTL) -> dict[str, st
     unique = list(dict.fromkeys(k for k in keys if k))
     if not unique:
         return {}
-    if len(unique) == 1:
-        return {unique[0]: playback_url(unique[0], ttl=ttl)}
-
-    from concurrent.futures import ThreadPoolExecutor
 
     def sign(key: str) -> tuple[str, str]:
         try:
             return key, playback_url(key, ttl=ttl)
         except Exception:                      # noqa: BLE001 - one bad key, not one bad page
             return key, ""
+
+    # The single-key fast path used to call `playback_url` directly, outside this guard. That
+    # made "one key cannot sign" fatal for exactly the lessons with one chapter — which is most
+    # of them — so `lesson_chapters` raised and the reader was told the lesson had no video at
+    # all. A shortcut that skips the error handling is not a shortcut.
+    if len(unique) == 1:
+        return {key: url for key, url in [sign(unique[0])] if url}
+
+    from concurrent.futures import ThreadPoolExecutor
 
     with ThreadPoolExecutor(max_workers=min(_SIGNING_CONCURRENCY, len(unique))) as pool:
         return {key: url for key, url in pool.map(sign, unique) if url}
