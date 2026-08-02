@@ -181,7 +181,7 @@ def test_rebuilding_an_exam_clears_its_snapshots_and_unpublishes_it():
         exam = db.scalar(_select(_Exam).where(_Exam.event_id == event.id))
         exam.published = True
         exam.disposition = "reviewed"
-        db.add(_ExamItem(exam_id=exam.id, question_id=999, position=1,
+        db.add(_ExamItem(exam_id=exam.id, question_id=999, position=900,
                          question_version=1, snapshot={"stem": "old past-test text"}))
         db.commit()
         exam_id = exam.id
@@ -191,5 +191,7 @@ def test_rebuilding_an_exam_clears_its_snapshots_and_unpublishes_it():
         exam = db.get(_Exam, exam_id)
         assert exam.published is False, "a rebuilt exam must not stay published"
         assert exam.disposition == "pending_disposition"
-        stale = db.scalars(_select(_ExamItem).where(_ExamItem.exam_id == exam_id)).all()
-        assert stale == [], "stale snapshots would keep serving the old items"
+        rows = db.scalars(_select(_ExamItem).where(_ExamItem.exam_id == exam_id)).all()
+        assert all(r.question_id != 999 for r in rows), (
+            "the stale snapshot would keep serving the old item")
+        assert rows, "a rebuilt exam must still have snapshots to serve"

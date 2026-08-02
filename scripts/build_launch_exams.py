@@ -54,6 +54,36 @@ def _structure_only(blueprint: dict) -> dict:
     return {k: v for k, v in (blueprint or {}).items() if k != "top_sections"}
 
 
+def _snapshot(question: Question) -> dict:
+    """The immutable copy `start_exam` actually serves.
+
+    An exam is its `ExamItem` rows, not its `question_ids`. The first version of this wrote
+    only the id list, so every exam it built would have started cleanly and served **zero
+    questions** — and it would have done so *after* a reviewer had spent their time on it. The
+    end-to-end journey test caught it; nothing else would have, because every gate the exam
+    passes reads `question_ids`.
+    """
+    return {
+        "question_id": question.id, "question_version": question.version,
+        "concept_id": question.concept_id, "question_type": question.question_type,
+        "stem": question.stem, "choices": question.choices, "assets": question.assets or [],
+        "answer_spec": question.answer_spec, "explanation": question.explanation,
+        "citations": question.citations, "difficulty": question.difficulty,
+        "cognitive_level": question.cognitive_level,
+        "estimated_seconds": question.estimated_seconds,
+    }
+
+
+def _write_items(db, exam, chosen: list[Question]) -> None:
+    for stale in db.scalars(select(ExamItem).where(ExamItem.exam_id == exam.id)).all():
+        db.delete(stale)
+    db.flush()
+    for position, question in enumerate(chosen):
+        db.add(ExamItem(exam_id=exam.id, question_id=question.id,
+                        question_version=question.version, position=position,
+                        snapshot=_snapshot(question)))
+
+
 def _past_test_pool(db, event: Event) -> list[Question]:
     """Imported past-test items — read for their shape, never copied into an exam."""
     return [q for q in db.scalars(select(Question).where(Question.event_id == event.id)).all()
@@ -143,8 +173,6 @@ def build(event_slug: str, size: int, apply: bool) -> dict:
             # alone. A previously published exam would have kept serving its old snapshots,
             # which for these events could hold imported past-test text, while its declared id
             # list pointed at new items. The snapshots are the exam; rebuild means rebuild.
-            for stale in db.scalars(select(ExamItem).where(ExamItem.exam_id == existing.id)).all():
-                db.delete(stale)
             existing.question_ids = [q.id for q in chosen]
             existing.blueprint = {**blueprint, "shape_source": shape}
             existing.published = False
@@ -165,6 +193,8 @@ def build(event_slug: str, size: int, apply: bool) -> dict:
                 disposition=sv.DISPOSITION_PENDING,
             )
             db.add(exam)
+        db.flush()
+        _write_items(db, exam, chosen)
         db.commit()
         return {"event": event_slug, "outcome":
                 f"exam of {len(chosen)} item(s), shaped by {shape}",
