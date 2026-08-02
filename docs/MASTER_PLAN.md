@@ -250,6 +250,27 @@ not the pilot's. Of 67 live events, **exactly one is free of all of them**:
 | Course carrying no skills at all | **16** |
 | **Lessons over the 12-minute target** | **402 of 426 (94%)** |
 
+**Corrected (2026-08-02): the table above measures the *local* database, not production.**
+Production holds 2 courses, 22 skills and 231 concepts — but **474 published lessons across 92
+events**, 6,042 questions and 150 published exams. The catalog-scale defect there is not badly
+shaped courses; it is lessons served with no course structure behind them at all.
+
+What that costs was measured, not assumed: `MasteryState` is keyed on `Concept`, and the only
+mastery evidence reading produces is `if lesson.concept_id:` in the checkpoint route. **450 of
+the 474 published lessons had no `concept_id`**, so a student could read one, answer every
+checkpoint, complete it — and nothing was recorded. The daily plan had nothing to schedule,
+remediation had no concept to route to, progress had nothing to show. Phase 8's chain was
+severed for 95% of the catalog by the same kind of unset field that severed it for the pilot's
+checkpoints.
+
+`scripts/link_lessons_to_concepts.py` closes the half that needs no judgement and refuses the
+half that does. Where an event has **no authored concepts**, a concept is created per lesson:
+that groups nothing and asserts nothing. Where an event **has** authored concepts — `ecology`
+has "Energy flow", "Population ecology" and two more, none matching any lesson title — mapping
+a lesson onto one is a pedagogical decision and adding a lesson-named fifth asserts it belongs
+to none of them. Both are refused and reported. **71/474 now record mastery (was 24); 403 await
+a human mapping.** Creations are tagged and reversible, and re-running is a no-op.
+
 This is the number that decides Phase 6's shape. The per-event work is now scripted and
 proven on the pilot, but two parts do not automate: unit boundaries are a pedagogical
 decision (`build_course_structure` refuses to guess them and requires a declared plan), and
@@ -373,6 +394,8 @@ Record the decision and its rationale here when made.
 | Courses published while serving no lesson | unmeasured | **0** | 0 | 4 |
 | Courses published without a content release | unmeasured | **50** | 0 | 4/6 |
 | Pilot lessons with grounded video | 0 | **24 / 24** (52.4 min) | all | 5 |
+| Published lessons able to record mastery | — | **71 / 474** (was 24) | all | 6/8 |
+| Published lessons awaiting a concept mapping | — | **403** | 0 | 6 |
 | Pilot video chapters QA-approved | 0 | 0 / 25 | all | 5 |
 | Published pilot checkpoints a student can answer | — | **73 / 73** (was 32) | all | 8 |
 | Published pilot checkpoints shipping their answer key | — | **0** (was 41) | 0 | 8 |
