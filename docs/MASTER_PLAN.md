@@ -418,6 +418,7 @@ Record the decision and its rationale here when made.
 | Pilot lessons with grounded video | 0 | **24 / 24** (52.4 min) | all | 5 |
 | Published lessons able to record mastery | — | **71 / 474** (was 24) | all | 6/8 |
 | Published lessons awaiting a concept mapping | — | **403** | 0 | 6 |
+| Production items a student may be scored on | — | **0 / 6,042** | — | 3 |
 | Pilot video chapters QA-approved | 0 | 0 / 25 | all | 5 |
 | Published pilot checkpoints a student can answer | — | **73 / 73** (was 32) | all | 8 |
 | Published pilot checkpoints shipping their answer key | — | **0** (was 41) | 0 | 8 |
@@ -426,6 +427,14 @@ Record the decision and its rationale here when made.
 | Imported items gradeable | unmeasured | **83.2%** (4,755) | ≥90% | 7 |
 | Imports running with an available answer key | 69 / 96 | **77 / 96** | 96 / 96 | 7 |
 | Imports below 60% gradeable | unmeasured | **19** | 0 | 7 |
+
+**Measured in production, 2026-08-02: not one of the 6,042 items is student-scoreable.** Every
+one sits at `draft` or `machine_validated`; none has reached `published` or `calibrated`. This
+is Phase 0 working exactly as specified rather than a defect — `can_start_new_attempt` refuses
+the 150 published exams because their items carry no human acceptance — but it is the single
+number that describes the platform's real position, and it is a review number, not an
+engineering one. The placement diagnostic refuses every event for this reason, which is the
+behaviour it was built to have.
 
 **The one line that matters:** every blocker between the pilot and a finished course is now a
 review decision. There is no remaining engineering task standing in front of it.
