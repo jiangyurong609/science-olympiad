@@ -15,7 +15,7 @@ from app.models.entities import (
     AssessmentBlueprint, ContentGap, ContentRelease, Course, CourseSourceCoverage,
     CourseUnit, EventSourceMap, Lesson, LessonSkill, LessonVersion, Question,
     QuestionCalibration, QuestionReview, ReviewDecision, ScientificClaim, Skill,
-    SourcePassage,
+    SourcePassage, SourceSnapshot,
 )
 
 
@@ -339,6 +339,19 @@ def audit_course(db: Session, course_id: int) -> dict:
             block("source_extraction", "source", row.source_id, row.extraction_status)
         if row.review_status != "approved":
             block("source_review", "source", row.source_id, row.review_status)
+        elif row.source_snapshot_id:
+            # An approval is about the content that was read, not about the URL. A re-crawl
+            # replaces the content while the approval sits unchanged, which is the same
+            # mistake as a lesson keeping its exposure decision through a rewrite and a
+            # release manifest not pinning the title it shipped. Nothing was stale when this
+            # was added; nothing was checking either.
+            newest = db.scalar(select(SourceSnapshot.id).where(
+                SourceSnapshot.source_id == row.source_id,
+            ).order_by(SourceSnapshot.id.desc()))
+            if newest and newest != row.source_snapshot_id:
+                block("source_review_stale", "source", row.source_id,
+                      f"approved against snapshot {row.source_snapshot_id}; "
+                      f"the source has since been re-crawled to {newest}")
         if (
             not row.student_destination and not row.withdrawal_reason
             and row.instructional_role not in {"reference_only", "assessment_validation"}
