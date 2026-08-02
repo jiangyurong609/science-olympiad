@@ -66,11 +66,13 @@ def _grounding_context(db: Session, concept: Concept | None,
         target_event = event.id if event is not None else (
             concept.event_id if concept is not None else None)
         if target_event is None:
-            raise ValueError("cannot ground generation without an event to scope claims to")
+            raise ValueError(
+                "cannot select grounding claims without an event to scope them to")
         sibling_ids = db.scalars(select(Concept.id).where(
             Concept.event_id == target_event)).all()
         if not sibling_ids:
-            raise ValueError("no concepts for this event; nothing may ground its items")
+            raise ValueError(
+                "this event has no concepts, so no approved claims can ground its items")
         claims = db.scalars(base.where(
             ScientificClaim.concept_id.in_(sibling_ids)).limit(8)).all()
     for claim in claims:
