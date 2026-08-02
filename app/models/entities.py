@@ -225,6 +225,12 @@ class Lesson(Base):
     # Explicit student-exposure decision, mirroring Exam.disposition. Legacy lessons are
     # grandfathered as unreviewed_practice; anything undecided is hidden from students.
     disposition: Mapped[str] = mapped_column(String(32), default="pending_disposition", index=True)
+    # The version the disposition was granted for. A decision to expose *this* content is not
+    # a decision to expose whatever the lesson later becomes: eight pilot lessons kept their
+    # `unreviewed_practice` grandfather through a split that cut them to "Part 1 of N" and
+    # left 3-4 model-written blocks in each, so students were served rewritten content under
+    # an exemption granted for the original.
+    disposition_version: Mapped[int | None] = mapped_column(Integer, nullable=True)
     current_version: Mapped[int] = mapped_column(Integer, default=1)
     sequence: Mapped[int] = mapped_column(Integer, default=0)
     estimated_minutes: Mapped[int] = mapped_column(Integer, default=10)

@@ -160,8 +160,16 @@ def lesson_is_student_visible(
     # grandfathered by an explicit per-lesson decision instead of by season: a lesson marked
     # `unreviewed_practice` stays readable and is reported as unreviewed, while anything
     # undecided is hidden until a human decides. New lessons therefore fail closed.
-    if getattr(lesson, "disposition", None) == "unreviewed_practice":
-        return True
+    if getattr(lesson, "disposition", None) == DISPOSITION_UNREVIEWED_PRACTICE:
+        # The grandfather covers the content it was granted for, not whatever the lesson later
+        # becomes. Eight pilot lessons carried theirs through a split that cut them to
+        # "Part 1 of N" and left model-written blocks behind, so students were served rewritten
+        # content under an exemption nobody granted for it. Rows predating this column keep
+        # their exemption: those decisions were made about the content as it then stood, and
+        # withdrawing them would hide legitimate content with nobody deciding to.
+        granted_for = getattr(lesson, "disposition_version", None)
+        if granted_for is None or granted_for == lesson.current_version:
+            return True
     # `student_preview` used to return True here, bypassing the review-evidence check below
     # entirely — so putting a course into preview made every unreviewed lesson on it readable.
     # That is the Phase 0 invariant inverted, and it fired: moving the pilot into preview to

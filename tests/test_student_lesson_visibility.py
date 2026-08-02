@@ -130,3 +130,51 @@ def test_staff_can_still_fetch_video_for_an_unreviewed_lesson(client, admin_toke
     response = client.get(f"/api/lessons/{lesson_id}/videos",
                           headers={"Authorization": f"Bearer {admin_token}"})
     assert response.status_code == 200
+
+
+def test_a_grandfather_does_not_survive_a_content_rewrite():
+    """`unreviewed_practice` records that someone decided to expose *this* lesson. Eight pilot
+    lessons kept theirs through a split that cut them to "Part 1 of N" and left model-written
+    blocks behind, so students were served rewritten content under an exemption nobody granted
+    for it."""
+    from app.models.entities import User as U
+    from app.services import student_visibility as sv
+
+    with SessionLocal() as db:
+        n = next(_UNIQUE)
+        event = Event(slug=f"gf-ev-{n}", name="E", division="B", season=2026)
+        db.add(event); db.flush()
+        lesson = Lesson(event_id=event.id, slug=f"gf-l-{n}", title="Legacy",
+                        status="published", current_version=1,
+                        disposition="unreviewed_practice", disposition_version=1)
+        db.add(lesson); db.flush()
+        db.add(LessonVersion(lesson_id=lesson.id, version=1, content=[]))
+        db.flush()
+        student = U(id=-1, email="p@x", full_name="P", role="student")
+        assert sv.lesson_is_student_visible(db, student, lesson) is True
+
+        # the lesson is rewritten; the decision was not made about this content
+        db.add(LessonVersion(lesson_id=lesson.id, version=2, content=[]))
+        lesson.current_version = 2
+        db.flush()
+        assert sv.lesson_is_student_visible(db, student, lesson) is False
+
+
+def test_a_legacy_disposition_with_no_recorded_version_still_applies():
+    """Rows predating the column were granted about the content as it stood; withdrawing them
+    would hide legitimately grandfathered lessons without anyone deciding to."""
+    from app.models.entities import User as U
+    from app.services import student_visibility as sv
+
+    with SessionLocal() as db:
+        n = next(_UNIQUE)
+        event = Event(slug=f"gf-old-{n}", name="E", division="B", season=2026)
+        db.add(event); db.flush()
+        lesson = Lesson(event_id=event.id, slug=f"gf-ol-{n}", title="Legacy",
+                        status="published", current_version=3,
+                        disposition="unreviewed_practice", disposition_version=None)
+        db.add(lesson); db.flush()
+        db.add(LessonVersion(lesson_id=lesson.id, version=3, content=[]))
+        db.flush()
+        student = U(id=-1, email="p@x", full_name="P", role="student")
+        assert sv.lesson_is_student_visible(db, student, lesson) is True

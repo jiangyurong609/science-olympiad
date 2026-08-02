@@ -389,6 +389,11 @@ def _write_parts(db: Session, event: Event, lesson: Lesson, version: LessonVersi
     version.review_status = "draft"
     if lesson.status == "published":
         lesson.status = "draft"
+    # An exposure decision made about the whole lesson does not carry over to the fragment it
+    # has become. Clearing the version it was granted for makes the grandfather stop applying
+    # until someone decides again.
+    lesson.disposition_version = None
+    lesson.disposition = "pending_disposition"
 
     # make room so the new parts sort immediately after their parent
     for later in db.scalars(select(Lesson).where(
