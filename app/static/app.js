@@ -3135,6 +3135,12 @@ async function startExam(id) {
     showSection('exam');
     $('exam-title').textContent = state.exam.title;
     $('exam-release-label').textContent = state.exam.release_label;
+    // Machine-gated content must say so where the student is working, not only on the card
+    // they clicked. `unreviewed` is set by the same rule that governs whether the exam may be
+    // served at all, so the banner cannot drift out of step with the gate.
+    const aiNotice = $('exam-ai-notice');
+    if (aiNotice) aiNotice.hidden = !(state.exam.unreviewed
+      || state.exam.release_class === 'machine_practice');
     $('exam-accommodation').hidden = !state.exam.accommodation_applied;
     $('exam-accommodation').textContent = state.exam.accommodation_applied
       ? `${state.exam.time_multiplier}× Extended Time Applied`

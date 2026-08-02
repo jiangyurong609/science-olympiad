@@ -84,7 +84,12 @@ RELEASE_LABELS = {
     "reviewed_practice": "Reviewed Practice",
     "past_test": "Past Test",
     "mock_shuffled": "Mock Exam",
+    "machine_practice": "AI Practice · Not Expert Reviewed",
 }
+# An unrecognised release class used to fall back to "Reviewed Practice" — the *strongest*
+# claim available, asserted about content nobody could classify. A default must be the weakest
+# claim, never the strongest.
+UNKNOWN_RELEASE_LABEL = "Unreviewed"
 
 
 def _finalize_graded(db: Session, attempt, submission_kind: str = "system"):
@@ -3879,7 +3884,7 @@ def list_exams(db: Session = Depends(get_db), user: User = Depends(current_user)
         "disposition": sv.exam_disposition(e),
         "unreviewed": sv.is_unreviewed_practice(e),
         "release_class": e.release_class,
-        "release_label": RELEASE_LABELS.get(e.release_class, "Reviewed Practice"),
+        "release_label": RELEASE_LABELS.get(e.release_class, UNKNOWN_RELEASE_LABEL),
     } for e in exams]
 
 
@@ -3961,7 +3966,10 @@ def start_exam(
         "attempt_id": attempt.id, "title": exam.title,
         "release_class": exam.release_class,
         "feedback_mode": (exam.blueprint or {}).get("feedback_mode", "after_submit"),
-        "release_label": RELEASE_LABELS.get(exam.release_class, "Reviewed Practice"),
+        "release_label": RELEASE_LABELS.get(exam.release_class, UNKNOWN_RELEASE_LABEL),
+        # the banner in the exam runner is driven by the same rule that decides whether the
+        # exam may be served, so a labelling gap cannot open between them
+        "unreviewed": sv.is_unreviewed_practice(exam),
         "duration_minutes": math.ceil(exam.duration_minutes * attempt.time_multiplier),
         "base_duration_minutes": exam.duration_minutes,
         "time_multiplier": attempt.time_multiplier,

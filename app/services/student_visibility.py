@@ -31,8 +31,17 @@ DISPOSITION_REVIEWED = "reviewed"            # every item human-reviewed; fully 
 DISPOSITION_UNREVIEWED_PRACTICE = "unreviewed_practice"  # historical; labelled, no new starts
 DISPOSITION_WITHDRAWN = "withdrawn"          # not serveable at all
 DISPOSITION_PENDING = "pending_disposition"  # default; treated as unsafe until decided
+# Machine-gated but not human-read: every item cleared the deterministic validator, an
+# independent blind solver, an independent verifier, and grounding in approved claims — and no
+# subject expert has read it. Serveable and scoreable, but never presented as verified: the
+# reader shows an explicit AI-generated banner and a report path.
+#
+# This is deliberately *not* `unreviewed_practice`. That covers historical content of unknown
+# provenance, which is why it refuses new attempts. Collapsing the two would either strand this
+# content or quietly re-open that one, and the distinction is what makes serving it honest.
+DISPOSITION_MACHINE_PRACTICE = "machine_practice"
 DISPOSITIONS = {
-    DISPOSITION_REVIEWED, DISPOSITION_UNREVIEWED_PRACTICE,
+    DISPOSITION_REVIEWED, DISPOSITION_UNREVIEWED_PRACTICE, DISPOSITION_MACHINE_PRACTICE,
     DISPOSITION_WITHDRAWN, DISPOSITION_PENDING,
 }
 
@@ -88,6 +97,10 @@ def can_start_new_attempt(db: Session, exam: Exam) -> tuple[bool, str]:
         # items is allowed; anything containing unreviewed items falls through to the
         # unreviewed-practice branch below and is refused.
         disposition = classify_exam(db, exam)
+    if disposition == DISPOSITION_MACHINE_PRACTICE:
+        # Serveable, and the client must say what it is. `is_unreviewed_practice` stays True
+        # for this, so every surface that labels unreviewed content already labels this too.
+        return True, ""
     if disposition == DISPOSITION_UNREVIEWED_PRACTICE:
         return False, (
             "This exam is historical practice whose items have not been reviewed, so it is "
@@ -128,16 +141,27 @@ def classify_exam(db: Session, exam: Exam) -> str:
     questions = {q.id: q for q in db.scalars(
         select(Question).where(Question.id.in_(served_ids))
     ).all()} if served_ids else {}
+    machine_only = False
     for item in items:
         question = questions.get(item.question_id)
-        if question is None or not item_is_student_ready(question):
+        if question is None:
             return DISPOSITION_UNREVIEWED_PRACTICE
+        if not item_is_student_ready(question):
+            # Not human-accepted. It may still be servable as labelled machine practice, but
+            # only if it cleared every machine gate — the class is earned by measurement here,
+            # never by setting a field. One item short of the gates and the whole exam falls
+            # back to `unreviewed_practice`, which refuses new attempts.
+            from scripts.build_launch_exams import item_clears_every_gate
+            if not item_clears_every_gate(question):
+                return DISPOSITION_UNREVIEWED_PRACTICE
+            machine_only = True
+            continue
         # human acceptance applies to a specific version; a newer draft edit must not ride
         # in on an older approval, nor an old snapshot on a newer approval
         recorded = getattr(item, "question_version", None)
         if recorded is not None and recorded != question.version:
             return DISPOSITION_UNREVIEWED_PRACTICE
-    return DISPOSITION_REVIEWED
+    return DISPOSITION_MACHINE_PRACTICE if machine_only else DISPOSITION_REVIEWED
 
 
 # --------------------------------------------------------------- lessons

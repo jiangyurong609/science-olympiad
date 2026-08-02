@@ -800,3 +800,22 @@ details[open] summary { color: var(--forest); }
 .lesson-review-dock-findings { display: grid; gap: .35rem; }
 .lesson-review-dock-findings .review-flag { display: block; }
 .lesson-review-dock .review-notes textarea { width: 100%; }
+
+
+/* Machine-gated practice says so where the student is working, not only on the card they
+   clicked from. Deliberately not a subtle style: the claim it qualifies is a strong one. */
+.exam-ai-notice {
+  margin: 0 0 1rem;
+  padding: 0.85rem 1.1rem;
+  border: 1px solid var(--warn-border, #d9a441);
+  border-left-width: 4px;
+  border-radius: 6px;
+  background: var(--warn-bg, #fdf6e6);
+  color: var(--warn-fg, #6b4e12);
+  font-size: 0.92rem;
+  line-height: 1.45;
+}
+.exam-ai-notice strong { font-weight: 650; }
+@media (prefers-color-scheme: dark) {
+  .exam-ai-notice { background: #3a2f14; color: #f0dfae; border-color: #8a6a22; }
+}
