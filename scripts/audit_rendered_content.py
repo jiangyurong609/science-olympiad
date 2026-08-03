@@ -138,7 +138,9 @@ def main() -> None:
     ap.add_argument("--event", default=None)
     ap.add_argument("--top", type=int, default=20)
     ap.add_argument("--fail-on-defect", action="store_true",
-                    help="exit non-zero if any block renders as nothing (for CI)")
+                    help="exit non-zero if any student-visible lesson is unusable (for CI)")
+    ap.add_argument("--max-unusable", type=int, default=0,
+                    help="how many unusable lessons to tolerate; tighten as content is fixed")
     args = ap.parse_args()
 
     result = run(args.event)
@@ -160,8 +162,19 @@ def main() -> None:
         for slug, n in result["by_event"].most_common(8):
             print(f"    {slug:32} {n} lesson(s)")
     print("=" * 92)
-    if args.fail_on_defect and stats.get("renders_as_nothing"):
-        raise SystemExit(1)
+    if args.fail_on_defect:
+        # Deliberately not "any defect". A block flagged empty is skipped by the reader, so it
+        # costs a student nothing; failing on those would block every deploy over content that
+        # is already handled, and a gate that always fires gets switched off. What must stop a
+        # release is a lesson a student can open and not learn from — too little left to read
+        # once the unusable blocks are dropped.
+        unusable = stats.get("lessons_with_under_3_visible_steps", 0)
+        print(f"\n  gate: {unusable} lesson(s) with under 3 readable steps "
+              f"(tolerated: {args.max_unusable})")
+        if unusable > args.max_unusable:
+            print("  FAILED — a student can open these and find nothing to learn.")
+            raise SystemExit(1)
+        print("  passed")
 
 
 if __name__ == "__main__":

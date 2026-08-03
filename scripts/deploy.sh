@@ -27,6 +27,13 @@ ANTIVIRUS_REQUIRED="${ANTIVIRUS_REQUIRED:-true}"
 # rather than the ephemeral Cloud Run filesystem (override for local/staging).
 ARTIFACT_STORE_BACKEND="${ARTIFACT_STORE_BACKEND:-gcs}"
 ARTIFACT_STORE_BUCKET="${ARTIFACT_STORE_BUCKET:-soplat-artifacts-video-agent-493605}"
+# Cloud Run's metadata credentials carry no private key, so signed playback URLs are minted by
+# impersonating this account. It was set in .env and never in the deploy, so video worked from
+# a developer shell and served nothing in production for as long as video existed.
+GCS_SIGNING_SERVICE_ACCOUNT="${GCS_SIGNING_SERVICE_ACCOUNT:-696895430749-compute@developer.gserviceaccount.com}"
+# Preflight gates. SKIP_PREFLIGHT=1 exists for an emergency rollback, not for convenience:
+# every defect these catch reached students because nothing checked before a deploy.
+SKIP_PREFLIGHT="${SKIP_PREFLIGHT:-0}"
 # ClamAV loads a large signature database per scan process. Keep the scanner
 # fail-closed without allowing concurrent uploads to exhaust the instance.
 CLOUD_RUN_MEMORY="${CLOUD_RUN_MEMORY:-2Gi}"
@@ -47,6 +54,27 @@ IMAGE="${IMAGE_REPO}:${TAG}"
 
 cd "$(dirname "$0")/.."   # repo root
 
+if [[ "$SKIP_PREFLIGHT" != "1" ]]; then
+  echo "==> Preflight: test suite"
+  python -m pytest -q -p no:warnings
+
+  # What a student would actually see. Grounding, the solver and the topical screen all ask
+  # whether content is well-formed or supported; none asks whether it renders. Four defects
+  # reached students in a row — checkpoints with no question, cards showing the word
+  # "Concept", slides with nothing in them, a worked example that threw and blanked the
+  # reader — and every one was found by a person clicking, not by a gate.
+  if [[ -n "${DATABASE_URL:-}" ]]; then
+    echo "==> Preflight: rendered content audit"
+    python -m scripts.audit_rendered_content --fail-on-defect
+  else
+    echo "==> Preflight: SKIPPED rendered content audit (no DATABASE_URL)"
+    echo "    Run it against production before publishing:"
+    echo "      scripts/prod_db_proxy.sh &"
+    echo "      DATABASE_URL=<proxy-url> python -m scripts.audit_rendered_content --fail-on-defect"
+  fi
+  echo "==> Preflight passed"
+fi
+
 echo "==> Project ${PROJECT} | Service ${SERVICE} | Region ${REGION}"
 echo "==> Image ${IMAGE}"
 
@@ -59,7 +87,7 @@ echo "==> Deploying to Cloud Run…"
 gcloud run deploy "$SERVICE" \
   --project "$PROJECT" --region "$REGION" \
   --image "$IMAGE" \
-  --update-env-vars "OPENAI_COMPATIBLE_BASE_URL=${LLM_BASE_URL},OPENAI_MODEL=${LLM_MODEL},REDIS_URL=${REDIS_URL:-redis://10.226.253.171:6379},ARTIFACT_STORE_BACKEND=${ARTIFACT_STORE_BACKEND},ARTIFACT_STORE_BUCKET=${ARTIFACT_STORE_BUCKET},ANTIVIRUS_COMMAND=${ANTIVIRUS_COMMAND},ANTIVIRUS_REQUIRED=${ANTIVIRUS_REQUIRED}" \
+  --update-env-vars "OPENAI_COMPATIBLE_BASE_URL=${LLM_BASE_URL},OPENAI_MODEL=${LLM_MODEL},REDIS_URL=${REDIS_URL:-redis://10.226.253.171:6379},ARTIFACT_STORE_BACKEND=${ARTIFACT_STORE_BACKEND},ARTIFACT_STORE_BUCKET=${ARTIFACT_STORE_BUCKET},ANTIVIRUS_COMMAND=${ANTIVIRUS_COMMAND},ANTIVIRUS_REQUIRED=${ANTIVIRUS_REQUIRED},GCS_SIGNING_SERVICE_ACCOUNT=${GCS_SIGNING_SERVICE_ACCOUNT}" \
   --memory "${CLOUD_RUN_MEMORY}" \
   --concurrency "${CLOUD_RUN_CONCURRENCY}" \
   --update-secrets "OPENAI_API_KEY=${SUNRA_SECRET}:latest" \
