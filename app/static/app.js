@@ -2175,7 +2175,24 @@ $('enrich-content-media').addEventListener('click', async event => {
   finally { setBusy(button, false); }
 });
 $('content-intake-form').addEventListener('submit', submitContentIntake);
-$('refresh-content-intake').addEventListener('click', event => { setBusy(event.currentTarget, true, 'Refreshing…'); loadContentIntake().finally(() => setBusy(event.currentTarget, false)); });
+// Refresh used to only re-read the list. There is no background worker — jobs run when
+// something calls /content/intake/process-next — so an upload sat at "received" forever and
+// the only button on the page that looked like it would help did nothing for it. Refresh now
+// drains the queue first, bounded so a permanently failing job cannot spin here.
+$('refresh-content-intake').addEventListener('click', async event => {
+  const button = event.currentTarget;
+  setBusy(button, true, 'Processing…');
+  try {
+    for (let i = 0; i < 8; i += 1) {
+      const result = await api('/content/intake/process-next', { method: 'POST' }).catch(() => null);
+      if (!result || !result.ran) break;
+    }
+  } finally {
+    setBusy(button, true, 'Refreshing…');
+    await loadContentIntake().catch(() => {});
+    setBusy(button, false);
+  }
+});
 $('content-intake-list').addEventListener('click', event => {
   const button = event.target.closest('[data-intake-review]');
   if (button) return reviewContentIntake(Number(button.dataset.intakeId), button.dataset.intakeReview, button);

@@ -37,7 +37,13 @@ SKIP_PREFLIGHT="${SKIP_PREFLIGHT:-0}"
 # ClamAV loads a large signature database per scan process. Keep the scanner
 # fail-closed without allowing concurrent uploads to exhaust the instance.
 CLOUD_RUN_MEMORY="${CLOUD_RUN_MEMORY:-2Gi}"
-CLOUD_RUN_CONCURRENCY="${CLOUD_RUN_CONCURRENCY:-1}"
+# Concurrency 1 meant a single slow request — a large PDF scan, a cold DB pool — made every
+# other request wait for a new instance, and Cloud Run returned "no available instance"
+# aborts instead. Uploads appeared to hang and Refresh spun forever. ClamAV's signature
+# database is the reason this was ever 1; 2Gi holds it comfortably for a handful of
+# concurrent requests, and min-instances 1 removes the cold start that made it worse.
+CLOUD_RUN_CONCURRENCY="${CLOUD_RUN_CONCURRENCY:-8}"
+CLOUD_RUN_MIN_INSTANCES="${CLOUD_RUN_MIN_INSTANCES:-1}"
 
 TAG=""
 SKIP_BUILD=false
@@ -98,6 +104,7 @@ gcloud run deploy "$SERVICE" \
   --update-env-vars "OPENAI_COMPATIBLE_BASE_URL=${LLM_BASE_URL},OPENAI_MODEL=${LLM_MODEL},REDIS_URL=${REDIS_URL:-redis://10.226.253.171:6379},ARTIFACT_STORE_BACKEND=${ARTIFACT_STORE_BACKEND},ARTIFACT_STORE_BUCKET=${ARTIFACT_STORE_BUCKET},ANTIVIRUS_COMMAND=${ANTIVIRUS_COMMAND},ANTIVIRUS_REQUIRED=${ANTIVIRUS_REQUIRED},GCS_SIGNING_SERVICE_ACCOUNT=${GCS_SIGNING_SERVICE_ACCOUNT}" \
   --memory "${CLOUD_RUN_MEMORY}" \
   --concurrency "${CLOUD_RUN_CONCURRENCY}" \
+  --min-instances "${CLOUD_RUN_MIN_INSTANCES}" \
   --update-secrets "OPENAI_API_KEY=${SUNRA_SECRET}:latest" \
   --vpc-connector "${VPC_CONNECTOR:-soplat-connector}" \
   --vpc-egress private-ranges-only \
