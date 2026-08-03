@@ -393,7 +393,10 @@ def run_job_now(db: Session = Depends(get_db), actor: User = Depends(require_adm
     job = run_next_job(db)
     if not job:
         return {"ran": False}
-    return {"ran": True, "id": job.id, "status": job.status, "result": job.result, "error": job.error}
+    # which job ran matters to the caller: the intake flow queues several and needs to know
+    # when the authoring pass has actually happened
+    return {"ran": True, "id": job.id, "job_type": job.job_type, "status": job.status,
+            "result": job.result, "error": job.error}
 
 
 @router.post("/questions/generate-model")

@@ -1859,8 +1859,29 @@ async function reviewContentIntake(uploadId, decision, button) {
     const response = await fetch(endpoint, { method: 'POST', headers, body: form });
     const data = await response.json().catch(() => ({}));
     if (!response.ok) throw new Error(data.detail || 'Review failed');
+    if (decision !== 'accepted') {
+      await loadContentIntake();
+      toast('Upload rejected and withheld.');
+      return;
+    }
+    if (data.needs_event) {
+      await loadContentIntake();
+      toast('Source approved, but no event was selected — pick one and accept again to author a lesson.');
+      return;
+    }
+    // Accepting queues claim extraction and a lesson pass. Nothing runs the queue on its own,
+    // so run it here: the reviewer clicked the button that promises authoring, and leaving the
+    // work sitting in a table is how an upload sat at "received" for a day.
+    setBusy(button, true, 'Extracting claims…');
+    for (let i = 0; i < 10; i += 1) {
+      const ran = await api('/content/intake/process-next', { method: 'POST' }).catch(() => null);
+      if (!ran || !ran.ran) break;
+      if (ran.error) { toast(`Authoring step failed: ${ran.error}`); break; }
+      setBusy(button, true, i === 0 ? 'Authoring lesson…' : 'Authoring lesson…');
+    }
     await loadContentIntake();
-    toast(decision === 'accepted' ? 'Source approved for grounded authoring.' : 'Upload rejected and withheld.');
+    await loadContentOperations().catch(() => {});   // the new lesson lands in the review queue
+    toast('Source approved. Claims extracted and a lesson drafted — see the Lesson Review Queue below.');
   } catch (error) { toast(error.message); setBusy(button, false); }
 }
 

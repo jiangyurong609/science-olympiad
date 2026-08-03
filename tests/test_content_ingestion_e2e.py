@@ -86,8 +86,15 @@ def test_upload_extract_review_and_student_visibility(client, admin_token, stude
     monkeypatch.setattr("app.services.lesson_generation.OpenAICompatibleProvider", FakeProvider)
     queued = client.post(f"/api/content/authoring/events/{event_id}/lessons", headers=auth(admin_token))
     assert queued.status_code == 200 and queued.json()["output_status"] == "draft"
-    authored = client.post("/api/jobs/run-next", headers=auth(admin_token))
-    assert authored.status_code == 200 and authored.json()["status"] == "completed"
+    # Accepting an upload now also queues claim extraction, so the authoring pass is no longer
+    # first in the queue. Drain until it runs — which is what the reviewer's click does.
+    for _ in range(6):
+        authored = client.post("/api/jobs/run-next", headers=auth(admin_token))
+        assert authored.status_code == 200
+        body = authored.json()
+        if not body.get("ran") or body.get("job_type") == "author_event_lessons":
+            break
+    assert authored.json()["status"] == "completed"
     with SessionLocal() as db:
         lesson = db.scalar(select(Lesson).where(Lesson.event_id == event_id))
         assert lesson is not None and lesson.status == "draft"

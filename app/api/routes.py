@@ -1560,7 +1560,8 @@ def process_next_content_intake_job(
     job = run_next_job(db)
     if not job:
         return {"ran": False}
-    return {"ran": True, "id": job.id, "status": job.status, "result": job.result, "error": job.error}
+    return {"ran": True, "id": job.id, "job_type": job.job_type, "status": job.status,
+            "result": job.result, "error": job.error}
 
 
 @router.post("/content/intake/imports/{source_id}/review")
@@ -1899,10 +1900,29 @@ def review_content_upload(
         source.approved = False
         upload.status = "rejected"
     run.stage = "ready_for_authoring" if decision == "accepted" else "withdrawn"
+    # "Accept for authoring" used to approve the source and stop. Nothing extracted claims from
+    # it and nothing authored anything, so an accepted upload produced no lesson and the button
+    # named the one thing it did not do. Accepting now queues the two steps that turn material
+    # into a lesson: claims first, because authoring grounds in them, then the lesson pass for
+    # the event this material was filed under.
+    queued_jobs: list[int] = []
+    if decision == "accepted":
+        claim_job = enqueue_job(db, "extract_claims", {"source_id": source.id, "limit": 24},
+                                actor_user_id=actor.id)
+        queued_jobs.append(claim_job.id)
+        if upload.event_id:
+            author_job = enqueue_job(db, "author_event_lessons", {"event_id": upload.event_id},
+                                     actor_user_id=actor.id)
+            queued_jobs.append(author_job.id)
     run.diagnostics_json = {**(run.diagnostics_json or {}), "review_decision": decision, "review_notes": notes.strip(), "reviewed_by": actor.id}
     _audit(db, actor, f"content.upload.{decision}", "upload_submission", upload.id, source_id=source.id, notes=notes.strip())
     db.commit()
-    return {"upload_id": upload.id, "source_id": source.id, "status": upload.status, "source_approved": source.approved, "rights_status": source.rights_status}
+    return {"upload_id": upload.id, "source_id": source.id, "status": upload.status,
+            "source_approved": source.approved, "rights_status": source.rights_status,
+            "queued_jobs": queued_jobs,
+            # An accepted upload with no event cannot be authored against anything, and saying
+            # so here is better than leaving the reviewer to wonder where the lesson went.
+            "needs_event": decision == "accepted" and not upload.event_id}
 
 
 @router.post("/parent/materials")
