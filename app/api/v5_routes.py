@@ -23,7 +23,7 @@ from app.services.discovery import DiscoveryError, record_discovered_resource
 from app.services.crawl_schedule import schedule_due_sources
 from app.services.source_changes import quarantine_source_dependents
 from app.services.rights import can_fetch_full_text
-from app.services.source_coverage import event_source_coverage
+from app.services.source_coverage import events_source_coverage
 from app.services.notifications import create_notification
 
 router = APIRouter(prefix="/api")
@@ -41,7 +41,7 @@ def source_coverage_scorecards(
     events = db.scalars(query.order_by(Event.name)).all()
     if event_id is not None and not events:
         raise HTTPException(status_code=404, detail="Event not found")
-    return {"scorecards": [event_source_coverage(db, event) for event in events]}
+    return {"scorecards": events_source_coverage(db, events)}
 
 
 @router.post("/discovery/domain-policies")
