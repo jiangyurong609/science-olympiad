@@ -268,3 +268,50 @@ def test_an_automated_approval_does_not_make_a_lesson_visible_by_itself():
         probe = User(id=-1, email="p2@invalid", full_name="P", role="student")
         version = db.scalar(select(LessonVersion).where(LessonVersion.lesson_id == lesson.id))
         assert sv.lesson_is_student_visible(db, probe, lesson, version) is False
+
+
+def test_concept_cards_render_whichever_schema_they_were_written_in(client, student_token):
+    """79 lessons showed students the word "Concept" over real content.
+
+    The reader reads `name`/`cue`/`detail`. Those lessons carry
+    `property`/`meaning`/`competition_implication`, so it found no name, fell back to a
+    placeholder, and the actual text — which was present the whole time — never rendered.
+    Same defect as the checkpoint schema split, in a different block type.
+    """
+    with SessionLocal() as db:
+        event = Event(slug="cards-event", name="Cards", division="B", season=2026)
+        db.add(event); db.flush()
+        concept = Concept(event_id=event.id, name="C", description="x")
+        db.add(concept); db.flush()
+        lesson = Lesson(event_id=event.id, concept_id=concept.id, slug="cards",
+                        title="Cards", status="published",
+                        disposition="unreviewed_practice", current_version=1, sequence=1)
+        db.add(lesson); db.flush()
+        db.add(LessonVersion(
+            lesson_id=lesson.id, version=1, review_status="sme_approved", claim_ids=[1],
+            citations=[{"title": "Gov"}],
+            content=[{
+                "type": "property_cards",
+                "title": "Core Event Properties",          # not `heading`
+                "cards": [{"property": "Event focus",
+                           "meaning": "Teams demonstrate anatomy understanding.",
+                           "competition_implication": "Know structures and functions."}],
+            }]))
+        db.commit()
+        lesson_id = lesson.id
+
+    started = client.post(f"/api/lessons/{lesson_id}/start", headers=auth(student_token))
+    block = started.json()["content"][0]
+    assert block["heading"] == "Core Event Properties", "a `title` must reach the reader"
+    card = block["cards"][0]
+    assert card["name"] == "Event focus"
+    assert "anatomy" in card["cue"]
+    assert "structures" in card["detail"]
+
+
+def test_a_card_with_nothing_in_it_is_dropped_rather_than_stubbed(client, student_token):
+    """Showing nothing beats showing a placeholder that implies content exists."""
+    from app.services.lesson_blocks import normalised_cards
+
+    assert normalised_cards({"cards": [{"unknown_key": "x"}, {}]}) == []
+    assert normalised_cards({"cards": ["Plain string card"]})[0]["name"] == "Plain string card"

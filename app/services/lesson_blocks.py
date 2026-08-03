@@ -99,13 +99,13 @@ def ungradeable_checkpoints(content: list) -> list[str]:
 # provenance metadata and has no business in a browser.
 _RENDERED_FIELDS: dict[str, set[str]] = {
     "opening": {"heading", "kicker", "body"},
-    "property_cards": {"heading", "kicker", "body", "cards"},
+    "property_cards": {"heading", "kicker", "body", "cards", "title", "items"},
     "worked_example": {"heading", "kicker", "prompt", "steps"},
     CHECKPOINT: {"heading", "kicker", "question", "choices"},
-    "steps": {"heading", "kicker", "body", "steps", "items"},
+    "steps": {"heading", "kicker", "body", "steps", "items", "title", "cards"},
     "image_gallery": {"heading", "kicker", "body", "images"},
     "video": {"heading", "kicker", "body", "video_id"},
-    "summary": {"heading", "kicker", "body", "points", "items"},
+    "summary": {"heading", "kicker", "body", "points", "items", "title", "cards"},
 }
 # the fallback renderer draws these for a type nobody has written a renderer for yet
 _FALLBACK_FIELDS = {"heading", "body"}
@@ -132,4 +132,49 @@ def student_safe(block: dict, index: int) -> dict:
     if block.get("type") == CHECKPOINT:
         # the reader reads `question`; give it one whichever name the author used
         safe["question"] = checkpoint_stem(block)
+    if block.get("type") in {"property_cards", "steps", "summary"}:
+        safe["cards"] = normalised_cards(block)
+    if not str(safe.get("heading") or "").strip():
+        # some generators write `title` instead of `heading`, and the reader shows a generic
+        # placeholder when it finds neither — content that exists, rendered as a stub
+        safe["heading"] = str(block.get("title") or "").strip()
     return safe
+
+
+# Every spelling a generator has used for the same three fields. The reader reads one shape;
+# normalising here is what stopped 41 checkpoints shipping their stem under the wrong key, and
+# this is the same defect in the card blocks: 79 lessons carry cards keyed
+# `property`/`meaning`/`competition_implication`, so the reader found no `name`, fell back to a
+# placeholder, and showed students the word "Concept" five times over real content.
+_CARD_NAME = ("name", "title", "label", "property", "term", "heading")
+_CARD_CUE = ("cue", "summary", "subtitle", "meaning", "definition")
+_CARD_DETAIL = ("detail", "body", "description", "competition_implication", "note", "example")
+
+
+def _first(card: dict, keys: tuple[str, ...]) -> str:
+    for key in keys:
+        value = card.get(key)
+        if isinstance(value, str) and value.strip():
+            return value.strip()
+    return ""
+
+
+def normalised_cards(block: dict) -> list[dict]:
+    """Cards in the one shape the reader knows, whichever shape they were written in."""
+    raw = block.get("cards")
+    if not isinstance(raw, list):
+        raw = block.get("items")
+    out = []
+    for card in raw or []:
+        if isinstance(card, str):
+            out.append({"name": card.strip(), "cue": "", "detail": ""})
+            continue
+        if not isinstance(card, dict):
+            continue
+        name = _first(card, _CARD_NAME)
+        cue = _first(card, _CARD_CUE)
+        detail = _first(card, _CARD_DETAIL)
+        if not (name or cue or detail):
+            continue                      # nothing to show is better than a stub that lies
+        out.append({"name": name or cue[:60], "cue": cue if name else "", "detail": detail})
+    return out
