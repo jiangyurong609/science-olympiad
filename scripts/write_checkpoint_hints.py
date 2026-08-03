@@ -53,6 +53,37 @@ SOLVER_SYSTEM = (
     "Answer the multiple-choice question. Return ONLY valid JSON as "
     '{"chosen_index": int}. You have not read the lesson.'
 )
+# The solver comparison alone cannot judge a hint. Measured over 935 hints, the blind solver
+# already answered correctly *without* the hint 931 times, so "did the hint turn a wrong answer
+# into the key" had almost nothing to fire on — an inert gate reporting a 99.9% pass rate.
+# This asks the question directly instead of inferring it.
+JUDGE_SYSTEM = (
+    "You judge whether a hint gives away a multiple-choice answer. Return ONLY valid JSON as "
+    '{"gives_away": bool, "reason": str}. A hint gives the answer away if it names or '
+    "paraphrases the correct choice, states the conclusion the question asks for, or rules out "
+    "specific wrong choices. A hint that points at the relevant idea, or at what to re-read, "
+    "does NOT give it away even when it shares vocabulary with the correct choice — questions "
+    "and their answers are about the same topic, so shared topic words are expected."
+)
+
+
+def _judge_hint(provider, stem: str, choices: list, answer_index: int, hint: str) -> dict:
+    """Ask outright whether the hint hands over the answer.
+
+    Shown the key, unlike the solver — because the question here is not "can this be solved"
+    but "does this text disclose the answer", and that is answerable only by someone who knows
+    what the answer is.
+    """
+    payload = provider.generate_json(JUDGE_SYSTEM, json.dumps({
+        "question": stem,
+        "choices": [str(c) for c in choices],
+        "correct_choice": str(choices[answer_index]) if 0 <= answer_index < len(choices) else "",
+        "hint": hint,
+    })).payload
+    if isinstance(payload, str):
+        payload = json.loads(payload)
+    return {"gives_away": bool(payload.get("gives_away")),
+            "reason": str(payload.get("reason") or "")[:200]}
 
 
 def _solve(provider, stem: str, choices: list, hint: str = "") -> int | None:
@@ -139,11 +170,20 @@ def run(event_slug: str, apply: bool, limit: int | None = None) -> dict:
                     stats[f"solver_failed:{type(exc).__name__}"] += 1
                     continue
 
-                too_revealing = hint_is_too_revealing(hinted, answer_index, baseline)
+                try:
+                    judged = _judge_hint(provider, stem, choices, answer_index, hint)
+                except (ModelProviderError, ValueError, KeyError) as exc:
+                    stats[f"judge_failed:{type(exc).__name__}"] += 1
+                    continue          # unjudged is not safe
+                # either signal condemns: the judge reads the hint directly, the solver
+                # comparison still catches a hint that demonstrably changes an answer
+                too_revealing = (judged["gives_away"]
+                                 or hint_is_too_revealing(hinted, answer_index, baseline))
                 block[HINT_FIELD] = hint
                 block["hint_check"] = {
                     "baseline_choice": baseline, "hinted_choice": hinted,
                     "answer_index": answer_index, "too_revealing": too_revealing,
+                    "judge": judged,
                     # binds the verdict to the exact hint, stem, choices and key it was run
                     # against, so editing any of them invalidates it rather than inheriting it
                     "fingerprint": hint_fingerprint(block),
