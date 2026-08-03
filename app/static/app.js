@@ -934,25 +934,29 @@ function studentEvents() {
 
 function resolveEvent(slug) {
   const exact = state.events.find(event => event.slug === slug);
-  if (exact?.season_status === 'current') return exact;
+  if (exact) return exact;
+  // The slug is gone from the catalog — a bookmark or a link to an event that has since been
+  // merged into its twin. `#practice?event=heredity` kept opening an empty page after the
+  // heredity/heredity-b merge, because nothing mapped the retired slug onto the survivor.
   const base = subjectKeyOf(slug);
   const division = (state.user?.division || '').toLowerCase();
-  return state.events.find(event => event.slug === `${base}-${division}` && event.season_status === 'current')
-    || state.events.find(event => event.slug === base && event.season_status === 'current')
-    || exact
+  return state.events.find(event => subjectKeyOf(event.slug) === base
+      && (event.division || '').toLowerCase() === division)
+    || state.events.find(event => subjectKeyOf(event.slug) === base)
     || null;
 }
 
 function renderEventSelectors() {
   const event = activeEvent();
-  const grouped = new Map();
-  studentEvents().forEach(item => {
-    if (!grouped.has(item.season)) grouped.set(item.season, []);
-    grouped.get(item.season).push(item);
-  });
-  const options = [...grouped.entries()].sort(([a], [b]) => b - a).map(([season, events]) => (
-    `<optgroup label="${season} Season">${events.map(item => `<option value="${escapeHtml(item.slug)}"${item.id === event?.id ? ' selected' : ''}>${escapeHtml(item.name)} · Div ${escapeHtml(item.division)}${item.season_status === 'trial' ? ' · Trial' : ''}${item.season_status === 'prior_season_practice' ? ' · Prior season' : ''}</option>`).join('')}</optgroup>`
-  )).join('');
+  // One list, ordered by name. Grouping by season split the picker into "2027 Season" and
+  // "2026 Season" headings over what is, to a student, one set of events — and duplicates
+  // across the two are merged in the database now, so the grouping only ever separated an
+  // event from itself.
+  const options = studentEvents()
+    .slice()
+    .sort((a, b) => a.name.localeCompare(b.name) || (a.division || '').localeCompare(b.division || ''))
+    .map(item => `<option value="${escapeHtml(item.slug)}"${item.id === event?.id ? ' selected' : ''}>${escapeHtml(item.name)} · Div ${escapeHtml(item.division)}${item.season_status === 'trial' ? ' · Trial' : ''}</option>`)
+    .join('');
   for (const id of ['overview-event-select', 'learn-event-select', 'practice-event-select']) $(id).innerHTML = options;
 }
 
