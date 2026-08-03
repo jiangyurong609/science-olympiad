@@ -1773,7 +1773,27 @@ async function loadContentIntake() {
         status: item.snapshot_id ? 'completed' : 'queued', diagnostics: { text_chars: item.text_chars } },
     })));
     $('content-intake-empty').hidden = rows.length > 0;
+    // One unrenderable row used to take the whole inbox with it: the list is assigned in a
+    // single expression, so a throw anywhere left innerHTML untouched and the page showed
+    // nothing at all — with the failure reported only as a toast that had already faded.
     $('content-intake-list').innerHTML = rows.map(row => {
+      try {
+        return renderIntakeRow(row);
+      } catch (error) {
+        return `<article class="content-intake-row surface"><div><strong>${escapeHtml(row.filename || 'Upload')}</strong><small>This row could not be displayed: ${escapeHtml(error.message)}</small></div></article>`;
+      }
+    }).join('');
+    $('content-intake-empty').hidden = rows.length > 0;
+  } catch (error) {
+    $('content-intake-empty').hidden = false;
+    const empty = $('content-intake-empty');
+    if (empty) empty.textContent = `Intake could not load: ${error.message}`;
+    toast(`Intake could not load. ${error.message}`);
+  }
+}
+
+function renderIntakeRow(row) {
+  {
       const ingestion = row.ingestion || {};
       const diagnostics = ingestion.diagnostics || {};
       const canReview = state.user.role === 'admin' && (row.is_import ? row.status === 'needs_review' : ['needs_review', 'needs_human_review'].includes(row.status)) && ingestion.source_id;
@@ -1784,8 +1804,7 @@ async function loadContentIntake() {
         <div class="content-intake-actions">${ingestion.source_id ? `<button class="button button-secondary button-compact" type="button" data-intake-source="${ingestion.source_id}">View extracted text</button>` : ''}${canReview ? `<select class="intake-event-select" data-intake-event aria-label="Assign event"><option value="">Keep current event</option>${(state.events || []).map(event => `<option value="${event.id}"${String(row.event_id) === String(event.id) ? ' selected' : ''}>${escapeHtml(event.name)} · ${escapeHtml(event.season)}</option>`).join('')}</select><button class="button button-primary button-compact" type="button" data-intake-review="accepted" data-intake-id="${row.id}" data-intake-import="${row.is_import ? row.source_id : ''}">Accept for authoring</button><button class="button button-quiet button-compact" type="button" data-intake-review="rejected" data-intake-id="${row.id}" data-intake-import="${row.is_import ? row.source_id : ''}">Reject</button>` : ''}</div>
         ${ingestion.source_id ? `<pre class="content-intake-extracted" data-intake-extracted="${ingestion.source_id}" hidden></pre>` : ''}
       </article>`;
-    }).join('');
-  } catch (error) { toast(`Intake could not load. ${error.message}`); }
+  }
 }
 
 async function submitContentIntake(event) {
@@ -2189,7 +2208,7 @@ $('refresh-content-intake').addEventListener('click', async event => {
     }
   } finally {
     setBusy(button, true, 'Refreshing…');
-    await loadContentIntake().catch(() => {});
+    await loadContentIntake();
     setBusy(button, false);
   }
 });
