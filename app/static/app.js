@@ -730,10 +730,11 @@ function renderEventCatalog() {
   }
   chips.forEach(chip => chip.setAttribute('aria-pressed', String(chip.dataset.catalogDivision === state.catalogDivision)));
   const catalog = (state.events || [])
-    // Prior-season events rotated out of the current slate but still hold real lessons and
-    // exams, so they stay in the catalog and are labelled rather than hidden. Category is a
-    // grouping convenience, not a gate: an event missing one still gets a card.
-    .filter(event => ['current', 'prior_season_practice'].includes(event.season_status))
+    // Any active event holding lessons belongs in the catalog. Listing by season_status
+    // hid 49 `foundational` events carrying 360 student-visible lessons — the bulk of the
+    // catalog — while showing 13 current-season events of which 7 had nothing at all. The
+    // status is a label for how content was sourced, never a reason to hide it from a student.
+    .filter(event => event.season_status !== 'superseded')
     .filter(event => state.catalogDivision === 'all' || event.division === state.catalogDivision)
     .sort((a, b) => (a.category || '~').localeCompare(b.category || '~') || a.name.localeCompare(b.name));
   $('event-catalog-count').textContent = catalog.length
