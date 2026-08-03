@@ -7,7 +7,8 @@ which is theirs. This is the one place those two could get confused, so it is pi
 from sqlalchemy import select
 
 from app.core.database import SessionLocal
-from app.models.entities import Concept, Event, Exam, Question, QuestionStatus
+from app.models.entities import (
+    Concept, Event, Exam, Question, QuestionStatus, ScientificClaim, Source, SourceSnapshot)
 from scripts.build_launch_exams import _our_items, _past_test_pool, build
 
 
@@ -17,6 +18,18 @@ def seed(slug="exam-event", ours=14, imported=12):
         db.add(event); db.flush()
         concept = Concept(event_id=event.id, name="Topic", description="x")
         db.add(concept); db.flush()
+        # an item must prove its grounding belongs to its own event, so the fixture has to
+        # supply a real claim on a concept of this event — the shape production requires
+        source = Source(title="USGS", url=f"https://usgs.gov/{slug}",
+                        rights_status="public_domain", approved=True)
+        db.add(source); db.flush()
+        snapshot = SourceSnapshot(source_id=source.id, final_url=source.url,
+                                  extracted_text="t", content_hash=f"h-{slug}")
+        db.add(snapshot); db.flush()
+        claim = ScientificClaim(source_id=source.id, source_snapshot_id=snapshot.id,
+                                concept_id=concept.id, claim_text="On-topic fact.",
+                                approved=True)
+        db.add(claim); db.flush()
         for i in range(ours):
             db.add(Question(
                 event_id=event.id, concept_id=concept.id,
@@ -28,7 +41,8 @@ def seed(slug="exam-event", ours=14, imported=12):
                     "passed": True,
                     "independent_solver": {"verdict": "solver_agrees"},
                     "independent_verifier": {"passed": True, "errors": []},
-                    "factual_grounding": "approved_claims"},
+                    "factual_grounding": "approved_claims",
+                    "claim_ids": [claim.id]},
                 generation_provenance={"generation_run": "launch-test"}))
         for i in range(imported):
             db.add(Question(
