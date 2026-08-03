@@ -2803,7 +2803,15 @@ function renderLessonBlock() {
   }[block.type];
   const node = $('lesson-block');
   node.className = `lesson-block surface${block.type === 'opening' ? ' lesson-block-opening' : ''}`;
-  node.innerHTML = renderer ? renderer(block) : `<h1>${escapeHtml(block.heading || 'Lesson section')}</h1><p>${escapeHtml(block.body || '')}</p>`;
+  // One malformed block must cost its own slide, never the lesson. Before this, a renderer
+  // throwing on a missing field left the reader blank with no way forward.
+  let markup;
+  try {
+    markup = renderer ? renderer(block) : `<h1>${escapeHtml(block.heading || 'Lesson section')}</h1><p>${escapeHtml(block.body || '')}</p>`;
+  } catch (error) {
+    markup = `<h1>${escapeHtml(block.heading || 'Lesson section')}</h1><p class="block-lede">This section could not be displayed. Use “Give feedback” to report it.</p>`;
+  }
+  node.innerHTML = markup;
   node.focus({ preventScroll: true });
   node.scrollIntoView({ behavior: preferredScrollBehavior(), block: 'start' });
 }
@@ -2952,7 +2960,11 @@ function renderPropertyCardsBlock(block) {
 }
 
 function renderWorkedExampleBlock(block) {
-  return `<p class="kicker">Worked example</p><h1 id="lesson-reader-title">${escapeHtml(block.heading)}</h1><div class="worked-prompt">${escapeHtml(block.prompt)}</div><ol class="worked-steps">${block.steps.map(step => `<li>${escapeHtml(step)}</li>`).join('')}</ol>`;
+  // `block.steps.map` on a block without steps throws, and a throw here blanks the whole
+  // reader rather than losing one slide. 49 published blocks are in that state.
+  const steps = Array.isArray(block.steps) ? block.steps : [];
+  const prompt = block.prompt || block.body || '';
+  return `<p class="kicker">Worked example</p><h1 id="lesson-reader-title">${escapeHtml(block.heading || 'Worked example')}</h1>${prompt ? `<div class="worked-prompt">${escapeHtml(prompt)}</div>` : ''}${steps.length ? `<ol class="worked-steps">${steps.map(step => `<li>${escapeHtml(typeof step === 'string' ? step : (step?.detail || step?.text || ''))}</li>`).join('')}</ol>` : ''}`;
 }
 
 function renderCheckpointBlock(block) {

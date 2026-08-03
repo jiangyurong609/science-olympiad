@@ -179,6 +179,9 @@ def block_is_empty(block: dict) -> bool:
         return not (block.get("images") or block.get("video_id"))
     if kind == CHECKPOINT:
         return not checkpoint_stem(block)
+    if kind == "worked_example":
+        # a worked example is its steps; a prompt with no working is not one
+        return not (block.get("steps") or [])
     if normalised_cards(block):
         return False
     for key in ("body", "text", "prompt", "heading", "title"):
