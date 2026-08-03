@@ -85,6 +85,7 @@ RELEASE_LABELS = {
     "past_test": "Past Test",
     "mock_shuffled": "Mock Exam",
     "machine_practice": "AI Practice · Not Expert Reviewed",
+    "imported_practice": "Past Test · Transcribed, Not Reviewed",
 }
 # An unrecognised release class used to fall back to "Reviewed Practice" — the *strongest*
 # claim available, asserted about content nobody could classify. A default must be the weakest

@@ -40,9 +40,15 @@ DISPOSITION_PENDING = "pending_disposition"  # default; treated as unsafe until 
 # provenance, which is why it refuses new attempts. Collapsing the two would either strand this
 # content or quietly re-open that one, and the distinction is what makes serving it honest.
 DISPOSITION_MACHINE_PRACTICE = "machine_practice"
+# A past test transcribed from a real paper. Not written here and not expert-reviewed, so it is
+# never presented as verified — but every item in it is answerable and keyed, which is the bar
+# for being scoreable at all. Held apart from `machine_practice` because the assurance is
+# different in kind: that one cleared a solver and a verifier, this one is a faithful
+# transcription whose questions someone else wrote.
+DISPOSITION_IMPORTED_PRACTICE = "imported_practice"
 DISPOSITIONS = {
     DISPOSITION_REVIEWED, DISPOSITION_UNREVIEWED_PRACTICE, DISPOSITION_MACHINE_PRACTICE,
-    DISPOSITION_WITHDRAWN, DISPOSITION_PENDING,
+    DISPOSITION_IMPORTED_PRACTICE, DISPOSITION_WITHDRAWN, DISPOSITION_PENDING,
 }
 
 
@@ -97,6 +103,8 @@ def can_start_new_attempt(db: Session, exam: Exam) -> tuple[bool, str]:
         # items is allowed; anything containing unreviewed items falls through to the
         # unreviewed-practice branch below and is refused.
         disposition = classify_exam(db, exam)
+    if disposition == DISPOSITION_IMPORTED_PRACTICE:
+        return True, ""
     if disposition == DISPOSITION_MACHINE_PRACTICE:
         # Serveable, and the client must say what it is. `is_unreviewed_practice` stays True
         # for this, so every surface that labels unreviewed content already labels this too.
