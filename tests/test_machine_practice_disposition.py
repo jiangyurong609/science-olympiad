@@ -100,3 +100,22 @@ def test_an_unknown_release_class_never_claims_to_be_reviewed():
     assert "review" not in UNKNOWN_RELEASE_LABEL.lower() or \
         UNKNOWN_RELEASE_LABEL.lower().startswith("unreview")
     assert RELEASE_LABELS["machine_practice"] == "AI Practice · Not Expert Reviewed"
+
+
+def test_a_listed_exam_is_always_one_a_student_can_open():
+    """Production listed 150 exams that refused every attempt.
+
+    A catalog that advertises work nobody can begin is worse than a shorter catalog: the
+    student cannot tell the difference between "not for me" and "broken", and 150 of 161
+    entries were the latter.
+    """
+    from sqlalchemy import select as _select
+    from app.models.entities import Exam as _Exam
+
+    seed_exam(slug="mp-listed")
+    with SessionLocal() as db:
+        for exam in db.scalars(_select(_Exam)).all():
+            if not exam.published:
+                continue
+            allowed, why = sv.can_start_new_attempt(db, exam)
+            assert allowed, f"exam {exam.id!r} is listed but refuses to start: {why}"
