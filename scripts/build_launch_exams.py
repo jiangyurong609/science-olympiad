@@ -136,10 +136,38 @@ def item_clears_every_gate(question: Question) -> bool:
     return bool(question.citations)
 
 
+def grounded_in_its_own_event(db, question: Question) -> bool:
+    """Every claim behind this item must belong, provably, to this item's event.
+
+    Passing the solver, the verifier and the grounding check says the item is *supported*. It
+    says nothing about whether it is supported by evidence for the right subject — which is how
+    a Chemistry Lab exam ended up asking which mineral effervesces in acid. A claim with no
+    concept has no event, and "cannot establish" is not "is fine": it is refused, because the
+    only way to be sure is to be able to check.
+    """
+    from app.models.entities import Concept, ScientificClaim
+
+    claim_ids = [c for c in ((question.validation_report or {}).get("claim_ids") or [])
+                 if isinstance(c, int)]
+    if not claim_ids:
+        return False
+    claims = db.scalars(select(ScientificClaim).where(
+        ScientificClaim.id.in_(claim_ids))).all()
+    if len(claims) != len(set(claim_ids)):
+        return False                      # a claim that no longer exists cannot be checked
+    for claim in claims:
+        if claim.concept_id is None:
+            return False
+        concept = db.get(Concept, claim.concept_id)
+        if concept is None or concept.event_id != question.event_id:
+            return False
+    return True
+
+
 def _our_items(db, event: Event) -> list[Question]:
     """Our own items that clear every gate independently."""
     return [q for q in db.scalars(select(Question).where(Question.event_id == event.id)).all()
-            if item_clears_every_gate(q)]
+            if item_clears_every_gate(q) and grounded_in_its_own_event(db, q)]
 
 
 def build(event_slug: str, size: int, apply: bool) -> dict:
