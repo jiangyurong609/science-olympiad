@@ -1732,12 +1732,20 @@ function renderContentChallengeQueue() {
 async function loadContentOperations(button = null) {
   setBusy(button, true, 'Refreshing Workspace…');
   try {
-    const [coverage, lessons, queue, calibration, challenges] = await Promise.all([api('/content/source-coverage'), api('/content/lessons/review-queue'), api('/content/questions/review-queue'), api('/content/questions/calibration-queue'), api('/content/challenges')]);
-    state.sourceCoverage = coverage.scorecards;
-    state.lessonReviewQueue = lessons;
-    state.questionReviewQueue = queue;
-    state.calibrationQueue = calibration;
-    state.contentChallenges = challenges;
+    // allSettled, not all. /content/source-coverage takes minutes against the production
+    // database, and one slow or failing panel used to take the whole workspace with it — the
+    // review queue held 24 lessons and the page rendered none of them, because a scorecard
+    // nobody was waiting for had not come back yet.
+    const [coverage, lessons, queue, calibration, challenges] = (await Promise.allSettled([
+      api('/content/source-coverage'), api('/content/lessons/review-queue'),
+      api('/content/questions/review-queue'), api('/content/questions/calibration-queue'),
+      api('/content/challenges'),
+    ])).map(result => result.status === 'fulfilled' ? result.value : null);
+    state.sourceCoverage = coverage?.scorecards || [];
+    state.lessonReviewQueue = lessons || [];
+    state.questionReviewQueue = queue || [];
+    state.calibrationQueue = calibration || [];
+    state.contentChallenges = challenges || [];
     renderSourceCoverage();
     renderLessonReviewQueue();
     renderQuestionReviewQueue();
@@ -2081,13 +2089,17 @@ async function loadApplication() {
       await loadParentMaterials();
       await loadParentRelationships();
     } else if (roleMode === 'content' && !contentPreview) {
-      const [events, coverage, lessons, queue, calibration, challenges] = await Promise.all([api('/events'), api('/content/source-coverage'), api('/content/lessons/review-queue'), api('/content/questions/review-queue'), api('/content/questions/calibration-queue'), api('/content/challenges')]);
-      state.events = events;
-      state.sourceCoverage = coverage.scorecards;
-      state.lessonReviewQueue = lessons;
-      state.questionReviewQueue = queue;
-      state.calibrationQueue = calibration;
-      state.contentChallenges = challenges;
+      const [events, coverage, lessons, queue, calibration, challenges] = (await Promise.allSettled([
+        api('/events'), api('/content/source-coverage'), api('/content/lessons/review-queue'),
+        api('/content/questions/review-queue'), api('/content/questions/calibration-queue'),
+        api('/content/challenges'),
+      ])).map(result => result.status === 'fulfilled' ? result.value : null);
+      state.events = events || state.events || [];
+      state.sourceCoverage = coverage?.scorecards || [];
+      state.lessonReviewQueue = lessons || [];
+      state.questionReviewQueue = queue || [];
+      state.calibrationQueue = calibration || [];
+      state.contentChallenges = challenges || [];
       renderSourceCoverage();
       renderLessonReviewQueue();
       renderQuestionReviewQueue();
@@ -2101,7 +2113,7 @@ async function loadApplication() {
       await loadContentIntake();
     } else if (roleMode === 'coach') {
       const [events, exams, coachDashboard, teams] = await Promise.all([api('/events'), api('/exams'), api('/coach/dashboard'), api('/teams')]);
-      state.events = events;
+      state.events = events || state.events || [];
       state.exams = exams;
       state.coachDashboard = coachDashboard;
       state.teams = teams;
@@ -2110,7 +2122,7 @@ async function loadApplication() {
       const [events, exams, dashboard, accommodation] = await Promise.all([
         api('/events'), api('/exams'), Promise.resolve(null), api('/me/accommodations'),
       ]);
-      state.events = events;
+      state.events = events || state.events || [];
       state.exams = exams;
       state.dashboard = dashboard;
       state.accommodation = accommodation;
