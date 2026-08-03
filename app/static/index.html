@@ -9,8 +9,8 @@
   <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='16' fill='%231f5a45'/%3E%3Ctext x='32' y='44' text-anchor='middle' font-size='38' fill='white'%3EF%3C/text%3E%3C/svg%3E">
   <link rel="preload" href="/static/fonts/Fraunces.woff2" as="font" type="font/woff2" crossorigin>
   <link rel="preload" href="/static/fonts/AtkinsonHyperlegibleNext.woff2" as="font" type="font/woff2" crossorigin>
-  <link rel="stylesheet" href="/static/styles.css?v=34">
-  <link rel="stylesheet" href="/static/theme.css?v=34">
+  <link rel="stylesheet" href="/static/styles.css?v=35">
+  <link rel="stylesheet" href="/static/theme.css?v=35">
 </head>
 <body>
   <a class="skip-link" href="#main-content">Skip to Main Content</a>
@@ -371,7 +371,19 @@
 
         <section id="content" class="view" aria-labelledby="content-title" hidden>
           <div class="dashboard-heading"><div><p class="kicker">Content operations</p><h1 id="content-title" tabindex="-1">Review and Release Courses</h1><p class="lede">Review lessons and questions against retained sources. Nothing reaches students until every required approval and release gate passes.</p></div><button id="refresh-content-operations" class="button button-primary" type="button">Refresh Workspace</button></div>
-          <section class="content-studio-intake surface" aria-labelledby="content-studio-title">
+          <!-- One workspace per tab. This page used to stack every queue into a single
+               466,000-pixel scroll; the lesson queue sat below 500 expanded question cards
+               and reviewers reported the page as empty. -->
+          <nav id="content-tabs" class="cr-tabs" role="tablist" aria-label="Content workspaces">
+            <button type="button" class="cr-tab" data-cr-tab="lessons" role="tab" aria-selected="true">Review Lessons<span class="cr-tab-count" id="tab-count-lessons" hidden></span></button>
+            <button type="button" class="cr-tab" data-cr-tab="intake" role="tab" aria-selected="false">Add Materials<span class="cr-tab-count" id="tab-count-intake" hidden></span></button>
+            <button type="button" class="cr-tab" data-cr-tab="questions" role="tab" aria-selected="false">Review Questions<span class="cr-tab-count" id="tab-count-questions" hidden></span></button>
+            <button type="button" class="cr-tab" data-cr-tab="videos" role="tab" aria-selected="false">Review Videos<span class="cr-tab-count" id="tab-count-videos" hidden></span></button>
+            <button type="button" class="cr-tab" data-cr-tab="releases" role="tab" aria-selected="false">Publish Courses<span class="cr-tab-count" id="tab-count-releases" hidden></span></button>
+            <button type="button" class="cr-tab" data-cr-tab="coverage" role="tab" aria-selected="false">Source Coverage<span class="cr-tab-count" id="tab-count-coverage" hidden></span></button>
+            <button type="button" class="cr-tab" data-cr-tab="ops" role="tab" aria-selected="false">Operations<span class="cr-tab-count" id="tab-count-ops" hidden></span></button>
+          </nav>
+          <section class="content-studio-intake surface" data-cr-panel="intake" aria-labelledby="content-studio-title">
             <div class="section-heading"><div><p class="kicker">Content Studio</p><h2 id="content-studio-title">Intake and ground new material</h2><p>Upload a source, inspect extraction, then approve it before generating any student content.</p></div><span id="intake-live-status" class="status-pill" role="status" aria-live="polite">Private until reviewed</span></div>
             <form id="content-intake-form" class="content-intake-form">
               <label>Material file <span class="label-note">PDF, DOCX, PPTX, CSV, or text</span><input id="content-intake-file" name="file" type="file" accept=".pdf,.docx,.pptx,.txt,.md,.csv,application/pdf,application/vnd.openxmlformats-officedocument.wordprocessingml.document,application/vnd.openxmlformats-officedocument.presentationml.presentation,text/plain,text/csv"></label>
@@ -389,12 +401,12 @@
               <div class="content-source-pane content-source-preview"><p class="kicker">Grounding notes</p><p>Review passages on the left before approving authoring. Every generated block must cite one or more passage IDs.</p><pre id="content-source-json" class="content-intake-extracted"></pre></div>
             </section>
           </section>
-          <section class="release-manager-workspace" aria-labelledby="release-manager-title">
+          <section class="release-manager-workspace" data-cr-panel="releases" aria-labelledby="release-manager-title">
             <div class="section-heading"><div><p class="kicker">Release control</p><h2 id="release-manager-title">Preview and publish courses</h2><p>Every action below is gated by source coverage and independent lesson review. A blocked course cannot be made visible by accident.</p></div><div class="section-heading-actions"><button id="enrich-content-media" class="button button-secondary button-compact" type="button">Add grounded media</button><button id="refresh-content-releases" class="button button-secondary button-compact" type="button">Refresh releases</button></div></div>
             <div id="content-release-list" class="content-release-list" aria-live="polite"></div>
             <div id="content-release-empty" class="empty-state surface" hidden><span aria-hidden="true">✓</span><h3>No courses in release control</h3><p>Courses will appear here after they have been created.</p></div>
           </section>
-          <section id="people-workspace" class="people-workspace" aria-labelledby="people-title" hidden>
+          <section id="people-workspace" class="people-workspace" data-cr-panel="ops" aria-labelledby="people-title" hidden>
             <div class="section-heading"><div><p class="kicker">Platform administration</p><h2 id="people-title">People &amp; Roles</h2><p>Assign staff roles and manage account access. Changes take effect immediately.</p></div><p id="people-count" class="queue-count">0 Users</p></div>
             <div class="people-controls">
               <input id="people-search" name="people_search" type="search" placeholder="Search name or email…" autocomplete="off" aria-label="Search users">
@@ -403,34 +415,36 @@
             <div id="people-list" class="people-list" aria-live="polite"></div>
             <div id="people-empty" class="empty-state surface" hidden><span aria-hidden="true">◇</span><h3>No matching people</h3><p>Adjust your search or role filter.</p></div>
           </section>
-          <section id="answerkey-workspace" class="answerkey-workspace" aria-labelledby="answerkey-title" hidden>
+          <section id="answerkey-workspace" class="answerkey-workspace" data-cr-panel="ops" aria-labelledby="answerkey-title" hidden>
             <div class="section-heading"><div><p class="kicker">Content repair</p><h2 id="answerkey-title">Answer Keys to Fix</h2><p>Short-answer questions with no reference answer — students can’t be graded on these until a key is added.</p></div><p id="answerkey-count" class="queue-count">0 Items</p></div>
             <div id="answerkey-list" class="answerkey-list" aria-live="polite"></div>
             <div id="answerkey-empty" class="empty-state surface" hidden><span aria-hidden="true">✓</span><h3>All keyed</h3><p>No short-answer questions are missing a reference answer.</p></div>
           </section>
-          <section class="lesson-editorial-workspace" aria-labelledby="lesson-editorial-title">
+          <section class="lesson-editorial-workspace" data-cr-panel="lessons" aria-labelledby="lesson-editorial-title">
             <div class="section-heading"><div><p class="kicker">Course authoring gate</p><h2 id="lesson-editorial-title">Lesson Review Queue</h2><p>Read each lesson in context, verify its retained source passages, and record independent editorial and scientific decisions.</p></div><p id="lesson-editorial-count" class="queue-count">0 Lessons</p></div>
             <div id="lesson-review-queue" class="lesson-review-queue" aria-live="polite"></div>
             <div id="lesson-review-empty" class="empty-state surface" hidden><span aria-hidden="true">✓</span><h3>Lesson Queue Clear</h3><p>No current lesson version is waiting for review.</p></div>
           </section>
-          <section class="editorial-workspace" aria-labelledby="editorial-title">
+          <section class="editorial-workspace" data-cr-panel="questions" aria-labelledby="editorial-title">
             <div class="section-heading"><div><p class="kicker">Human quality gate</p><h2 id="editorial-title">Question Review Queue</h2></div><p id="editorial-count" class="queue-count">0 Items</p></div>
             <div id="question-review-queue" class="question-review-queue" aria-live="polite"></div>
             <div id="question-review-empty" class="empty-state surface" hidden><span aria-hidden="true">✓</span><h3>Review Queue Clear</h3><p>No questions currently require your role’s review.</p></div>
           </section>
-          <section class="calibration-workspace" aria-labelledby="calibration-title">
+          <section class="video-review-workspace" data-cr-panel="videos" aria-labelledby="video-review-title">
             <div class="section-heading"><div><p class="kicker">Post-render gate</p><h2 id="video-review-title">Video Review</h2><p>Watch each rendered chapter before students do. Approving publishes it; requesting changes sends notes back to the storyboard.</p></div><p id="video-review-count" class="queue-count">Queue clear</p></div>
             <div id="video-review-list" class="video-review-list" aria-live="polite"></div>
-
+          </section>
+          <section class="calibration-workspace" data-cr-panel="ops" aria-labelledby="calibration-title">
             <div class="section-heading"><div><p class="kicker">Pilot evidence gate</p><h2 id="calibration-title">Calibration Queue</h2><p>Use first-exposure student data to verify difficulty, discrimination, omissions, timing, and cohort representation.</p></div><p id="calibration-count" class="queue-count">0 Items</p></div>
             <div id="calibration-queue" class="calibration-queue" aria-live="polite"></div>
             <div id="calibration-empty" class="empty-state surface" hidden><span aria-hidden="true">◇</span><h3>No Published Items Awaiting Calibration</h3><p>Reviewed practice items appear here after students generate pilot evidence.</p></div>
           </section>
-          <section class="challenge-workspace" aria-labelledby="challenge-ops-title">
+          <section class="challenge-workspace" data-cr-panel="ops" aria-labelledby="challenge-ops-title">
             <div class="section-heading"><div><p class="kicker">Correction operations</p><h2 id="challenge-ops-title">Content Challenge Queue</h2><p>Triage student reports, pause severe defects, record a two-person decision, and audit every score impact.</p></div><p id="challenge-ops-count" class="queue-count">0 Open</p></div>
             <div id="content-challenge-queue" class="content-challenge-queue" aria-live="polite"></div>
             <div id="content-challenge-empty" class="empty-state surface" hidden><span aria-hidden="true">✓</span><h3>No Content Challenges</h3><p>No student reports currently require content-operations review.</p></div>
           </section>
+          <section class="source-coverage-workspace" data-cr-panel="coverage" aria-label="Source coverage">
           <div class="section-heading source-coverage-heading"><div><p class="kicker">Acquisition readiness</p><h2>Source Coverage</h2></div></div>
           <div class="coverage-metrics">
             <article class="coach-metric surface"><p>Mapped Sources</p><strong id="coverage-mapped">0</strong><small>Across scoped events</small></article>
@@ -441,6 +455,7 @@
           <div class="coverage-legend" aria-label="Coverage state progression"><span>Registered</span><span>Crawled</span><span>Parsed</span><span>Grounded</span><span>Monitored</span></div>
           <div id="coverage-scorecards" class="coverage-scorecards" aria-live="polite"></div>
           <div id="coverage-empty" class="empty-state surface" hidden><span aria-hidden="true">◇</span><h2>No Reviewed Source Maps</h2><p>Add an event source universe before claiming comprehensive coverage.</p></div>
+          </section>
         </section>
         <section id="parent" class="view" aria-labelledby="parent-title" hidden>
           <div class="dashboard-heading"><div><p class="kicker">Family materials</p><h1 id="parent-title" tabindex="-1">Share a source with the coaching team</h1><p class="lede">Your upload stays private until staff verifies rights, extracts the content, and decides whether it belongs in a course.</p></div></div>
@@ -532,6 +547,6 @@
       </div>
     </div>
   </div>
-  <script src="/static/app.js?v=34"></script>
+  <script src="/static/app.js?v=35"></script>
 </body>
 </html>

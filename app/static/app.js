@@ -28,6 +28,10 @@ const state = {
   sourceCoverage: [],
   lessonReviewQueue: [],
   questionReviewQueue: [],
+  contentTab: 'lessons',
+  questionReviewLimit: 25,
+  videoReviewCount: 0,
+  intakeActionCount: 0,
   calibrationQueue: [],
   contentChallenges: [],
   contentReleases: [],
@@ -1637,9 +1641,16 @@ function renderLessonReviewQueue() {
 }
 
 function renderQuestionReviewQueue() {
-  const questions = state.questionReviewQueue;
-  $('editorial-count').textContent = `${questions.length} Item${questions.length === 1 ? '' : 's'}`;
-  $('question-review-empty').hidden = questions.length > 0;
+  const allQuestions = state.questionReviewQueue;
+  // 500 fully-expanded cards rendered at once made this section 390,000 pixels tall —
+  // 84% of the page — and buried every other queue. Render a page of it at a time.
+  const questions = allQuestions.slice(0, state.questionReviewLimit);
+  $('editorial-count').textContent = `${allQuestions.length} Item${allQuestions.length === 1 ? '' : 's'}`;
+  $('question-review-empty').hidden = allQuestions.length > 0;
+  const remaining = allQuestions.length - questions.length;
+  const showMore = remaining > 0
+    ? `<button class="button button-secondary" type="button" data-question-show-more>Show ${Math.min(25, remaining)} more · ${remaining} remaining</button>`
+    : '';
   $('question-review-queue').innerHTML = questions.map(question => {
     const stage = question.status === 'machine_validated' ? 'editor' : question.status === 'editor_reviewed' ? 'sme' : 'publish';
     // The decisive signals, on the card. `gates_run` is shown rather than assumed: most of
@@ -1663,7 +1674,7 @@ function renderQuestionReviewQueue() {
     if (canReview) actions = `<fieldset class="review-checklist"><legend>${stage === 'editor' ? 'Editorial checklist' : 'Scientific checklist'}</legend>${checks}</fieldset><label class="review-notes">Review Notes<textarea name="review-notes" rows="3" maxlength="4000" placeholder="Record evidence, ambiguity, or revision guidance…"></textarea></label><div class="review-actions"><button class="button button-secondary" type="button" data-review-decision="rewrite_required" data-question-id="${question.id}" data-review-stage="${stage}">Request Rewrite</button><button class="button button-primary" type="button" data-review-decision="approved" data-question-id="${question.id}" data-review-stage="${stage}">Approve ${stage === 'editor' ? 'Editorial Review' : 'Scientific Review'}</button></div>`;
     else if (stage === 'publish' && ['sme', 'admin'].includes(state.user.role)) actions = `<div class="review-actions"><button class="button button-primary" type="button" data-publish-question="${question.id}">Publish Question</button></div>`;
     return `<article class="question-review-card surface" data-question-card="${question.id}"><header><div><span class="coverage-season">Version ${question.version}</span><h3>${escapeHtml(question.stem)}</h3></div><span class="coverage-release ${stage === 'publish' ? 'ready' : 'blocked'}">${escapeHtml(question.status.replaceAll('_', ' '))}</span></header>${itemFindings}<ol class="review-choices">${question.choices.map((choice, index) => `<li${index === question.answer_spec.correct_index ? ' class="correct"' : ''}>${escapeHtml(choice)}</li>`).join('')}</ol><details><summary>Answer, Rationale & Quality Signals</summary><div class="review-evidence"><p><strong>Key:</strong> ${escapeHtml(correct)}</p><p>${escapeHtml(question.explanation || 'No rationale supplied.')}</p><p><strong>Validation:</strong> ${question.validation_report.passed ? 'Passed' : 'Blocked'} · <strong>Similarity:</strong> ${escapeHtml((question.similarity_report || {}).outcome || 'Not calculated')} · <strong>Citations:</strong> ${question.citations.length}</p><div class="citation-evidence-list">${citations}</div></div></details>${actions}<div class="review-status" aria-live="polite"></div></article>`;
-  }).join('');
+  }).join('') + showMore;
 }
 
 function renderContentReleases() {
@@ -1729,8 +1740,42 @@ function renderContentChallengeQueue() {
   }).join('');
 }
 
+function setContentTab(tab) {
+  state.contentTab = tab;
+  document.querySelectorAll('#content [data-cr-panel]').forEach(panel => {
+    panel.classList.toggle('cr-panel-hidden', panel.dataset.crPanel !== tab);
+  });
+  document.querySelectorAll('#content-tabs [data-cr-tab]').forEach(button => {
+    const active = button.dataset.crTab === tab;
+    button.classList.toggle('active', active);
+    button.setAttribute('aria-selected', String(active));
+  });
+}
+
+function updateContentTabBadges() {
+  const setCount = (id, value) => {
+    const el = $(id);
+    if (!el) return;
+    el.hidden = !value;
+    el.textContent = value > 99 ? '99+' : String(value || '');
+  };
+  const lessonsWaiting = state.lessonReviewQueue.filter(
+    lesson => !['complete', 'revision_required'].includes(lesson.next_stage)).length;
+  setCount('tab-count-lessons', lessonsWaiting);
+  setCount('tab-count-questions', state.questionReviewQueue.length);
+  setCount('tab-count-videos', state.videoReviewCount);
+  setCount('tab-count-intake', state.intakeActionCount);
+  const coverageGaps = state.sourceCoverage.reduce(
+    (total, card) => total + (card.summary.required_sources - card.summary.monitored_required_sources), 0);
+  setCount('tab-count-coverage', coverageGaps);
+  const opsCount = state.contentChallenges.filter(challenge => ['submitted', 'triaged'].includes(challenge.status)).length
+    + state.calibrationQueue.length;
+  setCount('tab-count-ops', opsCount);
+}
+
 async function loadContentOperations(button = null) {
   setBusy(button, true, 'Refreshing Workspace…');
+  setContentTab(state.contentTab);
   try {
     // allSettled, not all. /content/source-coverage takes minutes against the production
     // database, and one slow or failing panel used to take the whole workspace with it — the
@@ -1746,12 +1791,14 @@ async function loadContentOperations(button = null) {
     state.questionReviewQueue = queue || [];
     state.calibrationQueue = calibration || [];
     state.contentChallenges = challenges || [];
+    state.questionReviewLimit = 25;
     renderSourceCoverage();
     renderLessonReviewQueue();
     renderQuestionReviewQueue();
     renderCalibrationQueue();
     renderVideoReviewQueue();
     renderContentChallengeQueue();
+    updateContentTabBadges();
     await loadContentReleases();
     renderIntakeEvents();
     await loadContentIntake();
@@ -1781,6 +1828,10 @@ async function loadContentIntake() {
         status: item.snapshot_id ? 'completed' : 'queued', diagnostics: { text_chars: item.text_chars } },
     })));
     $('content-intake-empty').hidden = rows.length > 0;
+    state.intakeActionCount = rows.filter(row => (row.is_import
+      ? row.status === 'needs_review'
+      : ['needs_review', 'needs_human_review'].includes(row.status))).length;
+    updateContentTabBadges();
     // One unrenderable row used to take the whole inbox with it: the list is assigned in a
     // single expression, so a throw anywhere left innerHTML untouched and the page showed
     // nothing at all — with the failure reported only as a toast that had already faded.
@@ -2089,6 +2140,7 @@ async function loadApplication() {
       await loadParentMaterials();
       await loadParentRelationships();
     } else if (roleMode === 'content' && !contentPreview) {
+      setContentTab(state.contentTab);
       const [events, coverage, lessons, queue, calibration, challenges] = (await Promise.allSettled([
         api('/events'), api('/content/source-coverage'), api('/content/lessons/review-queue'),
         api('/content/questions/review-queue'), api('/content/questions/calibration-queue'),
@@ -2100,12 +2152,14 @@ async function loadApplication() {
       state.questionReviewQueue = queue || [];
       state.calibrationQueue = calibration || [];
       state.contentChallenges = challenges || [];
+      state.questionReviewLimit = 25;
       renderSourceCoverage();
       renderLessonReviewQueue();
       renderQuestionReviewQueue();
       renderCalibrationQueue();
-    renderVideoReviewQueue();
+      renderVideoReviewQueue();
       renderContentChallengeQueue();
+      updateContentTabBadges();
       // Content Studio has its own event picker and inbox. Populate these
       // before the first paint; previously they were only refreshed after an
       // admin clicked the workspace refresh button.
@@ -2213,6 +2267,12 @@ $('show-assignment-form').addEventListener('click', () => {
 });
 
 $('refresh-content-operations').addEventListener('click', event => loadContentOperations(event.currentTarget));
+// One workspace at a time. The page used to stack ten queues into a 466,000-pixel scroll
+// and reviewers read it as "nothing here" — the lesson queue sat below 500 question cards.
+$('content-tabs').addEventListener('click', event => {
+  const button = event.target.closest('[data-cr-tab]');
+  if (button) setContentTab(button.dataset.crTab);
+});
 $('refresh-content-releases').addEventListener('click', event => { setBusy(event.currentTarget, true, 'Refreshing…'); loadContentReleases().finally(() => setBusy(event.currentTarget, false)); });
 $('enrich-content-media').addEventListener('click', async event => {
   const button = event.currentTarget;
@@ -2337,6 +2397,12 @@ $('lesson-review-queue').addEventListener('click', async event => {
   }
 });
 $('question-review-queue').addEventListener('click', async event => {
+  const more = event.target.closest('[data-question-show-more]');
+  if (more) {
+    state.questionReviewLimit += 25;
+    renderQuestionReviewQueue();
+    return;
+  }
   const button = event.target.closest('[data-review-decision], [data-publish-question]');
   if (!button) return;
   const card = button.closest('[data-question-card]');
@@ -3897,6 +3963,8 @@ async function renderVideoReviewQueue() {
   try {
     const data = await api('/content/video-renders?status=pending');
     const renders = data.renders || [];
+    state.videoReviewCount = renders.length;
+    updateContentTabBadges();
     $('video-review-count').textContent = renders.length ? `${renders.length} awaiting review` : 'Queue clear';
     if (!renders.length) {
       host.innerHTML = '<p class="catalog-empty">No rendered videos are waiting for review.</p>';

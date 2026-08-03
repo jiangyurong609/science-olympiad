@@ -1465,3 +1465,15 @@ h2[tabindex="-1"]:focus-visible { outline: 0; }
   .lesson-stage .lesson-block { min-height: 430px; padding: 28px 22px; }
   .lesson-stage .lesson-block-opening { min-height: 430px; }
 }
+
+/* ---------- content review sub-tabs ---------- */
+/* One workspace per tab. This page used to render every queue at once — 466,000px tall —
+   and the lesson queue was unfindable below 500 question cards. */
+.cr-tabs { display: flex; flex-wrap: wrap; gap: 8px; margin: 4px 0 22px; padding: 6px; border-radius: 14px; background: var(--surface); border: 1px solid var(--line); box-shadow: var(--shadow); position: sticky; top: 12px; z-index: 30; }
+.cr-tab { display: inline-flex; align-items: center; gap: 7px; padding: 9px 14px; border: 0; border-radius: 10px; background: transparent; color: var(--ink); font: inherit; font-size: .82rem; font-weight: 700; cursor: pointer; transition: background .15s var(--ease-spring), color .15s var(--ease-spring); }
+.cr-tab:hover { background: rgba(31, 90, 69, .08); }
+.cr-tab.active { background: var(--forest); color: #fdfcf7; }
+.cr-tab-count { display: inline-flex; align-items: center; justify-content: center; min-width: 20px; height: 20px; padding: 0 6px; border-radius: 999px; background: var(--amber); color: #3c2a0d; font-size: .68rem; font-weight: 800; }
+.cr-tab.active .cr-tab-count { background: #fdfcf7; color: var(--forest-dark); }
+.cr-panel-hidden { display: none !important; }
+[data-question-show-more] { justify-self: center; margin: 10px auto; display: block; }
