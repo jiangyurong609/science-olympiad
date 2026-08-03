@@ -210,3 +210,61 @@ def test_progress_cannot_mark_an_id_less_checkpoint_complete_unanswered(client, 
     cheated = client.put(f"/api/lessons/{lesson_id}/progress", headers=auth(student_token),
                          json={"current_block": 1, "completed_block_ids": [checkpoint["id"]]})
     assert cheated.status_code == 422
+
+
+def test_an_automated_rejection_withholds_the_lesson_immediately():
+    """A machine may withhold on concrete evidence; it may not grant on any.
+
+    The automated reviewer found lessons placing the basal ganglia in the cerebral cortex and
+    treating blood glucose as a hindbrain function — both student-visible, both past every
+    structural gate. Rejection acts at once because the evidence is a named, checkable error.
+    """
+    from app.models.entities import ReviewDecision, User
+    from app.services import student_visibility as sv
+
+    _, lesson_id = create_split_style_lesson()
+    with SessionLocal() as db:
+        lesson = db.get(Lesson, lesson_id)
+        version = db.scalar(select(LessonVersion).where(LessonVersion.lesson_id == lesson_id))
+        probe = User(id=-1, email="p@invalid", full_name="P", role="student")
+        assert sv.lesson_is_student_visible(db, probe, lesson, version) is True
+
+        reviewer = db.scalar(select(User).where(User.role.in_(("admin", "editor"))))
+        if reviewer is None:
+            reviewer = User(email="auto@example.test", full_name="Auto", role="editor")
+            db.add(reviewer); db.flush()
+        db.add(ReviewDecision(entity_type="lesson", entity_id=lesson_id,
+                              entity_version=version.version, stage="automated",
+                              decision="reject", reviewer_user_id=reviewer.id))
+        db.commit()
+        assert sv.lesson_is_student_visible(db, probe, lesson, version) is False
+
+
+def test_an_automated_approval_does_not_make_a_lesson_visible_by_itself():
+    """Approving is a claim about what students are taught; that still needs a person."""
+    from app.models.entities import Concept, Event, ReviewDecision, User
+    from app.services import student_visibility as sv
+
+    with SessionLocal() as db:
+        event = Event(slug="auto-approve", name="AA", division="B", season=2026)
+        db.add(event); db.flush()
+        concept = Concept(event_id=event.id, name="C", description="x")
+        db.add(concept); db.flush()
+        lesson = Lesson(event_id=event.id, concept_id=concept.id, slug="aa",
+                        title="AA", status="published", disposition="pending_disposition",
+                        current_version=1, sequence=1)
+        db.add(lesson); db.flush()
+        db.add(LessonVersion(lesson_id=lesson.id, version=1, review_status="draft",
+                             claim_ids=[1], citations=[{"title": "x"}],
+                             content=[{"type": "opening", "heading": "Hi"}]))
+        reviewer = db.scalar(select(User).where(User.role.in_(("admin", "editor"))))
+        if reviewer is None:
+            reviewer = User(email="auto2@example.test", full_name="Auto", role="editor")
+            db.add(reviewer); db.flush()
+        db.add(ReviewDecision(entity_type="lesson", entity_id=lesson.id, entity_version=1,
+                              stage="automated", decision="approve",
+                              reviewer_user_id=reviewer.id))
+        db.commit()
+        probe = User(id=-1, email="p2@invalid", full_name="P", role="student")
+        version = db.scalar(select(LessonVersion).where(LessonVersion.lesson_id == lesson.id))
+        assert sv.lesson_is_student_visible(db, probe, lesson, version) is False

@@ -172,6 +172,21 @@ def classify_exam(db: Session, exam: Exam) -> str:
 # a video endpoint gated on `lesson.status` alone, and a tutor gated on
 # `LessonVersion.review_status` — a different mechanism from the ReviewDecision rows used here.
 # The three agreed only by coincidence of the current data. One definition, used by every path.
+def automated_review_rejected(db: Session, lesson: Lesson, version: LessonVersion) -> bool:
+    """Did the automated reviewer reject *this version* of this lesson?
+
+    Scoped to the version so a repaired lesson is not held down by a verdict about the text it
+    replaced — the same rule the `unreviewed_practice` grandfather learned the hard way.
+    """
+    return db.scalar(select(ReviewDecision).where(
+        ReviewDecision.entity_type == "lesson",
+        ReviewDecision.entity_id == lesson.id,
+        ReviewDecision.entity_version == version.version,
+        ReviewDecision.stage == "automated",
+        ReviewDecision.decision == "reject",
+    )) is not None
+
+
 def lesson_is_student_visible(
     db: Session,
     user: User,
@@ -193,6 +208,14 @@ def lesson_is_student_visible(
     # that happened to be answerable". This runs ahead of the grandfather: that exemption is
     # about review having happened, not about the content being coherent.
     if lesson_blocks.ungradeable_checkpoints(version.content or []):
+        return False
+    # An automated review may *withhold* but never *grant*. Rejecting is a safety action and
+    # the evidence for it is concrete — a named factual error a reviewer can check — so it
+    # takes effect immediately. Approving is a claim of authority about what students are
+    # taught, and that still requires editor and SME below. The asymmetry is the point: a
+    # machine that finds "the basal ganglia are placed in the cerebral cortex" should be able
+    # to pull the lesson without being able to bless the next one.
+    if automated_review_rejected(db, lesson, version):
         return False
     # Visibility was previously granted to every lesson on a pre-2027 event, so review
     # evidence was never consulted for most of the catalog. Legacy content is now
