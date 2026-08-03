@@ -913,6 +913,11 @@ function studentEvents() {
   // active, published, and unreachable from any menu. Duplicates are handled where they
   // belong — retired server-side as superseded, which the /events endpoint already excludes —
   // so navigation's only rule is: has content, is served.
+  //
+  // The student's own division still orders and filters the list — removing the season gate
+  // deleted this binding along with it and left the whole workspace failing to load on
+  // "division is not defined", because every view calls this before rendering anything.
+  const division = state.user?.division;
   return [...state.events]
     .filter(event => event.lesson_count > 0 || event.exam_count > 0 || event.material_count > 0)
     .filter(event => !division || event.division === division || event.division === 'B/C' || event.slug === state.activeEventSlug)

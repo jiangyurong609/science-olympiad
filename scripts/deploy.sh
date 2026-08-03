@@ -58,6 +58,14 @@ if [[ "$SKIP_PREFLIGHT" != "1" ]]; then
   echo "==> Preflight: test suite"
   python -m pytest -q -p no:warnings
 
+  # A reference error in the reader breaks every view at once — "division is not defined"
+  # blanked the whole workspace behind an error banner. This catches syntax only, which is
+  # less than it should be, but it is the difference between a broken deploy and a caught one.
+  if command -v node >/dev/null 2>&1; then
+    echo "==> Preflight: client syntax"
+    node --check app/static/app.js
+  fi
+
   # What a student would actually see. Grounding, the solver and the topical screen all ask
   # whether content is well-formed or supported; none asks whether it renders. Four defects
   # reached students in a row — checkpoints with no question, cards showing the word
