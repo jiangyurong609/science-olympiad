@@ -458,7 +458,10 @@ import re as _re
 
 # Retired consolidation twins are the only events removed from the catalog: they are exact
 # duplicates of a canonical event, so showing them would be noise.
-RETIRED_SEASON_STATUSES = {"archived_superseded"}
+# Statuses whose events must never reach a student. `superseded` marks a duplicate whose twin
+# holds more content — 34 events existed once per season, the newer copy carrying stubs — and
+# it was missing here, so retiring them changed nothing until now.
+RETIRED_SEASON_STATUSES = {"archived_superseded", "superseded"}
 # Prior-season practice is NOT retired — those events rotated out of the current season but
 # still hold real lessons, questions and exams, so they stay in the catalog (labelled by
 # season_status) rather than disappearing. Both appear on the archive surface.

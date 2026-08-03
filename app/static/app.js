@@ -907,18 +907,14 @@ function renderConcepts() {
 }
 
 function studentEvents() {
-  const division = state.user?.division;
-  // Student navigation is scoped to the active competition season so the picker does not
-  // fill with historical duplicates — but prior-season practice events are deliberately
-  // retained content (they rotated out of the slate, they were not superseded), so they
-  // stay selectable rather than becoming unreachable.
-  const currentSeason = Math.max(...state.events.filter(event => event.season_status === 'current').map(event => Number(event.season) || 0), 0);
+  // Every picker — Home, Courses, Practice — runs through here, so a filter here decides
+  // what a student can reach at all. Scoping to the newest "current" season left three 2027
+  // stub events selectable while 49 events holding 360 lessons and every startable exam sat
+  // active, published, and unreachable from any menu. Duplicates are handled where they
+  // belong — retired server-side as superseded, which the /events endpoint already excludes —
+  // so navigation's only rule is: has content, is served.
   return [...state.events]
     .filter(event => event.lesson_count > 0 || event.exam_count > 0 || event.material_count > 0)
-    .filter(event => !currentSeason
-      || Number(event.season) === currentSeason
-      || event.season_status === 'prior_season_practice'
-      || event.slug === state.activeEventSlug)
     .filter(event => !division || event.division === division || event.division === 'B/C' || event.slug === state.activeEventSlug)
     .sort((a, b) => {
       const aRank = a.division === division ? 0 : a.division === 'B/C' ? 1 : 2;
