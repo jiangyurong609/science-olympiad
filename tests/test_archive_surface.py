@@ -140,6 +140,31 @@ def test_review_queue_shows_unreviewed_lessons_inside_a_published_course(client,
     assert match["next_stage"] == "editor"
 
 
+def test_review_queue_shows_a_freshly_authored_lesson_with_no_course_yet(client, admin_token):
+    """Accepting material queues author_event_lessons, which writes lessons against an event
+    that may have no course, unit, or skill scaffolding yet. The queue required a skill->course
+    link, so every lesson the accept button had just authored was invisible in the very queue
+    that button points the reviewer at — the upload looked like it had produced nothing.
+    """
+    from app.models.entities import LessonVersion
+    with SessionLocal() as db:
+        live, _prior, _twin = _seed(db)
+        lesson = Lesson(event_id=live, slug="authored-no-course", title="Authored No Course",
+                        status="draft", current_version=1)
+        db.add(lesson); db.flush()
+        db.add(LessonVersion(lesson_id=lesson.id, version=1, content=[], review_status="editor_review"))
+        db.commit()
+
+    queue = client.get("/api/content/lessons/review-queue",
+                       headers={"Authorization": f"Bearer {admin_token}"}).json()
+    rows = queue if isinstance(queue, list) else queue.get("items", [])
+    match = next((r for r in rows if r.get("title") == "Authored No Course"), None)
+    assert match is not None, "a lesson authored before its course exists must still be reviewable"
+    assert match["next_stage"] == "editor"
+    assert match["course"] is None
+    assert match["event"]["id"] == live
+
+
 def test_a_fully_approved_lesson_is_marked_complete_not_pending(client, admin_token):
     from app.models.entities import (
         Course, CourseUnit, LessonSkill, LessonVersion, ReviewDecision, Skill, User,

@@ -1477,3 +1477,4 @@ h2[tabindex="-1"]:focus-visible { outline: 0; }
 .cr-tab.active .cr-tab-count { background: #fdfcf7; color: var(--forest-dark); }
 .cr-panel-hidden { display: none !important; }
 [data-question-show-more] { justify-self: center; margin: 10px auto; display: block; }
+.field-error { outline: 2px solid #b3261e; outline-offset: 1px; border-radius: 8px; }

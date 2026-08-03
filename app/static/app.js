@@ -1621,14 +1621,14 @@ function renderLessonReviewQueue() {
       <summary class="lesson-review-summary">
         <span class="lesson-review-summary-main">
           <strong>${escapeHtml(lesson.title)}</strong>
-          <small>${escapeHtml(lesson.unit?.title || 'Course')} · ${lesson.estimated_minutes} min · ${lesson.blocks.length} sections</small>
+          <small>${escapeHtml(lesson.unit?.title || lesson.event.name)} · ${lesson.estimated_minutes} min · ${lesson.blocks.length} sections · ${lesson.evidence.length} source passage${lesson.evidence.length === 1 ? '' : 's'}</small>
         </span>
         <span class="lesson-review-summary-flags">
           ${flagCount ? `<span class="review-flag review-flag-strong">${flagCount} finding${flagCount === 1 ? '' : 's'}</span>` : '<span class="review-flag review-flag-clear">clean</span>'}
           <span class="coverage-release ${stage === 'complete' ? 'ready' : 'blocked'}">${escapeHtml(stageLabel)}</span>
         </span>
       </summary>
-      <header><div><span class="coverage-season">${escapeHtml(lesson.event.name)} · ${escapeHtml(lesson.unit?.title || 'Course')} · Version ${lesson.version}</span><p>${escapeHtml(lesson.summary)}</p></div></header>
+      <header><div><span class="coverage-season">${escapeHtml(lesson.event.name)}${lesson.unit?.title ? ` · ${escapeHtml(lesson.unit.title)}` : ''} · Version ${lesson.version}</span><p>${escapeHtml(lesson.summary)}</p></div></header>
       <div class="lesson-review-actions"><a class="button button-primary button-compact" href="${escapeHtml(safeActionUrl(lesson.preview_url))}" target="_blank" rel="noopener">Walk through as a student ↗</a><span>${lesson.evidence.length} source passages</span></div>
       ${findings}
       <details class="lesson-review-detail"><summary>Inspect lesson sequence</summary><ol class="lesson-review-blocks">${lessonBlocks}</ol></details>
@@ -1860,7 +1860,7 @@ function renderIntakeRow(row) {
         <div><strong>${escapeHtml(row.filename)}</strong><small>${row.is_import ? 'URL / YouTube import' : `${row.byte_count.toLocaleString()} bytes · ${escapeHtml(row.created_at ? formatDate(row.created_at) : '—')}`}</small></div>
         <span class="status-pill intake-status-${escapeHtml(row.status)}">${escapeHtml(row.status.replaceAll('_', ' '))}</span>
         <div class="content-intake-detail"><span>${escapeHtml(ingestion.stage || 'queued')}</span>${diagnostics.text_chars ? `<span>${Number(diagnostics.text_chars).toLocaleString()} extracted chars</span>` : ''}${diagnostics.page_count ? `<span>${diagnostics.page_count} pages</span>` : ''}</div>
-        <div class="content-intake-actions">${ingestion.source_id ? `<button class="button button-secondary button-compact" type="button" data-intake-source="${ingestion.source_id}">View extracted text</button>` : ''}${canReview ? `<select class="intake-event-select" data-intake-event aria-label="Assign event"><option value="">Keep current event</option>${(state.events || []).map(event => `<option value="${event.id}"${String(row.event_id) === String(event.id) ? ' selected' : ''}>${escapeHtml(event.name)} · ${escapeHtml(event.season)}</option>`).join('')}</select><button class="button button-primary button-compact" type="button" data-intake-review="accepted" data-intake-id="${row.id}" data-intake-import="${row.is_import ? row.source_id : ''}">Accept for authoring</button><button class="button button-quiet button-compact" type="button" data-intake-review="rejected" data-intake-id="${row.id}" data-intake-import="${row.is_import ? row.source_id : ''}">Reject</button>` : ''}</div>
+        <div class="content-intake-actions">${ingestion.source_id ? `<button class="button button-secondary button-compact" type="button" data-intake-source="${ingestion.source_id}">View extracted text</button>` : ''}${canReview ? `<select class="intake-event-select" data-intake-event data-has-event="${row.event_id ? '1' : ''}" aria-label="Assign event"><option value="">${row.event_id ? 'Keep current event' : 'Choose event to author against…'}</option>${(state.events || []).map(event => `<option value="${event.id}"${String(row.event_id) === String(event.id) ? ' selected' : ''}>${escapeHtml(event.name)} · ${escapeHtml(event.season)}</option>`).join('')}</select><button class="button button-primary button-compact" type="button" data-intake-review="accepted" data-intake-id="${row.id}" data-intake-import="${row.is_import ? row.source_id : ''}">Accept for authoring</button><button class="button button-quiet button-compact" type="button" data-intake-review="rejected" data-intake-id="${row.id}" data-intake-import="${row.is_import ? row.source_id : ''}">Reject</button>` : ''}</div>
         ${ingestion.source_id ? `<pre class="content-intake-extracted" data-intake-extracted="${ingestion.source_id}" hidden></pre>` : ''}
       </article>`;
   }
@@ -1908,6 +1908,16 @@ async function reviewContentIntake(uploadId, decision, button) {
   form.append('decision', decision);
   if (decision === 'accepted') form.append('rights_status', 'derivative_generation_allowed');
   const eventSelect = button.closest('[data-intake-id]')?.querySelector('[data-intake-event]');
+  // An accept with no event authors nothing — the server approves the source and stops. That
+  // used to be reported only in a toast that had faded by the time anyone looked for the
+  // lesson. Refuse the click up front and point at the field that needs a value.
+  if (decision === 'accepted' && eventSelect && !eventSelect.value && !eventSelect.dataset.hasEvent) {
+    eventSelect.classList.add('field-error');
+    eventSelect.focus();
+    eventSelect.addEventListener('change', () => eventSelect.classList.remove('field-error'), { once: true });
+    toast('Choose which event this material teaches — the lesson is authored against it.');
+    return;
+  }
   if (eventSelect?.value) form.append('event_id', eventSelect.value);
   form.append('notes', decision === 'accepted' ? 'Reviewed in Content Studio; rights attestation accepted.' : 'Rejected in Content Studio.');
   setBusy(button, true, decision === 'accepted' ? 'Accepting…' : 'Rejecting…');

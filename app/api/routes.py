@@ -3229,7 +3229,11 @@ def lesson_review_queue(
     courses_by_id = {row.id: row for row in db.scalars(select(Course).where(
         Course.id.in_({s.course_id for s in skills_by_id.values() if s.course_id} or {-1}))).all()}
     events_by_id = {row.id: row for row in db.scalars(select(Event).where(
-        Event.id.in_({c.event_id for c in courses_by_id.values()} or {-1}))).all()}
+        Event.id.in_(
+            {c.event_id for c in courses_by_id.values()}
+            | {l.event_id for l in lessons_by_id.values()}
+            or {-1}
+        ))).all()}
     decisions_by_key: dict[tuple, list] = {}
     for row in (db.scalars(select(ReviewDecision).where(
         ReviewDecision.entity_type == "lesson",
@@ -3255,9 +3259,12 @@ def lesson_review_queue(
         # published lessons that were never reviewed, so this filter hid precisely the
         # backlog a reviewer needs to see. Completion is decided below by whether the
         # editor and SME approvals exist, which is the real question.
-        if not course:
-            continue
-        event = events_by_id.get(course.event_id)
+        #
+        # A missing course link must not hide the lesson either: author_event_lessons
+        # creates lessons for events that have no course scaffolding yet, and requiring
+        # skill->course here made every freshly authored lesson invisible in the very
+        # queue the accept button points the reviewer at. The lesson's own event scopes it.
+        event = events_by_id.get(course.event_id if course else lesson.event_id)
         # Reviewing lessons that belong to a retired duplicate is wasted work: whatever the
         # reviewer decides can never reach a student, because the event is not in the catalog.
         if not event or not event.active or event.season_status in RETIRED_SEASON_STATUSES:
@@ -3304,7 +3311,7 @@ def lesson_review_queue(
                 "id": course.id,
                 "title": course.title,
                 "slug": course.slug,
-            },
+            } if course else None,
             "unit": {
                 "id": unit.id,
                 "title": unit.title,
