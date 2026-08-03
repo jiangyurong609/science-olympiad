@@ -3707,9 +3707,18 @@ window.addEventListener('hashchange', () => {
 });
 
 async function initialize() {
+  // Google sign-in fails *open*. It used to be hidden by default and revealed only after
+  // /auth/config succeeded, so any hiccup on that one request — a cold start, a dropped
+  // connection, a slow boot — left the page showing password fields only, with no way for a
+  // Google-account user to get in and nothing on screen explaining why. Hiding a working
+  // sign-in route is a worse failure than briefly showing one that is unavailable.
+  const googleAuth = $('google-auth');
+  const remembered = localStorage.getItem('authProvider');
+  if (googleAuth) googleAuth.hidden = remembered === 'local';
   try {
     state.authConfig = await api('/auth/config');
-    $('google-auth').hidden = state.authConfig.provider !== 'firebase';
+    localStorage.setItem('authProvider', state.authConfig.provider);
+    if (googleAuth) googleAuth.hidden = state.authConfig.provider !== 'firebase';
   } catch (error) {
     $('auth-error').textContent = 'The sign-in service is unavailable. Refresh the page or try again later.';
   }
