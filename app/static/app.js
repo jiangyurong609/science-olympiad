@@ -2741,6 +2741,20 @@ function stepForBlock(blockIndex) {
   return Math.max(0, steps.findIndex(s => s.kind === 'block' && s.blockIndex === blockIndex));
 }
 
+// The finish button's state depends on lesson progress, which changes when a checkpoint is
+// answered — not only when a block is rendered. Computing it solely inside renderLessonBlock
+// meant answering the last required checkpoint correctly left the button reading "Complete
+// Required Checkpoints" and disabled, with nothing left to complete, until the reader
+// navigated away and back.
+function refreshLessonFinishButton() {
+  const lesson = state.currentLesson;
+  const finish = $('lesson-finish');
+  if (!lesson || !finish) return;
+  const done = lesson.progress?.status === 'completed';
+  finish.disabled = !done;
+  finish.textContent = done ? 'Finish Lesson' : 'Complete Required Checkpoints';
+}
+
 function renderLessonBlock() {
   const lesson = state.currentLesson;
   const steps = lessonSteps();
@@ -2754,8 +2768,7 @@ function renderLessonBlock() {
   $('lesson-previous').disabled = state.lessonStepIndex === 0;
   $('lesson-next').hidden = state.lessonStepIndex === total - 1;
   $('lesson-finish').hidden = state.lessonStepIndex !== total - 1;
-  $('lesson-finish').disabled = lesson.progress.status !== 'completed';
-  $('lesson-finish').textContent = lesson.progress.status === 'completed' ? 'Finish Lesson' : 'Complete Required Checkpoints';
+  refreshLessonFinishButton();
   renderLessonOutline();
 
   if (step.kind === 'video') {
@@ -2986,6 +2999,7 @@ $('lesson-block').addEventListener('submit', async event => {
     });
     state.currentLesson.progress.checkpoint_results[form.dataset.checkpointForm] = { correct: result.correct, attempts: result.attempts };
     state.currentLesson.progress.status = result.lesson_status;
+    refreshLessonFinishButton();     // the last correct answer must unlock Finish immediately
     const feedback = form.querySelector('.checkpoint-feedback');
     feedback.hidden = false;
     feedback.classList.toggle('incorrect', !result.correct);
