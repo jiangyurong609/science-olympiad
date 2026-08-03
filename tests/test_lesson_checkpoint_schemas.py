@@ -104,7 +104,7 @@ def test_a_checkpoint_carrying_review_metadata_reveals_nothing(client, student_t
 
     started = client.post(f"/api/lessons/{lesson_id}/start", headers=auth(student_token))
     checkpoint = next(b for b in started.json()["content"] if b["type"] == "checkpoint")
-    assert set(checkpoint) == {"type", "id", "heading", "question", "choices"}
+    assert set(checkpoint) == {"type", "id", "heading", "question", "choices", "empty"}
 
 
 def test_a_split_generated_checkpoint_reaches_the_reader_with_its_question(client, student_token):
@@ -315,3 +315,40 @@ def test_a_card_with_nothing_in_it_is_dropped_rather_than_stubbed(client, studen
 
     assert normalised_cards({"cards": [{"unknown_key": "x"}, {}]}) == []
     assert normalised_cards({"cards": ["Plain string card"]})[0]["name"] == "Plain string card"
+
+
+def test_a_hollow_slide_is_skipped_but_keeps_its_index(client, student_token):
+    """38 lessons served a slide of five boxes each reading "Concept" and nothing else.
+
+    Drawing empty boxes is worse than drawing nothing: it tells a student there is content
+    here and that they failed to see it. The block stays in `content` so video block_indexes,
+    checkpoint ids and saved progress keep pointing at the same places.
+    """
+    with SessionLocal() as db:
+        event = Event(slug="hollow-event", name="Hollow", division="B", season=2026)
+        db.add(event); db.flush()
+        concept = Concept(event_id=event.id, name="C", description="x")
+        db.add(concept); db.flush()
+        lesson = Lesson(event_id=event.id, concept_id=concept.id, slug="hollow",
+                        title="Hollow", status="published",
+                        disposition="unreviewed_practice", current_version=1, sequence=1)
+        db.add(lesson); db.flush()
+        db.add(LessonVersion(
+            lesson_id=lesson.id, version=1, review_status="sme_approved", claim_ids=[1],
+            citations=[{"title": "Gov"}],
+            content=[
+                {"type": "opening", "heading": "Real", "body": "Actual teaching text."},
+                {"type": "property_cards", "heading": "Key ideas", "body": "",
+                 "cards": [{"name": "Concept", "cue": "", "detail": ""} for _ in range(5)]},
+                {"type": "checkpoint", "heading": "Check", "prompt": "Q?",
+                 "choices": ["A", "B"], "answer_index": 1},
+            ]))
+        db.commit()
+        lesson_id = lesson.id
+
+    content = client.post(f"/api/lessons/{lesson_id}/start",
+                          headers=auth(student_token)).json()["content"]
+    assert len(content) == 3, "the block must stay in place so indexes do not shift"
+    assert content[1]["empty"] is True, "the hollow slide must be flagged"
+    assert content[1]["cards"] == [], "placeholder cards are dropped, not rendered"
+    assert content[0]["empty"] is False and content[2]["empty"] is False

@@ -109,7 +109,7 @@ def test_a_student_can_go_from_catalog_to_a_scored_exam(client, student_token):
     started = client.post(f"/api/lessons/{lesson_id}/start", headers=auth(student_token))
     assert started.status_code == 200
     checkpoint = next(b for b in started.json()["content"] if b["type"] == "checkpoint")
-    assert set(checkpoint) == {"type", "id", "heading", "question", "choices"}
+    assert set(checkpoint) == {"type", "id", "heading", "question", "choices", "empty"}
     assert checkpoint["question"], "the student must be able to read the question"
 
     # 3. scaffolding is available now that the lesson is reviewed

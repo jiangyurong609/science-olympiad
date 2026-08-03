@@ -2719,7 +2719,10 @@ function buildLessonSteps() {
   (lesson.content || []).forEach((block, index) => {
     const opener = chapters.find(c => (c.block_indexes || [])[0] === index);
     if (opener) steps.push({ kind: 'video', chapter: opener, blockIndex: index });
-    steps.push({ kind: 'block', blockIndex: index });
+    // A block the server flagged empty renders as a heading over nothing — five boxes reading
+    // "Concept" told students there was content they had failed to see. It stays in
+    // `lesson.content` so every index still points at the same block; it just gets no step.
+    if (!block.empty) steps.push({ kind: 'block', blockIndex: index });
   });
   state.lessonSteps = steps;
   return steps;

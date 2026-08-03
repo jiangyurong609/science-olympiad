@@ -134,6 +134,9 @@ def student_safe(block: dict, index: int) -> dict:
         safe["question"] = checkpoint_stem(block)
     if block.get("type") in {"property_cards", "steps", "summary"}:
         safe["cards"] = normalised_cards(block)
+    # Blocks stay in the array so every index — video `block_indexes`, checkpoint ids, saved
+    # progress — keeps pointing at the same content. The reader skips the flagged ones.
+    safe["empty"] = block_is_empty(block)
     if not str(safe.get("heading") or "").strip():
         # some generators write `title` instead of `heading`, and the reader shows a generic
         # placeholder when it finds neither — content that exists, rendered as a stub
@@ -159,6 +162,33 @@ def _first(card: dict, keys: tuple[str, ...]) -> str:
     return ""
 
 
+# Names a generator emits when it produced no content. A card called "Concept" with nothing
+# under it is not a concept; it is a slot that never got filled.
+_PLACEHOLDER_NAMES = {"concept", "key idea", "key ideas", "topic", "term", "idea", "item"}
+
+
+def block_is_empty(block: dict) -> bool:
+    """True when this block would render as furniture — a heading over nothing.
+
+    38 lessons carry `property_cards` blocks holding five cards each named "Concept" with an
+    empty cue and detail. The reader dutifully drew five empty boxes, which is worse than
+    drawing nothing: it tells a student there is content here and that they failed to see it.
+    """
+    kind = str(block.get("type") or "")
+    if kind in {"image_gallery", "video"}:
+        return not (block.get("images") or block.get("video_id"))
+    if kind == CHECKPOINT:
+        return not checkpoint_stem(block)
+    if normalised_cards(block):
+        return False
+    for key in ("body", "text", "prompt", "heading", "title"):
+        if str(block.get(key) or "").strip():
+            # a heading alone is furniture; body text is content
+            if key in {"body", "text", "prompt"}:
+                return False
+    return not (block.get("steps") or block.get("points"))
+
+
 def normalised_cards(block: dict) -> list[dict]:
     """Cards in the one shape the reader knows, whichever shape they were written in."""
     raw = block.get("cards")
@@ -176,5 +206,7 @@ def normalised_cards(block: dict) -> list[dict]:
         detail = _first(card, _CARD_DETAIL)
         if not (name or cue or detail):
             continue                      # nothing to show is better than a stub that lies
+        if name.lower() in _PLACEHOLDER_NAMES and not cue and not detail:
+            continue                      # "Concept" with nothing under it is an unfilled slot
         out.append({"name": name or cue[:60], "cue": cue if name else "", "detail": detail})
     return out
