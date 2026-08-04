@@ -165,7 +165,12 @@ def generate_model_questions(
                     "checks": ["factual support", "single unambiguous answer", "answer consistency", "age appropriateness"],
                 }),
             ).payload
-            verifier_passed = bool(verify_payload.get("passed"))
+            # `passed` comes back in whatever shape the model chose — sometimes a bool,
+            # sometimes a list of per-check results — and a non-empty list is truthy even when
+            # `errors` is simultaneously full of real objections. Recording that as a pass
+            # writes "verifier approved" beside the verifier's own complaint, which is the
+            # weak-report failure `item_clears_every_gate` exists to refuse. Require both.
+            verifier_passed = bool(verify_payload.get("passed")) and not verify_payload.get("errors")
             report["independent_verifier"] = verify_payload
 
             # Semantic leakage check: block if an embedding near-duplicate exists (when an
