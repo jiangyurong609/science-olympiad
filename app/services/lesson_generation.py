@@ -57,6 +57,23 @@ _LESSON_SYSTEM = (
     "- {\"type\":\"checkpoint\",\"id\":str,\"heading\":str,\"question\":str,\"choices\":[str,str,str,str],\"correct_index\":int,\"explanation\":str}  (knowledge check)\n"
     "- {\"type\":\"summary\",\"heading\":str,\"points\":[str]}  (key takeaways; last block)\n"
     "Media is composed server-side after authoring from approved, rights-cleared event assets; never invent image URLs, video IDs, or unsupported claims.\n"
+    # The prompt said "grounded in the provided source material" and never said the student
+    # cannot see it. So the model wrote for a reader holding the PDF: 155 blocks across the
+    # catalog say things like \"according to the source packet\", and 63 read from \"the
+    # diagram below\" in lessons that show no diagram. Both are caught after the fact by
+    # course_quality and block approval, which meant every generated course arrived with
+    # defects nobody could fix without re-authoring. Say it up front instead.
+    "SELF-CONTAINED: the student NEVER sees the source material — only your lesson text. "
+    "Never refer to it. Do not write 'the source', 'the source packet', 'according to the "
+    "source', 'in the source', 'the provided stations', or 'the source station'. Teach the "
+    "content directly instead of pointing at where it came from.\n"
+    "NO FIGURE REFERENCES: your lesson may be shown with no images at all, so never write a "
+    "phrase that depends on one. Avoid 'the figure/diagram/graph/chart/map/image above|below', "
+    "'Figure 1', 'shown above|below', 'pictured', 'depicted below', 'based on the diagram', and "
+    "'Specimen A' style labels. Describe what a student must see in words, so the sentence "
+    "stands on its own if no image accompanies it. When you must discuss a kind of figure the "
+    "student will meet at competition, name it indefinitely — 'an H-R diagram', 'a light "
+    "curve' — never 'the diagram', which reads as a figure you are about to show.\n"
     "Requirements: exactly one `opening` first and one `summary` last; at least 5 teaching "
     "blocks (property_cards/steps/worked_example) covering ALL the subtopics; at least 3 "
     "`checkpoint` blocks spread through the lesson, each with one correct answer and "
@@ -201,7 +218,12 @@ def generate_lessons_for_event(
     if not syllabus:
         raise ModelProviderError("Model returned no syllabus")
 
-    # Regeneration replaces the prior auto-generated course.
+    # Regeneration replaces the prior auto-generated course. The replacement is staged: the
+    # delete happens here, but if generation then yields nothing usable the whole call raises
+    # and rolls back rather than committing an event with its course removed and nothing put
+    # back. `_safe_generate` swallows per-lesson failures and `_valid_blocks`/`citations` drop
+    # more, so "every lesson failed" is a reachable state, not a hypothetical — and a student
+    # would have seen an event that used to have lessons and now has none.
     old = db.scalars(select(Lesson.id).where(
         Lesson.event_id == event.id, Lesson.slug.like(f"{SLUG_PREFIX}%")
     )).all()
@@ -258,6 +280,13 @@ def generate_lessons_for_event(
             citations=citations, review_status="editor_review",
         ))
         lessons.append(lesson)
+    if old and not lessons:
+        # Deleting a working course and committing nothing in its place is worse than leaving
+        # the old one in service, defects and all. Raising rolls the delete back with it.
+        raise ModelProviderError(
+            f"Regeneration of {event.slug} produced no usable lesson; keeping the "
+            f"{len(old)} existing lesson(s) rather than replacing them with nothing"
+        )
     if commit:
         db.commit()
         for lesson in lessons:
