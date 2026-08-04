@@ -30,7 +30,14 @@ def validate_candidate(
     answer_spec: dict,
     claim_ids: list[int],
     source_id: int | None,
+    exclude_question_id: int | None = None,
 ) -> dict:
+    """`exclude_question_id` omits one stored item from the duplicate check.
+
+    The duplicate scan compares the stem against every question in the catalog. That is right
+    for a brand-new candidate and wrong for re-validating a stored one, which would match
+    itself at 1.0 and be rejected as a near-duplicate of itself.
+    """
     errors: list[str] = []
     warnings: list[str] = []
     if len(stem.strip()) < 12:
@@ -56,7 +63,10 @@ def validate_candidate(
         source = db.get(Source, source_id)
         if not source or not can_use_for_generation(source.rights_status, source.approved):
             errors.append("source_not_authorized_for_generation")
-    previous = db.scalars(select(Question.stem)).all()
+    previous_query = select(Question.stem)
+    if exclude_question_id is not None:
+        previous_query = previous_query.where(Question.id != exclude_question_id)
+    previous = db.scalars(previous_query).all()
     max_similarity = max((SequenceMatcher(None, stem.lower(), old.lower()).ratio() for old in previous), default=0.0)
     if max_similarity >= 0.92:
         errors.append("near_duplicate_question")
