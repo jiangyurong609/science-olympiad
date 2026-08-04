@@ -1757,7 +1757,9 @@ function updateContentTabBadges() {
     const el = $(id);
     if (!el) return;
     el.hidden = !value;
-    el.textContent = value > 99 ? '99+' : String(value || '');
+    // No cap. "99+" on a queue of 1,444 reads as "a bit of work left" and hides an order of
+    // magnitude — the backlog size is the whole point of the badge.
+    el.textContent = String(value || '');
   };
   const lessonsWaiting = state.lessonReviewQueue.filter(
     lesson => !['complete', 'revision_required'].includes(lesson.next_stage)).length;
