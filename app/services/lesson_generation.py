@@ -128,6 +128,11 @@ def _attach_passage_citations(db: Session, source: Source, blocks: list[dict]) -
             passages = ensure_source_passages(db, snapshot, commit=False)
     if not passages:
         return blocks, []
+    # A passage with no primary key cannot be cited: `source_passage_id: null` resolves to no
+    # evidence at all, so the lesson reads as ungrounded no matter how well it was written.
+    passages = [passage for passage in passages if passage.id is not None]
+    if not passages:
+        return blocks, []
     citations = []
     seen = set()
     enriched = []

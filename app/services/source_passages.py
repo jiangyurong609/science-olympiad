@@ -196,4 +196,11 @@ def ensure_source_passages(db: Session, snapshot: SourceSnapshot, *, commit: boo
         rows.append(passage)
     if commit:
         db.commit()
+    elif rows:
+        # `commit=False` callers still need the primary keys: the lesson author records
+        # `source_passage_id` for every citation, and without a flush those rows hand back
+        # `id is None`. That wrote a null passage id into the first lesson generated for each
+        # source — one lesson per event arrived citing nothing, and the review queue showed it
+        # as ungrounded, which is exactly the defect the caller was there to fix.
+        db.flush()
     return rows
