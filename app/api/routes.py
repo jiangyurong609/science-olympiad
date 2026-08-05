@@ -3556,12 +3556,16 @@ def _review_evidence(question: Question) -> dict:
 def question_review_queue(
     event_id: int | None = None,
     course_id: int | None = None,
-    limit: int = Query(500, ge=1, le=1000),
+    limit: int = Query(500, ge=1, le=5000),
     offset: int = Query(0, ge=0),
     db: Session = Depends(get_db),
     actor: User = Depends(require_content_staff),
 ):
     """Items awaiting review, scoped so a reviewer can clear one course at a time.
+
+    The default cap is a page size, not a total: a caller that omits `limit` and counts the
+    rows it gets back reads a 1,444-item backlog as exactly 500. The admin badge did that and
+    understated the queue by two thirds, so callers that want the whole queue must ask for it.
 
     This returned every machine-validated item in the catalog — 820 of them — in one
     unpaginated response. A reviewer working a single course had no way to see only its items,

@@ -1785,7 +1785,7 @@ async function loadContentOperations(button = null) {
     // nobody was waiting for had not come back yet.
     const [coverage, lessons, queue, calibration, challenges] = (await Promise.allSettled([
       api('/content/source-coverage'), api('/content/lessons/review-queue'),
-      api('/content/questions/review-queue'), api('/content/questions/calibration-queue'),
+      api('/content/questions/review-queue?limit=1000'), api('/content/questions/calibration-queue'),
       api('/content/challenges'),
     ])).map(result => result.status === 'fulfilled' ? result.value : null);
     state.sourceCoverage = coverage?.scorecards || [];
@@ -2155,7 +2155,7 @@ async function loadApplication() {
       setContentTab(state.contentTab);
       const [events, coverage, lessons, queue, calibration, challenges] = (await Promise.allSettled([
         api('/events'), api('/content/source-coverage'), api('/content/lessons/review-queue'),
-        api('/content/questions/review-queue'), api('/content/questions/calibration-queue'),
+        api('/content/questions/review-queue?limit=1000'), api('/content/questions/calibration-queue'),
         api('/content/challenges'),
       ])).map(result => result.status === 'fulfilled' ? result.value : null);
       state.events = events || state.events || [];
@@ -2432,7 +2432,7 @@ $('question-review-queue').addEventListener('click', async event => {
         body: JSON.stringify({ stage: button.dataset.reviewStage, decision: button.dataset.reviewDecision, checklist, notes }),
       });
     }
-    state.questionReviewQueue = await api('/content/questions/review-queue');
+    state.questionReviewQueue = await api('/content/questions/review-queue?limit=1000');
     renderQuestionReviewQueue();
     toast(button.dataset.publishQuestion ? 'Question published.' : 'Review decision saved.');
   } catch (error) { status.textContent = error.message; }
