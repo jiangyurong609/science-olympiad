@@ -9,8 +9,8 @@
   <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='16' fill='%231f5a45'/%3E%3Ctext x='32' y='44' text-anchor='middle' font-size='38' fill='white'%3EF%3C/text%3E%3C/svg%3E">
   <link rel="preload" href="/static/fonts/Fraunces.woff2" as="font" type="font/woff2" crossorigin>
   <link rel="preload" href="/static/fonts/AtkinsonHyperlegibleNext.woff2" as="font" type="font/woff2" crossorigin>
-  <link rel="stylesheet" href="/static/styles.css?v=38">
-  <link rel="stylesheet" href="/static/theme.css?v=38">
+  <link rel="stylesheet" href="/static/styles.css?v=39">
+  <link rel="stylesheet" href="/static/theme.css?v=39">
 </head>
 <body>
   <a class="skip-link" href="#main-content">Skip to Main Content</a>
@@ -422,6 +422,13 @@
           </section>
           <section class="lesson-editorial-workspace" data-cr-panel="lessons" aria-labelledby="lesson-editorial-title">
             <div class="section-heading"><div><p class="kicker">Course authoring gate</p><h2 id="lesson-editorial-title">Lesson Review Queue</h2><p>Read each lesson in context, verify its retained source passages, and record independent editorial and scientific decisions.</p></div><p id="lesson-editorial-count" class="queue-count">0 Lessons</p></div>
+            <!-- Unordered, the four lessons that cannot be approved at all sorted to the top
+                 and the 204 that are ready scattered below them. Lead with what is reviewable. -->
+            <div id="lesson-review-filters" class="cr-filters" role="group" aria-label="Filter lessons by readiness">
+              <button type="button" class="cr-filter active" data-lesson-filter="ready">Ready to approve <span data-count="ready">0</span></button>
+              <button type="button" class="cr-filter" data-lesson-filter="findings">Has findings <span data-count="findings">0</span></button>
+              <button type="button" class="cr-filter" data-lesson-filter="all">All <span data-count="all">0</span></button>
+            </div>
             <div id="lesson-review-queue" class="lesson-review-queue" aria-live="polite"></div>
             <div id="lesson-review-empty" class="empty-state surface" hidden><span aria-hidden="true">✓</span><h3>Lesson Queue Clear</h3><p>No current lesson version is waiting for review.</p></div>
           </section>
@@ -547,6 +554,6 @@
       </div>
     </div>
   </div>
-  <script src="/static/app.js?v=38"></script>
+  <script src="/static/app.js?v=39"></script>
 </body>
 </html>

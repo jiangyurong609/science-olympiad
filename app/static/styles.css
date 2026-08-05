@@ -1478,3 +1478,11 @@ h2[tabindex="-1"]:focus-visible { outline: 0; }
 .cr-panel-hidden { display: none !important; }
 [data-question-show-more] { justify-self: center; margin: 10px auto; display: block; }
 .field-error { outline: 2px solid #b3261e; outline-offset: 1px; border-radius: 8px; }
+
+/* ---------- review queue readiness filters ---------- */
+.cr-filters { display: flex; flex-wrap: wrap; gap: 8px; margin: 0 0 16px; }
+.cr-filter { display: inline-flex; align-items: center; gap: 7px; padding: 8px 14px; border: 1px solid var(--line); border-radius: 999px; background: var(--surface); color: var(--ink); font: inherit; font-size: .78rem; font-weight: 700; cursor: pointer; transition: background .15s var(--ease-spring), color .15s var(--ease-spring); }
+.cr-filter:hover { background: rgba(31, 90, 69, .08); }
+.cr-filter.active { background: var(--forest); border-color: var(--forest); color: #fdfcf7; }
+.cr-filter span { display: inline-flex; align-items: center; justify-content: center; min-width: 20px; height: 19px; padding: 0 6px; border-radius: 999px; background: rgba(27, 43, 36, .10); font-size: .68rem; font-weight: 800; }
+.cr-filter.active span { background: rgba(253, 252, 247, .22); color: #fdfcf7; }

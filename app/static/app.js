@@ -29,6 +29,7 @@ const state = {
   lessonReviewQueue: [],
   questionReviewQueue: [],
   contentTab: 'lessons',
+  lessonFilter: 'ready',
   questionReviewLimit: 25,
   videoReviewCount: 0,
   intakeActionCount: 0,
@@ -1541,11 +1542,32 @@ const lessonReviewChecks = {
   ],
 };
 
+function lessonFindingCount(lesson) {
+  return (lesson.disputed_checkpoints || []).length
+    + (lesson.absent_media_blocks || []).length
+    + (lesson.unavailable_source_blocks || []).length
+    + (lesson.evidence.length ? 0 : 1);   // ungrounded is a finding in its own right
+}
+
 function renderLessonReviewQueue() {
-  const lessons = state.lessonReviewQueue;
-  const waiting = lessons.filter(lesson => !['complete', 'revision_required'].includes(lesson.next_stage));
-  $('lesson-editorial-count').textContent = `${waiting.length} waiting · ${lessons.length} total`;
-  $('lesson-review-empty').hidden = lessons.length > 0;
+  const all = state.lessonReviewQueue;
+  const waiting = all.filter(lesson => !['complete', 'revision_required'].includes(lesson.next_stage));
+  $('lesson-editorial-count').textContent = `${waiting.length} waiting · ${all.length} total`;
+  const ready = all.filter(lesson => lessonFindingCount(lesson) === 0);
+  const flagged = all.filter(lesson => lessonFindingCount(lesson) > 0);
+  const counts = { ready: ready.length, findings: flagged.length, all: all.length };
+  document.querySelectorAll('#lesson-review-filters [data-count]').forEach(node => {
+    node.textContent = counts[node.dataset.count] ?? 0;
+  });
+  document.querySelectorAll('#lesson-review-filters [data-lesson-filter]').forEach(button => {
+    button.classList.toggle('active', button.dataset.lessonFilter === state.lessonFilter);
+  });
+  const lessons = (state.lessonFilter === 'ready' ? ready
+    : state.lessonFilter === 'findings' ? flagged
+      : all.slice())
+    // fewest findings first, so a reviewer working top-down meets the approvable work first
+    .sort((a, b) => lessonFindingCount(a) - lessonFindingCount(b));
+  $('lesson-review-empty').hidden = all.length > 0;
   $('lesson-review-queue').innerHTML = lessons.map(lesson => {
     const stage = lesson.next_stage;
     const sameEditor = stage === 'sme' && lesson.decisions.some(
@@ -2177,6 +2199,14 @@ async function loadApplication() {
       // admin clicked the workspace refresh button.
       renderIntakeEvents();
       await loadContentIntake();
+      // People & Roles and Answer Keys were revealed only by loadContentOperations, which runs
+      // when someone clicks Refresh Workspace. On a fresh sign-in neither existed, so the
+      // Operations tab was empty and the only console for granting a staff role was invisible
+      // to the admin who needed it — reachable solely by pressing a refresh button that looked
+      // like it would merely reload what was already on screen.
+      if (state.user.role === 'admin') { $('people-workspace').hidden = false; await loadPeople(); }
+      $('answerkey-workspace').hidden = false;
+      await loadAnswerKeys();
     } else if (roleMode === 'coach') {
       const [events, exams, coachDashboard, teams] = await Promise.all([api('/events'), api('/exams'), api('/coach/dashboard'), api('/teams')]);
       state.events = events || state.events || [];
@@ -2284,6 +2314,12 @@ $('refresh-content-operations').addEventListener('click', event => loadContentOp
 $('content-tabs').addEventListener('click', event => {
   const button = event.target.closest('[data-cr-tab]');
   if (button) setContentTab(button.dataset.crTab);
+});
+$('lesson-review-filters').addEventListener('click', event => {
+  const button = event.target.closest('[data-lesson-filter]');
+  if (!button) return;
+  state.lessonFilter = button.dataset.lessonFilter;
+  renderLessonReviewQueue();
 });
 $('refresh-content-releases').addEventListener('click', event => { setBusy(event.currentTarget, true, 'Refreshing…'); loadContentReleases().finally(() => setBusy(event.currentTarget, false)); });
 $('enrich-content-media').addEventListener('click', async event => {
