@@ -2119,7 +2119,25 @@ $('people-search').addEventListener('input', () => { clearTimeout(peopleSearchTi
 $('people-role-filter').addEventListener('change', loadPeople);
 $('people-list').addEventListener('change', event => {
   const roleSelect = event.target.closest('[data-user-role]');
-  if (roleSelect) updatePerson(Number(roleSelect.dataset.userRole), { role: roleSelect.value });
+  if (!roleSelect) return;
+  const userId = Number(roleSelect.dataset.userRole);
+  const person = (state.people || []).find(u => u.id === userId);
+  const role = roleSelect.value;
+  // Every other role change is recoverable by changing it back. Granting administrator hands
+  // over the platform — the new admin can publish to students, reassign any role, and grant
+  // admin again — and the select applies on `change`, so a stray keystroke was enough. Ask.
+  if (role === 'admin' && person?.role !== 'admin') {
+    const who = person ? (person.full_name || person.email) : 'this user';
+    if (!window.confirm(
+      `Make ${who} an administrator?\n\n`
+      + 'Administrators can publish content to students, change anyone\'s role, and grant '
+      + 'administrator access to others. Every other administrator will be notified.'
+    )) {
+      roleSelect.value = person?.role || 'student';   // put the select back
+      return;
+    }
+  }
+  updatePerson(userId, { role });
 });
 $('people-list').addEventListener('click', event => {
   const toggle = event.target.closest('[data-user-active]');

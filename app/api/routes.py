@@ -4805,12 +4805,41 @@ def admin_update_user(
         ).with_for_update()).all()
         if not other_admins:
             raise HTTPException(status_code=400, detail="At least one active administrator must remain")
+    previous_role = user.role
     if payload.role is not None:
         user.role = payload.role
     if payload.is_active is not None:
         user.is_active = payload.is_active
     _audit(db, admin, "admin.user_update", "user", user.id,
            role=user.role, is_active=user.is_active)
+    # Granting administrator is the one change that hands over control of the platform:
+    # the new admin can publish to students, change any other role, and grant admin again.
+    # An audit row records it, but nobody reads an audit table unprompted. Tell the other
+    # administrators, so a grant nobody intended is noticed by someone who can undo it.
+    if payload.role is not None and previous_role != user.role and "admin" in (previous_role, user.role):
+        granted = user.role == "admin"
+        for other in db.scalars(select(User).where(
+            User.role == "admin", User.is_active.is_(True), User.id != user.id,
+        )).all():
+            create_notification(
+                db,
+                user_id=other.id,
+                notification_type="admin_role_change",
+                title="Administrator access " + ("granted" if granted else "removed"),
+                body=(
+                    f"{admin.full_name or admin.email} "
+                    f"{'granted administrator access to' if granted else 'removed administrator access from'} "
+                    f"{user.full_name or user.email}."
+                ),
+                action_url="#content",
+                # the recipient belongs in the key: without it every administrator after the
+                # first deduped against the same row and was never told
+                dedupe_key=(
+                    f"admin-role:{user.id}:{previous_role}->{user.role}:{admin.id}:{other.id}"
+                ),
+                metadata={"target_user_id": user.id, "actor_user_id": admin.id,
+                          "from_role": previous_role, "to_role": user.role},
+            )
     db.commit()
     db.refresh(user)
     return _admin_user_view(user)
