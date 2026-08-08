@@ -1525,3 +1525,20 @@ h2[tabindex="-1"]:focus-visible { outline: 0; }
   .lesson-review-actions { flex-direction: column; align-items: stretch; gap: 8px; }
   .lesson-review-actions .button { width: 100%; justify-content: center; }
 }
+
+/* ---------- staff preview of the student app ---------- */
+.student-view-toggle { display: flex; align-items: center; justify-content: center; gap: 8px; width: 100%; min-height: 44px; margin-top: auto; padding: 10px 12px; border: 1px solid var(--line); border-radius: 10px; background: var(--surface); color: var(--ink); font: inherit; font-size: .78rem; font-weight: 700; cursor: pointer; transition: background .15s var(--ease-spring); }
+.student-view-toggle:hover { background: rgba(31, 90, 69, .08); }
+.student-preview-banner { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 12px; margin-bottom: 18px; padding: 12px 16px; border: 1px solid var(--amber); border-radius: 12px; background: var(--amber-soft, #f7ecd8); color: #4a3411; font-size: .8rem; line-height: 1.45; }
+.student-preview-banner strong { font-weight: 800; }
+.student-preview-banner .button { flex: 0 0 auto; }
+
+@media (max-width: 700px) {
+  /* the sidebar is a bottom bar on phones; a full-width toggle inside it would crowd the nav */
+  .student-view-toggle { position: fixed; inset: auto 12px calc(72px + env(safe-area-inset-bottom)) auto; z-index: 31; width: auto; margin: 0; padding: 9px 14px; box-shadow: var(--shadow-lift); }
+  /* while previewing, the banner already carries the way out; a floating pill on top of the
+     content the preview exists to look at is just in the way */
+  body.student-preview .student-view-toggle { display: none; }
+  .student-preview-banner { flex-direction: column; align-items: flex-start; }
+  .student-preview-banner .button { width: 100%; }
+}

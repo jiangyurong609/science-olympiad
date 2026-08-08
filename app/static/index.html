@@ -9,8 +9,8 @@
   <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='16' fill='%231f5a45'/%3E%3Ctext x='32' y='44' text-anchor='middle' font-size='38' fill='white'%3EF%3C/text%3E%3C/svg%3E">
   <link rel="preload" href="/static/fonts/Fraunces.woff2" as="font" type="font/woff2" crossorigin>
   <link rel="preload" href="/static/fonts/AtkinsonHyperlegibleNext.woff2" as="font" type="font/woff2" crossorigin>
-  <link rel="stylesheet" href="/static/styles.css?v=41">
-  <link rel="stylesheet" href="/static/theme.css?v=41">
+  <link rel="stylesheet" href="/static/styles.css?v=43">
+  <link rel="stylesheet" href="/static/theme.css?v=43">
 </head>
 <body>
   <a class="skip-link" href="#main-content">Skip to Main Content</a>
@@ -117,6 +117,12 @@
           <a href="#content" data-view-link="content" data-content-nav hidden><span aria-hidden="true">◫</span>Content Review</a>
           <a href="#parent" data-view-link="parent" data-parent-nav hidden><span aria-hidden="true">⇧</span>Materials</a>
         </nav>
+        <!-- Staff navigation is content-only, so there was no route from the review workspace
+             into the student app at all — the closest thing was the per-lesson "Walk through as
+             a student" link on one review card. -->
+        <button id="student-view-toggle" class="student-view-toggle" type="button" hidden>
+          <span aria-hidden="true">◇</span><span data-toggle-label>Preview student view</span>
+        </button>
         <div class="sidebar-footer">
           <div class="avatar" id="user-initials" aria-hidden="true">SO</div>
           <div><strong id="sidebar-name">Student</strong><small id="sidebar-division">Division B</small></div>
@@ -124,6 +130,10 @@
       </aside>
 
       <div class="workspace">
+        <div id="student-preview-banner" class="student-preview-banner" role="status" hidden>
+          <div><strong>Previewing the student view.</strong> <span>Staff accounts also see unpublished and unreviewed content, so this shows at least as much as a student would — never less.</span></div>
+          <button id="student-view-exit" class="button button-secondary button-compact" type="button">Back to Content Review</button>
+        </div>
         <div id="app-loading-bar" class="app-loading-bar" hidden aria-hidden="true"></div>
         <div id="app-error" class="app-error surface" role="alert" hidden><div><strong>We couldn’t load your workspace.</strong><span id="app-error-detail"> Check your connection and try again.</span></div><button id="app-error-retry" class="button button-primary" type="button">Retry</button></div>
         <section id="dashboard" class="view" aria-labelledby="welcome">
@@ -554,6 +564,6 @@
       </div>
     </div>
   </div>
-  <script src="/static/app.js?v=41"></script>
+  <script src="/static/app.js?v=43"></script>
 </body>
 </html>

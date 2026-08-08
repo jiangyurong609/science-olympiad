@@ -1410,7 +1410,12 @@ function updateDashboard() {
   const firstName = (state.user.full_name || 'Competitor').split(' ')[0];
   $('welcome').textContent = `Ready, ${firstName}?`;
   $('sidebar-name').textContent = state.user.full_name;
-  $('sidebar-division').textContent = `Division ${state.user.division || 'B'}`;
+  // The student dashboard renders after configureRoleNavigation and used to relabel the
+  // sidebar unconditionally, so a staff member previewing the student app was told they were
+  // a Division B student — the one place the preview should stay obvious.
+  if (sessionStorage.getItem('studentView') !== '1') {
+    $('sidebar-division').textContent = `Division ${state.user.division || 'B'}`;
+  }
   $('user-initials').textContent = initials(state.user.full_name);
   const openCases = state.dashboard?.open_remediation || [];
   const mastery = state.dashboard?.concepts || [];
@@ -1538,16 +1543,43 @@ async function sendTutorMessage(message, button) {
   finally { setBusy(button, false); }
 }
 
+const STAFF_ROLES = ['admin', 'editor', 'sme', 'calibrator'];
+
+// One answer to "which app is this person looking at", used by both the boot-time router and
+// the hashchange router. They disagreed while the preview was on: the hashchange handler sent
+// any staff role to `content` regardless, so switching to the student view swapped the
+// navigation and then bounced the body straight back to the review workspace.
+function isStudentPreview() {
+  return STAFF_ROLES.includes(state.user?.role) && sessionStorage.getItem('studentView') === '1';
+}
+
 function configureRoleNavigation() {
-  const mode = ['admin', 'editor', 'sme', 'calibrator'].includes(state.user.role) ? 'content'
-    : state.user.role === 'coach' ? 'coach' : state.user.role === 'parent' ? 'parent' : 'student';
+  const isStaff = STAFF_ROLES.includes(state.user.role);
+  // Staff can look at the student app without a second account. This is a navigation change,
+  // not an impersonation: the API still answers with staff privileges, so the preview shows at
+  // least what a student sees and sometimes more. The banner says so rather than implying a
+  // fidelity the client cannot deliver.
+  const previewing = isStudentPreview();
+  const toggle = $('student-view-toggle');
+  if (toggle) {
+    toggle.hidden = !isStaff;
+    toggle.querySelector('[data-toggle-label]').textContent =
+      previewing ? 'Back to Content Review' : 'Preview student view';
+  }
+  const banner = $('student-preview-banner');
+  if (banner) banner.hidden = !previewing;
+  document.body.classList.toggle('student-preview', previewing);
+  const mode = previewing ? 'student'
+    : isStaff ? 'content'
+      : state.user.role === 'coach' ? 'coach' : state.user.role === 'parent' ? 'parent' : 'student';
   document.querySelectorAll('[data-student-nav]').forEach(item => { item.hidden = mode !== 'student'; });
   document.querySelectorAll('[data-coach-nav]').forEach(item => { item.hidden = mode !== 'coach'; });
   document.querySelectorAll('[data-content-nav]').forEach(item => { item.hidden = mode !== 'content'; });
   document.querySelectorAll('[data-parent-nav]').forEach(item => { item.hidden = mode !== 'parent'; });
   $('sidebar-name').textContent = state.user.full_name;
-  $('sidebar-division').textContent = mode === 'content' ? 'Content operations'
-    : mode === 'coach' ? 'Coach workspace' : mode === 'parent' ? 'Family workspace' : `Division ${state.user.division || 'B'}`;
+  $('sidebar-division').textContent = previewing ? 'Student preview'
+    : mode === 'content' ? 'Content operations'
+      : mode === 'coach' ? 'Coach workspace' : mode === 'parent' ? 'Family workspace' : `Division ${state.user.division || 'B'}`;
   $('user-initials').textContent = initials(state.user.full_name);
   return mode;
 }
@@ -2385,6 +2417,20 @@ async function loadApplication() {
 }
 
 $('app-error-retry').addEventListener('click', () => { $('app-error').hidden = true; loadApplication(); });
+
+function setStudentView(on) {
+  if (on) sessionStorage.setItem('studentView', '1');
+  else sessionStorage.removeItem('studentView');
+  // The route is part of the mode: staying on #content while previewing would show the review
+  // workspace with student navigation around it.
+  window.location.hash = on ? '#overview' : '#content';
+  loadApplication();
+}
+
+$('student-view-toggle').addEventListener('click', () => {
+  setStudentView(sessionStorage.getItem('studentView') !== '1');
+});
+$('student-view-exit').addEventListener('click', () => setStudentView(false));
 
 $('show-assignment-form').addEventListener('click', () => {
   $('assignment-form').hidden = false;
@@ -3966,8 +4012,9 @@ window.addEventListener('hashchange', () => {
   }
   // Non-student roles have no student dashboard, so #overview (the brand logo)
   // must land them on their own home instead of an empty student view.
-  const roleHome = ['admin', 'editor', 'sme', 'calibrator'].includes(state.user.role)
-    ? 'content' : state.user.role === 'coach' ? 'coach' : state.user.role === 'parent' ? 'parent' : 'dashboard';
+  const roleHome = isStudentPreview() ? 'dashboard'
+    : STAFF_ROLES.includes(state.user.role)
+      ? 'content' : state.user.role === 'coach' ? 'coach' : state.user.role === 'parent' ? 'parent' : 'dashboard';
   const view = { '#learn': 'learn', '#practice': 'practice', '#errors': 'errors', '#coach': 'coach', '#content': 'content', '#parent': 'parent' }[hashRoute] || roleHome;
   showView(view, false);
 });
