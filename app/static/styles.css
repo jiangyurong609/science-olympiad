@@ -1486,3 +1486,42 @@ h2[tabindex="-1"]:focus-visible { outline: 0; }
 .cr-filter.active { background: var(--forest); border-color: var(--forest); color: #fdfcf7; }
 .cr-filter span { display: inline-flex; align-items: center; justify-content: center; min-width: 20px; height: 19px; padding: 0 6px; border-radius: 999px; background: rgba(27, 43, 36, .10); font-size: .68rem; font-weight: 800; }
 .cr-filter.active span { background: rgba(253, 252, 247, .22); color: #fdfcf7; }
+
+/* ---------- touch targets ---------- */
+/* 38px reads as "almost tappable" and misses often. Apple and Android both ask for ~44px. */
+.cr-tab, .cr-filter { min-height: 44px; }
+#forgot-password { min-height: 44px; display: inline-flex; align-items: center; }
+
+@media (max-width: 700px) {
+  /* Seven tabs wrapped to four rows and pushed the queue itself below the fold. One row that
+     scrolls sideways keeps the workspace switcher out of the way of the work. */
+  .cr-tabs {
+    flex-wrap: nowrap;
+    overflow-x: auto;
+    overscroll-behavior-x: contain;
+    -webkit-overflow-scrolling: touch;
+    scrollbar-width: none;
+    top: 8px;
+    margin-inline: -18px;                 /* bleed to the screen edge so it reads as scrollable */
+    padding-inline: 18px;
+    border-radius: 0;
+    scroll-snap-type: x proximity;
+  }
+  .cr-tabs::-webkit-scrollbar { display: none; }
+  .cr-tab { flex: 0 0 auto; scroll-snap-align: start; }
+  .cr-filters { overflow-x: auto; flex-wrap: nowrap; scrollbar-width: none; padding-bottom: 2px; }
+  .cr-filters::-webkit-scrollbar { display: none; }
+  .cr-filter { flex: 0 0 auto; }
+  /* the review cards are the reason to be on this page: give them the width */
+  .lesson-review-summary { flex-direction: column; align-items: flex-start; gap: 8px; }
+  .lesson-review-summary-flags { flex-wrap: wrap; }
+  .review-actions { flex-direction: column; }
+  .review-actions .button { width: 100%; }
+  .review-checklist { grid-template-columns: 1fr; }
+  .people-list select, .people-list button { min-height: 44px; }
+  /* "Walk through as a student" is the primary action on a review card; compact sizing is a
+     desktop affordance and leaves it under the touch minimum on a phone. */
+  .lesson-review-actions .button, .button-compact { min-height: 44px; }
+  .lesson-review-actions { flex-direction: column; align-items: stretch; gap: 8px; }
+  .lesson-review-actions .button { width: 100%; justify-content: center; }
+}

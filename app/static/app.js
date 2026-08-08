@@ -354,12 +354,32 @@ function loadFirebaseSdk() {
   return firebaseSdkPromise;
 }
 
+// An in-app browser — the WebView opened when a link is tapped inside Instagram, Facebook,
+// LinkedIn, Line and friends. Two things break here: pop-ups are blocked outright, and Google
+// refuses OAuth inside embedded WebViews entirely (`disallowed_useragent`). So "allow pop-ups
+// and try again" was advice that could not be followed, on a screen with no other way in for
+// a Google-account user. Redirect rescues most of these; the rest need the real browser.
+function isEmbeddedBrowser() {
+  const ua = navigator.userAgent || '';
+  if (/\b(FBAN|FBAV|FB_IAB|Instagram|Line\/|LinkedInApp|Twitter|Snapchat|Pinterest|MicroMessenger|WeChat)\b/i.test(ua)) return true;
+  // iOS WebViews are Safari-shaped but lack "Safari" in the UA
+  const isIOS = /iPhone|iPad|iPod/i.test(ua);
+  if (isIOS && !/Safari/i.test(ua)) return true;
+  // Android System WebView announces itself
+  if (/\bwv\b/i.test(ua)) return true;
+  return false;
+}
+
 function googleAuthErrorMessage(error) {
   const code = String(error?.code || '');
+  const message = String(error?.message || '');
   if (code.includes('operation-not-allowed')) return 'Google sign-in is not enabled for this app yet. Use email and password, or ask an administrator to enable Google sign-in.';
   if (code.includes('popup-closed-by-user') || code.includes('cancelled-popup-request')) return 'The Google window was closed before finishing. Try again when you are ready.';
-  if (code.includes('popup-blocked')) return 'Your browser blocked the Google window. Allow pop-ups for this site and try again.';
+  if (code.includes('popup-blocked')) return 'Your browser blocked the Google window. Redirecting you to Google instead…';
   if (code.includes('unauthorized-domain')) return 'This site is not yet authorized for Google sign-in. Ask an administrator to add it in Firebase.';
+  if (code.includes('disallowed-useragent') || message.includes('disallowed_useragent')) {
+    return 'Google will not sign you in inside an app’s built-in browser. Open science-olympiad.com in Safari or Chrome, or use email and password below.';
+  }
   return error?.message || 'Google sign-in did not finish. Try again.';
 }
 
@@ -373,28 +393,73 @@ function showGoogleProfileForm(firebaseUser) {
   $('google-profile-name').focus();
 }
 
+// Shared by the pop-up and the redirect return: both end with a Firebase user and the same
+// question of whether this person already has a Fieldstone profile.
+async function completeGoogleSignIn(firebaseUser) {
+  state.token = await firebaseUser.getIdToken();
+  state.refreshToken = firebaseUser.refreshToken;
+  state.tokenExpiresAt = Date.now() + 55 * 60_000;
+  let user;
+  try {
+    user = await api('/auth/me');
+  } catch (error) {
+    if (error.status === 401) { showGoogleProfileForm(firebaseUser); return; }
+    throw error;
+  }
+  persistAuth({ access_token: state.token, user }, { refreshToken: state.refreshToken, expiresIn: 3300 });
+}
+
 async function continueWithGoogle(button) {
   $('auth-error').textContent = '';
   $('resend-verification').hidden = true;
   setBusy(button, true, 'Opening Google…');
   try {
     const { auth, authModule } = await loadFirebaseSdk();
-    const result = await authModule.signInWithPopup(auth, new authModule.GoogleAuthProvider());
-    state.token = await result.user.getIdToken();
-    state.refreshToken = result.user.refreshToken;
-    state.tokenExpiresAt = Date.now() + 55 * 60_000;
-    let user;
-    try {
-      user = await api('/auth/me');
-    } catch (error) {
-      if (error.status === 401) { showGoogleProfileForm(result.user); return; }
-      throw error;
+    // No point opening a pop-up that this browser will swallow: go straight to redirect.
+    if (isEmbeddedBrowser()) {
+      sessionStorage.setItem('googleRedirectPending', '1');
+      await authModule.signInWithRedirect(auth, new authModule.GoogleAuthProvider());
+      return;                       // the page navigates away
     }
-    persistAuth({ access_token: state.token, user }, { refreshToken: state.refreshToken, expiresIn: 3300 });
+    const result = await authModule.signInWithPopup(auth, new authModule.GoogleAuthProvider());
+    await completeGoogleSignIn(result.user);
   } catch (error) {
+    const code = String(error?.code || '');
+    if (code.includes('popup-blocked') || code.includes('cancelled-popup-request')) {
+      // The pop-up was refused after the fact. Redirect is the same sign-in without a window.
+      try {
+        const { auth, authModule } = await loadFirebaseSdk();
+        $('auth-error').textContent = 'Taking you to Google…';
+        sessionStorage.setItem('googleRedirectPending', '1');
+        await authModule.signInWithRedirect(auth, new authModule.GoogleAuthProvider());
+        return;
+      } catch (redirectError) {
+        $('auth-error').textContent = googleAuthErrorMessage(redirectError);
+        $('auth-error').focus();
+        setBusy(button, false);
+        return;
+      }
+    }
     $('auth-error').textContent = googleAuthErrorMessage(error);
     $('auth-error').focus();
   } finally { setBusy(button, false); }
+}
+
+// Coming back from signInWithRedirect. Runs before the auth screen is shown so a returning
+// user is not briefly asked to sign in again with their credentials already in hand.
+async function resumeGoogleRedirect() {
+  if (sessionStorage.getItem('googleRedirectPending') !== '1') return false;
+  sessionStorage.removeItem('googleRedirectPending');
+  try {
+    const { auth, authModule } = await loadFirebaseSdk();
+    const result = await authModule.getRedirectResult(auth);
+    if (!result?.user) return false;
+    await completeGoogleSignIn(result.user);
+    return true;
+  } catch (error) {
+    $('auth-error').textContent = googleAuthErrorMessage(error);
+    return false;
+  }
 }
 
 $('google-signin').addEventListener('click', event => continueWithGoogle(event.currentTarget));
@@ -3923,6 +3988,9 @@ async function initialize() {
   } catch (error) {
     $('auth-error').textContent = 'The sign-in service is unavailable. Refresh the page or try again later.';
   }
+  // Must run after /auth/config: the Firebase SDK is configured from it. A redirect sign-in
+  // finishes here, on the page Google sends the user back to, not in continueWithGoogle.
+  if (state.authConfig?.provider === 'firebase' && await resumeGoogleRedirect()) return;
   if (state.token && state.user) loadApplication(); else showSection('auth');
 }
 
