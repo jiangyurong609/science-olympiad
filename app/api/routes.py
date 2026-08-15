@@ -3592,18 +3592,31 @@ def question_review_queue(
         query.order_by(Question.created_at).limit(limit).offset(offset)).all()
     claim_cache = _claim_cache(db, questions)
     # "Pending review" spans two very different situations: an item nobody can see until a
-    # human decides, and an item already serving students in a published exam under a
-    # labelled practice disposition, where review is a promotion rather than an unblocking.
-    # The queue at one point held 996 items of which 490 were the second kind; without this
-    # flag the whole number reads as urgent and the reviewer cannot triage.
+    # human decides, and an item already serving students under a labelled practice
+    # disposition, where review is a promotion rather than an unblocking. The queue at one
+    # point held 996 items of which 649 were the second kind; without this flag the whole
+    # number reads as urgent and the reviewer cannot triage.
+    #
+    # Serving has two paths: exam_items rows of a published exam, and published skill labs,
+    # whose versions embed items that point back via a question_id key. An exam-only check
+    # here once marked 159 lab-serving questions as dark — and nearly got them withdrawn
+    # as unreferenced surplus.
+    page_ids = {q.id for q in questions}
     served_ids = set(db.scalars(
         select(ExamItem.question_id)
         .join(Exam, Exam.id == ExamItem.exam_id)
-        .where(Exam.published, ExamItem.question_id.in_([q.id for q in questions] or [-1]))
+        .where(Exam.published, ExamItem.question_id.in_(list(page_ids) or [-1]))
     ).all()) if questions else set()
+    if page_ids:
+        for version in db.scalars(select(PracticeSetVersion).join(
+            PracticeSet, PracticeSet.id == PracticeSetVersion.practice_set_id,
+        ).where(PracticeSet.status == "published")).all():
+            for item in version.items or []:
+                if isinstance(item, dict) and item.get("question_id") in page_ids:
+                    served_ids.add(item["question_id"])
     return [{
         "id": q.id, "version": q.version, "status": q.status, "event_id": q.event_id,
-        "in_published_exam": q.id in served_ids,
+        "serving_students": q.id in served_ids,
         "stem": q.stem, "choices": q.choices, "answer_spec": q.answer_spec,
         "explanation": q.explanation, "citations": q.citations,
         "citation_evidence": _citation_evidence(db, q),

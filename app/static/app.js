@@ -1856,11 +1856,12 @@ function renderLessonReviewQueue() {
   }).join('');
 }
 
-// A pending question is "blocking" when no published exam serves it — students cannot see
-// it until someone decides. Everything else is live as labelled practice, where review is a
-// promotion. Two different kinds of work; the queue was messy because it summed them.
+// A pending question is "blocking" when nothing serves it — no published exam and no
+// published skill lab — so students cannot see it until someone decides. Everything else
+// is live as labelled practice, where review is a promotion. Two different kinds of work;
+// the queue was messy because it summed them.
 function questionIsBlocking(question) {
-  return !question.in_published_exam;
+  return !question.serving_students;
 }
 
 function renderQuestionReviewQueue() {
@@ -1913,7 +1914,7 @@ function renderQuestionReviewQueue() {
       if (ev.verifier_passed === false) itemChips.push(`<span class="review-flag review-flag-strong">verifier objected${(ev.verifier_errors || []).length ? ` · ${escapeHtml(String(ev.verifier_errors[0]).slice(0, 120))}` : ''}</span>`);
       if ((ev.max_similarity || 0) > 0.8) itemChips.push(`<span class="review-flag">near-duplicate ${Number(ev.max_similarity).toFixed(2)}</span>`);
     }
-    itemChips.push(question.in_published_exam
+    itemChips.push(question.serving_students
       ? '<span class="review-flag review-flag-clear">live as labelled practice — review promotes it</span>'
       : '<span class="review-flag">not serving students yet — review unblocks it</span>');
     const itemFindings = `<div class="review-flags">${itemChips.join('')}</div>`;
