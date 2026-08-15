@@ -745,18 +745,45 @@ function initials(name = '') {
   return name.split(/\s+/).filter(Boolean).slice(0, 2).map(part => part[0].toUpperCase()).join('') || 'SO';
 }
 
-function renderSubjects() {
-  const division = state.user?.division;
-  const subjects = [...state.events]
-    .filter(event => (
-      event.lesson_count > 0 || event.exam_count > 0 || event.material_count > 0
-    ) && (event.division === division || event.division === 'B/C'))
+// Khan Academy's home is "My courses": the learner's own list, not the catalog's guess.
+// The subjects here are the ones this student has actually started, kept per user, with an
+// explicit tile for adding more — never an auto-picked top six they don't recognise.
+function mySubjectsKey() {
+  return `fieldstone:my-subjects:${state.user?.id}`;
+}
+
+function mySubjectSlugs() {
+  try {
+    const list = JSON.parse(localStorage.getItem(mySubjectsKey()) || '[]');
+    return Array.isArray(list) ? list : [];
+  } catch { return []; }
+}
+
+function rememberSubject(slug) {
+  if (!slug || !state.user?.id) return;
+  const list = mySubjectSlugs();
+  if (!list.includes(slug)) {
+    list.push(slug);
+    localStorage.setItem(mySubjectsKey(), JSON.stringify(list));
+  }
+}
+
+function mySubjects() {
+  rememberSubject(state.activeEventSlug);
+  const seen = new Set();
+  return mySubjectSlugs()
+    .map(slug => resolveEvent(slug))
+    .filter(event => {
+      if (!event || seen.has(event.slug)) return false;
+      seen.add(event.slug);
+      return true;
+    })
     .sort((a, b) => Number(b.slug === state.activeEventSlug) - Number(a.slug === state.activeEventSlug)
-      || b.season - a.season
-      || (b.material_count + b.lesson_count + b.exam_count)
-        - (a.material_count + a.lesson_count + a.exam_count)
-      || a.name.localeCompare(b.name))
-    .slice(0, 6);
+      || a.name.localeCompare(b.name));
+}
+
+function renderSubjects() {
+  const subjects = mySubjects();
   $('subject-list').innerHTML = subjects.map(event => {
     const experience = eventExperience(event);
     const active = event.slug === state.activeEventSlug;
@@ -766,7 +793,11 @@ function renderSubjects() {
       <div class="subject-card-meta"><span>${event.season}</span><span>${event.material_count} resource${event.material_count === 1 ? '' : 's'}</span><span>${event.lesson_count} module${event.lesson_count === 1 ? '' : 's'}</span><span>${event.exam_count} exam${event.exam_count === 1 ? '' : 's'}</span></div>
       <footer>${event.lesson_count > 0 ? `<button class="subject-action-primary" type="button" data-subject="${escapeHtml(event.slug)}" data-subject-destination="learn">Learn</button>` : ''}${event.material_count > 0 || event.exam_count > 0 ? `<button type="button" data-subject="${escapeHtml(event.slug)}" data-subject-destination="practice">${event.exam_count > 0 ? 'Practice' : 'Resources'}</button>` : ''}</footer>
     </article>`;
-  }).join('');
+  }).join('') + `<button type="button" id="subject-add-tile" class="subject-add-tile">
+      <span class="subject-add-plus" aria-hidden="true">＋</span>
+      <strong>Add another subject</strong>
+      <small>Browse by interest below — most competitors train two or three events.</small>
+    </button>`;
 }
 
 function renderOverviewEvent() {
@@ -807,8 +838,15 @@ function renderStudentGuidance() {
     .forEach(id => { const el = $(id); if (el) el.hidden = !hasEvent; });
   $('student-onboarding').hidden = hasEvent;
   $('student-guide').hidden = !hasEvent || localStorage.getItem('fieldstoneHomeGuideDismissed') === '1';
-  if (hasEvent) return;
-  const pool = studentEvents();
+  // The explorer is permanent, Khan Academy-style: for a new student it IS the home page;
+  // for a returning one it sits below their subjects as the way to add another.
+  $('explorer-kicker').textContent = hasEvent ? 'Explore' : 'Step 1 · Your interests';
+  $('explorer-title').textContent = hasEvent ? 'Add Another Subject' : 'What kind of science excites you?';
+  $('explorer-copy').textContent = hasEvent
+    ? 'Browse by interest. Starting an event adds it to your subjects — nothing you already train is lost.'
+    : 'Pick an interest to see matching events, or browse everything.';
+  const mine = new Set(mySubjects().map(event => event.slug));
+  const pool = studentEvents().filter(event => !hasEvent || !mine.has(event.slug));
   const counts = new Map();
   pool.forEach(event => {
     if (event.category) counts.set(event.category, (counts.get(event.category) || 0) + 1);
@@ -829,9 +867,11 @@ function renderStudentGuidance() {
       <div class="subject-card-heading"><span class="subject-icon" aria-hidden="true">${experience.icon}</span><span class="division-badge">Div ${escapeHtml(event.division)}</span></div>
       <h3>${escapeHtml(event.name)}</h3><p>${escapeHtml(event.topic_focus || event.description || experience.skill)}</p>
       <div class="subject-card-meta"><span>${event.lesson_count} lesson${event.lesson_count === 1 ? '' : 's'}</span><span>${event.exam_count} exam${event.exam_count === 1 ? '' : 's'}</span><span>${event.material_count} resource${event.material_count === 1 ? '' : 's'}</span></div>
-      <footer><button class="subject-action-primary" type="button" data-onboard-event="${escapeHtml(event.slug)}">Start With This Event</button></footer>
+      <footer><button class="subject-action-primary" type="button" data-onboard-event="${escapeHtml(event.slug)}">${hasEvent ? 'Add This Subject' : 'Start With This Event'}</button></footer>
     </article>`;
-  }).join('') || '<p class="catalog-empty">Nothing in this area has published content yet — try another interest.</p>';
+  }).join('') || (pool.length
+    ? '<p class="catalog-empty">Nothing in this area has published content yet — try another interest.</p>'
+    : '<p class="catalog-empty">You are already training every event that has published content. New events appear here as they are released.</p>');
 }
 
 function renderEventCatalog() {
@@ -2558,6 +2598,11 @@ $('onboarding-event-list').addEventListener('click', event => {
 $('student-guide-dismiss').addEventListener('click', () => {
   localStorage.setItem('fieldstoneHomeGuideDismissed', '1');
   $('student-guide').hidden = true;
+});
+$('subject-list').addEventListener('click', event => {
+  if (event.target.closest('#subject-add-tile')) {
+    $('subject-explorer').scrollIntoView({ behavior: preferredScrollBehavior(), block: 'start' });
+  }
 });
 $('lesson-review-filters').addEventListener('click', event => {
   const button = event.target.closest('[data-lesson-filter]');

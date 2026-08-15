@@ -9,8 +9,8 @@
   <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='16' fill='%231f5a45'/%3E%3Ctext x='32' y='44' text-anchor='middle' font-size='38' fill='white'%3EF%3C/text%3E%3C/svg%3E">
   <link rel="preload" href="/static/fonts/Fraunces.woff2" as="font" type="font/woff2" crossorigin>
   <link rel="preload" href="/static/fonts/AtkinsonHyperlegibleNext.woff2" as="font" type="font/woff2" crossorigin>
-  <link rel="stylesheet" href="/static/styles.css?v=44">
-  <link rel="stylesheet" href="/static/theme.css?v=44">
+  <link rel="stylesheet" href="/static/styles.css?v=45">
+  <link rel="stylesheet" href="/static/theme.css?v=45">
 </head>
 <body>
   <a class="skip-link" href="#main-content">Skip to Main Content</a>
@@ -143,16 +143,14 @@
           </div>
 
           <!-- A brand-new student used to be dropped into an arbitrary auto-picked course.
-               Until they choose a subject, the dashboard is this guided picker instead. -->
-          <section id="student-onboarding" class="student-onboarding" hidden aria-labelledby="onboarding-title">
-            <ol class="onboarding-steps surface" aria-label="How Fieldstone works">
+               Until they choose a subject, the dashboard is this how-it-works strip plus the
+               subject explorer below — everything progress-related stays hidden. -->
+          <section id="student-onboarding" class="student-onboarding" hidden aria-label="How Fieldstone works">
+            <ol class="onboarding-steps surface">
               <li class="onboarding-step"><span class="onboarding-step-num" aria-hidden="true">1</span><div><h3>Pick a subject</h3><p>Choose an area of science you like below. Everything else is built around that choice, and you can switch or add more any time.</p></div></li>
               <li class="onboarding-step"><span class="onboarding-step-num" aria-hidden="true">2</span><div><h3>Learn</h3><p>Work through short lessons with built-in checks under <strong>Courses</strong>.</p></div></li>
               <li class="onboarding-step"><span class="onboarding-step-num" aria-hidden="true">3</span><div><h3>Practice &amp; review</h3><p>Try skill labs and mock exams under <strong>Practice</strong>. Anything you miss becomes a review card under <strong>Review</strong>.</p></div></li>
             </ol>
-            <div class="section-heading"><div><p class="kicker">Step 1 · Your interests</p><h2 id="onboarding-title">What kind of science excites you?</h2></div><p>Pick an interest to see matching events, or browse everything.</p></div>
-            <div id="interest-chips" class="interest-chips" role="group" aria-label="Filter events by interest"></div>
-            <div id="onboarding-event-list" class="onboarding-event-grid" aria-live="polite"></div>
           </section>
 
           <div id="student-guide" class="student-guide surface" hidden role="note" aria-label="How to get around">
@@ -172,6 +170,15 @@
             <div class="mission-content"><header><div><p class="kicker">Recommended Next</p><h2 id="daily-mission-title">Your Focused Study Plan</h2><p id="mission-summary">Loading the highest-value next steps…</p></div><div class="mission-workload"><strong id="mission-minutes">0</strong><span>minutes</span></div></header><ol id="daily-plan-list" class="daily-plan-list" aria-live="polite"></ol><div id="daily-plan-empty" class="mission-empty" hidden><strong>You’re caught up.</strong><p>Choose an event below to learn something new or sharpen a competition skill.</p></div><footer><span><strong id="mission-active-days">0</strong> active days this week</span><span><strong id="mission-due-reviews">0</strong> reviews due</span><span><strong id="mission-pending-assignments">0</strong> assignments waiting</span></footer></div>
           </section>
 
+          <!-- Khan Academy's logged-in home leads with "My courses" — the learner's own set,
+               each with progress and a continue action, plus an explicit way to add more.
+               Same shape here: your subjects first, then the detail card for the one in
+               focus, then the always-present explorer for adding another. -->
+          <section id="subject-library-block" class="section-block" aria-labelledby="subjects-title">
+            <div class="section-heading"><div><p class="kicker">My Subjects</p><h2 id="subjects-title">Your Subjects</h2></div><p>Pick up where you left off, or add another event to your rotation.</p></div>
+            <div id="subject-list" class="subject-grid" aria-live="polite"></div>
+          </section>
+
           <section id="current-event-block" class="current-event surface" aria-labelledby="current-event-title">
             <div class="current-event-header">
               <div id="overview-event-icon" class="current-event-icon" aria-hidden="true">◇</div>
@@ -184,9 +191,10 @@
             </div>
           </section>
 
-          <section id="subject-library-block" class="section-block" aria-labelledby="subjects-title">
-            <div class="section-heading"><div><p class="kicker">Your Library</p><h2 id="subjects-title">Continue Across Events</h2></div><p>Open a learning path or go straight to event practice.</p></div>
-            <div id="subject-list" class="subject-grid" aria-live="polite"></div>
+          <section id="subject-explorer" class="section-block subject-explorer" aria-labelledby="explorer-title">
+            <div class="section-heading"><div><p id="explorer-kicker" class="kicker">Explore</p><h2 id="explorer-title">What kind of science excites you?</h2></div><p id="explorer-copy">Pick an interest to see matching events, or browse everything.</p></div>
+            <div id="interest-chips" class="interest-chips" role="group" aria-label="Filter events by interest"></div>
+            <div id="onboarding-event-list" class="onboarding-event-grid" aria-live="polite"></div>
           </section>
 
           <details class="event-browser section-block surface">
@@ -598,6 +606,6 @@
       </div>
     </div>
   </div>
-  <script src="/static/app.js?v=44"></script>
+  <script src="/static/app.js?v=45"></script>
 </body>
 </html>
