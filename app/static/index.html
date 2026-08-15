@@ -9,8 +9,8 @@
   <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='16' fill='%231f5a45'/%3E%3Ctext x='32' y='44' text-anchor='middle' font-size='38' fill='white'%3EF%3C/text%3E%3C/svg%3E">
   <link rel="preload" href="/static/fonts/Fraunces.woff2" as="font" type="font/woff2" crossorigin>
   <link rel="preload" href="/static/fonts/AtkinsonHyperlegibleNext.woff2" as="font" type="font/woff2" crossorigin>
-  <link rel="stylesheet" href="/static/styles.css?v=45">
-  <link rel="stylesheet" href="/static/theme.css?v=45">
+  <link rel="stylesheet" href="/static/styles.css?v=46">
+  <link rel="stylesheet" href="/static/theme.css?v=46">
 </head>
 <body>
   <a class="skip-link" href="#main-content">Skip to Main Content</a>
@@ -485,7 +485,13 @@
             <div id="lesson-review-empty" class="empty-state surface" hidden><span aria-hidden="true">✓</span><h3>Lesson Queue Clear</h3><p>No current lesson version is waiting for review.</p></div>
           </section>
           <section class="editorial-workspace" data-cr-panel="questions" aria-labelledby="editorial-title">
-            <div class="section-heading"><div><p class="kicker">Human quality gate</p><h2 id="editorial-title">Question Review Queue</h2></div><p id="editorial-count" class="queue-count">0 Items</p></div>
+            <div class="section-heading"><div><p class="kicker">Human quality gate</p><h2 id="editorial-title">Question Review Queue</h2><p>Not-yet-serving items are invisible to students until reviewed. Items live as labelled practice are already serving; review promotes them to fully reviewed.</p></div><p id="editorial-count" class="queue-count">0 Items</p></div>
+            <div id="question-review-controls" class="cr-filters" role="group" aria-label="Question queue filters">
+              <button type="button" class="cr-filter" data-question-serve="blocking">Not yet serving <span data-question-serve-count="blocking">0</span></button>
+              <button type="button" class="cr-filter" data-question-serve="serving">Live as labelled practice <span data-question-serve-count="serving">0</span></button>
+              <button type="button" class="cr-filter" data-question-serve="all">Everything <span data-question-serve-count="all">0</span></button>
+              <label class="question-event-scope" for="question-event-filter"><span>Event</span><select id="question-event-filter" autocomplete="off"><option value="all">All events</option></select></label>
+            </div>
             <div id="question-review-queue" class="question-review-queue" aria-live="polite"></div>
             <div id="question-review-empty" class="empty-state surface" hidden><span aria-hidden="true">✓</span><h3>Review Queue Clear</h3><p>No questions currently require your role’s review.</p></div>
           </section>
@@ -606,6 +612,6 @@
       </div>
     </div>
   </div>
-  <script src="/static/app.js?v=45"></script>
+  <script src="/static/app.js?v=46"></script>
 </body>
 </html>

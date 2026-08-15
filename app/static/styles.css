@@ -1591,3 +1591,8 @@ h2[tabindex="-1"]:focus-visible { outline: 0; }
 .subject-add-plus { width: 40px; height: 40px; display: grid; place-items: center; border-radius: 50%; background: rgba(31, 90, 69, .1); color: var(--forest); font-size: 1.2rem; font-weight: 800; }
 .subject-add-tile strong { font-size: 1rem; }
 .subject-add-tile small { color: var(--muted); font-size: .78rem; line-height: 1.45; }
+
+/* ---------- question queue scope controls ---------- */
+.question-event-scope { display: inline-flex; align-items: center; gap: 8px; margin-left: auto; font-size: .78rem; font-weight: 700; }
+.question-event-scope select { width: auto; min-height: 44px; padding: 8px 12px; border: 1px solid var(--line); border-radius: 999px; background: var(--surface); font: inherit; font-size: .78rem; }
+@media (max-width: 700px) { .question-event-scope { margin-left: 0; width: 100%; } .question-event-scope select { flex: 1; } }

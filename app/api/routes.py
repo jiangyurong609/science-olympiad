@@ -3591,8 +3591,19 @@ def question_review_queue(
     questions = db.scalars(
         query.order_by(Question.created_at).limit(limit).offset(offset)).all()
     claim_cache = _claim_cache(db, questions)
+    # "Pending review" spans two very different situations: an item nobody can see until a
+    # human decides, and an item already serving students in a published exam under a
+    # labelled practice disposition, where review is a promotion rather than an unblocking.
+    # The queue at one point held 996 items of which 490 were the second kind; without this
+    # flag the whole number reads as urgent and the reviewer cannot triage.
+    served_ids = set(db.scalars(
+        select(ExamItem.question_id)
+        .join(Exam, Exam.id == ExamItem.exam_id)
+        .where(Exam.published, ExamItem.question_id.in_([q.id for q in questions] or [-1]))
+    ).all()) if questions else set()
     return [{
         "id": q.id, "version": q.version, "status": q.status, "event_id": q.event_id,
+        "in_published_exam": q.id in served_ids,
         "stem": q.stem, "choices": q.choices, "answer_spec": q.answer_spec,
         "explanation": q.explanation, "citations": q.citations,
         "citation_evidence": _citation_evidence(db, q),

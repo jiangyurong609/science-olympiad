@@ -34,6 +34,8 @@ const state = {
   contentTab: 'overview',
   lessonFilter: 'ready',
   interestFilter: 'all',
+  questionServeFilter: 'blocking',
+  questionScopeEvent: 'all',
   questionReviewLimit: 25,
   videoReviewCount: 0,
   intakeActionCount: 0,
@@ -1737,7 +1739,12 @@ function lessonFindingCount(lesson) {
 function renderLessonReviewQueue() {
   const all = state.lessonReviewQueue;
   const waiting = all.filter(lesson => !['complete', 'revision_required'].includes(lesson.next_stage));
-  $('lesson-editorial-count').textContent = `${waiting.length} waiting · ${all.length} total`;
+  // Same split as the question queue: a draft lesson is dark until reviewed, while a
+  // published one is already serving under an "unreviewed practice" label and review
+  // merely removes the label. The single big number hid that only a handful were dark.
+  const dark = waiting.filter(lesson => lesson.status !== 'published');
+  $('lesson-editorial-count').textContent =
+    `${dark.length} dark · ${waiting.length - dark.length} live as practice · ${all.length} total`;
   const ready = all.filter(lesson => lessonFindingCount(lesson) === 0);
   const flagged = all.filter(lesson => lessonFindingCount(lesson) > 0);
   const counts = { ready: ready.length, findings: flagged.length, all: all.length };
@@ -1750,8 +1757,10 @@ function renderLessonReviewQueue() {
   const lessons = (state.lessonFilter === 'ready' ? ready
     : state.lessonFilter === 'findings' ? flagged
       : all.slice())
-    // fewest findings first, so a reviewer working top-down meets the approvable work first
-    .sort((a, b) => lessonFindingCount(a) - lessonFindingCount(b));
+    // dark lessons first — they block students — then fewest findings, so a reviewer
+    // working top-down meets the unblocking and approvable work before the polish
+    .sort((a, b) => Number(a.status === 'published') - Number(b.status === 'published')
+      || lessonFindingCount(a) - lessonFindingCount(b));
   $('lesson-review-empty').hidden = all.length > 0;
   $('lesson-review-queue').innerHTML = lessons.map(lesson => {
     const stage = lesson.next_stage;
@@ -1847,14 +1856,46 @@ function renderLessonReviewQueue() {
   }).join('');
 }
 
+// A pending question is "blocking" when no published exam serves it — students cannot see
+// it until someone decides. Everything else is live as labelled practice, where review is a
+// promotion. Two different kinds of work; the queue was messy because it summed them.
+function questionIsBlocking(question) {
+  return !question.in_published_exam;
+}
+
 function renderQuestionReviewQueue() {
   const allQuestions = state.questionReviewQueue;
+  const blocking = allQuestions.filter(questionIsBlocking);
+  const serving = allQuestions.filter(question => !questionIsBlocking(question));
+  const counts = { blocking: blocking.length, serving: serving.length, all: allQuestions.length };
+  document.querySelectorAll('[data-question-serve-count]').forEach(node => {
+    node.textContent = counts[node.dataset.questionServeCount] ?? 0;
+  });
+  document.querySelectorAll('[data-question-serve]').forEach(button => {
+    button.classList.toggle('active', button.dataset.questionServe === state.questionServeFilter);
+  });
+  const scope = $('question-event-filter');
+  if (scope) {
+    const eventsById = new Map(state.events.map(event => [event.id, event]));
+    const inQueue = [...new Set(allQuestions.map(question => question.event_id))]
+      .map(id => ({ id, name: eventsById.get(id)?.name || `Event ${id}`,
+        n: allQuestions.filter(question => question.event_id === id).length }))
+      .sort((a, b) => b.n - a.n || a.name.localeCompare(b.name));
+    scope.innerHTML = '<option value="all">All events</option>' + inQueue.map(row =>
+      `<option value="${row.id}">${escapeHtml(row.name)} · ${row.n}</option>`).join('');
+    scope.value = String(state.questionScopeEvent);
+    if (scope.value === '') { state.questionScopeEvent = 'all'; scope.value = 'all'; }
+  }
+  const filtered = (state.questionServeFilter === 'blocking' ? blocking
+    : state.questionServeFilter === 'serving' ? serving : allQuestions)
+    .filter(question => state.questionScopeEvent === 'all'
+      || question.event_id === Number(state.questionScopeEvent));
   // 500 fully-expanded cards rendered at once made this section 390,000 pixels tall —
   // 84% of the page — and buried every other queue. Render a page of it at a time.
-  const questions = allQuestions.slice(0, state.questionReviewLimit);
-  $('editorial-count').textContent = `${allQuestions.length} Item${allQuestions.length === 1 ? '' : 's'}`;
+  const questions = filtered.slice(0, state.questionReviewLimit);
+  $('editorial-count').textContent = `${filtered.length} Shown · ${allQuestions.length} Total`;
   $('question-review-empty').hidden = allQuestions.length > 0;
-  const remaining = allQuestions.length - questions.length;
+  const remaining = filtered.length - questions.length;
   const showMore = remaining > 0
     ? `<button class="button button-secondary" type="button" data-question-show-more>Show ${Math.min(25, remaining)} more · ${remaining} remaining</button>`
     : '';
@@ -1872,6 +1913,9 @@ function renderQuestionReviewQueue() {
       if (ev.verifier_passed === false) itemChips.push(`<span class="review-flag review-flag-strong">verifier objected${(ev.verifier_errors || []).length ? ` · ${escapeHtml(String(ev.verifier_errors[0]).slice(0, 120))}` : ''}</span>`);
       if ((ev.max_similarity || 0) > 0.8) itemChips.push(`<span class="review-flag">near-duplicate ${Number(ev.max_similarity).toFixed(2)}</span>`);
     }
+    itemChips.push(question.in_published_exam
+      ? '<span class="review-flag review-flag-clear">live as labelled practice — review promotes it</span>'
+      : '<span class="review-flag">not serving students yet — review unblocks it</span>');
     const itemFindings = `<div class="review-flags">${itemChips.join('')}</div>`;
     const canReview = stage === 'editor' ? ['editor', 'admin'].includes(state.user.role) : stage === 'sme' ? ['sme', 'admin'].includes(state.user.role) : false;
     const correct = question.choices[question.answer_spec.correct_index] || 'Answer key unavailable';
@@ -1969,9 +2013,14 @@ function updateContentTabBadges() {
     el.textContent = String(value || '');
   };
   const lessonsWaiting = state.lessonReviewQueue.filter(
-    lesson => !['complete', 'revision_required'].includes(lesson.next_stage)).length;
-  setCount('tab-count-lessons', lessonsWaiting);
-  setCount('tab-count-questions', state.questionReviewQueue.length);
+    lesson => !['complete', 'revision_required'].includes(lesson.next_stage));
+  // Badges carry the number that demands attention: items students cannot see until a
+  // human decides. Work already live as labelled practice is real but not urgent, and
+  // summing the two made every tab shout three-digit numbers at whoever signed in.
+  const lessonsDark = lessonsWaiting.filter(lesson => lesson.status !== 'published').length;
+  const questionsBlocked = state.questionReviewQueue.filter(questionIsBlocking).length;
+  setCount('tab-count-lessons', lessonsDark);
+  setCount('tab-count-questions', questionsBlocked);
   setCount('tab-count-videos', state.videoReviewCount);
   setCount('tab-count-intake', state.intakeActionCount);
   const coverageGaps = state.sourceCoverage.reduce(
@@ -1981,25 +2030,31 @@ function updateContentTabBadges() {
     + state.calibrationQueue.length;
   setCount('tab-count-ops', opsCount);
   renderContentOverview({
-    intake: state.intakeActionCount, lessons: lessonsWaiting,
-    questions: state.questionReviewQueue.length, videos: state.videoReviewCount,
-    ops: opsCount, coverage: coverageGaps,
+    intake: state.intakeActionCount,
+    lessonsBlocked: lessonsDark, lessonsLive: lessonsWaiting.length - lessonsDark,
+    questionsBlocked, questionsLive: state.questionReviewQueue.length - questionsBlocked,
+    videos: state.videoReviewCount, ops: opsCount, coverage: coverageGaps,
   });
 }
 
 // The Start Here panel repeats the tab badges as step counts, plus one sentence naming
 // today's bottleneck — the answer to "where do I start?" that the raw queues never gave.
+// Blocked work (dark until a human decides) is stated separately from items already live
+// as labelled practice, where review is a promotion, not an unblocking.
 function renderContentOverview(counts) {
-  const step = (id, value, noun) => {
+  const step = (id, blocked, live) => {
     const el = $(id);
     if (!el) return;
-    el.textContent = value ? `${value} ${noun}${value === 1 ? '' : 's'} waiting` : 'Clear';
-    el.classList.toggle('has-work', Boolean(value));
+    const parts = [];
+    if (blocked) parts.push(`${blocked} blocked`);
+    if (live) parts.push(`${live} live as practice`);
+    el.textContent = parts.join(' · ') || 'Clear';
+    el.classList.toggle('has-work', Boolean(blocked));
   };
-  step('step-count-intake', counts.intake, 'upload');
-  step('step-count-lessons', counts.lessons, 'lesson');
-  step('step-count-questions', counts.questions, 'question');
-  step('step-count-videos', counts.videos, 'video');
+  step('step-count-intake', counts.intake, 0);
+  step('step-count-lessons', counts.lessonsBlocked, counts.lessonsLive);
+  step('step-count-questions', counts.questionsBlocked, counts.questionsLive);
+  step('step-count-videos', counts.videos, 0);
   const opsEl = $('step-count-ops');
   if (opsEl) {
     const parts = [];
@@ -2008,16 +2063,22 @@ function renderContentOverview(counts) {
     opsEl.textContent = parts.join(' · ') || 'Clear';
     opsEl.classList.toggle('has-work', Boolean(counts.ops || counts.coverage));
   }
-  const reviews = [
-    counts.lessons && `${counts.lessons} lesson${counts.lessons === 1 ? '' : 's'}`,
-    counts.questions && `${counts.questions} question${counts.questions === 1 ? '' : 's'}`,
+  const blocked = [
+    counts.lessonsBlocked && `${counts.lessonsBlocked} lesson${counts.lessonsBlocked === 1 ? '' : 's'}`,
+    counts.questionsBlocked && `${counts.questionsBlocked} question${counts.questionsBlocked === 1 ? '' : 's'}`,
     counts.videos && `${counts.videos} video${counts.videos === 1 ? '' : 's'}`,
   ].filter(Boolean);
-  $('cr-overview-now').textContent = reviews.length
-    ? `Right now the review queues are the bottleneck: ${reviews.join(', ')} waiting for a human decision.`
-    : counts.intake
-      ? `The review queues are clear. ${counts.intake} upload${counts.intake === 1 ? ' needs' : 's need'} triage in Add Materials.`
-      : 'Every review queue is clear. Add new source material, or open Publish Courses to release something that is ready.';
+  const liveTotal = (counts.lessonsLive || 0) + (counts.questionsLive || 0);
+  const liveNote = liveTotal
+    ? ` Another ${liveTotal} item${liveTotal === 1 ? ' is' : 's are'} already live as labelled practice — reviewing those removes the label, but nothing waits on them.`
+    : '';
+  $('cr-overview-now').textContent = blocked.length
+    ? `Start with what is blocked: ${blocked.join(', ')} invisible to students until someone decides.${liveNote}`
+    : liveTotal
+      ? `Nothing is blocked — students can see everything current.${liveNote}`
+      : counts.intake
+        ? `The review queues are clear. ${counts.intake} upload${counts.intake === 1 ? ' needs' : 's need'} triage in Add Materials.`
+        : 'Every review queue is clear. Add new source material, or open Publish Courses to release something that is ready.';
 }
 
 async function loadContentOperations(button = null) {
@@ -2609,6 +2670,18 @@ $('lesson-review-filters').addEventListener('click', event => {
   if (!button) return;
   state.lessonFilter = button.dataset.lessonFilter;
   renderLessonReviewQueue();
+});
+$('question-review-controls').addEventListener('click', event => {
+  const button = event.target.closest('[data-question-serve]');
+  if (!button) return;
+  state.questionServeFilter = button.dataset.questionServe;
+  state.questionReviewLimit = 25;
+  renderQuestionReviewQueue();
+});
+$('question-event-filter').addEventListener('change', event => {
+  state.questionScopeEvent = event.target.value;
+  state.questionReviewLimit = 25;
+  renderQuestionReviewQueue();
 });
 $('refresh-content-releases').addEventListener('click', event => { setBusy(event.currentTarget, true, 'Refreshing…'); loadContentReleases().finally(() => setBusy(event.currentTarget, false)); });
 $('enrich-content-media').addEventListener('click', async event => {
