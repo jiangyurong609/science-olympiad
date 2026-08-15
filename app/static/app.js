@@ -1,8 +1,11 @@
-// Pre-2027 builds stored unversioned slugs (for example, "rocks-and-minerals-b").
-// Ignore those legacy values so an existing student starts in the current catalog;
-// explicit #learn?event=… links still win during route resolution below.
-const storedActiveEventSlug = localStorage.getItem('activeEventSlug') || '';
-const initialActiveEventSlug = /-\d{4}$/.test(storedActiveEventSlug) ? storedActiveEventSlug : '';
+// The stored slug may predate catalog consolidation (for example, "rocks-and-minerals-b").
+// Keep it raw: resolveEvent rolls any remembered value forward onto the served catalog —
+// exact match first, base subject + division otherwise — so a legacy slug lands on its
+// current twin. The parse-time regex that used to live here discarded every slug without
+// a "-YYYY" suffix, and all 49 foundational events carry exactly such slugs: choosing one
+// held until the next reload, then the student was back at the start as if they had never
+// picked anything.
+const initialActiveEventSlug = localStorage.getItem('activeEventSlug') || '';
 
 const state = {
   token: localStorage.getItem('token'),
@@ -28,8 +31,9 @@ const state = {
   sourceCoverage: [],
   lessonReviewQueue: [],
   questionReviewQueue: [],
-  contentTab: 'lessons',
+  contentTab: 'overview',
   lessonFilter: 'ready',
+  interestFilter: 'all',
   questionReviewLimit: 25,
   videoReviewCount: 0,
   intakeActionCount: 0,
@@ -792,6 +796,44 @@ function renderOverviewEvent() {
   $('course-progress-bar').parentElement.setAttribute('aria-valuenow', String(percent));
 }
 
+// The home page has two shapes. Until a subject is chosen it is a guided picker —
+// interest categories first, then matching events — because dropping a new student
+// into an auto-selected course told them nothing about what this place is or how to
+// start. Once a subject exists, the plan-centred dashboard returns, with a dismissible
+// strip explaining where Courses, Practice, and Review live.
+function renderStudentGuidance() {
+  const hasEvent = Boolean(activeEvent());
+  ['dashboard-snapshot', 'daily-mission-block', 'current-event-block', 'subject-library-block']
+    .forEach(id => { const el = $(id); if (el) el.hidden = !hasEvent; });
+  $('student-onboarding').hidden = hasEvent;
+  $('student-guide').hidden = !hasEvent || localStorage.getItem('fieldstoneHomeGuideDismissed') === '1';
+  if (hasEvent) return;
+  const pool = studentEvents();
+  const counts = new Map();
+  pool.forEach(event => {
+    if (event.category) counts.set(event.category, (counts.get(event.category) || 0) + 1);
+  });
+  const chips = [
+    ['all', 'Show everything', '☰', pool.length],
+    ...[...counts.entries()]
+      .sort((a, b) => b[1] - a[1] || a[0].localeCompare(b[0]))
+      .map(([category, count]) => [category, category, categoryProfiles[category]?.icon || '◇', count]),
+  ];
+  if (!chips.some(([key]) => key === state.interestFilter)) state.interestFilter = 'all';
+  $('interest-chips').innerHTML = chips.map(([key, label, icon, count]) =>
+    `<button type="button" class="interest-chip" data-interest="${escapeHtml(key)}" aria-pressed="${String(key === state.interestFilter)}"><span aria-hidden="true">${icon}</span>${escapeHtml(label)}<span class="interest-chip-count">${count}</span></button>`).join('');
+  const matches = pool.filter(event => state.interestFilter === 'all' || event.category === state.interestFilter);
+  $('onboarding-event-list').innerHTML = matches.map(event => {
+    const experience = eventExperience(event);
+    return `<article class="subject-card event-accent-${experience.accent} surface" data-available="true">
+      <div class="subject-card-heading"><span class="subject-icon" aria-hidden="true">${experience.icon}</span><span class="division-badge">Div ${escapeHtml(event.division)}</span></div>
+      <h3>${escapeHtml(event.name)}</h3><p>${escapeHtml(event.topic_focus || event.description || experience.skill)}</p>
+      <div class="subject-card-meta"><span>${event.lesson_count} lesson${event.lesson_count === 1 ? '' : 's'}</span><span>${event.exam_count} exam${event.exam_count === 1 ? '' : 's'}</span><span>${event.material_count} resource${event.material_count === 1 ? '' : 's'}</span></div>
+      <footer><button class="subject-action-primary" type="button" data-onboard-event="${escapeHtml(event.slug)}">Start With This Event</button></footer>
+    </article>`;
+  }).join('') || '<p class="catalog-empty">Nothing in this area has published content yet — try another interest.</p>';
+}
+
 function renderEventCatalog() {
   const chips = document.querySelectorAll('[data-catalog-division]');
   if (!chips.length) return;
@@ -1408,7 +1450,11 @@ function renderNotebook() {
 
 function updateDashboard() {
   const firstName = (state.user.full_name || 'Competitor').split(' ')[0];
-  $('welcome').textContent = `Ready, ${firstName}?`;
+  const hasEvent = Boolean(activeEvent());
+  $('welcome').textContent = hasEvent ? `Ready, ${firstName}?` : `Welcome, ${firstName}!`;
+  $('today-copy').textContent = hasEvent
+    ? 'Build confidence one focused session at a time.'
+    : 'Two minutes to set up: pick a subject you like and your study plan is built around it.';
   $('sidebar-name').textContent = state.user.full_name;
   // The student dashboard renders after configureRoleNavigation and used to relabel the
   // sidebar unconditionally, so a staff member previewing the student app was told they were
@@ -1440,6 +1486,7 @@ function updateDashboard() {
     return `<li class="mission-item urgency-${escapeHtml(item.urgency)}"><span class="mission-item-icon" aria-hidden="true">${missionIcons[item.type] || '◇'}</span><div><span class="mission-order">Step ${index + 1} · ${escapeHtml(item.type.replaceAll('_', ' '))}</span><h3>${escapeHtml(item.title)}</h3><p>${escapeHtml(item.summary)}</p><small><strong>Why now:</strong> ${escapeHtml(item.why)}</small></div><div class="mission-item-action"><span>${item.estimated_minutes} min</span>${action}</div></li>`;
   }).join('');
   const primary = dailyPlan.items[0];
+  $('continue-button').hidden = !hasEvent;
   delete $('continue-button').dataset.startExam;
   delete $('continue-button').dataset.missionIndex;
   if (primary) {
@@ -1451,6 +1498,7 @@ function updateDashboard() {
   }
   renderSubjects();
   renderOverviewEvent();
+  renderStudentGuidance();
   renderEventCatalog();
   renderConcepts();
   renderCourseMap();
@@ -1892,6 +1940,44 @@ function updateContentTabBadges() {
   const opsCount = state.contentChallenges.filter(challenge => ['submitted', 'triaged'].includes(challenge.status)).length
     + state.calibrationQueue.length;
   setCount('tab-count-ops', opsCount);
+  renderContentOverview({
+    intake: state.intakeActionCount, lessons: lessonsWaiting,
+    questions: state.questionReviewQueue.length, videos: state.videoReviewCount,
+    ops: opsCount, coverage: coverageGaps,
+  });
+}
+
+// The Start Here panel repeats the tab badges as step counts, plus one sentence naming
+// today's bottleneck — the answer to "where do I start?" that the raw queues never gave.
+function renderContentOverview(counts) {
+  const step = (id, value, noun) => {
+    const el = $(id);
+    if (!el) return;
+    el.textContent = value ? `${value} ${noun}${value === 1 ? '' : 's'} waiting` : 'Clear';
+    el.classList.toggle('has-work', Boolean(value));
+  };
+  step('step-count-intake', counts.intake, 'upload');
+  step('step-count-lessons', counts.lessons, 'lesson');
+  step('step-count-questions', counts.questions, 'question');
+  step('step-count-videos', counts.videos, 'video');
+  const opsEl = $('step-count-ops');
+  if (opsEl) {
+    const parts = [];
+    if (counts.ops) parts.push(`${counts.ops} item${counts.ops === 1 ? '' : 's'} waiting`);
+    if (counts.coverage) parts.push(`${counts.coverage} source gap${counts.coverage === 1 ? '' : 's'}`);
+    opsEl.textContent = parts.join(' · ') || 'Clear';
+    opsEl.classList.toggle('has-work', Boolean(counts.ops || counts.coverage));
+  }
+  const reviews = [
+    counts.lessons && `${counts.lessons} lesson${counts.lessons === 1 ? '' : 's'}`,
+    counts.questions && `${counts.questions} question${counts.questions === 1 ? '' : 's'}`,
+    counts.videos && `${counts.videos} video${counts.videos === 1 ? '' : 's'}`,
+  ].filter(Boolean);
+  $('cr-overview-now').textContent = reviews.length
+    ? `Right now the review queues are the bottleneck: ${reviews.join(', ')} waiting for a human decision.`
+    : counts.intake
+      ? `The review queues are clear. ${counts.intake} upload${counts.intake === 1 ? ' needs' : 's need'} triage in Add Materials.`
+      : 'Every review queue is clear. Add new source material, or open Publish Courses to release something that is ready.';
 }
 
 async function loadContentOperations(button = null) {
@@ -2343,9 +2429,13 @@ async function loadApplication() {
       const explicitSlug = pathCourse?.slug || hashParams.get('event') || statefulParams.get('event');
       // A URL explicitly naming a historical event is intentional, so an exact match wins.
       // Remembered state, however, always rolls forward to the current catalog.
-      let requestedEvent = (explicitSlug
+      // No fallback to "the first event with content". A brand-new student used to be
+      // dropped straight into an arbitrary auto-picked course with no idea why it was
+      // theirs; with nothing chosen and nothing linked, the dashboard now opens the
+      // guided subject picker instead and the student makes the first choice.
+      let requestedEvent = explicitSlug
         ? (state.events.find(event => event.slug === explicitSlug) || resolveEvent(explicitSlug))
-        : resolveEvent(state.activeEventSlug)) || studentEvents()[0] || events[0];
+        : resolveEvent(state.activeEventSlug);
       // Honouring the link stops making sense when the archived event holds nothing: the
       // reader lands on a "Course content" heading with an empty page and no sign that a
       // live version exists. Consolidation left several such twins behind. Roll forward and
@@ -2383,6 +2473,9 @@ async function loadApplication() {
       $('today-copy').textContent = 'Build confidence one focused session at a time.';
       updateDashboard();
       renderSubjectShell();
+      // Courses and Practice are scoped to the chosen subject; with none chosen yet they
+      // are empty shells, so land on the picker instead.
+      if (!selectedEvent && ['learn', 'practice'].includes(initialRoute)) showView('dashboard', false);
       if (location.hash.startsWith('#lesson=')) {
         const lessonId = Number(new URLSearchParams(location.hash.slice(1)).get('lesson'));
         if (state.lessons.some(lesson => lesson.id === lessonId)) {
@@ -2443,6 +2536,28 @@ $('refresh-content-operations').addEventListener('click', event => loadContentOp
 $('content-tabs').addEventListener('click', event => {
   const button = event.target.closest('[data-cr-tab]');
   if (button) setContentTab(button.dataset.crTab);
+});
+$('content-overview').addEventListener('click', event => {
+  const button = event.target.closest('[data-cr-goto]');
+  if (button) setContentTab(button.dataset.crGoto);
+});
+$('interest-chips').addEventListener('click', event => {
+  const chip = event.target.closest('[data-interest]');
+  if (!chip) return;
+  state.interestFilter = chip.dataset.interest;
+  renderStudentGuidance();
+});
+$('onboarding-event-list').addEventListener('click', event => {
+  const button = event.target.closest('[data-onboard-event]');
+  if (!button) return;
+  setBusy(button, true, 'Setting Up…');
+  selectSubject(button.dataset.onboardEvent, 'dashboard')
+    .catch(error => toast(error.message))
+    .finally(() => setBusy(button, false));
+});
+$('student-guide-dismiss').addEventListener('click', () => {
+  localStorage.setItem('fieldstoneHomeGuideDismissed', '1');
+  $('student-guide').hidden = true;
 });
 $('lesson-review-filters').addEventListener('click', event => {
   const button = event.target.closest('[data-lesson-filter]');
@@ -4015,7 +4130,12 @@ window.addEventListener('hashchange', () => {
   const roleHome = isStudentPreview() ? 'dashboard'
     : STAFF_ROLES.includes(state.user.role)
       ? 'content' : state.user.role === 'coach' ? 'coach' : state.user.role === 'parent' ? 'parent' : 'dashboard';
-  const view = { '#learn': 'learn', '#practice': 'practice', '#errors': 'errors', '#coach': 'coach', '#content': 'content', '#parent': 'parent' }[hashRoute] || roleHome;
+  let view = { '#learn': 'learn', '#practice': 'practice', '#errors': 'errors', '#coach': 'coach', '#content': 'content', '#parent': 'parent' }[hashRoute] || roleHome;
+  // A student who has not chosen a subject yet has nothing to see in Courses or
+  // Practice — land them on the guided picker instead of an empty shell.
+  if (['learn', 'practice'].includes(view) && roleHome === 'dashboard' && state.events.length && !activeEvent()) {
+    view = 'dashboard';
+  }
   showView(view, false);
 });
 

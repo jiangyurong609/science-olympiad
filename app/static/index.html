@@ -9,8 +9,8 @@
   <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='16' fill='%231f5a45'/%3E%3Ctext x='32' y='44' text-anchor='middle' font-size='38' fill='white'%3EF%3C/text%3E%3C/svg%3E">
   <link rel="preload" href="/static/fonts/Fraunces.woff2" as="font" type="font/woff2" crossorigin>
   <link rel="preload" href="/static/fonts/AtkinsonHyperlegibleNext.woff2" as="font" type="font/woff2" crossorigin>
-  <link rel="stylesheet" href="/static/styles.css?v=43">
-  <link rel="stylesheet" href="/static/theme.css?v=43">
+  <link rel="stylesheet" href="/static/styles.css?v=44">
+  <link rel="stylesheet" href="/static/theme.css?v=44">
 </head>
 <body>
   <a class="skip-link" href="#main-content">Skip to Main Content</a>
@@ -142,18 +142,37 @@
             <div class="dashboard-hero-actions"><button id="continue-button" class="button button-primary dashboard-primary-action" type="button">Start Today’s Mission <span aria-hidden="true">→</span></button><button id="dashboard-resources-button" class="button button-secondary dashboard-resource-action" type="button" hidden>Browse Resources <span id="dashboard-resource-count">0</span> <span aria-hidden="true">→</span></button></div>
           </div>
 
-          <dl class="dashboard-snapshot" aria-label="Learning snapshot">
+          <!-- A brand-new student used to be dropped into an arbitrary auto-picked course.
+               Until they choose a subject, the dashboard is this guided picker instead. -->
+          <section id="student-onboarding" class="student-onboarding" hidden aria-labelledby="onboarding-title">
+            <ol class="onboarding-steps surface" aria-label="How Fieldstone works">
+              <li class="onboarding-step"><span class="onboarding-step-num" aria-hidden="true">1</span><div><h3>Pick a subject</h3><p>Choose an area of science you like below. Everything else is built around that choice, and you can switch or add more any time.</p></div></li>
+              <li class="onboarding-step"><span class="onboarding-step-num" aria-hidden="true">2</span><div><h3>Learn</h3><p>Work through short lessons with built-in checks under <strong>Courses</strong>.</p></div></li>
+              <li class="onboarding-step"><span class="onboarding-step-num" aria-hidden="true">3</span><div><h3>Practice &amp; review</h3><p>Try skill labs and mock exams under <strong>Practice</strong>. Anything you miss becomes a review card under <strong>Review</strong>.</p></div></li>
+            </ol>
+            <div class="section-heading"><div><p class="kicker">Step 1 · Your interests</p><h2 id="onboarding-title">What kind of science excites you?</h2></div><p>Pick an interest to see matching events, or browse everything.</p></div>
+            <div id="interest-chips" class="interest-chips" role="group" aria-label="Filter events by interest"></div>
+            <div id="onboarding-event-list" class="onboarding-event-grid" aria-live="polite"></div>
+          </section>
+
+          <div id="student-guide" class="student-guide surface" hidden role="note" aria-label="How to get around">
+            <span class="student-guide-lead" aria-hidden="true">✦</span>
+            <p><strong>Getting around:</strong> <a href="#learn">Courses</a> holds your lessons, <a href="#practice">Practice</a> has skill labs, mock exams, and official resources, and <a href="#errors">Review</a> turns your mistakes into mastery. Your plan below always shows the best next step.</p>
+            <button id="student-guide-dismiss" class="button button-secondary button-compact" type="button">Got it</button>
+          </div>
+
+          <dl id="dashboard-snapshot" class="dashboard-snapshot" aria-label="Learning snapshot">
             <div><dt>Today</dt><dd><strong id="assignment-count">0</strong><span>focused steps</span></dd></div>
             <div><dt>Mastery</dt><dd><strong id="mastery-count">0</strong><span>skills practiced</span></dd></div>
             <div><dt>Review</dt><dd><strong id="open-error-count">0</strong><span>open corrections</span></dd></div>
           </dl>
 
-          <section class="daily-mission surface" aria-labelledby="daily-mission-title">
+          <section id="daily-mission-block" class="daily-mission surface" aria-labelledby="daily-mission-title">
             <div class="mission-compass" aria-hidden="true"><span>✦</span><small>Your Plan</small></div>
             <div class="mission-content"><header><div><p class="kicker">Recommended Next</p><h2 id="daily-mission-title">Your Focused Study Plan</h2><p id="mission-summary">Loading the highest-value next steps…</p></div><div class="mission-workload"><strong id="mission-minutes">0</strong><span>minutes</span></div></header><ol id="daily-plan-list" class="daily-plan-list" aria-live="polite"></ol><div id="daily-plan-empty" class="mission-empty" hidden><strong>You’re caught up.</strong><p>Choose an event below to learn something new or sharpen a competition skill.</p></div><footer><span><strong id="mission-active-days">0</strong> active days this week</span><span><strong id="mission-due-reviews">0</strong> reviews due</span><span><strong id="mission-pending-assignments">0</strong> assignments waiting</span></footer></div>
           </section>
 
-          <section class="current-event surface" aria-labelledby="current-event-title">
+          <section id="current-event-block" class="current-event surface" aria-labelledby="current-event-title">
             <div class="current-event-header">
               <div id="overview-event-icon" class="current-event-icon" aria-hidden="true">◇</div>
               <div class="current-event-identity"><p id="overview-event-category" class="kicker">Current Event</p><h2 id="current-event-title">Choose an Event</h2><p id="overview-event-focus">Your learning path, practice, and progress stay together.</p></div>
@@ -165,7 +184,7 @@
             </div>
           </section>
 
-          <section class="section-block" aria-labelledby="subjects-title">
+          <section id="subject-library-block" class="section-block" aria-labelledby="subjects-title">
             <div class="section-heading"><div><p class="kicker">Your Library</p><h2 id="subjects-title">Continue Across Events</h2></div><p>Open a learning path or go straight to event practice.</p></div>
             <div id="subject-list" class="subject-grid" aria-live="polite"></div>
           </section>
@@ -385,7 +404,8 @@
                466,000-pixel scroll; the lesson queue sat below 500 expanded question cards
                and reviewers reported the page as empty. -->
           <nav id="content-tabs" class="cr-tabs" role="tablist" aria-label="Content workspaces">
-            <button type="button" class="cr-tab" data-cr-tab="lessons" role="tab" aria-selected="true">Review Lessons<span class="cr-tab-count" id="tab-count-lessons" hidden></span></button>
+            <button type="button" class="cr-tab" data-cr-tab="overview" role="tab" aria-selected="true">Start Here</button>
+            <button type="button" class="cr-tab" data-cr-tab="lessons" role="tab" aria-selected="false">Review Lessons<span class="cr-tab-count" id="tab-count-lessons" hidden></span></button>
             <button type="button" class="cr-tab" data-cr-tab="intake" role="tab" aria-selected="false">Add Materials<span class="cr-tab-count" id="tab-count-intake" hidden></span></button>
             <button type="button" class="cr-tab" data-cr-tab="questions" role="tab" aria-selected="false">Review Questions<span class="cr-tab-count" id="tab-count-questions" hidden></span></button>
             <button type="button" class="cr-tab" data-cr-tab="videos" role="tab" aria-selected="false">Review Videos<span class="cr-tab-count" id="tab-count-videos" hidden></span></button>
@@ -393,6 +413,20 @@
             <button type="button" class="cr-tab" data-cr-tab="coverage" role="tab" aria-selected="false">Source Coverage<span class="cr-tab-count" id="tab-count-coverage" hidden></span></button>
             <button type="button" class="cr-tab" data-cr-tab="ops" role="tab" aria-selected="false">Operations<span class="cr-tab-count" id="tab-count-ops" hidden></span></button>
           </nav>
+          <!-- The workspace used to open on a raw queue with no explanation of how the
+               pipeline fits together — new staff reported having no idea where to start. -->
+          <section id="content-overview" class="cr-overview" data-cr-panel="overview" aria-labelledby="cr-overview-title">
+            <div class="section-heading"><div><p class="kicker">Start here</p><h2 id="cr-overview-title">How content reaches students</h2><p>Material moves through these steps in order, and nothing becomes visible to students until it clears every review gate. The counts show where work is waiting right now.</p></div></div>
+            <p id="cr-overview-now" class="cr-overview-now" role="status" aria-live="polite"></p>
+            <ol class="cr-step-grid">
+              <li class="cr-step surface"><span class="cr-step-num" aria-hidden="true">1</span><h3>Add materials</h3><p>Upload or import official source documents and approve their extraction. Every lesson and question downstream is grounded in these sources.</p><footer><span class="cr-step-count" id="step-count-intake">Clear</span><button type="button" class="button button-secondary button-compact" data-cr-goto="intake">Open Add Materials</button></footer></li>
+              <li class="cr-step surface"><span class="cr-step-num" aria-hidden="true">2</span><h3>Review lessons</h3><p>Read each generated lesson against its retained source passages and record independent editorial and scientific decisions — two different reviewers per lesson.</p><footer><span class="cr-step-count" id="step-count-lessons">Clear</span><button type="button" class="button button-secondary button-compact" data-cr-goto="lessons">Open Review Lessons</button></footer></li>
+              <li class="cr-step surface"><span class="cr-step-num" aria-hidden="true">3</span><h3>Review questions</h3><p>Approve, edit, or withdraw generated practice questions. Only approved questions can appear in student exams and skill labs.</p><footer><span class="cr-step-count" id="step-count-questions">Clear</span><button type="button" class="button button-secondary button-compact" data-cr-goto="questions">Open Review Questions</button></footer></li>
+              <li class="cr-step surface"><span class="cr-step-num" aria-hidden="true">4</span><h3>Review videos</h3><p>Watch each rendered lesson chapter before students do. Approving publishes it; requesting changes sends notes back to the storyboard.</p><footer><span class="cr-step-count" id="step-count-videos">Clear</span><button type="button" class="button button-secondary button-compact" data-cr-goto="videos">Open Review Videos</button></footer></li>
+              <li class="cr-step surface"><span class="cr-step-num" aria-hidden="true">5</span><h3>Publish courses</h3><p>Preview a course exactly as a student will see it, then release it. The release gate is automatic: a course blocked by missing reviews or coverage cannot go live.</p><footer><span class="cr-step-count">Gated by steps 1–4</span><button type="button" class="button button-secondary button-compact" data-cr-goto="releases">Open Publish Courses</button></footer></li>
+              <li class="cr-step surface"><span class="cr-step-num" aria-hidden="true">6</span><h3>Monitor &amp; administer</h3><p>Track source coverage per event, calibrate question difficulty from student data, triage student-reported content problems, and manage people and roles.</p><footer><span class="cr-step-count" id="step-count-ops">Clear</span><span class="cr-step-buttons"><button type="button" class="button button-secondary button-compact" data-cr-goto="coverage">Coverage</button><button type="button" class="button button-secondary button-compact" data-cr-goto="ops">Operations</button></span></footer></li>
+            </ol>
+          </section>
           <section class="content-studio-intake surface" data-cr-panel="intake" aria-labelledby="content-studio-title">
             <div class="section-heading"><div><p class="kicker">Content Studio</p><h2 id="content-studio-title">Intake and ground new material</h2><p>Upload a source, inspect extraction, then approve it before generating any student content.</p></div><span id="intake-live-status" class="status-pill" role="status" aria-live="polite">Private until reviewed</span></div>
             <form id="content-intake-form" class="content-intake-form">
@@ -564,6 +598,6 @@
       </div>
     </div>
   </div>
-  <script src="/static/app.js?v=43"></script>
+  <script src="/static/app.js?v=44"></script>
 </body>
 </html>

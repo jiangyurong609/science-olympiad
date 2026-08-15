@@ -1542,3 +1542,45 @@ h2[tabindex="-1"]:focus-visible { outline: 0; }
   .student-preview-banner { flex-direction: column; align-items: flex-start; }
   .student-preview-banner .button { width: 100%; }
 }
+
+/* ---------- guided landing: student onboarding ---------- */
+.student-onboarding { margin-top: 26px; display: grid; gap: 22px; }
+.onboarding-steps { list-style: none; margin: 0; padding: 20px 22px; display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 18px; border-radius: 16px; }
+.onboarding-step { display: flex; align-items: flex-start; gap: 12px; }
+.onboarding-step-num { flex: 0 0 auto; width: 30px; height: 30px; display: grid; place-items: center; border-radius: 50%; background: var(--forest); color: #fdfcf7; font-size: .8rem; font-weight: 800; }
+.onboarding-step h3 { margin: 3px 0 4px; font-size: .95rem; }
+.onboarding-step p { margin: 0; color: var(--muted); font-size: .8rem; line-height: 1.5; }
+.interest-chips { display: flex; flex-wrap: wrap; gap: 9px; }
+.interest-chip { display: inline-flex; align-items: center; gap: 8px; min-height: 44px; padding: 9px 16px; border: 1px solid var(--line); border-radius: 999px; background: var(--surface); color: var(--ink); font: inherit; font-size: .84rem; font-weight: 700; cursor: pointer; transition: background .15s var(--ease-spring), color .15s var(--ease-spring); }
+.interest-chip:hover { background: rgba(31, 90, 69, .08); }
+.interest-chip[aria-pressed="true"] { background: var(--forest); border-color: var(--forest); color: #fdfcf7; }
+.interest-chip-count { display: inline-flex; align-items: center; justify-content: center; min-width: 20px; height: 19px; padding: 0 6px; border-radius: 999px; background: rgba(27, 43, 36, .10); font-size: .68rem; font-weight: 800; }
+.interest-chip[aria-pressed="true"] .interest-chip-count { background: rgba(253, 252, 247, .22); color: #fdfcf7; }
+.onboarding-event-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(240px, 1fr)); gap: 16px; }
+.onboarding-event-grid .subject-card footer { justify-content: flex-start; }
+
+/* ---------- guided landing: returning-student guide strip ---------- */
+.student-guide { display: flex; flex-wrap: wrap; align-items: center; gap: 12px; margin-top: 18px; padding: 13px 18px; border-radius: 14px; font-size: .84rem; line-height: 1.5; }
+.student-guide-lead { color: var(--forest); font-size: 1.05rem; }
+.student-guide p { flex: 1 1 320px; margin: 0; }
+.student-guide a { color: var(--forest); font-weight: 700; }
+.student-guide .button { flex: 0 0 auto; margin-left: auto; }
+
+/* ---------- guided landing: content-operations Start Here ---------- */
+.cr-overview-now { margin: -4px 0 18px; font-size: .92rem; font-weight: 600; }
+.cr-step-grid { list-style: none; margin: 0; padding: 0; display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap: 16px; }
+.cr-step { display: flex; flex-direction: column; gap: 7px; padding: 18px; border-radius: 14px; }
+.cr-step-num { width: 30px; height: 30px; display: grid; place-items: center; border-radius: 50%; background: var(--forest); color: #fdfcf7; font-size: .8rem; font-weight: 800; }
+.cr-step h3 { margin: 4px 0 0; font-size: 1rem; }
+.cr-step p { flex: 1; margin: 0; color: var(--muted); font-size: .8rem; line-height: 1.5; }
+.cr-step footer { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 10px; margin-top: 10px; }
+.cr-step-count { font-size: .74rem; font-weight: 800; color: var(--muted); }
+.cr-step-count.has-work { color: #8a4a12; }
+.cr-step-buttons { display: flex; gap: 8px; }
+
+@media (max-width: 700px) {
+  .onboarding-steps { grid-template-columns: 1fr; }
+  .onboarding-event-grid { grid-template-columns: 1fr; }
+  .student-guide .button, .cr-step footer .button { min-height: 44px; }
+  .student-guide .button { width: 100%; margin-left: 0; }
+}
