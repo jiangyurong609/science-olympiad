@@ -168,7 +168,37 @@ FIGURE_LABEL = re.compile(
 # the figure being referenced. `sole_on_page` is kept as resolving because the item must also
 # explicitly reference a figure and be alone with it, but it is reported separately so its
 # weaker basis stays visible rather than being folded into one "unique" number.
-RESOLVING_MATCHES = {"label_matched", "sole_on_page"}
+RESOLVING_MATCHES = {"label_matched", "caption_named", "sole_on_page"}
+
+# A caption that names the questions it serves: "The following figure is needed for questions
+# 32 and 33", "Use the map below to answer questions 5-8". This is the strongest anchor a paper
+# offers — stronger than sharing a page, which the printed layout routinely breaks. On the
+# BullSO Meteorology paper the climatograph and its caption sit at the foot of page 6 while
+# questions 32 and 33 begin on page 7, so page association alone attached nothing to either.
+QUESTION_SPAN = re.compile(
+    r"(?i:questions?)\s+(\d{1,3})\s*(?:(?:-|–|—|to|through|and|&|,)\s*(\d{1,3}))?")
+# How many figures a single caption may hand to one question before the page is treated as a
+# gallery rather than an illustration.
+CAPTION_FIGURE_CAP = 3
+
+
+def captioned_question_labels(text: str) -> dict[int, set[str]]:
+    """Question labels each page's captions claim, keyed by the page the caption sits on."""
+    offsets = page_offsets(text)
+    if not offsets:
+        return {}
+    out: dict[int, set[str]] = {}
+    for match in QUESTION_SPAN.finditer(text):
+        page = page_of_offset(offsets, match.start())
+        if page is None:
+            continue
+        first = int(match.group(1))
+        second = int(match.group(2)) if match.group(2) else first
+        low, high = min(first, second), max(first, second)
+        if high - low > 20:               # "questions 1 and 60" is prose, not a caption
+            continue
+        out.setdefault(page, set()).update(str(n) for n in range(low, high + 1))
+    return out
 
 
 def figure_labels_in(text: str) -> set[str]:
@@ -269,8 +299,29 @@ def _probe(stem: str) -> str:
 
 
 def _find_label(text: str, label: str, start: int) -> int:
-    match = re.compile(rf"(?m)^\s*{re.escape(label)}[.)]\s").search(text, start)
-    return match.start() if match else -1
+    """Where the printed label `12.` appears in the extracted text.
+
+    Anchoring to the start of a line is what a test looks like on paper and almost never what
+    the extractor produces: pypdf runs the question onto the tail of whatever preceded it, so
+    a real paper reads `... T/F (1 pt)   1.  What is the general minimum ...`. Requiring a line
+    start matched nothing on such a paper — 34 of 40 items could not be located, every one of
+    them fell through to matching a stem the parser had deliberately rewritten, and the figures
+    on their pages were never attached.
+
+    A label is therefore accepted mid-line, but only at a token boundary and only when it is
+    not part of a longer number or a decimal: `1.` in `(1 pt) 1. What` counts, while the `1`
+    of `31.` or the `5` of `0.5.` does not.
+    """
+    # Trailing whitespace is optional because some papers extract with none at all: a real
+    # Remote Sensing test reads `35)(15pts)Explainthedifference…`, where requiring a space
+    # after the number left 36 of 45 items unlocated.
+    pattern = re.compile(rf"(?:(?<=^)|(?<=[\s(\[]))\.?{re.escape(label)}\s*[.)]\s*(?=\S)", re.M)
+    for match in pattern.finditer(text, start):
+        before = text[max(0, match.start() - 1):match.start()]
+        if before.isdigit() or before == ".":
+            continue                      # the tail of 31. or of a decimal like 0.5.
+        return match.start()
+    return -1
 
 
 def attach_figures_to_items(text: str, items: list[dict],
@@ -289,7 +340,7 @@ def attach_figures_to_items(text: str, items: list[dict],
 
     pages = locate_items(text, items)
     stats = {"located": 0, "unlocated": 0, "with_figures": 0,
-             "label_matched": 0, "sole_on_page": 0, "ambiguous": 0,
+             "label_matched": 0, "caption_named": 0, "sole_on_page": 0, "ambiguous": 0,
              "no_figure_reference": 0, "image_dependent_resolved": 0}
 
     items_on_page: dict[int, int] = {}
@@ -297,6 +348,7 @@ def attach_figures_to_items(text: str, items: list[dict],
         if page is not None:
             items_on_page[page] = items_on_page.get(page, 0) + 1
     labels_by_page = page_figure_labels(text)
+    captioned = captioned_question_labels(text)
 
     for item, page in zip(items, pages):
         item["page"] = page
@@ -324,6 +376,32 @@ def attach_figures_to_items(text: str, items: list[dict],
                     if item.get("image_dependent"):
                         stats["image_dependent_resolved"] += 1
                     continue
+
+        # A caption naming this question ("needed for questions 32 and 33") binds the figure
+        # sitting with that caption, whichever page the question itself was printed on. The
+        # paper is stating the pairing outright, so it outranks page proximity.
+        # Where the captioned page holds more than one figure they are all attached rather than
+        # none. The caption is the paper's own statement that this page's artwork belongs to
+        # these questions, and the Meteorology paper is the ordinary case: page 6 carries an
+        # orographic-lift diagram for the question above and the climatograph for these two.
+        # An extra diagram beside the right one costs a moment's confusion; withholding both
+        # leaves the question unanswerable, which is the failure being fixed. The cap keeps a
+        # gallery page from being dumped onto one item.
+        label = str(item.get("label") or "").strip()
+        if label:
+            claiming = [p for p, labels in captioned.items()
+                        if label in labels and 1 <= len(by_page.get(p, [])) <= CAPTION_FIGURE_CAP]
+            if len(claiming) == 1:
+                anchor_page = claiming[0]
+                item["page"] = anchor_page
+                item["figures"] = [f.descriptor for f in by_page[anchor_page]]
+                item["figure_match"] = "caption_named"
+                stats["located"] += 1
+                stats["with_figures"] += 1
+                stats["caption_named"] += 1
+                if item.get("image_dependent"):
+                    stats["image_dependent_resolved"] += 1
+                continue
 
         if page is None:
             stats["unlocated"] += 1

@@ -290,3 +290,69 @@ def test_a_prose_reference_cannot_anchor_a_figure_by_coincidence():
     stats = attach_figures_to_items(text, items, [_figure(1)])
     assert items[0]["figure_match"] != "label_matched"
     assert stats["label_matched"] == 0
+
+
+def test_a_question_number_is_found_when_the_extractor_runs_it_onto_the_line_above():
+    """Real papers do not extract with the number at the start of a line.
+
+    pypdf runs each question onto the tail of whatever preceded it, so a genuine paper reads
+    `... T/F (1 pt)   1.  What is ...`. Anchoring to a line start located 6 of 40 items on the
+    BullSO Meteorology test; every other item fell through to matching a stem the parser had
+    deliberately rewritten, and the figures on their pages were never attached.
+    """
+    text = ("[Page 1]\n"
+            "Part 1: Multiple choice and T/F (1 pt)   1.  What is the minimum record length?\n"
+            "a. 10 years  b. 30 years   2.  Which gas is most abundant?\n"
+            "[Page 2]\n"
+            "a. Argon  b. Neon  31.  Which process cools the air?\n")
+    items = [{"label": "1"}, {"label": "2"}, {"label": "31"}]
+    assert locate_items(text, items) == [1, 1, 2]
+
+
+def test_a_label_is_not_matched_inside_a_longer_number():
+    text = "[Page 1]\n intro 31.  The thirty-first question\n[Page 2]\n 1.  The first question\n"
+    assert locate_items(text, [{"label": "1"}]) == [2], "31. must not satisfy label 1"
+
+
+def test_a_caption_naming_its_questions_binds_the_figure_across_a_page_break():
+    """The paper states the pairing outright; that beats sharing a page.
+
+    On the BullSO Meteorology test the climatograph and its caption sit at the foot of page 6
+    while questions 32 and 33 begin on page 7, so page association attached nothing to either
+    and both were dropped as image-dependent.
+    """
+    text = ("[Page 6]\n"
+            "The following figure is needed for questions 32 and 33: a climatograph of Tampa\n"
+            "[Page 7]\n"
+            "32.  Which month recorded the lowest rainfall?\n"
+            "33.  What was the average rainfall in June?\n")
+    items = [{"label": "32", "stem": "Which month recorded the lowest rainfall?",
+              "image_dependent": True},
+             {"label": "33", "stem": "What was the average rainfall in June?",
+              "image_dependent": True}]
+    stats = attach_figures_to_items(text, items, [_figure(6)])
+    assert [i["figure_match"] for i in items] == ["caption_named", "caption_named"]
+    assert stats["image_dependent_resolved"] == 2
+    assert all(i["figures"] for i in items)
+
+
+def test_a_caption_hands_over_every_figure_on_its_page():
+    """A captioned page routinely carries the previous question's diagram too.
+
+    Handing over both is deliberate: one extra diagram beside the right one costs a moment's
+    confusion, while withholding both leaves the question unanswerable.
+    """
+    text = ("[Page 6]\n"
+            "Use the chart below to answer questions 4-5\n"
+            "[Page 7]\n4.  First\n5.  Second\n")
+    items = [{"label": "4", "image_dependent": True}, {"label": "5", "image_dependent": True}]
+    attach_figures_to_items(text, items, [_figure(6), _figure(6, sequence=2)])
+    assert len(items[0]["figures"]) == 2
+
+
+def test_a_gallery_page_is_not_handed_to_a_single_question():
+    text = "[Page 1]\nUse the images to answer questions 2-3\n[Page 2]\n2.  A\n3.  B\n"
+    figures = [_figure(1, sequence=n) for n in range(1, 6)]
+    items = [{"label": "2", "image_dependent": True}]
+    attach_figures_to_items(text, items, figures)
+    assert items[0].get("figure_match") != "caption_named"
