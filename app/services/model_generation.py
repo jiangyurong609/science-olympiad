@@ -1,5 +1,6 @@
 from __future__ import annotations
 import json
+import re
 from sqlalchemy import select
 from sqlalchemy.orm import Session
 from app.models.entities import Concept, Event, GenerationRun, Question, QuestionStatus, ScientificClaim, Source, User
@@ -152,7 +153,14 @@ def generate_model_questions(
         approved_ids = {c.id for c in claims}
         for raw in items[:count]:
             choices = raw.get("choices", [])
-            claim_ids = [int(cid) for cid in raw.get("claim_ids", []) if int(cid) in approved_ids]
+            # Models cite claims in whatever shape they fancy (ints, "123", "12-7-3");
+            # extract every number and let the approved-ids filter discard the rest —
+            # one malformed citation must not throw away the whole batch.
+            claim_ids = []
+            for cid in raw.get("claim_ids", []):
+                for num in re.findall(r"\d+", str(cid)):
+                    if int(num) in approved_ids and int(num) not in claim_ids:
+                        claim_ids.append(int(num))
             answer_spec = {
                 "correct_index": raw.get("correct_index"),
                 "points": 1,

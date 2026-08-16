@@ -54,9 +54,10 @@ class OpenAICompatibleProvider:
         if not self.configured:
             raise ModelProviderError("No external model provider is configured")
         url = f"{self.base_url}/chat/completions"
+        # No temperature: gpt-5.x reasoning models reject anything but the default,
+        # and Azure's endpoint enforces that strictly (Sunra silently dropped it).
         body = {
             "model": self.model,
-            "temperature": 0.2,
             "response_format": {"type": "json_object"},
             "messages": [{"role": "system", "content": system}, {"role": "user", "content": user}],
         }
