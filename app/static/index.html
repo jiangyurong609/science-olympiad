@@ -9,8 +9,8 @@
   <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='16' fill='%231f5a45'/%3E%3Ctext x='32' y='44' text-anchor='middle' font-size='38' fill='white'%3EF%3C/text%3E%3C/svg%3E">
   <link rel="preload" href="/static/fonts/Fraunces.woff2" as="font" type="font/woff2" crossorigin>
   <link rel="preload" href="/static/fonts/AtkinsonHyperlegibleNext.woff2" as="font" type="font/woff2" crossorigin>
-  <link rel="stylesheet" href="/static/styles.css?v=46">
-  <link rel="stylesheet" href="/static/theme.css?v=46">
+  <link rel="stylesheet" href="/static/styles.css?v=47">
+  <link rel="stylesheet" href="/static/theme.css?v=47">
 </head>
 <body>
   <a class="skip-link" href="#main-content">Skip to Main Content</a>
@@ -413,6 +413,7 @@
                and reviewers reported the page as empty. -->
           <nav id="content-tabs" class="cr-tabs" role="tablist" aria-label="Content workspaces">
             <button type="button" class="cr-tab" data-cr-tab="overview" role="tab" aria-selected="true">Start Here</button>
+            <button type="button" class="cr-tab" data-cr-tab="insights" role="tab" aria-selected="false">Insights</button>
             <button type="button" class="cr-tab" data-cr-tab="lessons" role="tab" aria-selected="false">Review Lessons<span class="cr-tab-count" id="tab-count-lessons" hidden></span></button>
             <button type="button" class="cr-tab" data-cr-tab="intake" role="tab" aria-selected="false">Add Materials<span class="cr-tab-count" id="tab-count-intake" hidden></span></button>
             <button type="button" class="cr-tab" data-cr-tab="questions" role="tab" aria-selected="false">Review Questions<span class="cr-tab-count" id="tab-count-questions" hidden></span></button>
@@ -434,6 +435,25 @@
               <li class="cr-step surface"><span class="cr-step-num" aria-hidden="true">5</span><h3>Publish courses</h3><p>Preview a course exactly as a student will see it, then release it. The release gate is automatic: a course blocked by missing reviews or coverage cannot go live.</p><footer><span class="cr-step-count">Gated by steps 1–4</span><button type="button" class="button button-secondary button-compact" data-cr-goto="releases">Open Publish Courses</button></footer></li>
               <li class="cr-step surface"><span class="cr-step-num" aria-hidden="true">6</span><h3>Monitor &amp; administer</h3><p>Track source coverage per event, calibrate question difficulty from student data, triage student-reported content problems, and manage people and roles.</p><footer><span class="cr-step-count" id="step-count-ops">Clear</span><span class="cr-step-buttons"><button type="button" class="button button-secondary button-compact" data-cr-goto="coverage">Coverage</button><button type="button" class="button button-secondary button-compact" data-cr-goto="ops">Operations</button></span></footer></li>
             </ol>
+          </section>
+          <section id="content-insights" class="content-insights" data-cr-panel="insights" aria-labelledby="insights-title">
+            <div class="section-heading"><div><p class="kicker">Teaching view</p><h2 id="insights-title">Subject Insights</h2><p>Participation, progress, outcomes, and open issues per subject — computed from real student activity only. Staff walkthroughs are excluded.</p></div><div class="section-heading-actions"><p id="insights-totals" class="queue-count"></p><button id="refresh-insights" class="button button-secondary button-compact" type="button">Refresh</button></div></div>
+            <div id="insights-status" class="insights-status" role="status" aria-live="polite">Loading insights…</div>
+            <div class="insights-table-wrap">
+              <table class="insights-table" hidden id="insights-table">
+                <thead><tr>
+                  <th scope="col">Subject</th>
+                  <th scope="col">Students</th>
+                  <th scope="col">Lessons done</th>
+                  <th scope="col">Exam attempts</th>
+                  <th scope="col">Avg score</th>
+                  <th scope="col">Correct rate</th>
+                  <th scope="col">Question mix</th>
+                  <th scope="col">Issues</th>
+                </tr></thead>
+                <tbody id="insights-rows"></tbody>
+              </table>
+            </div>
           </section>
           <section class="content-studio-intake surface" data-cr-panel="intake" aria-labelledby="content-studio-title">
             <div class="section-heading"><div><p class="kicker">Content Studio</p><h2 id="content-studio-title">Intake and ground new material</h2><p>Upload a source, inspect extraction, then approve it before generating any student content.</p></div><span id="intake-live-status" class="status-pill" role="status" aria-live="polite">Private until reviewed</span></div>
@@ -612,6 +632,6 @@
       </div>
     </div>
   </div>
-  <script src="/static/app.js?v=46"></script>
+  <script src="/static/app.js?v=47"></script>
 </body>
 </html>

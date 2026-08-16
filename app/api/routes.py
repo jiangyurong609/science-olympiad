@@ -4901,6 +4901,175 @@ def my_attempts(
     return {"attempts": out}
 
 
+# --- Teacher-style insights: who is learning what, and where it hurts ------
+
+PENDING_REVIEW_STATUSES = ("machine_validated", "editor_reviewed", "sme_approved")
+
+
+@router.get("/content/insights")
+def content_insights(
+    db: Session = Depends(get_db),
+    actor: User = Depends(require_content_staff),
+):
+    """Per-event participation, progress, outcomes, and open issues, in one payload.
+
+    Every aggregate is scoped to active student accounts: staff walk the student app for
+    verification, and counting their probes as participation would invent an audience.
+    Aggregation happens in a fixed number of grouped queries — never per event — because
+    this endpoint's whole reason to exist is being glanced at often.
+    """
+    student_ids = set(db.scalars(select(User.id).where(
+        User.role == "student", User.is_active)).all())
+    events = db.scalars(select(Event).where(
+        Event.active, Event.season_status.notin_(RETIRED_SEASON_STATUSES))).all()
+
+    def _grouped(query):
+        return {row[0]: row[1:] for row in db.execute(query).all()}
+
+    lessons_pub = _grouped(select(Lesson.event_id, func.count()).where(
+        Lesson.status == "published").group_by(Lesson.event_id))
+    exams_pub = _grouped(select(Exam.event_id, func.count()).where(
+        Exam.published).group_by(Exam.event_id))
+    labs_pub = _grouped(select(PracticeSet.event_id, func.count()).where(
+        PracticeSet.status == "published").group_by(PracticeSet.event_id))
+
+    progress = db.execute(
+        select(Lesson.event_id, LessonProgress.user_id, LessonProgress.status)
+        .join(Lesson, Lesson.id == LessonProgress.lesson_id)
+    ).all()
+    attempts = db.execute(
+        select(Exam.event_id, Attempt.user_id, Attempt.status, Attempt.score,
+               Attempt.max_score, Attempt.started_at)
+        .join(Exam, Exam.id == Attempt.exam_id)
+    ).all()
+    practice = db.execute(
+        select(PracticeSet.event_id, PracticeSession.user_id)
+        .join(PracticeSet, PracticeSet.id == PracticeSession.practice_set_id)
+    ).all()
+    graded = db.execute(
+        select(Question.event_id, Response.is_correct)
+        .join(Question, Question.id == Response.question_id)
+        .join(Attempt, Attempt.id == Response.attempt_id)
+        .where(Response.is_correct.is_not(None), Attempt.user_id.in_(student_ids or {-1}))
+    ).all()
+    mix = db.execute(
+        select(Question.event_id, Question.cognitive_level, func.count())
+        .where(Question.status.in_(("published", "calibrated") + PENDING_REVIEW_STATUSES))
+        .group_by(Question.event_id, Question.cognitive_level)
+    ).all()
+    challenges = _grouped(
+        select(Question.event_id, func.count())
+        .join(ContentChallenge, ContentChallenge.question_id == Question.id)
+        .where(ContentChallenge.status.in_(["submitted", "triaged"]))
+        .group_by(Question.event_id))
+    remediation = _grouped(
+        select(Question.event_id, func.count())
+        .join(RemediationCase, RemediationCase.question_id == Question.id)
+        .where(RemediationCase.status == "open")
+        .group_by(Question.event_id))
+    keyless_rows = db.scalars(select(Question).where(
+        Question.question_type == "short_answer",
+        Question.status.in_(("published", "calibrated") + PENDING_REVIEW_STATUSES))).all()
+    keyless: dict[int, int] = {}
+    for row in keyless_rows:
+        if not is_gradeable("short_answer", row.answer_spec or {}):
+            keyless[row.event_id] = keyless.get(row.event_id, 0) + 1
+
+    month_ago = datetime.now(timezone.utc) - timedelta(days=30)
+    per_event: dict[int, dict] = {}
+
+    def bucket(event_id):
+        return per_event.setdefault(event_id, {
+            "participants": set(), "recent": set(), "completed": 0, "in_progress": 0,
+            "attempts": 0, "submitted": 0, "ratios": [], "graded": 0, "correct": 0,
+            "mix": {},
+        })
+
+    for event_id, user_id, status in progress:
+        if user_id not in student_ids:
+            continue
+        b = bucket(event_id)
+        b["participants"].add(user_id)
+        if status == "completed":
+            b["completed"] += 1
+        elif status == "in_progress":
+            b["in_progress"] += 1
+    for event_id, user_id, status, score, max_score, started_at in attempts:
+        if user_id not in student_ids:
+            continue
+        b = bucket(event_id)
+        b["participants"].add(user_id)
+        b["attempts"] += 1
+        if started_at and _aware(started_at) >= month_ago:
+            b["recent"].add(user_id)
+        if status == AttemptStatus.SUBMITTED.value and score is not None and (max_score or 0) > 0:
+            b["submitted"] += 1
+            b["ratios"].append(score / max_score)
+    for event_id, user_id in practice:
+        if user_id in student_ids:
+            bucket(event_id)["participants"].add(user_id)
+    for event_id, is_correct in graded:
+        b = bucket(event_id)
+        b["graded"] += 1
+        b["correct"] += 1 if is_correct else 0
+    for event_id, level, count in mix:
+        bucket(event_id)["mix"][level or "unlabelled"] = count
+
+    rows = []
+    for event in events:
+        b = per_event.get(event.id)
+        published = {
+            "lessons": (lessons_pub.get(event.id) or [0])[0],
+            "exams": (exams_pub.get(event.id) or [0])[0],
+            "practice_sets": (labs_pub.get(event.id) or [0])[0],
+        }
+        if not b and not any(published.values()):
+            continue
+        b = b or bucket(event.id)
+        question_total = sum(b["mix"].values())
+        recall_share = (b["mix"].get("recall", 0) / question_total) if question_total else None
+        correct_pct = round(100 * b["correct"] / b["graded"], 1) if b["graded"] else None
+        avg_score_pct = round(100 * sum(b["ratios"]) / len(b["ratios"]), 1) if b["ratios"] else None
+        flags = []
+        if not b["participants"] and any(published.values()):
+            flags.append("no_participation")
+        if recall_share is not None and question_total >= 20 and recall_share >= 0.3:
+            flags.append("recall_heavy")
+        # A high correct rate is a difficulty finding, not a success story — but only
+        # once enough real answers exist to mean anything.
+        if b["graded"] >= 30 and correct_pct is not None and correct_pct >= 85:
+            flags.append("possibly_too_easy")
+        elif b["graded"] < 30 and b["graded"] >= 0:
+            flags.append("insufficient_response_data")
+        rows.append({
+            "event": {"id": event.id, "name": event.name, "slug": event.slug,
+                      "division": event.division, "season": event.season},
+            "published": published,
+            "participation": {"students": len(b["participants"]),
+                              "active_last_30d": len(b["recent"])},
+            "lessons": {"completions": b["completed"], "in_progress": b["in_progress"]},
+            "exams": {"attempts": b["attempts"], "submitted": b["submitted"],
+                      "avg_score_pct": avg_score_pct},
+            "responses": {"graded": b["graded"], "correct_pct": correct_pct},
+            "questions": {"total": question_total, "by_level": b["mix"],
+                          "recall_share": round(recall_share, 2) if recall_share is not None else None},
+            "issues": {"open_challenges": (challenges.get(event.id) or [0])[0],
+                       "open_remediation": (remediation.get(event.id) or [0])[0],
+                       "missing_answer_keys": keyless.get(event.id, 0)},
+            "flags": flags,
+        })
+    rows.sort(key=lambda row: (-row["participation"]["students"],
+                               -row["exams"]["attempts"], row["event"]["name"]))
+    return {
+        "totals": {
+            "active_students": len(student_ids),
+            "participating_students": len({u for b in per_event.values() for u in b["participants"]}),
+            "events_reported": len(rows),
+        },
+        "events": rows,
+    }
+
+
 # --- Answer-key authoring (fix ungradeable short-answer questions) ---------
 
 @router.get("/content/questions/needs-key")

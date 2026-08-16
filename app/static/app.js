@@ -36,6 +36,7 @@ const state = {
   interestFilter: 'all',
   questionServeFilter: 'blocking',
   questionScopeEvent: 'all',
+  insights: null,
   questionReviewLimit: 25,
   videoReviewCount: 0,
   intakeActionCount: 0,
@@ -2002,6 +2003,65 @@ function setContentTab(tab) {
     button.classList.toggle('active', active);
     button.setAttribute('aria-selected', String(active));
   });
+  // Insights aggregates the whole activity history; compute it when someone looks,
+  // not on every workspace load.
+  if (tab === 'insights' && !state.insights) loadContentInsights().catch(() => {});
+}
+
+async function loadContentInsights(button = null) {
+  setBusy(button, true, 'Computing…');
+  const status = $('insights-status');
+  status.hidden = false;
+  status.textContent = 'Loading insights…';
+  try {
+    state.insights = await api('/content/insights');
+    renderContentInsights();
+  } catch (error) {
+    status.textContent = `Insights could not load. ${error.message}`;
+  } finally { setBusy(button, false); }
+}
+
+function renderContentInsights() {
+  const data = state.insights;
+  if (!data) return;
+  $('insights-totals').textContent =
+    `${data.totals.participating_students} of ${data.totals.active_students} students participating · ${data.totals.events_reported} subjects`;
+  const rows = data.events;
+  $('insights-table').hidden = rows.length === 0;
+  $('insights-status').hidden = rows.length > 0;
+  if (!rows.length) {
+    $('insights-status').textContent = 'No subjects with published content yet.';
+    return;
+  }
+  const flagLabels = {
+    no_participation: 'no students yet',
+    recall_heavy: 'recall-heavy questions',
+    possibly_too_easy: 'possibly too easy',
+    insufficient_response_data: 'too few answers to judge difficulty',
+  };
+  const warnFlags = new Set(['possibly_too_easy', 'no_participation', 'recall_heavy']);
+  $('insights-rows').innerHTML = rows.map(row => {
+    const issues = row.issues.open_challenges + row.issues.open_remediation + row.issues.missing_answer_keys;
+    const flags = row.flags.map(flag =>
+      `<span class="insight-flag${warnFlags.has(flag) ? ' insight-flag-warn' : ''}">${flagLabels[flag] || flag}</span>`).join('');
+    const mix = row.questions.total
+      ? `${row.questions.total}<small>${Math.round((row.questions.recall_share || 0) * 100)}% recall</small>`
+      : '—';
+    return `<tr>
+      <td><strong>${escapeHtml(row.event.name)}</strong><small>Div ${escapeHtml(row.event.division)} · ${row.event.season}</small>${flags ? `<div class="insight-flags">${flags}</div>` : ''}</td>
+      <td>${row.participation.students}${row.participation.active_last_30d ? `<small>${row.participation.active_last_30d} this month</small>` : ''}</td>
+      <td>${row.lessons.completions}${row.lessons.in_progress ? `<small>+${row.lessons.in_progress} in progress</small>` : ''}<small>${row.published.lessons} published</small></td>
+      <td>${row.exams.attempts}${row.exams.submitted ? `<small>${row.exams.submitted} submitted</small>` : ''}</td>
+      <td>${row.exams.avg_score_pct == null ? '—' : `${row.exams.avg_score_pct}%`}</td>
+      <td>${row.responses.correct_pct == null ? '—' : `${row.responses.correct_pct}%`}<small>${row.responses.graded} graded</small></td>
+      <td>${mix}</td>
+      <td>${issues ? `<strong>${issues}</strong><small>${[
+        row.issues.open_challenges && `${row.issues.open_challenges} challenge${row.issues.open_challenges === 1 ? '' : 's'}`,
+        row.issues.open_remediation && `${row.issues.open_remediation} remediation`,
+        row.issues.missing_answer_keys && `${row.issues.missing_answer_keys} keyless`,
+      ].filter(Boolean).join(' · ')}</small>` : '0'}</td>
+    </tr>`;
+  }).join('');
 }
 
 function updateContentTabBadges() {
@@ -2679,6 +2739,7 @@ $('question-review-controls').addEventListener('click', event => {
   state.questionReviewLimit = 25;
   renderQuestionReviewQueue();
 });
+$('refresh-insights').addEventListener('click', event => loadContentInsights(event.currentTarget));
 $('question-event-filter').addEventListener('change', event => {
   state.questionScopeEvent = event.target.value;
   state.questionReviewLimit = 25;

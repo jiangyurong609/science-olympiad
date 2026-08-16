@@ -7,7 +7,7 @@ from app.services.model_provider import ModelProviderError, OpenAICompatibleProv
 from app.services.rights import can_use_for_generation
 from app.services.validation import build_similarity_report, validate_candidate
 
-PROMPT_VERSION = "competition-item-v1"
+PROMPT_VERSION = "competition-item-v2-difficulty-calibrated"
 
 _SOLVER_SYSTEM = (
     "You are an INDEPENDENT solver. You receive ONLY a question stem and its answer choices — "
@@ -97,11 +97,29 @@ def generate_model_questions(
     if not provider.configured:
         raise ModelProviderError("External model provider is not configured")
     claim_text = "\n".join(f"- [{c.id}] {c.claim_text}" for c in claims)
+    # Difficulty used to be passed only as a bare number in the user payload, with nothing
+    # saying what it should mean — and the model defaulted to single-fact recall items.
+    # Reviewer feedback was blunt: too simple, too easy for the eighth-graders using them.
+    # The audience calibration therefore lives in the system prompt, not the knob.
     system = (
         "You create original Science Olympiad-style practice items. Use only the approved claims. "
         "Do not copy known competition wording. Return strict JSON with an items array. Each item must "
         "contain stem, four choices, correct_index, explanation, claim_ids, estimated_seconds, and "
-        "distractor_error_types keyed by choice index."
+        "distractor_error_types keyed by choice index.\n"
+        "AUDIENCE: Science Olympiad competitors — the strongest science students in their school, "
+        "preparing for tournaments. An item a prepared competitor answers instantly from one "
+        "remembered fact is a wasted item.\n"
+        "DIFFICULTY: the difficulty field runs 0 (open-book warm-up) to 1 (national tiebreaker). "
+        "At 0.5 and above, an item must take at least two reasoning steps before the answer is "
+        "determined: combining claims, interpreting a described scenario or data, ranking or "
+        "classifying close cases, or quantitative estimation.\n"
+        "COGNITIVE LEVEL is a contract: only 'recall' items may be answerable from a single fact; "
+        "'application', 'analysis', and 'transfer' items must be unanswerable by recall alone.\n"
+        "STEMS: prefer scenario, data, and 'which would…' constructions over 'what is' definitions.\n"
+        "DISTRACTORS: each wrong choice must be the precise endpoint of one plausible misconception "
+        "or missed step — close enough that a student who half-knows the material hesitates. Never "
+        "pad with obviously wrong options, and never let the correct choice be the longest or most "
+        "hedged one."
     )
     user_prompt = json.dumps({
         "event": event.name,

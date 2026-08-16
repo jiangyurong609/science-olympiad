@@ -1596,3 +1596,16 @@ h2[tabindex="-1"]:focus-visible { outline: 0; }
 .question-event-scope { display: inline-flex; align-items: center; gap: 8px; margin-left: auto; font-size: .78rem; font-weight: 700; }
 .question-event-scope select { width: auto; min-height: 44px; padding: 8px 12px; border: 1px solid var(--line); border-radius: 999px; background: var(--surface); font: inherit; font-size: .78rem; }
 @media (max-width: 700px) { .question-event-scope { margin-left: 0; width: 100%; } .question-event-scope select { flex: 1; } }
+
+/* ---------- teacher-style insights ---------- */
+.section-heading-actions { display: flex; align-items: center; gap: 12px; }
+.insights-status { padding: 18px; color: var(--muted); font-size: .88rem; }
+.insights-table-wrap { overflow-x: auto; border-radius: 14px; }
+.insights-table { width: 100%; min-width: 860px; border-collapse: separate; border-spacing: 0; background: var(--surface); border: 1px solid var(--line); border-radius: 14px; font-size: .84rem; }
+.insights-table th { text-align: left; padding: 12px 14px; border-bottom: 1px solid var(--line); font-size: .72rem; text-transform: uppercase; letter-spacing: .06em; color: var(--muted); }
+.insights-table td { padding: 12px 14px; border-bottom: 1px solid var(--line); vertical-align: top; }
+.insights-table tr:last-child td { border-bottom: 0; }
+.insights-table td small { display: block; color: var(--muted); font-size: .72rem; margin-top: 2px; }
+.insight-flags { display: flex; flex-wrap: wrap; gap: 5px; margin-top: 6px; }
+.insight-flag { display: inline-block; padding: 2px 9px; border-radius: 999px; background: rgba(27, 43, 36, .08); font-size: .68rem; font-weight: 700; }
+.insight-flag-warn { background: var(--amber-soft, #f7ecd8); color: #7a511d; }
