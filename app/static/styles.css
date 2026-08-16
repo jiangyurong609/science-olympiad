@@ -891,7 +891,9 @@ textarea { resize: vertical; }
   .exam-mode, .review-mode { width: min(100% - 20px, 1280px); margin-top: 10px; }
   .exam-layout { display: block; }
   .question-nav { position: static; margin-bottom: 10px; }
-  #question-map { grid-template-columns: repeat(10, 1fr); }
+  /* Ten columns on a 390px screen gives each question a 28px square. Let the count follow
+     from a thumb-sized minimum instead, so the map wraps rather than shrinking. */
+  #question-map { grid-template-columns: repeat(auto-fill, minmax(44px, 1fr)); }
   .question-nav .kicker, .question-nav > p:last-child { display: none; }
   .exam-status { gap: 8px; }
   .exam-status > span { display: none; }
@@ -899,6 +901,13 @@ textarea { resize: vertical; }
   #submit-exam { grid-column: 1 / -1; }
   .review-hero { align-items: start; }
   .score-ring { width: 92px; height: 92px; }
+
+  .subject-card footer { gap: 8px; flex-wrap: wrap; }
+  .subject-card footer button, .subject-card footer a { flex: 1 1 auto; }
+  .catalog-event footer { gap: 10px; }
+  .catalog-actions { flex-wrap: wrap; gap: 8px; }
+  .catalog-actions button { flex: 1 1 auto; }
+  .sidebar nav a, .sidebar nav a.active { font-size: .68rem; }
 }
 
 @media (prefers-reduced-motion: reduce) {

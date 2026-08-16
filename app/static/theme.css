@@ -522,6 +522,12 @@ details[open] summary { color: var(--forest); }
 .subject-card-meta span + span::before { content: "·"; margin-right: 6px; }
 #dashboard .subject-card footer { margin-top: 13px; justify-content: flex-start; gap: 14px; border-top: 1px solid var(--line); padding-top: 12px; }
 #dashboard .subject-card footer button { min-height: 32px; padding: 2px 0; }
+/* 32px is a mouse target. On a phone this is the button that picks a subject, so it gets a
+   thumb-sized one — stated here, beside the rule it overrides, because this file loads last
+   and an equally specific rule in styles.css would silently lose the tie. */
+@media (max-width: 700px) {
+  #dashboard .subject-card footer button { min-height: 44px; padding: 6px 12px; }
+}
 #dashboard .subject-card footer .subject-action-primary::after { content: " →"; }
 
 .event-browser { overflow: hidden; box-shadow: none; }
@@ -824,4 +830,41 @@ details[open] summary { color: var(--forest); }
 .exam-ai-notice strong { font-weight: 650; }
 @media (prefers-color-scheme: dark) {
   .exam-ai-notice { background: #3a2f14; color: #f0dfae; border-color: #8a6a22; }
+}
+
+/* ---------------------------------------------------------------- phone tap targets
+   A thumb is not a cursor. Everything a student taps to move through the app — pick a
+   subject, open a course, start a lab, filter the resource list — sat between 16px and
+   40px tall, so choosing "Start Course" on a phone meant aiming at it.
+
+   This block lives at the end of the last stylesheet the page loads on purpose. The sizes
+   it corrects are set in rules of equal or greater specificity across both files (one of
+   them `#dashboard .subject-card footer button`), and an equally specific rule in
+   styles.css silently loses the tie. Keeping the phone overrides together and last is what
+   makes them hold. */
+@media (max-width: 700px) {
+  :is(
+    .subject-card footer button, .subject-card footer a,
+    .catalog-actions button, .catalog-actions a, .catalog-event footer a,
+    .interest-chip, .catalog-chip, .button-compact,
+    .practice-set-actions .button, .practice-set-actions button,
+    .material-actions .button, [data-material-filter],
+    .lesson-outline ol button, .skip-link, .brand,
+    #notifications-button, #login-tab, #register-tab
+  ) { min-height: 44px; }
+
+  :is(.catalog-actions a, .catalog-event footer a, .interest-chip, .catalog-chip,
+      [data-material-filter], .subject-card footer button, .subject-card footer a) {
+    display: inline-flex; align-items: center; justify-content: center;
+  }
+  #notifications-button { width: 44px; }
+  .brand { justify-content: flex-start; }
+  .lesson-outline ol button { padding-block: 10px; }
+  .mission-item-action .button { min-height: 44px; }
+
+  /* The question map is a grid of thirty numbered squares; 28px each is a dartboard on a
+     phone. 40px still fits six across at 390px and is the difference between jumping to
+     question 17 and jumping to question 18 by accident, mid-exam. */
+  .map-button { min-width: 44px; min-height: 44px; font-size: .8rem; }
+  .question-map { gap: 7px; }
 }
