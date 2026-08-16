@@ -4908,6 +4908,11 @@ def my_attempts(
 # --- Teacher-style insights: who is learning what, and where it hurts ------
 
 PENDING_REVIEW_STATUSES = ("machine_validated", "editor_reviewed", "sme_approved")
+# A handed-in paper, whatever grading decided to do with it afterwards.
+GRADED_ATTEMPT_STATUSES = {
+    AttemptStatus.SUBMITTED.value, AttemptStatus.SCORED.value,
+    AttemptStatus.REMEDIATION_OPEN.value, AttemptStatus.REMEDIATION_COMPLETE.value,
+}
 
 
 @router.get("/content/insights")
@@ -5006,7 +5011,12 @@ def content_insights(
         b["attempts"] += 1
         if started_at and _aware(started_at) >= month_ago:
             b["recent"].add(user_id)
-        if status == AttemptStatus.SUBMITTED.value and score is not None and (max_score or 0) > 0:
+        # An attempt never rests at `submitted`: finalize_attempt moves it straight to
+        # remediation_open/remediation_complete depending on whether anything was missed.
+        # Matching on `submitted` alone meant every graded paper in production — all of them —
+        # was counted as unfinished, so the teaching view's average score could only ever
+        # render "—", which is exactly what it did.
+        if status in GRADED_ATTEMPT_STATUSES and score is not None and (max_score or 0) > 0:
             b["submitted"] += 1
             b["ratios"].append(score / max_score)
     for event_id, user_id in practice:

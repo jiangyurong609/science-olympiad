@@ -69,7 +69,10 @@ def test_scores_and_correct_rate_come_from_graded_student_responses(client, admi
         db.add(exam)
         db.flush()
         db.add(ExamItem(exam_id=exam.id, question_id=question.id, position=1))
-        attempt = Attempt(exam_id=exam.id, user_id=student.id, status="submitted",
+        # the status a handed-in paper actually carries: finalize_attempt never leaves one at
+        # "submitted", so a test pinned to that status passed while the column stayed empty
+        # for every real attempt in production
+        attempt = Attempt(exam_id=exam.id, user_id=student.id, status="remediation_open",
                           score=3, max_score=4,
                           started_at=datetime.now(timezone.utc),
                           submitted_at=datetime.now(timezone.utc))
