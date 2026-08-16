@@ -98,6 +98,27 @@ def is_gradeable(question_type: str, answer_spec: dict) -> bool:
     return bool(answer_key_set(answer_spec))
 
 
+# RemediationCase.error_type is a varchar(64) label, and the Error Notebook renders it as a
+# heading. The value comes from the item's `distractor_error_types`, which is model-authored:
+# the difficulty-calibrated prompt asks for a *specific* misconception per choice, so those
+# entries are now whole sentences — 2,993 of them in production run past 64 characters. Writing
+# one straight into the column raised StringDataRightTruncation and turned the whole submit into
+# a 500, so an exam holding a single such item could never be handed in. The label is clipped
+# for the column and the heading; the full sentence is kept in the diagnostic JSON, which is
+# where the student's explanation is read from anyway.
+ERROR_TYPE_MAX = 64
+
+
+def error_type_label(raw: str | None) -> str:
+    text = " ".join(str(raw or "").split()) or "unknown"
+    if len(text) <= ERROR_TYPE_MAX:
+        return text
+    clipped = text[:ERROR_TYPE_MAX - 1]
+    if " " in clipped[32:]:
+        clipped = clipped[:clipped.rfind(" ")]
+    return clipped + "…"
+
+
 def score_response(question, answer: dict) -> tuple[bool, float, dict]:
     points = float(question.answer_spec.get("points", 1))
     if question.question_type == "single_choice":
@@ -246,7 +267,7 @@ def finalize_attempt(
                         concept_id=q.concept_id,
                         source_type="exam",
                         source_ref=f"exam:{attempt.id}:{q.id}",
-                        error_type=diagnostic.get("error_type") or "unknown",
+                        error_type=error_type_label(diagnostic.get("error_type")),
                         diagnosis={
                             "question_stem": q.stem,
                             "student_answer": response.answer,
