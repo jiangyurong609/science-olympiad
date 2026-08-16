@@ -8,7 +8,7 @@ from app.services.model_provider import ModelProviderError, OpenAICompatibleProv
 from app.services.rights import can_use_for_generation
 from app.services.validation import build_similarity_report, validate_candidate
 
-PROMPT_VERSION = "competition-item-v2-difficulty-calibrated"
+PROMPT_VERSION = "competition-item-v3-self-contained"
 
 _SOLVER_SYSTEM = (
     "You are an INDEPENDENT solver. You receive ONLY a question stem and its answer choices — "
@@ -117,6 +117,10 @@ def generate_model_questions(
         "COGNITIVE LEVEL is a contract: only 'recall' items may be answerable from a single fact; "
         "'application', 'analysis', and 'transfer' items must be unanswerable by recall alone.\n"
         "STEMS: prefer scenario, data, and 'which would…' constructions over 'what is' definitions.\n"
+        "SELF-CONTAINED: the student sees only the stem and choices. Never reference the claims, "
+        "'approved' evidence or sources, reference material, or the item-writing process — phrases "
+        "like 'the approved claim' or 'supported by the evidence provided' are automatic rejects. "
+        "Everything needed to answer must be stated inside the stem itself.\n"
         "DISTRACTORS: each wrong choice must be the precise endpoint of one plausible misconception "
         "or missed step — close enough that a student who half-knows the material hesitates. Never "
         "pad with obviously wrong options, and never let the correct choice be the longest or most "
@@ -210,8 +214,17 @@ def generate_model_questions(
             if embedding_blocked:
                 report.setdefault("errors", []).append("embedding_near_duplicate")
 
+            # Grounding-vocabulary leakage: a stem that says "the approved claim" hands the
+            # student our internal scaffolding instead of a self-contained question.
+            leaked = bool(re.search(
+                r"\bapproved (claim|evidence|source)|\bthe approved\b|source-grounded",
+                " ".join([str(raw.get("stem", "")), *[str(c) for c in choices]]), re.IGNORECASE))
+            if leaked:
+                report.setdefault("errors", []).append("grounding_vocabulary_leaked")
+
             report["passed"] = bool(
-                report["passed"] and solver_ok and verifier_passed and not embedding_blocked
+                report["passed"] and solver_ok and verifier_passed
+                and not embedding_blocked and not leaked
             )
             question = Question(
                 event_id=event.id,
