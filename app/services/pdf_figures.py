@@ -177,6 +177,11 @@ RESOLVING_MATCHES = {"label_matched", "caption_named", "sole_on_page"}
 # questions 32 and 33 begin on page 7, so page association alone attached nothing to either.
 QUESTION_SPAN = re.compile(
     r"(?i:questions?)\s+(\d{1,3})\s*(?:(?:-|–|—|to|through|and|&|,)\s*(\d{1,3}))?")
+# The same sentence with the numbers in front — "5- 8 questions are based on the image below".
+# Papers write it both ways and the 2026 Meteorology test uses this order for the four
+# questions hanging off its precipitation maps, so reading only the other form lost all four.
+SPAN_QUESTION = re.compile(
+    r"(\d{1,3})\s*(?:-|–|—|to|through|and|&)\s*(\d{1,3})\s+(?i:questions?)\b")
 # How many figures a single caption may hand to one question before the page is treated as a
 # gallery rather than an illustration.
 CAPTION_FIGURE_CAP = 3
@@ -188,16 +193,26 @@ def captioned_question_labels(text: str) -> dict[int, set[str]]:
     if not offsets:
         return {}
     out: dict[int, set[str]] = {}
-    for match in QUESTION_SPAN.finditer(text):
-        page = page_of_offset(offsets, match.start())
-        if page is None:
-            continue
-        first = int(match.group(1))
-        second = int(match.group(2)) if match.group(2) else first
-        low, high = min(first, second), max(first, second)
-        if high - low > 20:               # "questions 1 and 60" is prose, not a caption
-            continue
-        out.setdefault(page, set()).update(str(n) for n in range(low, high + 1))
+    for pattern in (QUESTION_SPAN, SPAN_QUESTION):
+        for match in pattern.finditer(text):
+            page = page_of_offset(offsets, match.start())
+            if page is None:
+                continue
+            first = int(match.group(1))
+            second = int(match.group(2)) if match.group(2) else first
+            low, high = min(first, second), max(first, second)
+            if high - low > 20:           # "questions 1 and 60" is prose, not a caption
+                continue
+            labels = {str(n) for n in range(low, high + 1)}
+            out.setdefault(page, set()).update(labels)
+            # "…based on the image above" is printed *below* its figure, and a page break
+            # routinely falls between them, so the caption's own page holds no artwork at all.
+            # The previous page is offered as a second candidate; `attach_figures_to_items`
+            # keeps only candidates that actually carry a figure, and refuses the pairing
+            # outright if both do.
+            window = text[match.start():match.end() + 60]
+            if re.search(r"\babove\b", window, re.I) and page > 1:
+                out.setdefault(page - 1, set()).update(labels)
     return out
 
 
@@ -380,21 +395,21 @@ def attach_figures_to_items(text: str, items: list[dict],
         # A caption naming this question ("needed for questions 32 and 33") binds the figure
         # sitting with that caption, whichever page the question itself was printed on. The
         # paper is stating the pairing outright, so it outranks page proximity.
-        # Where the captioned page holds more than one figure they are all attached rather than
-        # none. The caption is the paper's own statement that this page's artwork belongs to
-        # these questions, and the Meteorology paper is the ordinary case: page 6 carries an
-        # orographic-lift diagram for the question above and the climatograph for these two.
-        # An extra diagram beside the right one costs a moment's confusion; withholding both
-        # leaves the question unanswerable, which is the failure being fixed. The cap keeps a
-        # gallery page from being dumped onto one item.
+        # These captions introduce what follows them — "Below is a climatograph of Tampa",
+        # "Use the map below to answer questions 5-8" — so on a page holding several figures the
+        # one being introduced is the last. Handing over the whole page instead put the previous
+        # question's orographic-lift diagram above the climatograph on the Meteorology paper,
+        # which reads as though the diagram were part of the question. One figure, the one the
+        # caption points at.
         label = str(item.get("label") or "").strip()
         if label:
             claiming = [p for p, labels in captioned.items()
                         if label in labels and 1 <= len(by_page.get(p, [])) <= CAPTION_FIGURE_CAP]
             if len(claiming) == 1:
                 anchor_page = claiming[0]
+                introduced = max(by_page[anchor_page], key=lambda f: f.sequence)
                 item["page"] = anchor_page
-                item["figures"] = [f.descriptor for f in by_page[anchor_page]]
+                item["figures"] = [introduced.descriptor]
                 item["figure_match"] = "caption_named"
                 stats["located"] += 1
                 stats["with_figures"] += 1
@@ -419,7 +434,14 @@ def attach_figures_to_items(text: str, items: list[dict],
         # An item that never mentions a figure has no figure to pair with. Attaching one
         # because it happened to share a page is how a text question ends up illustrated by
         # its neighbour's diagram.
-        if not references_figure(stem):
+        #
+        # The parser's own `image_dependent` flag counts as a reference. It is the judgement of
+        # something that read the whole question, where `references_figure` is a word list, and
+        # the two disagreed on the 2026 Meteorology paper: a question reading "The provided
+        # image shows a dust devil…" was flagged image_dependent, sat alone on its page with
+        # exactly one figure, and was refused because the word list did not recognise the
+        # phrasing. Refusing there means dropping the question entirely.
+        if not references_figure(stem) and not item.get("image_dependent"):
             item["figure_match"] = "no_figure_reference"
             stats["no_figure_reference"] += 1
             continue

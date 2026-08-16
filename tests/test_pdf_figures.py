@@ -336,18 +336,21 @@ def test_a_caption_naming_its_questions_binds_the_figure_across_a_page_break():
     assert all(i["figures"] for i in items)
 
 
-def test_a_caption_hands_over_every_figure_on_its_page():
+def test_a_caption_hands_over_only_the_figure_it_introduces():
     """A captioned page routinely carries the previous question's diagram too.
 
-    Handing over both is deliberate: one extra diagram beside the right one costs a moment's
-    confusion, while withholding both leaves the question unanswerable.
+    "Below is …" and "the chart below" point at what follows, so the figure being introduced is
+    the last on the page. Handing over the whole page put an orographic-lift diagram belonging
+    to the previous question above the climatograph these questions actually need.
     """
     text = ("[Page 6]\n"
             "Use the chart below to answer questions 4-5\n"
             "[Page 7]\n4.  First\n5.  Second\n")
     items = [{"label": "4", "image_dependent": True}, {"label": "5", "image_dependent": True}]
-    attach_figures_to_items(text, items, [_figure(6), _figure(6, sequence=2)])
-    assert len(items[0]["figures"]) == 2
+    leftover, introduced = _figure(6, sequence=1, digest="a"), _figure(6, sequence=2, digest="b")
+    attach_figures_to_items(text, items, [leftover, introduced])
+    assert len(items[0]["figures"]) == 1
+    assert items[0]["figures"][0] == introduced.descriptor, "the leftover diagram must not ride along"
 
 
 def test_a_gallery_page_is_not_handed_to_a_single_question():
@@ -356,3 +359,35 @@ def test_a_gallery_page_is_not_handed_to_a_single_question():
     items = [{"label": "2", "image_dependent": True}]
     attach_figures_to_items(text, items, figures)
     assert items[0].get("figure_match") != "caption_named"
+
+
+def test_a_caption_written_with_the_numbers_first_still_binds():
+    """Papers write it both ways: "5- 8 questions are based on the image below"."""
+    text = ("[Page 3]\n5- 8 questions are based on the image below:\n"
+            "[Page 4]\n5.  First\n6.  Second\n")
+    items = [{"label": "5", "image_dependent": True}, {"label": "6", "image_dependent": True}]
+    attach_figures_to_items(text, items, [_figure(3)])
+    assert [i["figure_match"] for i in items] == ["caption_named", "caption_named"]
+
+
+def test_a_caption_saying_above_reaches_back_to_the_previous_page():
+    """"…based on the image above" is printed below its figure, and a page break falls between."""
+    text = ("[Page 8]\n(Questions 26-27 will be based on the image above of the map)\n"
+            "[Page 9]\n26.  First\n27.  Second\n")
+    items = [{"label": "26", "image_dependent": True}]
+    attach_figures_to_items(text, items, [_figure(8)])
+    assert items[0]["figure_match"] == "caption_named"
+
+
+def test_the_parsers_image_flag_counts_as_a_reference():
+    """The word list missed "The provided image shows a dust devil…" on a real paper.
+
+    The parser read the whole question and said it needs an image; refusing on a phrasing the
+    regex does not know drops the question entirely.
+    """
+    text = "[Page 2]\n3.  An image of a dust devil represents its structure mathematically.\n"
+    items = [{"label": "3", "stem": "An image of a dust devil represents its structure.",
+              "image_dependent": True}]
+    attach_figures_to_items(text, items, [_figure(2)])
+    assert items[0]["figure_match"] == "sole_on_page"
+    assert items[0]["figures"]
