@@ -9,8 +9,8 @@
   <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='16' fill='%231f5a45'/%3E%3Ctext x='32' y='44' text-anchor='middle' font-size='38' fill='white'%3EF%3C/text%3E%3C/svg%3E">
   <link rel="preload" href="/static/fonts/Fraunces.woff2" as="font" type="font/woff2" crossorigin>
   <link rel="preload" href="/static/fonts/AtkinsonHyperlegibleNext.woff2" as="font" type="font/woff2" crossorigin>
-  <link rel="stylesheet" href="/static/styles.css?v=50">
-  <link rel="stylesheet" href="/static/theme.css?v=50">
+  <link rel="stylesheet" href="/static/styles.css?v=51">
+  <link rel="stylesheet" href="/static/theme.css?v=51">
 </head>
 <body>
   <a class="skip-link" href="#main-content">Skip to Main Content</a>
@@ -448,7 +448,16 @@
           </section>
           <section id="content-insights" class="content-insights" data-cr-panel="insights" aria-labelledby="insights-title">
             <div class="section-heading"><div><p class="kicker">Teaching view</p><h2 id="insights-title">Subject Insights</h2><p>Participation, progress, outcomes, and open issues per subject — computed from real student activity only. Staff walkthroughs are excluded.</p></div><div class="section-heading-actions"><p id="insights-totals" class="queue-count"></p><button id="refresh-insights" class="button button-secondary button-compact" type="button">Refresh</button></div></div>
+            <div class="insights-search">
+              <label class="sr-only" for="insights-search">Search subjects</label>
+              <input id="insights-search" type="search" autocomplete="off"
+                     placeholder="Search a subject — name, division or season…">
+              <p id="insights-search-count" class="insights-search-count" aria-live="polite"></p>
+            </div>
             <div id="insights-status" class="insights-status" role="status" aria-live="polite">Loading insights…</div>
+            <!-- Picking a subject opens its students, courses and exams; the table answers
+                 "where does it hurt", this answers "who, and in which lesson or exam". -->
+            <section id="insights-detail" class="insights-detail surface" aria-live="polite" hidden></section>
             <div class="insights-table-wrap">
               <table class="insights-table" hidden id="insights-table">
                 <thead><tr>
@@ -642,6 +651,6 @@
       </div>
     </div>
   </div>
-  <script src="/static/app.js?v=50"></script>
+  <script src="/static/app.js?v=51"></script>
 </body>
 </html>

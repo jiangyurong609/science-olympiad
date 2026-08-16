@@ -1,3 +1,4 @@
+from collections import defaultdict
 from datetime import datetime, timedelta, timezone
 import hashlib
 import json
@@ -5081,6 +5082,124 @@ def content_insights(
             "events_reported": len(rows),
         },
         "events": rows,
+    }
+
+
+@router.get("/content/insights/{event_id}")
+def content_insights_detail(
+    event_id: int,
+    db: Session = Depends(get_db),
+    actor: User = Depends(require_content_staff),
+):
+    """One subject, broken out: who is learning it, which courses exist, which exams exist.
+
+    The subject table answers "where does it hurt"; this answers the question staff ask
+    immediately afterwards, which is "who, and in which lesson or exam". Student rows are
+    restricted to active student accounts for the same reason the summary is — a staff
+    walkthrough is verification, not participation.
+    """
+    event = db.get(Event, event_id)
+    if not event:
+        raise HTTPException(status_code=404, detail="Event not found")
+    students = {u.id: u for u in db.scalars(select(User).where(
+        User.role == "student", User.is_active)).all()}
+
+    lessons = db.scalars(select(Lesson).where(Lesson.event_id == event_id)
+                         .order_by(Lesson.sequence, Lesson.id)).all()
+    lesson_ids = [lesson.id for lesson in lessons]
+    progress = db.execute(select(
+        LessonProgress.lesson_id, LessonProgress.user_id, LessonProgress.status
+    ).where(LessonProgress.lesson_id.in_(lesson_ids or [-1]))).all()
+
+    exams = db.scalars(select(Exam).where(Exam.event_id == event_id)
+                       .order_by(Exam.created_at.desc())).all()
+    exam_ids = [exam.id for exam in exams]
+    attempts = db.scalars(select(Attempt).where(Attempt.exam_id.in_(exam_ids or [-1]))).all()
+    item_counts = dict(db.execute(
+        select(ExamItem.exam_id, func.count()).where(ExamItem.exam_id.in_(exam_ids or [-1]))
+        .group_by(ExamItem.exam_id)).all())
+    correct = db.execute(
+        select(Response.attempt_id, Response.is_correct)
+        .join(Attempt, Attempt.id == Response.attempt_id)
+        .where(Attempt.exam_id.in_(exam_ids or [-1]), Response.is_correct.is_not(None))).all()
+    correct_by_attempt: dict[int, list[int]] = defaultdict(list)
+    for attempt_id, is_correct in correct:
+        correct_by_attempt[attempt_id].append(1 if is_correct else 0)
+
+    def ratio(scores):
+        return round(100 * sum(scores) / len(scores), 1) if scores else None
+
+    per_student: dict[int, dict] = defaultdict(
+        lambda: {"completed": 0, "in_progress": 0, "attempts": 0, "ratios": [],
+                 "answers": [], "last_active": None})
+    for lesson_id, user_id, status in progress:
+        if user_id not in students:
+            continue
+        row = per_student[user_id]
+        if status == "completed":
+            row["completed"] += 1
+        elif status == "in_progress":
+            row["in_progress"] += 1
+    for attempt in attempts:
+        if attempt.user_id not in students:
+            continue
+        row = per_student[attempt.user_id]
+        row["attempts"] += 1
+        if attempt.status in GRADED_ATTEMPT_STATUSES and attempt.score is not None \
+                and (attempt.max_score or 0) > 0:
+            row["ratios"].append(attempt.score / attempt.max_score)
+        row["answers"].extend(correct_by_attempt.get(attempt.id, []))
+        stamp = attempt.submitted_at or attempt.started_at
+        if stamp and (row["last_active"] is None or _aware(stamp) > row["last_active"]):
+            row["last_active"] = _aware(stamp)
+
+    student_rows = [{
+        "id": uid,
+        "name": students[uid].full_name or students[uid].email,
+        "email": students[uid].email,
+        "division": students[uid].division,
+        "lessons_completed": row["completed"],
+        "lessons_in_progress": row["in_progress"],
+        "attempts": row["attempts"],
+        "avg_score_pct": ratio(row["ratios"]),
+        "correct_pct": ratio(row["answers"]),
+        "last_active": _iso_utc(row["last_active"]) if row["last_active"] else None,
+    } for uid, row in per_student.items()]
+    student_rows.sort(key=lambda r: (-(r["attempts"] + r["lessons_completed"]), r["name"]))
+
+    completions = defaultdict(int)
+    started = defaultdict(int)
+    for lesson_id, user_id, status in progress:
+        if user_id not in students:
+            continue
+        (completions if status == "completed" else started)[lesson_id] += 1
+
+    attempts_by_exam = defaultdict(list)
+    for attempt in attempts:
+        if attempt.user_id in students:
+            attempts_by_exam[attempt.exam_id].append(attempt)
+
+    return {
+        "event": {"id": event.id, "name": event.name, "slug": event.slug,
+                  "division": event.division, "season": event.season},
+        "students": student_rows,
+        "lessons": [{
+            "id": lesson.id, "title": lesson.title, "slug": lesson.slug,
+            "status": lesson.status, "version": lesson.current_version,
+            "estimated_minutes": lesson.estimated_minutes,
+            "completions": completions.get(lesson.id, 0),
+            "in_progress": started.get(lesson.id, 0),
+        } for lesson in lessons],
+        "exams": [{
+            "id": exam.id, "title": exam.title, "published": bool(exam.published),
+            "disposition": exam.disposition, "release_class": exam.release_class,
+            "items": item_counts.get(exam.id, 0),
+            "attempts": len(attempts_by_exam.get(exam.id, [])),
+            "avg_score_pct": ratio([
+                a.score / a.max_score for a in attempts_by_exam.get(exam.id, [])
+                if a.status in GRADED_ATTEMPT_STATUSES and a.score is not None
+                and (a.max_score or 0) > 0]),
+        } for exam in exams],
     }
 
 

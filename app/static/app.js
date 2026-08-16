@@ -37,6 +37,7 @@ const state = {
   questionServeFilter: 'blocking',
   questionScopeEvent: 'all',
   insights: null,
+  insightsDetail: null,
   questionReviewLimit: 25,
   videoReviewCount: 0,
   intakeActionCount: 0,
@@ -2060,11 +2061,25 @@ function renderContentInsights() {
   if (!data) return;
   $('insights-totals').textContent =
     `${data.totals.participating_students} of ${data.totals.active_students} students participating · ${data.totals.events_reported} subjects`;
-  const rows = data.events;
+  // 56 subjects is too many to scan, so the table is filtered rather than paged: staff
+  // arrive knowing the subject they care about.
+  const query = ($('insights-search')?.value || '').trim().toLowerCase();
+  // "div c" is how staff say it, so the division reads as "div c" here rather than a bare "c"
+  // that would match half the alphabet soup of slugs.
+  const rows = query
+    ? data.events.filter(row => `${row.event.name} div ${row.event.division} ${row.event.season} ${row.event.slug}`
+      .toLowerCase().includes(query))
+    : data.events;
+  const count = $('insights-search-count');
+  if (count) count.textContent = query ? `${rows.length} of ${data.events.length} subjects match “${query}”` : '';
   $('insights-table').hidden = rows.length === 0;
   $('insights-status').hidden = rows.length > 0;
   if (!rows.length) {
-    $('insights-status').textContent = 'No subjects with published content yet.';
+    // clear the body too, or the previous search's rows sit in the DOM behind a hidden table
+    $('insights-rows').innerHTML = '';
+    $('insights-status').textContent = query
+      ? `No subject matches “${query}”.`
+      : 'No subjects with published content yet.';
     return;
   }
   const flagLabels = {
@@ -2081,7 +2096,7 @@ function renderContentInsights() {
     const mix = row.questions.total
       ? `${row.questions.total}<small>${Math.round((row.questions.recall_share || 0) * 100)}% recall</small>`
       : '—';
-    return `<tr>
+    return `<tr class="insights-row${state.insightsDetail?.event?.id === row.event.id ? ' is-open' : ''}" data-insight-event="${row.event.id}" tabindex="0" role="button" aria-label="Open ${escapeHtml(row.event.name)} Division ${escapeHtml(row.event.division)}">
       <td><strong>${escapeHtml(row.event.name)}</strong><small>Div ${escapeHtml(row.event.division)} · ${row.event.season}</small>${flags ? `<div class="insight-flags">${flags}</div>` : ''}</td>
       <td>${row.participation.students}${row.participation.active_last_30d ? `<small>${row.participation.active_last_30d} this month</small>` : ''}</td>
       <td>${row.lessons.completions}${row.lessons.in_progress ? `<small>+${row.lessons.in_progress} in progress</small>` : ''}<small>${row.published.lessons} published</small></td>
@@ -2097,6 +2112,86 @@ function renderContentInsights() {
     </tr>`;
   }).join('');
 }
+
+async function openInsightDetail(eventId) {
+  const panel = $('insights-detail');
+  panel.hidden = false;
+  panel.innerHTML = '<p class="insights-status">Loading subject…</p>';
+  panel.scrollIntoView({ behavior: preferredScrollBehavior(), block: 'nearest' });
+  try {
+    state.insightsDetail = await api(`/content/insights/${eventId}`);
+  } catch (error) {
+    panel.innerHTML = `<p class="insights-status">Could not open this subject. ${escapeHtml(error.message)}</p>`;
+    return;
+  }
+  renderInsightDetail();
+  renderContentInsights();
+}
+
+function renderInsightDetail() {
+  const data = state.insightsDetail;
+  const panel = $('insights-detail');
+  if (!data) { panel.hidden = true; return; }
+  const pct = value => (value == null ? '—' : `${value}%`);
+  const when = value => (value ? new Date(value).toLocaleDateString(undefined, { dateStyle: 'medium' }) : '—');
+
+  const students = data.students.length
+    ? `<table class="insights-subtable"><thead><tr><th scope="col">Student</th><th scope="col">Lessons done</th><th scope="col">Exam attempts</th><th scope="col">Avg score</th><th scope="col">Correct rate</th><th scope="col">Last active</th></tr></thead><tbody>${
+      data.students.map(s => `<tr>
+        <td><strong>${escapeHtml(s.name)}</strong><small>Div ${escapeHtml(s.division || '—')}</small></td>
+        <td>${s.lessons_completed}${s.lessons_in_progress ? `<small>+${s.lessons_in_progress} in progress</small>` : ''}</td>
+        <td>${s.attempts}</td><td>${pct(s.avg_score_pct)}</td><td>${pct(s.correct_pct)}</td><td>${when(s.last_active)}</td>
+      </tr>`).join('')}</tbody></table>`
+    : '<p class="insights-status">No student has started this subject yet.</p>';
+
+  const lessons = data.lessons.length
+    ? `<table class="insights-subtable"><thead><tr><th scope="col">Course</th><th scope="col">Status</th><th scope="col">Completed</th><th scope="col">In progress</th></tr></thead><tbody>${
+      data.lessons.map(l => `<tr>
+        <td><strong>${escapeHtml(l.title)}</strong><small>${l.estimated_minutes} min · v${l.version}</small></td>
+        <td><span class="insight-flag${l.status === 'published' ? '' : ' insight-flag-warn'}">${escapeHtml(l.status.replaceAll('_', ' '))}</span></td>
+        <td>${l.completions}</td><td>${l.in_progress}</td>
+      </tr>`).join('')}</tbody></table>`
+    : '<p class="insights-status">This subject has no courses yet.</p>';
+
+  const exams = data.exams.length
+    ? `<table class="insights-subtable"><thead><tr><th scope="col">Exam</th><th scope="col">Visibility</th><th scope="col">Questions</th><th scope="col">Attempts</th><th scope="col">Avg score</th></tr></thead><tbody>${
+      data.exams.map(x => `<tr>
+        <td><strong>${escapeHtml(x.title)}</strong>${x.disposition ? `<small>${escapeHtml(String(x.disposition).replaceAll('_', ' '))}</small>` : ''}</td>
+        <td><span class="insight-flag${x.published ? '' : ' insight-flag-warn'}">${x.published ? 'published' : 'draft'}</span></td>
+        <td>${x.items}</td><td>${x.attempts}</td><td>${pct(x.avg_score_pct)}</td>
+      </tr>`).join('')}</tbody></table>`
+    : '<p class="insights-status">This subject has no exams yet.</p>';
+
+  panel.innerHTML = `
+    <header class="insights-detail-head">
+      <div><p class="kicker">Subject detail</p><h3>${escapeHtml(data.event.name)}</h3>
+        <p>Division ${escapeHtml(data.event.division)} · ${data.event.season} season · ${data.students.length} student${data.students.length === 1 ? '' : 's'} · ${data.lessons.length} course${data.lessons.length === 1 ? '' : 's'} · ${data.exams.length} exam${data.exams.length === 1 ? '' : 's'}</p></div>
+      <button type="button" class="button button-secondary button-compact" data-close-insight-detail>Close</button>
+    </header>
+    <h4>Students</h4>${students}
+    <h4>Courses</h4>${lessons}
+    <h4>Exams</h4>${exams}`;
+}
+
+$('insights-search')?.addEventListener('input', () => renderContentInsights());
+
+$('content-insights')?.addEventListener('click', event => {
+  if (event.target.closest('[data-close-insight-detail]')) {
+    state.insightsDetail = null;
+    $('insights-detail').hidden = true;
+    renderContentInsights();
+    return;
+  }
+  const row = event.target.closest('[data-insight-event]');
+  if (row) openInsightDetail(Number(row.dataset.insightEvent)).catch(error => toast(error.message));
+});
+
+$('content-insights')?.addEventListener('keydown', event => {
+  const row = event.target.closest('[data-insight-event]');
+  if (!row || (event.key !== 'Enter' && event.key !== ' ')) return;
+  event.preventDefault();
+  openInsightDetail(Number(row.dataset.insightEvent)).catch(error => toast(error.message));
+});
 
 function updateContentTabBadges() {
   const setCount = (id, value) => {
