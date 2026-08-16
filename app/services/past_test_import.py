@@ -559,9 +559,12 @@ def import_past_test(
             1 for i in items if not is_trustworthy(*parse_confidence(i))),
         "answers_withheld": sum(
             1 for i in items if not is_trustworthy(*answer_confidence(i))),
+        # Counting only "unique" reported 0 recovered on an import that in fact recovered two
+        # items through their caption — the same set `build_questions` uses to decide whether an
+        # image-dependent item may be kept, so the report and the decision now agree.
         "image_dependent_recovered": sum(
             1 for i in items
-            if i.get("image_dependent") and i.get("figure_match") == "unique"),
+            if i.get("image_dependent") and i.get("figure_match") in RESOLVING_MATCHES),
         "questions_created": len(questions),
         "exam_id": exam.id if exam else None,
         "items": items,
