@@ -1527,7 +1527,10 @@ h2[tabindex="-1"]:focus-visible { outline: 0; }
 }
 
 /* ---------- staff preview of the student app ---------- */
-.student-view-toggle { display: flex; align-items: center; justify-content: center; gap: 8px; width: 100%; min-height: 44px; margin-top: auto; padding: 10px 12px; border: 1px solid var(--line); border-radius: 10px; background: var(--surface); color: var(--ink); font: inherit; font-size: .78rem; font-weight: 700; cursor: pointer; transition: background .15s var(--ease-spring); }
+/* Sits with the rest of the navigation. `margin-top: auto` pushed it to the floor of the
+   sidebar, which for a staff account holding two links meant a screen-height gap between
+   "Content Review" and the only way back into the student app. */
+.student-view-toggle { display: flex; align-items: center; justify-content: center; gap: 8px; width: 100%; min-height: 44px; margin-top: 14px; padding: 10px 12px; border: 1px solid var(--line); border-radius: 10px; background: var(--surface); color: var(--ink); font: inherit; font-size: .78rem; font-weight: 700; cursor: pointer; transition: background .15s var(--ease-spring); }
 .student-view-toggle:hover { background: rgba(31, 90, 69, .08); }
 .student-preview-banner { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 12px; margin-bottom: 18px; padding: 12px 16px; border: 1px solid var(--amber); border-radius: 12px; background: var(--amber-soft, #f7ecd8); color: #4a3411; font-size: .8rem; line-height: 1.45; }
 .student-preview-banner strong { font-weight: 800; }

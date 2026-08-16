@@ -251,7 +251,11 @@ function showView(id, updateHash = true) {
   showSection('app-shell');
   appViews.forEach(view => { $(view).hidden = view !== id; });
   document.querySelectorAll('[data-view-link]').forEach(link => {
-    const active = link.dataset.viewLink === id;
+    // Content Review and Teaching Insights share the workspace, so the view alone cannot say
+    // which is current — the open tab does.
+    const tab = link.dataset.contentTabLink;
+    const active = link.dataset.viewLink === id
+      && (!tab || (tab === 'insights') === (state.contentTab === 'insights'));
     link.classList.toggle('active', active);
     if (active) link.setAttribute('aria-current', 'page'); else link.removeAttribute('aria-current');
   });
@@ -739,6 +743,9 @@ document.querySelectorAll('[data-view-link]').forEach(link => {
   link.addEventListener('click', event => {
     event.preventDefault();
     showView(link.dataset.viewLink);
+    // Two sidebar entries open the same workspace on different tabs; the link says which.
+    const tab = link.dataset.contentTabLink;
+    if (tab) setContentTab(tab === 'insights' ? 'insights' : state.contentTab === 'insights' ? 'overview' : state.contentTab);
   });
 });
 
@@ -2021,6 +2028,15 @@ function setContentTab(tab) {
     button.classList.toggle('active', active);
     button.setAttribute('aria-selected', String(active));
   });
+  // Switching tabs inside the workspace moves the sidebar highlight too, since Teaching
+  // Insights is a destination there rather than only a tab.
+  const onWorkspace = !$('content').hidden;
+  document.querySelectorAll('[data-content-tab-link]').forEach(link => {
+    const active = onWorkspace && (link.dataset.contentTabLink === 'insights') === (tab === 'insights');
+    link.classList.toggle('active', active);
+    if (active) link.setAttribute('aria-current', 'page'); else link.removeAttribute('aria-current');
+  });
+  if (onWorkspace) history.replaceState(null, '', tab === 'insights' ? '#insights' : '#content');
   // Insights aggregates the whole activity history; compute it when someone looks,
   // not on every workspace load.
   if (tab === 'insights' && !state.insights) loadContentInsights().catch(() => {});
@@ -4330,13 +4346,15 @@ window.addEventListener('hashchange', () => {
   const roleHome = isStudentPreview() ? 'dashboard'
     : STAFF_ROLES.includes(state.user.role)
       ? 'content' : state.user.role === 'coach' ? 'coach' : state.user.role === 'parent' ? 'parent' : 'dashboard';
-  let view = { '#learn': 'learn', '#practice': 'practice', '#errors': 'errors', '#coach': 'coach', '#content': 'content', '#parent': 'parent' }[hashRoute] || roleHome;
+  let view = { '#learn': 'learn', '#practice': 'practice', '#errors': 'errors', '#coach': 'coach', '#content': 'content', '#insights': 'content', '#parent': 'parent' }[hashRoute] || roleHome;
   // A student who has not chosen a subject yet has nothing to see in Courses or
   // Practice — land them on the guided picker instead of an empty shell.
   if (['learn', 'practice'].includes(view) && roleHome === 'dashboard' && state.events.length && !activeEvent()) {
     view = 'dashboard';
   }
   showView(view, false);
+  // #insights is a shareable link to the teaching view, not just a tab someone clicked.
+  if (hashRoute === '#insights' && view === 'content') setContentTab('insights');
 });
 
 async function initialize() {

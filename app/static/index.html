@@ -9,8 +9,8 @@
   <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='16' fill='%231f5a45'/%3E%3Ctext x='32' y='44' text-anchor='middle' font-size='38' fill='white'%3EF%3C/text%3E%3C/svg%3E">
   <link rel="preload" href="/static/fonts/Fraunces.woff2" as="font" type="font/woff2" crossorigin>
   <link rel="preload" href="/static/fonts/AtkinsonHyperlegibleNext.woff2" as="font" type="font/woff2" crossorigin>
-  <link rel="stylesheet" href="/static/styles.css?v=49">
-  <link rel="stylesheet" href="/static/theme.css?v=49">
+  <link rel="stylesheet" href="/static/styles.css?v=50">
+  <link rel="stylesheet" href="/static/theme.css?v=50">
 </head>
 <body>
   <a class="skip-link" href="#main-content">Skip to Main Content</a>
@@ -114,15 +114,20 @@
           <a href="#practice" data-view-link="practice" data-student-nav><span aria-hidden="true">◎</span>Practice</a>
           <a href="#errors" data-view-link="errors" data-student-nav><span aria-hidden="true">↻</span>Review <span id="nav-error-count" class="nav-count">0</span></a>
           <a href="#coach" data-view-link="coach" data-coach-nav hidden><span aria-hidden="true">⌂</span>Coach Overview</a>
-          <a href="#content" data-view-link="content" data-content-nav hidden><span aria-hidden="true">◫</span>Content Review</a>
+          <a href="#content" data-view-link="content" data-content-tab-link="workspace" data-content-nav hidden><span aria-hidden="true">◫</span>Content Review</a>
+          <!-- Teaching metrics were a tab inside the review workspace, eight tabs along, so the
+               one question staff ask most — who is learning what, and where does it hurt — was
+               the hardest thing in the app to find. It gets its own destination. -->
+          <a href="#insights" data-view-link="content" data-content-tab-link="insights" data-content-nav hidden><span aria-hidden="true">◔</span>Teaching Insights</a>
           <a href="#parent" data-view-link="parent" data-parent-nav hidden><span aria-hidden="true">⇧</span>Materials</a>
+          <!-- Staff navigation is content-only, so there was no route from the review workspace
+               into the student app at all — the closest thing was the per-lesson "Walk through as
+               a student" link on one review card. It belongs with the other destinations, not
+               marooned at the far end of an empty sidebar. -->
+          <button id="student-view-toggle" class="student-view-toggle" type="button" hidden>
+            <span aria-hidden="true">◇</span><span data-toggle-label>Preview student view</span>
+          </button>
         </nav>
-        <!-- Staff navigation is content-only, so there was no route from the review workspace
-             into the student app at all — the closest thing was the per-lesson "Walk through as
-             a student" link on one review card. -->
-        <button id="student-view-toggle" class="student-view-toggle" type="button" hidden>
-          <span aria-hidden="true">◇</span><span data-toggle-label>Preview student view</span>
-        </button>
         <div class="sidebar-footer">
           <div class="avatar" id="user-initials" aria-hidden="true">SO</div>
           <div><strong id="sidebar-name">Student</strong><small id="sidebar-division">Division B</small></div>
@@ -637,6 +642,6 @@
       </div>
     </div>
   </div>
-  <script src="/static/app.js?v=49"></script>
+  <script src="/static/app.js?v=50"></script>
 </body>
 </html>
