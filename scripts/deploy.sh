@@ -16,9 +16,11 @@ PROJECT="video-agent-493605"
 REGION="us-central1"
 SERVICE="soplat-web"
 IMAGE_REPO="us-central1-docker.pkg.dev/${PROJECT}/soplat/web"
-SUNRA_SECRET="SUNRA_KEY"                       # Secret Manager secret -> OPENAI_API_KEY
-LLM_BASE_URL="https://api-llm.sunra.ai/v1"
-LLM_MODEL="openai/gpt-5.5"
+# Azure OpenAI (resource soplat-llm, sub 8f3ae45d, eastus). Sunra ran dry 2026-08-15;
+# the old pair was SUNRA_KEY + https://api-llm.sunra.ai/v1 + openai/gpt-5.5.
+LLM_SECRET="AZURE_OPENAI_KEY"                  # Secret Manager secret -> OPENAI_API_KEY
+LLM_BASE_URL="https://soplat-llm.openai.azure.com/openai/v1"
+LLM_MODEL="gpt-5.6-luna"
 # The image bundles ClamAV and refreshes signatures during the build. Override
 # these only when using a separately provisioned scanner service.
 ANTIVIRUS_COMMAND="${ANTIVIRUS_COMMAND:-clamscan --no-summary -}"
@@ -105,7 +107,7 @@ gcloud run deploy "$SERVICE" \
   --memory "${CLOUD_RUN_MEMORY}" \
   --concurrency "${CLOUD_RUN_CONCURRENCY}" \
   --min-instances "${CLOUD_RUN_MIN_INSTANCES}" \
-  --update-secrets "OPENAI_API_KEY=${SUNRA_SECRET}:latest" \
+  --update-secrets "OPENAI_API_KEY=${LLM_SECRET}:latest" \
   --vpc-connector "${VPC_CONNECTOR:-soplat-connector}" \
   --vpc-egress private-ranges-only \
   --quiet
