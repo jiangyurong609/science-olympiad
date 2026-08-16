@@ -14,7 +14,7 @@ import re
 from sqlalchemy import select
 from sqlalchemy.orm import Session
 
-from app.services.student_visibility import DISPOSITION_UNREVIEWED_PRACTICE
+from app.services.student_visibility import DISPOSITION_IMPORTED_PRACTICE
 from app.models.entities import (
     Event, EventSourceMap, Exam, ExamItem, Question, QuestionStatus, RawArtifact,
     Source, SourceSnapshot,
@@ -495,9 +495,15 @@ def build_exam(
         duration_minutes=duration_minutes,
         question_ids=[q.id for q in questions],
         published=True,
-        # Imported items are unreviewed by definition; label the exposure honestly.
-        disposition=DISPOSITION_UNREVIEWED_PRACTICE,
-        release_class="past_test",
+        # A freshly transcribed paper is `imported_practice`, not `unreviewed_practice`. Both
+        # mean "no expert has read this" and both are labelled as such, but the second one is
+        # for *historical* content of unknown provenance and refuses new attempts — so an exam
+        # imported through here published straight into a state no student could start, while
+        # the 47 already in production carry `imported_practice` and open normally. The bar for
+        # that disposition is that every item is answerable and keyed, which `build_questions`
+        # has already enforced by the time this runs.
+        disposition=DISPOSITION_IMPORTED_PRACTICE,
+        release_class="imported_practice",
         blueprint={
             "import_kind": "past_test",
             "feedback_mode": feedback_mode,
