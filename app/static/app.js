@@ -3186,6 +3186,8 @@ function renderPracticeItem() {
   $('practice-mode-badge').textContent = session.mode === 'station'
     ? `Station Sprint${session.accommodation_applied ? ` · ${session.time_multiplier}× Time` : ''}`
     : 'Study Lab';
+  // Same rule as the exam banner: machine-gated content must say so where the student works.
+  $('practice-ai-notice').hidden = !session.practice_set?.unreviewed;
   $('practice-position').textContent = session.status === 'completed' ? 'Complete' : `${session.current_index + 1} of ${session.total_items}`;
   $('practice-progress-bar').style.width = `${Math.round((session.current_index / session.total_items) * 100)}%`;
   if (!item || session.status === 'completed') {

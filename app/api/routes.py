@@ -2672,6 +2672,7 @@ def _practice_session_response(
             "practice_type": practice_set.practice_type,
             "version": version.version,
             "review_status": version.review_status,
+            "unreviewed": version.review_status not in {"sme_approved", "calibrated"},
             "citations": version.citations,
         },
         "status": session.status,
@@ -2758,7 +2759,10 @@ def start_practice_set(
         session.last_active_at = datetime.now(timezone.utc)
     else:
         version = _practice_version(db, practice_set, practice_set.current_version)
-        if version.review_status not in {"sme_approved", "calibrated"}:
+        # Machine-gated labs serve as *labelled* practice, the same policy machine_practice
+        # exams follow. Requiring human sign-off here while the catalog showed the card meant
+        # every start attempt since launch 409'd — zero practice sessions were ever created.
+        if version.review_status not in {"machine_validated", "sme_approved", "calibrated"}:
             raise HTTPException(status_code=409, detail="Practice set has not completed review")
         item_ids = [str(item["id"]) for item in version.items if item.get("id")]
         if not item_ids:
