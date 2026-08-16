@@ -791,9 +791,9 @@ function renderSubjects() {
     const experience = eventExperience(event);
     const active = event.slug === state.activeEventSlug;
     return `<article class="subject-card event-accent-${experience.accent} surface${active ? ' is-active' : ''}" data-available="true">
-      <div class="subject-card-heading"><span class="subject-icon" aria-hidden="true">${experience.icon}</span>${active ? '<span class="subject-current">Current</span>' : ''}</div>
+      <div class="subject-card-heading"><span class="subject-icon" aria-hidden="true">${experience.icon}</span>${active ? '<span class="subject-current">Current</span>' : ''}${seasonBadge(event)}</div>
       <h3>${escapeHtml(event.name)}</h3><p>${escapeHtml(event.topic_focus || event.description || experience.skill)}</p>
-      <div class="subject-card-meta"><span>${event.season}</span><span>${event.material_count} resource${event.material_count === 1 ? '' : 's'}</span><span>${event.lesson_count} module${event.lesson_count === 1 ? '' : 's'}</span><span>${event.exam_count} exam${event.exam_count === 1 ? '' : 's'}</span></div>
+      <div class="subject-card-meta"><span>Div ${escapeHtml(event.division)}</span><span>${event.material_count} resource${event.material_count === 1 ? '' : 's'}</span><span>${event.lesson_count} module${event.lesson_count === 1 ? '' : 's'}</span><span>${event.exam_count} exam${event.exam_count === 1 ? '' : 's'}</span></div>
       <footer>${event.lesson_count > 0 ? `<button class="subject-action-primary" type="button" data-subject="${escapeHtml(event.slug)}" data-subject-destination="learn">Learn</button>` : ''}${event.material_count > 0 || event.exam_count > 0 ? `<button type="button" data-subject="${escapeHtml(event.slug)}" data-subject-destination="practice">${event.exam_count > 0 ? 'Practice' : 'Resources'}</button>` : ''}</footer>
     </article>`;
   }).join('') + `<button type="button" id="subject-add-tile" class="subject-add-tile">
@@ -867,7 +867,7 @@ function renderStudentGuidance() {
   $('onboarding-event-list').innerHTML = matches.map(event => {
     const experience = eventExperience(event);
     return `<article class="subject-card event-accent-${experience.accent} surface" data-available="true">
-      <div class="subject-card-heading"><span class="subject-icon" aria-hidden="true">${experience.icon}</span><span class="division-badge">Div ${escapeHtml(event.division)}</span></div>
+      <div class="subject-card-heading"><span class="subject-icon" aria-hidden="true">${experience.icon}</span>${seasonBadge(event)}<span class="division-badge">Div ${escapeHtml(event.division)}</span></div>
       <h3>${escapeHtml(event.name)}</h3><p>${escapeHtml(event.topic_focus || event.description || experience.skill)}</p>
       <div class="subject-card-meta"><span>${event.lesson_count} lesson${event.lesson_count === 1 ? '' : 's'}</span><span>${event.exam_count} exam${event.exam_count === 1 ? '' : 's'}</span><span>${event.material_count} resource${event.material_count === 1 ? '' : 's'}</span></div>
       <footer><button class="subject-action-primary" type="button" data-onboard-event="${escapeHtml(event.slug)}">${hasEvent ? 'Add This Subject' : 'Start With This Event'}</button></footer>
@@ -1080,11 +1080,29 @@ function studentEvents() {
       const aRank = a.division === division ? 0 : a.division === 'B/C' ? 1 : 2;
       const bRank = b.division === division ? 0 : b.division === 'B/C' ? 1 : 2;
       return Number(b.slug === state.activeEventSlug) - Number(a.slug === state.activeEventSlug)
-        || b.season - a.season
+        || Number(b.season_status === 'current') - Number(a.season_status === 'current')
+        || subjectDepth(b) - subjectDepth(a)
         || aRank - bRank
         || a.name.localeCompare(b.name)
         || a.division.localeCompare(b.division);
     });
+}
+
+// The season a student is actually competing in leads; everything else is the library behind
+// it. Only the badge says so — the card still reports its real lesson and exam counts, because
+// a current-season event with nothing in it yet must not look ready.
+function seasonBadge(event) {
+  if (event.season_status === 'current') return '<span class="season-badge">Current season</span>';
+  if (event.season_status === 'prior_season_practice') return '<span class="prior-season-badge">Prior season</span>';
+  return '';
+}
+
+// How much a student can actually do here — the tiebreak within a season, so a course holding
+// eight lessons and five exams outranks a roster entry with a single orientation page.
+function subjectDepth(event) {
+  return (event.exam_count > 0 ? 8 : 0)
+    + (event.lesson_count >= 4 ? 4 : event.lesson_count > 0 ? 1 : 0)
+    + (event.material_count >= 4 ? 2 : event.material_count > 0 ? 1 : 0);
 }
 
 function resolveEvent(slug) {
