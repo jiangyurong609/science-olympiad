@@ -18,6 +18,10 @@ dependencies = [
   "beautifulsoup4>=4.12,<5",
   "alembic>=1.13,<2",
   "pypdf>=5,<6",
+  # pypdf raises ImportError from `page.images` without Pillow, which pdf_figures catches as
+  # `page_image_read_failed` — so every figure in every past test was silently dropped and the
+  # extractor reported success with zero figures. Undeclared, it was missing in production too.
+  "pillow>=10,<12",
   "firebase-admin>=6.5,<8",
   "google-cloud-storage>=2.18,<4",
   "google-cloud-vision>=3.7,<4",
