@@ -529,6 +529,14 @@ def import_past_test(
     build: bool = True, commit: bool = True, min_questions: int = 1,
 ) -> dict:
     """Parse a past-test Source into Questions and (optionally) assemble a mock Exam."""
+    # A superseded event is invisible to every catalog view, so an exam built under it
+    # publishes into a place no student can find — which is how the 2026 Meteorology paper
+    # imported cleanly, verified cleanly, and then could not be found. Source mappings can
+    # go stale after a season consolidation; the import must refuse them, not follow them.
+    if getattr(event, "season_status", "") == "superseded":
+        raise ValueError(
+            f"Event {event.slug!r} is superseded; repoint the source mapping to the live "
+            "event before importing, or the exam will publish where no catalog lists it")
     exam_snapshot = _latest_snapshot(db, exam_source.id)
     if not exam_snapshot or not (exam_snapshot.extracted_text or "").strip():
         raise ValueError(f"Source {exam_source.id} has no retained text to parse")

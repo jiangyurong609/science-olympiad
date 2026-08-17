@@ -51,6 +51,25 @@ def test_a_freshly_imported_paper_can_be_started(client, student_token):
     assert started.json()["release_label"] == "Past Test · Transcribed, Not Reviewed"
 
 
+def test_an_import_into_a_superseded_event_is_refused(monkeypatch):
+    """Season consolidation leaves source mappings pointing at retired events. An exam built
+    under one publishes into a place no catalog view lists — imported cleanly, verified
+    cleanly, findable by nobody. The import must refuse the stale mapping, not follow it."""
+    import pytest
+    from app.models.entities import Source
+    from app.services import past_test_import as pti
+
+    with SessionLocal() as db:
+        event = Event(slug="retired-import", name="Retired Import", division="B", season=2027,
+                      season_status="superseded")
+        source = Source(url="local://retired-import.pdf", title="Retired Import TEST",
+                        publisher="test")
+        db.add_all([event, source])
+        db.flush()
+        with pytest.raises(ValueError, match="superseded"):
+            pti.import_past_test(db, event, source)
+
+
 def test_an_item_whose_answer_was_withheld_never_reaches_the_exam(monkeypatch):
     """The 2014 Heredity paper's key skips one question as "duplicate; omitted from the answer
     key". The question is kept as a draft for an editor to key later, but the served exam must
