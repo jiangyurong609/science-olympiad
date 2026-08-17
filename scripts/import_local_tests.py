@@ -44,6 +44,7 @@ ALIASES = {
     "wq": "water quality",
     "dp": "dynamic planet",
     "codebusters": "codebusters",
+    "material science": "materials science",
 }
 
 
@@ -75,24 +76,33 @@ def _pdf_text(path: Path) -> str:
 
 
 def _classify(name: str) -> str:
-    low = name.lower()
-    if re.search(r"answer\s*key|answerkey|[_ ]key\b|key\.pdf", low):
+    # Underscores and hyphens are word characters to the regex engine, so \btest\b never
+    # matched "BullSO_Div_B_Test.pdf" and "KEY BullSO..." (key first in the name) never
+    # matched "[_ ]key" — both fell through to reference_material and were never parsed.
+    low = re.sub(r"[_\-.]+", " ", name.lower())
+    if re.search(r"answer\s*key|answerkey|\bkey\b", low):
         return "answer_key"
     if re.search(r"answer\s*sheet|answersheet", low):
         return "answer_sheet"
-    if re.search(r"\btest\b|\bexam\b|stations?\b", low):
-        return "test"
-    if re.search(r"reference|resource|cheat", low):
+    if re.search(r"reference|resource|cheat|image\s*sheet", low):
         return "reference_material"
+    if re.search(r"\btest\b|\bexam\b|stations?\b|question\s*sheets?\b|\bquestions\b", low):
+        return "test"
     if re.search(r"checklist|rubric|score", low):
         return "team_checklist"
     return "reference_material"
 
 
 def _build_event_index(db):
-    """Map normalized 'name + division' -> Event for our division-specific events."""
+    """Map normalized 'name + division' -> Event for our division-specific events.
+
+    Superseded events are excluded: a source mapped to one strands its import — the exam
+    publishes under an event no catalog view lists (`import_past_test` now refuses this
+    outright, but the mapping should never be created in the first place)."""
     index = {}
     for event in db.scalars(select(Event).where(Event.official_url != "")).all():
+        if event.season_status == "superseded":
+            continue
         index[(_norm(event.name), event.division)] = event
     return index
 
@@ -113,9 +123,13 @@ def _match_event(index, relpath: str) -> Event | None:
     division = _detect_division(relpath)
     best = None
     for (name, div), event in index.items():
-        if name and name in norm_path and (division is None or div == division):
-            # prefer the longest event-name match to avoid 'optics' vs 'optics lab' slips
-            if best is None or len(name) > len(_norm(best.name)):
+        # an unscoped "B/C" event serves both divisions, so either detected division matches
+        division_ok = division is None or div == division or div == "B/C"
+        if name and name in norm_path and division_ok:
+            # prefer the longest event-name match to avoid 'optics' vs 'optics lab' slips;
+            # between equal names, a division-exact event beats a B/C twin
+            if (best is None or len(name) > len(_norm(best.name))
+                    or (len(name) == len(_norm(best.name)) and best.division == "B/C" and div == division)):
                 best = event
     return best
 
@@ -179,6 +193,62 @@ def scan(db) -> None:
             print(f"   {d}")
 
 
+def reclassify(db) -> None:
+    """Re-run the (fixed) filename classifier over already-registered local sources.
+
+    `--scan` is idempotent by URL and never revisits an existing Source, so a classifier fix
+    alone leaves every earlier misclassification in place. This updates the stored role and
+    the EventSourceMap purpose, and prints each change so the sweep is reviewable."""
+    changes = {}
+    for source in db.scalars(select(Source).where(Source.url.like("local://%"))).all():
+        meta = dict(source.metadata_json or {})
+        relpath = meta.get("relpath", "")
+        if not relpath:
+            continue
+        old = meta.get("role")
+        new = _classify(Path(relpath).name)
+        if new == old:
+            continue
+        meta["role"] = new
+        source.metadata_json = meta
+        for esm in db.scalars(select(EventSourceMap).where(
+                EventSourceMap.source_id == source.id)).all():
+            esm.purpose = new
+        changes[(old, new)] = changes.get((old, new), 0) + 1
+        print(f"  {old} -> {new}: {relpath}")
+    db.commit()
+    print(f"\nReclassified {sum(changes.values())} sources: "
+          + ", ".join(f"{o}->{n}: {c}" for (o, n), c in sorted(changes.items())))
+
+
+def remap(db) -> None:
+    """Give unmapped local sources another chance against the current event catalog.
+
+    `--scan` maps a source once, at registration. Events added later (Protein Modeling) and
+    matcher fixes (Materials Science's missing alias) leave registered sources permanently
+    unmapped unless something retries them — this does, and prints every new mapping."""
+    index = _build_event_index(db)
+    mapped = 0
+    for source in db.scalars(select(Source).where(Source.url.like("local://%"))).all():
+        if db.scalar(select(EventSourceMap).where(EventSourceMap.source_id == source.id)):
+            continue
+        meta = source.metadata_json or {}
+        relpath = meta.get("relpath", "")
+        event = _match_event(index, relpath)
+        if not event:
+            continue
+        db.add(EventSourceMap(
+            event_id=event.id, source_id=source.id, purpose=meta.get("role", "test"),
+            source_tier=0, required=False, required_artifact_types=["parsed_text"],
+            source_universe_version=UNIVERSE, reviewed=True,
+            notes="local past-test import (remapped)",
+        ))
+        mapped += 1
+        print(f"  {event.slug:28} <- {relpath}")
+    db.commit()
+    print(f"\nRemapped {mapped} sources.")
+
+
 def _paired_key(db, test_source: Source):
     """A same-event, same-folder answer-key source with the best filename overlap."""
     meta = test_source.metadata_json or {}
@@ -198,8 +268,13 @@ def _paired_key(db, test_source: Source):
 
 
 def parse(db, limit: int | None) -> None:
+    # Any exam that already names this source — published, held for review, or retired —
+    # means the source has been parsed. Filtering on release_class == "past_test" missed the
+    # 146 imports that carry "imported_practice", and a full run would have re-parsed and
+    # re-published every one of them as a duplicate.
     already = {(e.blueprint or {}).get("exam_source_id")
-               for e in db.scalars(select(Exam).where(Exam.release_class == "past_test")).all()}
+               for e in db.scalars(select(Exam)).all()}
+    already.discard(None)
     test_sources = []
     for source in db.scalars(select(Source).where(Source.url.like("local://%"))).all():
         meta = source.metadata_json or {}
@@ -236,6 +311,10 @@ def main() -> None:
     with SessionLocal() as db:
         if "--scan" in sys.argv:
             scan(db)
+        elif "--reclassify" in sys.argv:
+            reclassify(db)
+        elif "--remap" in sys.argv:
+            remap(db)
         elif "--parse" in sys.argv:
             parse(db, int(_arg("--limit")) if "--limit" in sys.argv else None)
         else:
