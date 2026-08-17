@@ -7,7 +7,7 @@ serveable. The re-imported Meteorology paper went live and every student who cli
 told "no longer offered for new attempts", while the 47 imports already in production opened
 normally.
 """
-from app.models.entities import Event, Exam, Question
+from app.models.entities import Event, Exam, ExamItem, Question
 from app.services import student_visibility as sv
 from app.services.past_test_import import build_exam
 from app.core.database import SessionLocal
@@ -49,3 +49,44 @@ def test_a_freshly_imported_paper_can_be_started(client, student_token):
                           headers={"Authorization": f"Bearer {student_token}"})
     assert started.status_code == 200, started.text
     assert started.json()["release_label"] == "Past Test · Transcribed, Not Reviewed"
+
+
+def test_an_item_whose_answer_was_withheld_never_reaches_the_exam(monkeypatch):
+    """The 2014 Heredity paper's key skips one question as "duplicate; omitted from the answer
+    key". The question is kept as a draft for an editor to key later, but the served exam must
+    hold only items the scorer can actually mark — an ungradeable item sits in an attempt as a
+    question the student can answer and the platform can never score."""
+    from app.models.entities import Source, SourceSnapshot
+    from app.services import past_test_import as pti
+    from app.services.scoring import is_gradeable
+
+    keyed = {"label": "1", "stem": "Which nitrogenous base pairs with adenine in DNA?",
+             "question_type": "single_choice",
+             "choices": ["Thymine", "Cytosine", "Guanine", "Uracil"],
+             "correct_index": 0, "has_key_source": True, "points": 1}
+    key_omitted = {"label": "2", "stem": "In Drosophila, what should the offspring of this cross be?",
+                   "question_type": "single_choice",
+                   "choices": ["All red-eyed", "All white-eyed", "Red daughters, white sons"],
+                   "correct_index": None, "has_key_source": True, "points": 1}
+    monkeypatch.setattr(pti, "parse_items",
+                        lambda *args, **kwargs: [dict(keyed), dict(key_omitted)])
+
+    with SessionLocal() as db:
+        event = Event(slug="withheld-serve", name="Withheld Serve", division="B", season=2026)
+        source = Source(url="local://withheld-serve.pdf", title="Withheld Serve TEST",
+                        publisher="test")
+        db.add_all([event, source])
+        db.flush()
+        db.add(SourceSnapshot(source_id=source.id, final_url=source.url, content_hash="x" * 64,
+                              extracted_text="[Page 1]\n1. ...\n2. ...\n"))
+        db.flush()
+        result = pti.import_past_test(db, event, source, key_source=source,
+                                      build=True, commit=True)
+
+        assert result["questions_created"] == 2, "the withheld item is still worth an editor's review"
+        assert result["withheld_from_exam"] == 1
+        exam = db.get(Exam, result["exam_id"])
+        snapshots = [item.snapshot for item in db.query(ExamItem).filter_by(exam_id=exam.id)]
+        assert len(snapshots) == 1
+        assert all(is_gradeable(s["question_type"], s["answer_spec"]) for s in snapshots), \
+            "every served item must clear the scorer's own bar"

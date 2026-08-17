@@ -23,6 +23,7 @@ from app.services.model_provider import ModelProviderError, OpenAICompatibleProv
 from app.services.pdf_figures import (
     RESOLVING_MATCHES, attach_figures_to_items, extract_figures,
 )
+from app.services.scoring import is_gradeable
 
 MAX_TEXT_CHARS = 30_000
 PROMPT_VERSION = "past-test-parse-v1"
@@ -500,8 +501,8 @@ def build_exam(
         # for *historical* content of unknown provenance and refuses new attempts — so an exam
         # imported through here published straight into a state no student could start, while
         # the 47 already in production carry `imported_practice` and open normally. The bar for
-        # that disposition is that every item is answerable and keyed, which `build_questions`
-        # has already enforced by the time this runs.
+        # that disposition is that every item is answerable and keyed — callers owe this
+        # function only gradeable questions; `import_past_test` filters withheld answers out.
         disposition=DISPOSITION_IMPORTED_PRACTICE,
         release_class="imported_practice",
         blueprint={
@@ -551,7 +552,13 @@ def import_past_test(
             "questions_created": 0, "exam_id": None, "skipped": True, "items": items,
             "figures": figure_stats,
         }
-    exam = build_exam(db, event, exam_source, questions, feedback_mode) if (build and questions) else None
+    # A question whose answer was withheld is kept as a draft for review, but it must not be
+    # served: `is_gradeable` is the scorer's own bar, and an item below it sits in an attempt
+    # as a question the student can answer but the platform can never mark. The 2014 Heredity
+    # paper is the concrete case — its key skips one question as "duplicate; omitted", and the
+    # exam built anyway with that item inside.
+    servable = [q for q in questions if is_gradeable(q.question_type, q.answer_spec)]
+    exam = build_exam(db, event, exam_source, servable, feedback_mode) if (build and servable) else None
     if commit:
         db.commit()
         if exam:
@@ -572,6 +579,7 @@ def import_past_test(
             1 for i in items
             if i.get("image_dependent") and i.get("figure_match") in RESOLVING_MATCHES),
         "questions_created": len(questions),
+        "withheld_from_exam": len(questions) - len(servable),
         "exam_id": exam.id if exam else None,
         "items": items,
         "figures": figure_stats,
