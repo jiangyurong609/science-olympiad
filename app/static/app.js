@@ -3875,6 +3875,9 @@ async function startExam(id) {
     state.exam = await api(`/exams/${id}/start`, {
       method: 'POST', headers: { 'X-Exam-Client-Session': state.examClientSession },
     });
+    if (state.exam.previous_attempt_auto_submitted) {
+      toast('Your earlier attempt reached its time limit and was submitted — this is a fresh attempt.');
+    }
     state.attempt = state.exam.attempt_id;
     state.answers = Object.fromEntries(state.exam.questions
       .filter(question => question.saved_answer?.selected_index != null || question.saved_answer?.text != null)

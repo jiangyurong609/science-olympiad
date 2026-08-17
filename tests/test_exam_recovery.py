@@ -164,11 +164,17 @@ def test_expired_attempt_is_auto_submitted_with_manifest_before_retake(client, s
         db.add(response)
         db.commit()
         attempt_id = attempt.id
-    expired = client.post(
+    # One click does the whole thing: the expired attempt is graded and a fresh one begins.
+    # This used to 409 with "reopen the exam" — an instruction to click the same button
+    # again, which every student read as the button being broken.
+    restarted = client.post(
         f"/api/exams/{exam_id}/start", headers=auth(student_token, "browser-session-a")
     )
-    assert expired.status_code == 409
-    assert "submitted automatically" in expired.json()["detail"]
+    assert restarted.status_code == 200, restarted.text
+    body = restarted.json()
+    assert body["previous_attempt_auto_submitted"] is True
+    assert body["attempt_id"] != attempt_id, "the fresh attempt must not be the expired one"
+    assert body["questions"][0]["saved_answer"] is None, "a fresh attempt starts unanswered"
     with SessionLocal() as db:
         attempt = db.get(Attempt, attempt_id)
         submission = db.scalar(select(AttemptSubmission).where(
@@ -177,3 +183,5 @@ def test_expired_attempt_is_auto_submitted_with_manifest_before_retake(client, s
         assert attempt.submitted_at is not None
         assert submission.submission_kind == "deadline_expired"
         assert submission.response_manifest[0]["revision_id"] is None
+        fresh = db.get(Attempt, body["attempt_id"])
+        assert fresh.status == "in_progress"

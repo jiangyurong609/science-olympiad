@@ -3978,6 +3978,16 @@ def start_exam(
         Attempt.exam_id == exam.id, Attempt.user_id == user.id,
         Attempt.status == AttemptStatus.IN_PROGRESS.value,
     ))
+    previous_attempt_auto_submitted = False
+    if resuming and resuming.deadline_at and datetime.now(timezone.utc) > _aware(resuming.deadline_at):
+        # The deadline already ended this attempt in spirit; make it so in fact, then treat
+        # the click as what the student meant: begin again. This used to 409 with "reopen the
+        # exam to begin a permitted new attempt" — an instruction to click the same button a
+        # second time, which reads as the button being broken. An expired attempt is not a
+        # resumption, so the fresh attempt below still clears every new-attempt gate.
+        _finalize_graded(db, resuming, submission_kind="deadline_expired")
+        previous_attempt_auto_submitted = True
+        resuming = None
     if not resuming:
         if not exam.published:
             raise HTTPException(status_code=404, detail="Published exam not found")
@@ -3991,9 +4001,6 @@ def start_exam(
         Attempt.status == AttemptStatus.IN_PROGRESS.value,
     ))
     if existing:
-        if existing.deadline_at and datetime.now(timezone.utc) > _aware(existing.deadline_at):
-            _finalize_graded(db, existing, submission_kind="deadline_expired")
-            raise HTTPException(status_code=409, detail="The prior attempt reached its deadline and was submitted automatically; reopen the exam to begin a permitted new attempt")
         lease_fresh = bool(
             existing.client_lease_at
             and datetime.now(timezone.utc) - _aware(existing.client_lease_at) < timedelta(seconds=90)
@@ -4028,6 +4035,9 @@ def start_exam(
     response_by_question = {response.question_id: response for response in responses}
     return {
         "attempt_id": attempt.id, "title": exam.title,
+        # Tells the runner to say what just happened — the prior attempt was graded at its
+        # deadline and this is a fresh one — instead of silently presenting an empty paper.
+        "previous_attempt_auto_submitted": previous_attempt_auto_submitted,
         "release_class": exam.release_class,
         "feedback_mode": (exam.blueprint or {}).get("feedback_mode", "after_submit"),
         "release_label": RELEASE_LABELS.get(exam.release_class, UNKNOWN_RELEASE_LABEL),
