@@ -118,8 +118,9 @@ def _detect_division(relpath: str) -> str | None:
 def _match_event(index, relpath: str) -> Event | None:
     norm_path = _norm(relpath)
     for alias, canonical in ALIASES.items():
-        if alias in norm_path:
-            norm_path = norm_path.replace(alias, canonical)
+        # word-bounded: the substring form turned "windpower" into "win[dynamic planet]ower"
+        # and published two Wind Power papers under Dynamic Planet
+        norm_path = re.sub(rf"\b{re.escape(alias)}\b", canonical, norm_path)
     division = _detect_division(relpath)
     best = None
     for (name, div), event in index.items():
