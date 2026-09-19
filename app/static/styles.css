@@ -180,8 +180,8 @@ p { line-height: 1.65; text-wrap: pretty; }
 .button:hover { transform: translateY(-1px); }
 .button:active { transform: translateY(0); }
 .button:disabled { cursor: wait; opacity: .65; transform: none; }
-.button-primary { background: var(--amber); color: #1f251f; }
-.button-primary:hover { background: #e1a955; }
+.button-primary { background: var(--forest); color: white; }
+.button-primary:hover { background: var(--forest-dark); }
 .button-dark { background: var(--forest); color: white; }
 .button-dark:hover { background: var(--forest-dark); }
 .button-secondary { border-color: var(--line); background: var(--surface); color: var(--ink); }
@@ -352,6 +352,8 @@ textarea { resize: vertical; }
 .lesson-citations h3 { font-family: inherit; font-size: .8rem; }
 .lesson-citations a { color: var(--forest); overflow-wrap: anywhere; }
 .lesson-reader-actions { margin-top: 14px; display: flex; justify-content: flex-end; gap: 9px; }
+.lesson-feedback-link { display: inline-block; margin: 6px 0 14px clamp(30px, 6vw, 64px); padding: 0; border: 0; background: transparent; color: var(--muted); font-size: .72rem; font-weight: 600; text-decoration: underline; text-underline-offset: 3px; }
+.lesson-feedback-link:hover { color: var(--forest); }
 .concept-row { padding: 18px 20px; display: grid; grid-template-columns: 44px 1fr auto; align-items: center; gap: 14px; border: 1px solid var(--line); border-radius: 12px; background: var(--surface); }
 .concept-index { width: 36px; height: 36px; display: grid; place-items: center; border-radius: 50%; background: #e7ebe3; color: var(--forest); font-size: .75rem; font-weight: 800; }
 .concept-row h3 { margin: 0; font-family: inherit; font-size: .92rem; }
@@ -482,7 +484,7 @@ textarea { resize: vertical; }
 .answerkey-item .button { justify-self: start; }
 @media (max-width: 700px) { .answerkey-fields { grid-template-columns: 1fr; } }
 .choices { display: grid; gap: 10px; margin-top: 26px; }
-.choice { position: relative; margin: 0; display: grid; grid-template-columns: auto 1fr; gap: 12px; align-items: start; padding: 15px; border: 1px solid var(--line); border-radius: 10px; font-weight: 500; }
+.choice { position: relative; margin: 0; display: grid; grid-template-columns: auto 1fr; gap: 12px; align-items: start; padding: 10px 13px; border: 1px solid transparent; border-radius: 10px; font-weight: 500; }
 .choice:hover { border-color: #91a69a; background: #f7f8f3; }
 .choice:has(input:checked) { border-color: var(--forest); background: #edf3ec; box-shadow: inset 3px 0 var(--forest); }
 .choice input { width: 18px; height: 18px; margin: 2px 0 0; accent-color: var(--forest); }

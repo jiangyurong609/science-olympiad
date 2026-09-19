@@ -2239,15 +2239,17 @@ def save_lesson_progress(
     # Keyed off the raw `id`, this guard simply did not see checkpoints authored without one,
     # so a student could mark those complete without ever answering them.
     checkpoint_ids = set(lesson_blocks.checkpoint_ids(version.content))
+    checkpoint_results = progress.checkpoint_results or {}
     invalid_checkpoints = {
         block_id for block_id in completed_ids
         if block_id in checkpoint_ids
-        and not (progress.checkpoint_results or {}).get(block_id, {}).get("correct")
+        and not (checkpoint_results.get(block_id, {}).get("correct")
+                 or checkpoint_results.get(block_id, {}).get("exhausted"))
     }
     if invalid_checkpoints:
         raise HTTPException(
             status_code=422,
-            detail="A checkpoint can be completed only after a correct response",
+            detail="A checkpoint can be completed only after it has been answered",
         )
     progress.current_block = payload.current_block
     progress.completed_block_ids = completed_ids
@@ -2442,21 +2444,38 @@ def submit_lesson_checkpoint(
     correct = payload.selected_index == answer_index
     results = dict(progress.checkpoint_results or {})
     previous = results.get(payload.checkpoint_id, {})
-    results[payload.checkpoint_id] = {
+    if previous.get("correct") or previous.get("exhausted"):
+        raise HTTPException(status_code=409, detail="This knowledge check is already resolved")
+    attempts = int(previous.get("attempts", 0)) + 1
+    exhausted = not correct and attempts >= 2
+    entry = dict(previous)  # keep flags other writers set, e.g. the hint endpoint's hint_used
+    entry.update({
         "correct": correct,
-        "attempts": int(previous.get("attempts", 0)) + 1,
+        "attempts": attempts,
         "selected_index": payload.selected_index,
-    }
+    })
+    if exhausted:
+        # The answer is revealed on the second miss; keep what was shown so a page
+        # reload renders the same reveal instead of an answerable form.
+        entry["exhausted"] = True
+        entry["revealed"] = {
+            "correct_index": answer_index,
+            "explanation": checkpoint.get("explanation", ""),
+        }
+    results[payload.checkpoint_id] = entry
     progress.checkpoint_results = results
     progress.last_viewed_at = datetime.now(timezone.utc)
     # `block["id"]` raised KeyError on any lesson holding an id-less checkpoint, which took
     # down answering the *well-formed* checkpoints beside it too.
     ids = lesson_blocks.checkpoint_ids(version.content)
-    completed = bool(ids) and all(results.get(cid, {}).get("correct") for cid in ids)
+    resolved = [results.get(cid, {}) for cid in ids]
+    completed = bool(ids) and all(r.get("correct") or r.get("exhausted") for r in resolved)
     if completed:
         progress.status = "completed"
         progress.completed_at = datetime.now(timezone.utc)
-        if lesson.concept_id:
+        # A checkpoint resolved by running out of tries is recorded as missed:
+        # the lesson finishes, but a reveal is not evidence of mastery.
+        if lesson.concept_id and all(r.get("correct") for r in resolved):
             mastery = db.scalar(select(MasteryState).where(
                 MasteryState.user_id == user.id,
                 MasteryState.concept_id == lesson.concept_id,
@@ -2474,15 +2493,21 @@ def submit_lesson_checkpoint(
             mastery.last_practiced_at = datetime.now(timezone.utc)
             db.add(mastery)
     _audit(db, user, "lesson.checkpoint", "lesson", lesson.id,
-           checkpoint_id=payload.checkpoint_id, correct=correct)
+           checkpoint_id=payload.checkpoint_id, correct=correct, attempts=attempts)
     db.commit()
+    # The key, explanation and misconception leave the server only once the checkpoint
+    # is resolved — returning them on a retryable miss hands the retry its answer.
+    reveal = correct or exhausted
     return {
         "correct": correct,
-        "correct_index": checkpoint.get("correct_index"),
-        "explanation": checkpoint.get("explanation", ""),
-        "misconception": (checkpoint.get("misconception_by_choice") or {}).get(str(payload.selected_index)),
+        "reveal": reveal,
+        "correct_index": answer_index if reveal else None,
+        "correct_choice": choices[answer_index] if reveal and answer_index < len(choices) else None,
+        "explanation": checkpoint.get("explanation", "") if reveal else "",
+        "misconception": (checkpoint.get("misconception_by_choice") or {}).get(str(payload.selected_index)) if reveal else None,
         "lesson_status": progress.status,
-        "attempts": results[payload.checkpoint_id]["attempts"],
+        "attempts": attempts,
+        "remaining_attempts": 0 if reveal else 2 - attempts,
     }
 
 

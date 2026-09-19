@@ -97,7 +97,11 @@ def test_lesson_checkpoints_complete_lesson_and_update_mastery(client, student_t
     )
     assert wrong.status_code == 200
     assert wrong.json()["correct"] is False
-    assert wrong.json()["misconception"] == "Luster is reflected light."
+    # A first miss is retryable, so nothing that identifies the key leaves the server:
+    # returning the misconception or correct_index here hands the retry its answer.
+    assert wrong.json()["misconception"] is None
+    assert wrong.json()["correct_index"] is None
+    assert wrong.json()["remaining_attempts"] == 1
 
     first = client.post(
         f"/api/lessons/{lesson_id}/checkpoint",
@@ -118,3 +122,42 @@ def test_lesson_checkpoints_complete_lesson_and_update_mastery(client, student_t
         assert progress.status == "completed"
         assert mastery.mastery_probability >= 0.45
         assert mastery.evidence_count == 1
+
+
+def test_two_misses_reveal_the_answer_and_complete_without_mastery_credit(client, student_token):
+    _, concept_id, lesson_id = create_lesson()
+    client.post(f"/api/lessons/{lesson_id}/start", headers=auth(student_token))
+
+    client.post(f"/api/lessons/{lesson_id}/checkpoint", headers=auth(student_token),
+                json={"checkpoint_id": "check-one", "selected_index": 1})
+    second = client.post(f"/api/lessons/{lesson_id}/checkpoint", headers=auth(student_token),
+                         json={"checkpoint_id": "check-one", "selected_index": 1})
+    body = second.json()
+    assert body["correct"] is False
+    assert body["reveal"] is True
+    assert body["correct_index"] == 0
+    assert body["correct_choice"] == "Hardness"
+    assert body["explanation"] == "Hardness measures resistance to scratching."
+    assert body["misconception"] == "Luster is reflected light."
+    assert body["remaining_attempts"] == 0
+
+    third = client.post(f"/api/lessons/{lesson_id}/checkpoint", headers=auth(student_token),
+                        json={"checkpoint_id": "check-one", "selected_index": 0})
+    assert third.status_code == 409, "an exhausted check must not be flippable to correct"
+
+    done = client.post(f"/api/lessons/{lesson_id}/checkpoint", headers=auth(student_token),
+                       json={"checkpoint_id": "check-two", "selected_index": 1})
+    assert done.json()["lesson_status"] == "completed"
+
+    saved = client.put(f"/api/lessons/{lesson_id}/progress", headers=auth(student_token),
+                       json={"current_block": 2,
+                             "completed_block_ids": ["intro", "check-one", "check-two"]})
+    assert saved.status_code == 200, "a checkpoint resolved by exhaustion counts as answered"
+
+    with SessionLocal() as db:
+        progress = db.scalar(select(LessonProgress).where(LessonProgress.lesson_id == lesson_id))
+        assert progress.status == "completed"
+        assert progress.checkpoint_results["check-one"]["exhausted"] is True
+        assert progress.checkpoint_results["check-one"]["revealed"]["correct_index"] == 0
+        mastery = db.scalar(select(MasteryState).where(MasteryState.concept_id == concept_id))
+        assert mastery is None, "a revealed answer is not evidence of mastery"

@@ -1007,7 +1007,7 @@ function renderMaterials() {
     return `<article class="material-card surface${guided ? ' material-card-guided' : ''}">
       <div class="material-card-top"><span class="material-type">${guided ? 'GUIDED LESSON' : escapeHtml((material.purpose || 'reference').replaceAll('_', ' '))}</span><span class="material-format">${kind}</span></div>
       <h3>${escapeHtml(materialTitle(material))}</h3>
-      ${guided ? `<p class="material-plan"><strong>${guided.estimated_minutes || 10} min</strong> lesson · ${guided.checkpoint_count || 0} quick checks</p><p class="material-summary">${escapeHtml(guided.summary || 'Watch the source, learn the key ideas, and check your understanding as you go.')}</p>` : `<p class="material-meta">${escapeHtml(material.publisher || 'Official resource')} · ${size}</p>`}
+      ${guided ? `<p class="material-plan"><strong>Guided lesson</strong> · ${guided.checkpoint_count || 0} quick checks</p><p class="material-summary">${escapeHtml(guided.summary || 'Watch the source, learn the key ideas, and check your understanding as you go.')}</p>` : `<p class="material-meta">${escapeHtml(material.publisher || 'Official resource')} · ${size}</p>`}
       <div class="material-actions">${guided ? `<button type="button" class="button button-dark button-compact" data-start-guided-lesson="${guided.id}">Start Lesson <span aria-hidden="true">→</span></button>` : material.has_text ? `<button type="button" class="button button-dark button-compact" data-open-material="${material.source_id}">Open Transcript</button>` : ''}${material.url ? `<a class="button ${guided || material.has_text ? 'button-secondary' : 'button-dark'} button-compact" href="${safeUrl(material.url)}" target="_blank" rel="noopener noreferrer">${group === 'video' ? 'Watch Source Video' : isPdf ? 'Open PDF' : 'Open Resource'} <span aria-hidden="true">↗</span></a>` : ''}</div>
     </article>`;
       }).join('')}</div>
@@ -1156,7 +1156,6 @@ function renderSubjectShell() {
   const event = activeEvent();
   if (!event) return;
   const experience = eventExperience(event);
-  const totalMinutes = state.lessons.reduce((sum, lesson) => sum + (lesson.estimated_minutes || 0), 0);
   const completed = state.lessons.filter(lesson => lesson.progress.status === 'completed').length;
   const progress = state.lessons.length ? Math.round((completed / state.lessons.length) * 100) : 0;
   const nextLesson = state.lessons.find(lesson => lesson.progress.status === 'in_progress')
@@ -1176,7 +1175,7 @@ function renderSubjectShell() {
   $('learn-lede').textContent = state.courseMap?.summary || experience.focus;
   $('learning-path-title').textContent = 'Course content';
   $('learn-module-count').textContent = state.courseMap?.units?.length ?? state.lessons.length;
-  $('learn-duration').textContent = totalMinutes >= 60 ? `${Math.round(totalMinutes / 6) / 10} hr` : `${totalMinutes} min`;
+  $('learn-duration').textContent = String(state.lessons.length);
   $('learn-progress-value').textContent = `${progress}%`;
   const preview = $('course-preview-banner');
   const previewMode = state.courseMap?.status;
@@ -1303,7 +1302,7 @@ function renderLessons() {
     const statusLabel = lesson.progress.status === 'completed' ? 'Completed' : lesson.progress.status === 'in_progress' ? 'Resume' : 'Start';
     return `<article class="lesson-catalog-card surface">
       <span class="lesson-order">${String(index + 1).padStart(2, '0')}</span>
-      <div class="lesson-card-copy"><span class="lesson-card-meta">${lesson.estimated_minutes} min · ${escapeHtml(lesson.progress.status.replaceAll('_', ' '))}</span><h3>${escapeHtml(lesson.title)}</h3><p>${escapeHtml(lesson.summary)}</p></div>
+      <div class="lesson-card-copy"><span class="lesson-card-meta">${escapeHtml(lesson.progress.status.replaceAll('_', ' '))}</span><h3>${escapeHtml(lesson.title)}</h3><p>${escapeHtml(lesson.summary)}</p></div>
       <button class="button ${lesson.progress.status === 'not_started' ? 'button-dark' : 'button-secondary'}" type="button" data-start-lesson="${lesson.id}">${statusLabel} <span class="sr-only">${escapeHtml(lesson.title)}</span></button>
     </article>`;
   }).join('');
@@ -1312,10 +1311,9 @@ function renderLessons() {
   $('start-featured-lesson').textContent = featured?.progress.status === 'in_progress' ? 'Resume Lesson →' : featured?.progress.status === 'completed' ? 'Review Lesson →' : 'Start Lesson →';
   const learnResources = $('learn-resources-button');
   if (learnResources) learnResources.hidden = !(activeEvent()?.material_count > 0);
-  const totalMin = state.lessons.reduce((sum, lesson) => sum + (lesson.estimated_minutes || 0), 0);
   const done = state.lessons.filter(lesson => lesson.progress.status === 'completed').length;
   $('course-scope').textContent = state.lessons.length
-    ? `${done} of ${state.lessons.length} complete · ${totalMin >= 60 ? `~${Math.round(totalMin / 6) / 10} hr` : `${totalMin} min`}`
+    ? `${done} of ${state.lessons.length} complete`
     : '';
 }
 
@@ -1369,7 +1367,7 @@ function renderCourseMap() {
       return `<li class="course-skill">
         <span class="mastery-dot mastery-${escapeHtml(skill.mastery.level)}" aria-hidden="true"></span>
         <div class="course-skill-copy">
-          <span class="course-skill-type">Lesson${primaryLesson ? ` · ${primaryLesson.estimated_minutes} min` : ''}</span>
+          <span class="course-skill-type">Lesson</span>
           <h4>${escapeHtml(skill.name)}</h4>
           ${skill.description ? `<p>${escapeHtml(skill.description)}</p>` : ''}
           <span class="mastery-label">${escapeHtml(masteryLabel(skill.mastery.level))}</span>
@@ -3668,7 +3666,8 @@ function renderLessonOutline() {
   $('lesson-outline-list').innerHTML = lesson.content.map((block, index) => {
     const current = index === state.lessonBlockIndex;
     const completed = complete.has(block.id)
-      || lesson.progress.checkpoint_results?.[block.id]?.correct;
+      || lesson.progress.checkpoint_results?.[block.id]?.correct
+      || lesson.progress.checkpoint_results?.[block.id]?.exhausted;
     // A chapter belongs to the section it teaches, so it is offered here rather than as a
     // second, parallel list of lesson content.
     const chapter = chapterOpeningBlock(index);
@@ -3710,9 +3709,22 @@ function renderWorkedExampleBlock(block) {
   return `<p class="kicker">Worked example</p><h1 id="lesson-reader-title">${escapeHtml(block.heading || 'Worked example')}</h1>${prompt ? `<div class="worked-prompt">${escapeHtml(prompt)}</div>` : ''}${steps.length ? `<ol class="worked-steps">${steps.map(step => `<li>${escapeHtml(typeof step === 'string' ? step : (step?.detail || step?.text || ''))}</li>`).join('')}</ol>` : ''}`;
 }
 
+function checkpointAnswerLine(index, choices) {
+  if (!Number.isInteger(index) || index < 0 || index >= (choices || []).length) return '';
+  return `<p><strong>Answer: ${String.fromCharCode(65 + index)}.</strong> ${escapeHtml(choices[index])}</p>`;
+}
+
 function renderCheckpointBlock(block) {
-  const prior = state.currentLesson.progress.checkpoint_results[block.id];
-  return `<p class="kicker">Knowledge check</p><h1 id="lesson-reader-title">${escapeHtml(block.heading)}</h1><p class="block-lede">${escapeHtml(block.question)}</p><form class="checkpoint-form" data-checkpoint-form="${escapeHtml(block.id)}"><fieldset class="choices"><legend class="sr-only">Select one answer</legend>${block.choices.map((choice, index) => `<label class="choice"><input type="radio" name="lesson-checkpoint" value="${index}" required><span>${escapeHtml(choice)}</span></label>`).join('')}</fieldset><button class="button button-primary" type="submit">Check My Answer</button><div class="checkpoint-feedback" aria-live="polite" ${prior?.correct ? '' : 'hidden'}>${prior?.correct ? '<h3>Previously completed</h3><p>You answered this checkpoint correctly.</p>' : ''}</div></form>`;
+  const prior = state.currentLesson.progress.checkpoint_results[block.id] || {};
+  const resolved = Boolean(prior.correct || prior.exhausted);
+  let priorNote = '';
+  if (prior.correct) {
+    priorNote = '<h3>Previously completed</h3><p>You answered this knowledge check correctly.</p>';
+  } else if (prior.exhausted) {
+    const revealed = prior.revealed || {};
+    priorNote = `<h3>Both tries used</h3>${checkpointAnswerLine(revealed.correct_index, block.choices)}${revealed.explanation ? `<p>${escapeHtml(revealed.explanation)}</p>` : ''}<p>This check is recorded as missed — review the answer, then continue.</p>`;
+  }
+  return `<p class="kicker">Knowledge check</p><h1 id="lesson-reader-title">${escapeHtml(block.heading)}</h1><p class="block-lede">${escapeHtml(block.question)}</p><form class="checkpoint-form" data-checkpoint-form="${escapeHtml(block.id)}"><fieldset class="choices"${resolved ? ' disabled' : ''}><legend class="sr-only">Select one answer</legend>${block.choices.map((choice, index) => `<label class="choice"><input type="radio" name="lesson-checkpoint" value="${index}" required${prior.exhausted && index === prior.revealed?.correct_index ? ' checked' : ''}><span>${escapeHtml(choice)}</span></label>`).join('')}</fieldset><button class="button button-primary" type="submit"${resolved ? ' disabled' : ''}>${prior.correct ? 'Correct' : 'Check My Answer'}</button><div class="checkpoint-feedback${prior.exhausted ? ' incorrect' : ''}" aria-live="polite" ${resolved ? '' : 'hidden'}>${priorNote}</div></form>`;
 }
 
 function renderStepsBlock(block) {
@@ -3752,18 +3764,38 @@ $('lesson-block').addEventListener('submit', async event => {
       method: 'POST',
       body: JSON.stringify({ checkpoint_id: form.dataset.checkpointForm, selected_index: Number(selected.value) }),
     });
-    state.currentLesson.progress.checkpoint_results[form.dataset.checkpointForm] = { correct: result.correct, attempts: result.attempts };
+    const exhausted = !result.correct && result.reveal;
+    state.currentLesson.progress.checkpoint_results[form.dataset.checkpointForm] = {
+      correct: result.correct,
+      attempts: result.attempts,
+      exhausted,
+      revealed: exhausted ? { correct_index: result.correct_index, explanation: result.explanation } : undefined,
+    };
     state.currentLesson.progress.status = result.lesson_status;
-    refreshLessonFinishButton();     // the last correct answer must unlock Finish immediately
+    refreshLessonFinishButton();     // the last resolved answer must unlock Finish immediately
     const feedback = form.querySelector('.checkpoint-feedback');
     feedback.hidden = false;
     feedback.classList.toggle('incorrect', !result.correct);
-    feedback.innerHTML = `<h3>${result.correct ? 'Evidence confirmed' : 'Look at the evidence being tested'}</h3><p>${escapeHtml(result.misconception || result.explanation)}</p>`;
+    const block = state.currentLesson.content.find(b => b.id === form.dataset.checkpointForm);
+    const answerLine = result.reveal
+      ? (checkpointAnswerLine(result.correct_index, block?.choices)
+         || (result.correct_choice ? `<p><strong>Answer:</strong> ${escapeHtml(result.correct_choice)}</p>` : ''))
+      : '';
+    const explanationLine = result.reveal && result.explanation ? `<p>${escapeHtml(result.explanation)}</p>` : '';
     if (result.correct) {
+      feedback.innerHTML = `<h3>Correct</h3>${answerLine}${explanationLine}`;
       button.textContent = 'Correct';
       button.disabled = true;
       locked = true;
       await saveCurrentLessonProgress(true);
+    } else if (exhausted) {
+      feedback.innerHTML = `<h3>Not this time</h3>${result.misconception ? `<p>${escapeHtml(result.misconception)}</p>` : ''}${answerLine}${explanationLine}<p>This check is recorded as missed — review the answer, then continue.</p>`;
+      form.querySelector('fieldset').disabled = true;
+      button.disabled = true;
+      locked = true;
+      await saveCurrentLessonProgress(true);
+    } else {
+      feedback.innerHTML = `<h3>Wrong — try again</h3><p>You have one more try. Reread the section, then pick again.</p>`;
     }
   } catch (error) { toast(error.message); }
   finally { if (!locked) setBusy(button, false); }
@@ -3788,9 +3820,10 @@ async function moveLesson(delta) {
   const step = steps[state.lessonStepIndex] || steps[0];
   const block = state.currentLesson.content[step.blockIndex];
   // Only a reading step can gate on its checkpoint; a video step always advances.
+  const checkpointResult = state.currentLesson.progress.checkpoint_results[block.id];
   if (delta > 0 && step.kind === 'block' && block.type === 'checkpoint'
-      && !state.currentLesson.progress.checkpoint_results[block.id]?.correct) {
-    toast('Answer this knowledge check correctly before moving on.');
+      && !(checkpointResult?.correct || checkpointResult?.exhausted)) {
+    toast('Answer this knowledge check before moving on.');
     return;
   }
   try {

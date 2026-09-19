@@ -240,7 +240,7 @@
               <p id="learn-lede" class="lede">Choose an event to load its current lessons and progress.</p>
               <dl class="course-metrics" aria-label="Course summary">
                 <div><dt>Units</dt><dd id="learn-module-count">0</dd></div>
-                <div><dt>Study Time</dt><dd id="learn-duration">0 min</dd></div>
+                <div><dt>Lessons</dt><dd id="learn-duration">0</dd></div>
                 <div><dt>Complete</dt><dd id="learn-progress-value">0%</dd></div>
               </dl>
             </div>
@@ -286,11 +286,11 @@
               <div class="lesson-stage">
                 <div id="lesson-inline-video" class="lesson-inline-video" hidden></div>
                 <div id="lesson-block" class="lesson-block" tabindex="-1"></div>
+                <button id="lesson-feedback" class="lesson-feedback-link" type="button">Give feedback on this lesson</button>
                 <footer class="lesson-reader-actions">
                   <button id="lesson-previous" class="button button-secondary" type="button">Previous</button>
                   <button id="lesson-next" class="button button-dark" type="button">Continue</button>
                   <button id="lesson-finish" class="button button-primary" type="button" hidden>Finish Lesson</button>
-                  <button id="lesson-feedback" class="button button-quiet" type="button">Give feedback</button>
                 </footer>
                 <!-- Shown only to content staff walking a lesson for review. The verdict
                      belongs where the reading happens: a reviewer who has to leave the
