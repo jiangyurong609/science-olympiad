@@ -1211,9 +1211,17 @@ function renderSubjectShell() {
   const taxonomyReady = subjectKeyOf(state.activeEventSlug) === 'entomology'
     && state.activeTaxonomy?.official_list_verified
     && state.activeTaxonomy?.image_release_ready;
+  // A rotated topic is the one thing a student must read before studying: the event keeps its
+  // name every season while the tested material changes under it, so "Meteorology" can be a
+  // real, reviewed course and still teach the wrong year. `topic_focus` carries that sentence
+  // for the events where it applies, and it belongs here, on the page the studying starts from,
+  // not only on the card that was clicked to get here.
   const scopeMessage = taxonomyReady
     ? `Current-season taxonomy and specimen assets verified · ${state.activeTaxonomy.entries.length} scoped taxa.`
-    : event.season_status !== 'current' ? 'Foundational library · This course is not labeled as current-season competition coverage.' : '';
+    : event.season_status !== 'current'
+    ? [event.topic_focus, 'Foundational library · not labeled as current-season competition coverage.']
+        .filter(Boolean).join(' ')
+    : '';
   $('subject-scope-note').hidden = !scopeMessage;
   $('subject-scope-note').textContent = scopeMessage || '';
 }
