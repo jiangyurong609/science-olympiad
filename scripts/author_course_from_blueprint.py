@@ -20,13 +20,13 @@ import re
 from concurrent.futures import ThreadPoolExecutor, as_completed
 from pathlib import Path
 
-from sqlalchemy import func, select
+from sqlalchemy import and_, func, select
 
 from app.core.database import SessionLocal
 from app.models.entities import (
     AssessmentBlueprint, Concept, ContentGap, Course, CourseSourceCoverage,
     CourseUnit, CourseVersion, Event, EventSourceMap, Lesson, LessonSkill,
-    LessonVersion, Skill, Source, SourcePassage,
+    LessonVersion, ReviewDecision, Skill, Source, SourcePassage,
 )
 from app.services.model_provider import ModelProviderError, OpenAICompatibleProvider
 
@@ -490,10 +490,29 @@ def _video_block(passages: list[SourcePassage], sources: dict[int, Source]) -> d
     }
 
 
-def _generate_one(provider, blueprint, unit_data, lesson_data, passages, sources):
-    result = provider.generate_json(
-        SYSTEM, _prompt(blueprint, unit_data, lesson_data, passages, sources)
-    )
+# A rejection names a specific falsehood — "3.9 to 7.3 micrometres described as a water-vapour
+# channel", "hail initiation attributed to condensation nuclei rather than ice nuclei". Handing
+# that back to the author is worth far more than regenerating the lesson blind and hoping the
+# same sentence comes out differently: the reviewer has already done the hard part, which is
+# saying exactly what is wrong.
+REPAIR_PREFIX = """A subject-matter reviewer read your previous draft of this lesson and
+REJECTED it. Their finding, verbatim:
+
+{notes}
+
+Write the lesson again, fixing exactly that. Everything the reviewer did not fault should come
+out substantially as it was. Do not mention the review, the correction, or the previous draft
+anywhere in the lesson — a student reads only the result.
+
+"""
+
+
+def _generate_one(provider, blueprint, unit_data, lesson_data, passages, sources,
+                  correction: str = ""):
+    prompt = _prompt(blueprint, unit_data, lesson_data, passages, sources)
+    if correction:
+        prompt = REPAIR_PREFIX.format(notes=correction.strip()) + prompt
+    result = provider.generate_json(SYSTEM, prompt)
     blocks = _normalize_blocks(
         result.payload, {passage.id for passage in passages}, lesson_data["slug"]
     )
@@ -511,7 +530,8 @@ def _generate_one(provider, blueprint, unit_data, lesson_data, passages, sources
 
 def author(*, apply: bool, generate: bool, regenerate: bool = False,
            blueprint_path: Path | None = None, allow_live: bool = False,
-           only: set[str] | None = None) -> dict:
+           only: set[str] | None = None, repair: bool = False,
+           corrections_file: Path | None = None) -> dict:
     path = Path(blueprint_path or DEFAULT_BLUEPRINT)
     if not path.exists():
         raise SystemExit(f"no blueprint at {path}")
@@ -530,6 +550,38 @@ def author(*, apply: bool, generate: bool, regenerate: bool = False,
         return report
     with SessionLocal() as db:
         event, course, scaffold = _ensure_scaffold(db, blueprint, allow_live=allow_live)
+        corrections: dict[str, str] = {}
+        if repair:
+            # Every lesson an automated review faulted AT ITS CURRENT VERSION, with the
+            # reviewer's own words. A lesson approved at version 3 and rejected at version 2 is
+            # not repaired again; the decision that counts is the one about what is there now.
+            for lesson, decision in db.execute(
+                select(Lesson, ReviewDecision)
+                .join(ReviewDecision, and_(
+                    ReviewDecision.entity_type == "lesson",
+                    ReviewDecision.entity_id == Lesson.id,
+                    ReviewDecision.entity_version == Lesson.current_version,
+                ))
+                .where(
+                    Lesson.event_id == event.id,
+                    ReviewDecision.stage == "automated",
+                    ReviewDecision.decision.in_(["reject", "rejected", "revise"]),
+                )
+                .order_by(ReviewDecision.id)
+            ).all():
+                corrections[lesson.slug] = decision.notes or ""
+            # Findings from a reviewer that is not this pipeline — an expert read, a coach's
+            # email, a student's bug report. An independent reviewer found a Tier 1 error in a
+            # lesson the automated pass had APPROVED (the 4/3 refraction model stated as an
+            # effective Earth curvature rather than an effective radius, which inverts it), so
+            # the repair set cannot be only what one reviewer flagged.
+            if corrections_file:
+                for slug, note in json.loads(Path(corrections_file).read_text()).items():
+                    corrections[slug] = (corrections.get(slug, "") + "\n\n" + note).strip()
+            report["repairing"] = sorted(corrections)
+            # Repair means repair: lessons nobody faulted are left exactly as they are.
+            only = set(corrections) if only is None else (only & set(corrections))
+            regenerate = True
         sources, all_passages = _course_sources(db, event)
         generation_rows = []
         for unit_data, unit, lesson_data, skill, concept, sequence in scaffold:
@@ -566,7 +618,7 @@ def author(*, apply: bool, generate: bool, regenerate: bool = False,
                 futures = {
                     pool.submit(
                         _generate_one, provider, blueprint, unit_data, lesson_data,
-                        passages, sources,
+                        passages, sources, corrections.get(lesson_data["slug"], ""),
                     ): lesson_data["slug"]
                     for unit_data, _, lesson_data, _, _, _, passages in generation_rows
                 }
@@ -699,6 +751,12 @@ def main() -> None:
     # a course's 21 lessons, regenerating the blueprint would also pull the 6 that survived
     # out of the catalog, and a student mid-course would watch the subject empty out. Name the
     # lessons being repaired and the rest are left exactly as they are.
+    parser.add_argument("--corrections", default=None,
+                        help="JSON file mapping lesson slug -> a reviewer's finding, merged "
+                             "into --repair (use for findings from outside this pipeline)")
+    parser.add_argument("--repair", action="store_true",
+                        help="re-author only the lessons an automated review faulted, handing "
+                             "the reviewer's own finding back to the author")
     parser.add_argument("--only", default="",
                         help="comma-separated lesson slugs to author; others are left untouched")
     args = parser.parse_args()
@@ -708,6 +766,8 @@ def main() -> None:
         apply=args.apply, generate=args.generate, regenerate=args.regenerate,
         blueprint_path=Path(args.blueprint), allow_live=args.allow_live,
         only={s.strip() for s in args.only.split(",") if s.strip()} or None,
+        repair=args.repair,
+        corrections_file=Path(args.corrections) if args.corrections else None,
     ), indent=2))
 
 
