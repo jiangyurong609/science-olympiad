@@ -345,8 +345,14 @@ def _validate(raw: dict, kind: str, passages: dict[int, SourcePassage]) -> dict:
 BATCH_SIZE = 4
 
 
-def _one_batch(provider, event, section, chosen, index, want, avoid, topics) -> list[dict]:
+def _one_batch(provider, event, section, chosen, index, want, avoid, topics,
+               constraints: list[str] | None = None) -> list[dict]:
     system = f"{BASE_RULES}\n\n{KIND_RULES[section['kind']]}"
+    if constraints:
+        system += ("\n\nRULES MANUAL CONSTRAINTS FOR THIS EVENT. These come from the official "
+                   "rules manual and are not style preferences. An item that breaks one of them "
+                   "is out of scope however good it is, so discard it and write another:\n- "
+                   + "\n- ".join(constraints))
     payload = provider.generate_json(system, json.dumps({
         "event": event.name,
         "topic_focus": event.topic_focus,
@@ -414,7 +420,7 @@ def _generate_section(provider, event, section, passages, sources,
         try:
             return _one_batch(provider, event, section, chosen,
                               {row.id: row for row in chosen}, want,
-                              [i["stem"] for i in collected], topics)
+                              [i["stem"] for i in collected], topics, constraints)
         except ModelProviderError as exc:
             print(f"      {section['title']}: provider error {exc}", flush=True)
             return []
@@ -452,6 +458,24 @@ def _generate_section(provider, event, section, passages, sources,
         rounds += 1
     return collected[:wanted]
 
+
+
+
+# The manual's own rules for what an exam may ask. The builder knew the SHAPE of a paper,
+# taken from real past tests, and nothing about what the manual forbids — so it could produce
+# a perfectly-shaped Solar System paper full of trivia requiring a calculator, when the rules
+# say in those words to minimize trivia and allow no calculator at all.
+EXAM_CONSTRAINTS = Path(__file__).resolve().parent.parent / "docs" / "season_2027" / "exam_constraints.json"
+
+
+def manual_constraints(event_slug: str) -> list[str]:
+    """Rules from the rules manual for this event, or [] when none are recorded."""
+    if not EXAM_CONSTRAINTS.exists():
+        return []
+    base = re.sub(r"-(19|20)\d{2}$", "", event_slug)
+    base = re.sub(r"-[bc]$", "", base)
+    data = json.loads(EXAM_CONSTRAINTS.read_text())
+    return list(data.get("events", {}).get(base, []))
 
 
 def format_reference(db, event, spec: dict) -> str:
@@ -493,6 +517,11 @@ def build(event_slug: str, format_key: str, apply: bool) -> dict:
     if not event:
         raise SystemExit(f"unknown event {event_slug!r}")
     reference = format_reference(db, event, spec)
+    constraints = manual_constraints(event.slug)
+    if constraints:
+        print(f"  rules-manual constraints applied: {len(constraints)}")
+    else:
+        print("  no rules-manual constraints recorded for this event")
     source_ids = db.scalars(select(EventSourceMap.source_id).where(
         EventSourceMap.event_id == event.id)).all()
     sources = {s.id: s for s in db.scalars(

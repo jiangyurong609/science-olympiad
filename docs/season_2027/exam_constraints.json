@@ -1,0 +1,46 @@
+{
+  "_source": "Science Olympiad Division B Rules Manual 2027, section 3 of each event.",
+  "_notice": "Constraints an exam must satisfy, derived for internal authoring and audit. Not a reproduction of the rules manual; consult the official manual for authoritative rules.",
+  "_why": "The exam builder knew the SHAPE of a paper, taken from real past tests, and nothing about what the manual forbids. These are the rules a supervisor would apply, written where the generator can read them. Every one is checkable against a finished item.",
+  "events": {
+    "solar-system": [
+      "NO CALCULATOR is permitted. Every numeric item must be solvable by hand: algebraic rearrangement, order-of-magnitude estimation, dimensional analysis, ratios and proportions. Never require a value that needs long division, a logarithm evaluated numerically, or a fourth root taken exactly.",
+      "MINIMIZE TRIVIA. The manual says so in those words. Prefer reasoning, conceptual understanding and reading a figure over recall of a date, a diameter or a mission launch year.",
+      "Ask about the LISTED objects only: Venus, Mars, Ganymede, Europa, Enceladus, Titan, Makemake, 101955 Bennu, 67P/Churyumov-Gerasimenko, and the systems TRAPPIST-1, Kepler-452, LHS 1140. Detailed questions about an object that is not on that list are out of scope, however interesting.",
+      "Weight Solar System objects ABOVE extrasolar systems; the manual asks for that balance explicitly.",
+      "Spacecraft questions are limited to: Venus Express, DAVINCI, VERITAS, Perseverance, Mars Reconnaissance Orbiter, MAVEN, Galileo, Europa Clipper, JUICE, Cassini-Huygens, Dragonfly, OSIRIS-REx, Rosetta, Kepler, JWST, Roman Space Telescope."
+    ],
+    "thermodynamics": [
+      "AT LEAST THREE questions from each of these areas: (1) systems, intensive and extensive properties, definition of temperature, the zeroth law, temperature scales and conversions, heat-related units; (2) phases of matter, phase transitions, phase diagrams, latent and sensible heat, the ideal gas law; (3) kinds of heat transfer, thermal conductivity, heat capacity, specific heat; (4) processes (adiabatic, isothermal, isochoric, isobaric), cycles, engines, efficiency, the first and second laws; (5) the historical contributions of Kelvin, Joseph Black, Joule, Carnot, Planck, Clausius, Boltzmann and Maxwell.",
+      "Radiant exitance, blackbody radiation, the Stefan-Boltzmann law and the third law are STATE AND NATIONAL ONLY. Do not put them on a regional paper.",
+      "Mathematics is limited to arithmetic (including ratios, exponents and absolute value), simple algebra (solving one equation for one variable) and simple geometry (area or volume of common shapes). NO TRIGONOMETRY AND NO CALCULUS may be required by any item.",
+      "Unless an item says otherwise, answers are in metric units with appropriate significant figures."
+    ],
+    "water-quality": [
+      "The written paper is three equal parts, 30% each: Marine and Estuary Ecology; Coral Reef Macroflora and Fauna Identification; Water Monitoring and Analysis. Build to those proportions. The remaining 10% is the salinometer device, which is not part of a written paper.",
+      "Identification is COMMON NAME ONLY, and only for the organisms the manual lists. Also expect general ecology, life cycle and feeding habits for each listed organism.",
+      "Region is examinable: the manual groups its organisms as found around the globe, Indo-Pacific only, or Atlantic only.",
+      "Monitoring covers salinity, pH, phosphates, turbidity, dissolved oxygen, temperature, nitrates, fecal coliform, total solids, biochemical oxygen demand and aragonite saturation, AND THE RELATIONSHIPS BETWEEN THEM. No item may ask the student to perform a physical laboratory test.",
+      "A Class II calculator is permitted."
+    ],
+    "meteorology": [
+      "The rotating topic is SEVERE WEATHER AND STORMS. Ordinary climate, seasons and general weather belong to a different year's paper.",
+      "A Class II calculator is permitted."
+    ],
+    "botany": [
+      "May be run as a paper test or as a station test, and supervisors provide live or preserved specimens, pictures, tables, graphs, microscopes and slides. Items that read from a specimen or a data display are in the spirit of the event.",
+      "A Class II calculator is permitted."
+    ],
+    "anatomy-and-physiology": [
+      "The systems examined are the RESPIRATORY, DIGESTIVE and IMMUNE systems. No other body system is in scope this year.",
+      "A Class II calculator is permitted."
+    ],
+    "dynamic-planet": [
+      "The rotating topic is EARTH'S FRESH WATERS. Oceanography belongs to a different year's paper."
+    ],
+    "rocks-and-minerals": [
+      "Identification is limited to the specimens on the 2027 National Rocks and Minerals List.",
+      "A station item that names no specimen and shows no photograph cannot be answered at all; every identification item needs its image."
+    ]
+  }
+}
