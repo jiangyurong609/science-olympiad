@@ -62,6 +62,12 @@ DOMAIN_TERM_PATTERNS = {
                   r"sinkhole|cave|limestone|dissolv|lake|reservoir|wetland|marsh|swamp|bog|"
                   r"porosity|permeab|hydraulic|gradient|velocity|storage|residence|budget|"
                   r"gauge|stage|hydrograph|bank|bed|gravel|silt|clay|sand|valley|slope"),
+    "botany": (r"plant|leaf|leaves|root|stem|flower|seed|pollen|pollinat|photosynth|chloroplast|"
+               r"chlorophyll|stomat|xylem|phloem|vascular|cuticle|transpir|meristem|cambium|"
+               r"cotyledon|monocot|dicot|angiosperm|gymnosperm|bryophyte|fern|spore|gametophyte|"
+               r"sporophyte|germinat|hormone|auxin|tropism|nutrient|nitrogen|cellulose|"
+               r"cell wall|vacuole|respirat|stoma|petal|sepal|stamen|carpel|ovule|fruit|"
+               r"taxonom|species|genus|evolution|fossil|pathogen|fungus|deficiency"),
     "physics": (r"energy|force|motion|velocity|speed|accelerat|momentum|inertia|mass|weight|"
                 r"gravit|friction|roll|slide|torque|lever|pulley|wheel|axle|incline|machine|"
                 r"mechanical advantage|work|power|potential|kinetic|rotat|angular|circular|"
@@ -582,6 +588,45 @@ DOMAIN_SOURCES = {
     # drainage basins and stream networks, fluvial sediment transport and channel form,
     # fluvial landforms, streamflow and floods, groundwater and karst. The USGS Water
     # Science School is a federal work and is the best single teaching source for this event.
+    # 2027 Botany (Division B and C): plant structure, physiology, diversity and ecology.
+    # Every page below was fetched and its extracted text measured before being added; the two
+    # federal candidates tried (USDA hardiness map, NPS plants index) are shells and are absent.
+    "botany": {
+        "publisher": "Wikipedia contributors",
+        "license": "CC-BY-SA 4.0 (facts used with attribution)",
+        "urls": [
+            "https://en.wikipedia.org/wiki/Plant_cell",
+            "https://en.wikipedia.org/wiki/Root",
+            "https://en.wikipedia.org/wiki/Plant_stem",
+            "https://en.wikipedia.org/wiki/Leaf",
+            "https://en.wikipedia.org/wiki/Flower",
+            "https://en.wikipedia.org/wiki/Photosynthesis",
+            "https://en.wikipedia.org/wiki/Xylem",
+            "https://en.wikipedia.org/wiki/Phloem",
+            "https://en.wikipedia.org/wiki/Stomata",
+            "https://en.wikipedia.org/wiki/Transpiration",
+            "https://en.wikipedia.org/wiki/Monocotyledon",
+            "https://en.wikipedia.org/wiki/Dicotyledon",
+            "https://en.wikipedia.org/wiki/Bryophyte",
+            "https://en.wikipedia.org/wiki/Fern",
+            "https://en.wikipedia.org/wiki/Gymnosperm",
+            "https://en.wikipedia.org/wiki/Flowering_plant",
+            "https://en.wikipedia.org/wiki/Alternation_of_generations",
+            "https://en.wikipedia.org/wiki/Pollination",
+            "https://en.wikipedia.org/wiki/Seed",
+            "https://en.wikipedia.org/wiki/Germination",
+            "https://en.wikipedia.org/wiki/Plant_hormone",
+            "https://en.wikipedia.org/wiki/Tropism",
+            "https://en.wikipedia.org/wiki/Meristem",
+            "https://en.wikipedia.org/wiki/Evolutionary_history_of_plants",
+            "https://en.wikipedia.org/wiki/Paleobotany",
+            "https://en.wikipedia.org/wiki/Genetically_modified_crops",
+            "https://en.wikipedia.org/wiki/Plant_pathology",
+            "https://en.wikipedia.org/wiki/Plant_nutrition",
+            "https://en.wikipedia.org/wiki/Cellular_respiration",
+            "https://en.wikipedia.org/wiki/Carbon_cycle",
+        ],
+    },
     "hydrology": {
         "publisher": "USGS Water Science School / National Park Service",
         "license": "public_domain",
@@ -745,6 +790,7 @@ EVENT_DOMAIN = {
     # mechanics events; Thermodynamics is heat transfer, which `physics` does not yet cover
     # and is therefore left out rather than mapped to a set that cannot ground it.
     "roller-coaster": "physics",
+    "botany": "botany",
     "ping-pong-parachute": "physics",
     "elastic-launched-glider": "physics",
     "elastic-launch-glider": "physics",

@@ -1,0 +1,207 @@
+{
+ "event_slug": "botany-b-2027",
+ "season": 2027,
+ "title": "Botany",
+ "summary": "Read a plant the way a botanist does — from cell to organ to whole community — and use structure to explain what the plant is doing.",
+ "objectives": [
+  "Identify plant cell, root, stem, leaf and flower structures and say what each one does.",
+  "Trace water, sugar and nutrients through a plant and explain what drives each movement.",
+  "Place a plant in its major division from observable features.",
+  "Explain photosynthesis and the plant's role in energy and nutrient cycling.",
+  "Diagnose a struggling plant from symptoms, distinguishing deficiency from infection."
+ ],
+ "units": [
+  {
+   "slug": "plant-cells-and-tissues",
+   "title": "Cells and Tissues",
+   "summary": "Everything a plant can do is set by features its cells have and animal cells do not.",
+   "objectives": [
+    "Name the structures that distinguish a plant cell and state each one's function.",
+    "Explain how meristems let a plant keep growing where an animal cannot."
+   ],
+   "lessons": [
+    {
+     "slug": "the-plant-cell",
+     "title": "The Plant Cell",
+     "objective": "Identify the cell wall, chloroplast, central vacuole and plasmodesmata, and explain what each contributes that an animal cell lacks.",
+     "keywords": ["plant cell", "cell wall", "cellulose", "chloroplast", "central vacuole",
+                  "turgor pressure", "plasmodesmata", "plastid"],
+     "high_weight": true,
+     "video": true
+    },
+    {
+     "slug": "meristems-growth-differentiation",
+     "title": "Meristems, Growth, and Differentiation",
+     "objective": "Distinguish apical from lateral meristems and explain primary versus secondary growth.",
+     "keywords": ["meristem", "apical meristem", "lateral meristem", "cambium",
+                  "primary growth", "secondary growth", "differentiation", "woody", "herbaceous"],
+     "high_weight": true
+    }
+   ]
+  },
+  {
+   "slug": "roots-stems-leaves",
+   "title": "Roots, Stems, and Leaves",
+   "summary": "Three organs, one job each, and every structural detail follows from that job.",
+   "objectives": [
+    "Relate root, stem and leaf anatomy to absorption, support and photosynthesis.",
+    "Read a cross-section and name what you are looking at."
+   ],
+   "lessons": [
+    {
+     "slug": "root-structure-and-function",
+     "title": "Roots: Absorption and Anchorage",
+     "objective": "Identify root hairs, cortex, endodermis and the root cap, and explain how water crosses into the vascular cylinder.",
+     "keywords": ["root", "root hair", "root cap", "cortex", "endodermis", "Casparian strip",
+                  "taproot", "fibrous root", "absorption"],
+     "high_weight": true
+    },
+    {
+     "slug": "stems-and-support",
+     "title": "Stems: Support and Transport",
+     "objective": "Describe stem anatomy and explain how vascular bundle arrangement differs between monocots and dicots.",
+     "keywords": ["stem", "node", "internode", "vascular bundle", "pith", "cortex",
+                  "bark", "wood", "herbaceous", "woody"]
+    },
+    {
+     "slug": "leaves-and-photosynthetic-surface",
+     "title": "Leaves: The Photosynthetic Surface",
+     "objective": "Identify epidermis, cuticle, mesophyll layers, veins and stomata, and explain the trade-off a stoma manages.",
+     "keywords": ["leaf", "cuticle", "epidermis", "palisade mesophyll", "spongy mesophyll",
+                  "stomata", "guard cell", "vein", "gas exchange"],
+     "high_weight": true,
+     "video": true
+    }
+   ]
+  },
+  {
+   "slug": "transport",
+   "title": "Moving Water, Sugar, and Nutrients",
+   "summary": "Two transport tissues, two entirely different mechanisms — this is the distinction tests reach for most.",
+   "objectives": [
+    "Contrast xylem and phloem in structure, contents, direction and driving force.",
+    "Explain transpiration and what changes its rate."
+   ],
+   "lessons": [
+    {
+     "slug": "xylem-and-transpiration",
+     "title": "Xylem and the Transpiration Stream",
+     "objective": "Explain how cohesion, adhesion and tension move water upward without the plant spending energy on it.",
+     "keywords": ["xylem", "tracheid", "vessel element", "transpiration", "cohesion",
+                  "adhesion", "tension", "water potential", "stomata", "guard cell"],
+     "high_weight": true
+    },
+    {
+     "slug": "phloem-and-sugar-transport",
+     "title": "Phloem and Sugar Transport",
+     "objective": "Explain pressure-flow from source to sink and say why phloem transport requires living cells.",
+     "keywords": ["phloem", "sieve tube", "companion cell", "translocation", "source", "sink",
+                  "pressure flow", "sucrose", "loading"],
+     "high_weight": true
+    },
+    {
+     "slug": "plant-nutrition-and-deficiency",
+     "title": "Nutrients and What Their Absence Looks Like",
+     "objective": "Distinguish macronutrients from micronutrients and read a deficiency from where and how symptoms appear.",
+     "keywords": ["plant nutrition", "macronutrient", "micronutrient", "nitrogen", "phosphorus",
+                  "potassium", "chlorosis", "necrosis", "mobile nutrient", "deficiency"]
+    }
+   ]
+  },
+  {
+   "slug": "photosynthesis-and-energy",
+   "title": "Photosynthesis and Energy",
+   "summary": "The reaction the whole event orbits, and the plant's place in the cycles it drives.",
+   "objectives": [
+    "State the inputs, outputs and location of each stage of photosynthesis.",
+    "Explain the plant's role in the carbon and energy cycles."
+   ],
+   "lessons": [
+    {
+     "slug": "photosynthesis",
+     "title": "Photosynthesis: Light and Carbon",
+     "objective": "Separate the light-dependent reactions from the Calvin cycle by location, inputs and outputs.",
+     "keywords": ["photosynthesis", "chlorophyll", "thylakoid", "stroma", "light-dependent",
+                  "Calvin cycle", "carbon dioxide", "glucose", "oxygen", "ATP", "NADPH"],
+     "high_weight": true,
+     "video": true
+    },
+    {
+     "slug": "respiration-and-nutrient-cycles",
+     "title": "Respiration and the Cycles Plants Drive",
+     "objective": "Contrast photosynthesis with cellular respiration and place plants in the carbon and nitrogen cycles.",
+     "keywords": ["cellular respiration", "carbon cycle", "nitrogen cycle", "decomposition",
+                  "primary producer", "biomass", "energy flow", "nitrogen fixation"]
+    }
+   ]
+  },
+  {
+   "slug": "diversity-and-reproduction",
+   "title": "Plant Diversity and Reproduction",
+   "summary": "Place any plant in its group from what you can see, and explain how each group reproduces.",
+   "objectives": [
+    "Distinguish the major plant divisions by vascular tissue, seeds and flowers.",
+    "Explain alternation of generations and how it shifts across the divisions."
+   ],
+   "lessons": [
+    {
+     "slug": "major-plant-divisions",
+     "title": "The Major Plant Divisions",
+     "objective": "Separate algae, bryophytes, ferns, gymnosperms and angiosperms by vascular tissue, seeds and flowers, and distinguish monocots from dicots.",
+     "keywords": ["algae", "bryophyte", "moss", "fern", "gymnosperm", "angiosperm",
+                  "vascular", "seed", "monocot", "dicot", "cryptogam", "embryophyte"],
+     "high_weight": true
+    },
+    {
+     "slug": "alternation-of-generations",
+     "title": "Alternation of Generations",
+     "objective": "Trace the sporophyte and gametophyte stages and explain which dominates in each major group.",
+     "keywords": ["alternation of generations", "sporophyte", "gametophyte", "spore",
+                  "gamete", "haploid", "diploid", "meiosis", "fertilization"],
+     "high_weight": true
+    },
+    {
+     "slug": "flowers-pollination-seeds",
+     "title": "Flowers, Pollination, and Seeds",
+     "objective": "Identify flower parts and follow the path from pollination through fertilisation to seed and fruit.",
+     "keywords": ["flower", "sepal", "petal", "stamen", "anther", "carpel", "stigma", "ovule",
+                  "pollination", "fertilization", "seed", "fruit", "germination"],
+     "high_weight": true,
+     "video": true
+    }
+   ]
+  },
+  {
+   "slug": "plants-and-people",
+   "title": "Plants, People, and Problems",
+   "summary": "Plants in competition, plants under attack, and plants put to work.",
+   "objectives": [
+    "Explain how plants compete and respond to their environment.",
+    "Distinguish infection from deficiency and describe how crops are modified."
+   ],
+   "lessons": [
+    {
+     "slug": "growth-responses-and-competition",
+     "title": "Growth Responses and Competition",
+     "objective": "Explain tropisms and hormone action, and describe how plants compete for light, water and nutrients.",
+     "keywords": ["plant hormone", "auxin", "gibberellin", "tropism", "phototropism",
+                  "gravitropism", "competition", "shade", "allelopathy", "succession"]
+    },
+    {
+     "slug": "plant-disease-and-human-use",
+     "title": "Plant Disease, Crops, and GMOs",
+     "objective": "Distinguish a pathogen-caused disease from a nutrient deficiency, and explain what a genetically modified crop is.",
+     "keywords": ["plant pathology", "pathogen", "fungus", "bacteria", "virus", "blight",
+                  "rust", "genetically modified", "crop", "breeding", "food production"]
+    },
+    {
+     "slug": "paleobotany-and-plant-evolution",
+     "title": "Paleobotany and Plant Evolution",
+     "objective": "Order the major innovations in plant evolution and explain what each one made possible on land.",
+     "keywords": ["paleobotany", "plant evolution", "fossil", "land plants", "vascular tissue",
+                  "seed", "flower", "Devonian", "Carboniferous", "colonization of land"]
+    }
+   ]
+  }
+ ]
+}

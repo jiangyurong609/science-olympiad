@@ -45,6 +45,14 @@ and blocks. The blocks must form this learning rhythm:
 3. at least three checkpoint blocks spread through the lesson;
 4. one summary block last with key points and next_step.
 
+If the supplied passages cannot support this lesson's objective, return
+{"insufficient_evidence": "<what is missing>"} and NOTHING ELSE. Do not write a lesson about
+what the sources fail to say. NEVER write a card, a step, an explanation or an answer choice
+asserting that something is "not defined", "not supplied", "not provided", "not described",
+"cannot be determined" or "must not be inferred", and NEVER make such a statement the correct
+answer. A checkpoint keyed to the absence of evidence teaches a student nothing and silently
+removes a required topic from the course. An honest empty result is far better.
+
 Every teaching block and checkpoint MUST contain passage_ids using only IDs supplied in
 the prompt. A checkpoint must contain id, heading, question, exactly four choices,
 correct_index, explanation, misconception_by_choice for every incorrect choice,
@@ -142,10 +150,45 @@ def _prompt(blueprint: dict, unit: dict, lesson: dict, passages: list[SourcePass
     })
 
 
+# The author is told not to invent facts, and was never told what to do when the passages do
+# not cover its objective — so it wrote lessons ABOUT the absence and keyed the answer to them.
+# Nine Dynamic Planet checkpoints keyed to "the supplied evidence does not define this", for
+# continentality, lake effect, sinuosity, turnover, wetland types and alluvial fans: in-scope
+# topics deleted from the course, with the deletion graded. The prompt now forbids it and this
+# refuses it, because a prompt is a request and a validator is a guarantee.
+ABSENCE = re.compile(
+    r"\b(not|never)\s+(defined|supplied|provided|described|stated|specified|given|available)\b|"
+    r"\bcannot\s+be\s+(determined|inferred|justified|assigned|established|distinguished)\b|"
+    r"\bmust\s+not\s+be\s+inferred\b|\bis\s+not\s+(supported|established)\s+by\b|"
+    r"\bthe\s+(supplied|available)\s+(evidence|material|description|sources?)\b|"
+    r"\bappears?\s+in\s+the\s+supplied\s+list\b|\bno\s+.{0,30}\s+is\s+(supplied|provided)\b",
+    re.I)
+
+
+def _reject_absence_content(blocks: list[dict]) -> None:
+    """Refuse a lesson that teaches, or grades, the absence of its own evidence."""
+    for block in blocks:
+        if block.get("type") == "checkpoint":
+            choices = block.get("choices") or []
+            key = block.get("correct_index")
+            if isinstance(key, int) and 0 <= key < len(choices) and ABSENCE.search(str(choices[key])):
+                raise ValueError("checkpoint is keyed to the absence of evidence")
+            if ABSENCE.search(str(block.get("explanation") or "")):
+                raise ValueError("checkpoint explanation asserts the evidence is missing")
+        text = json.dumps({k: v for k, v in block.items() if k != "passage_ids"})
+        if len(ABSENCE.findall(text)) >= 2:
+            raise ValueError(f"{block.get('type')} block is written about missing evidence")
+
+
 def _normalize_blocks(raw: dict, allowed_passage_ids: set[int], lesson_slug: str) -> list[dict]:
+    if isinstance(raw, dict) and raw.get("insufficient_evidence"):
+        # The honest empty result. Better an absent lesson, recorded as a gap, than a lesson
+        # that teaches students the sources were quiet.
+        raise ValueError(f"insufficient evidence: {str(raw['insufficient_evidence'])[:160]}")
     blocks = raw.get("blocks") if isinstance(raw, dict) else None
     if not isinstance(blocks, list):
         raise ValueError("model returned no lesson blocks")
+    _reject_absence_content([b for b in blocks if isinstance(b, dict)])
     normalized = []
     checkpoint_index = 0
     for block in blocks:
