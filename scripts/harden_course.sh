@@ -40,17 +40,20 @@ for (( round=1; round<=ROUNDS; round++ )); do
   out="$(env -u OPENAI_API_KEY python -m scripts.agentic_course_review \
           --event "$EVENT" --include-drafts --apply 2>&1)"
   echo "$out" | tail -20
-  # Per-lesson lines only. The summary block ends with its own tally — "  reject      6" —
-  # which matches a looser pattern and inflated every count by two, so a clean course would
-  # still have reported faults to repair. Requiring an event slug after the decision is what
-  # distinguishes a finding from a total.
-  faults="$(echo "$out" | grep -cE '^  (reject|revise)[[:space:]]+[a-z][a-z0-9-]+[[:space:]]')"
+  # Ask the DATABASE which lessons stand faulted at their current version, rather than
+  # counting fault lines in the reviewer's output. The reviewer SKIPS a lesson whose current
+  # version it has already judged, so a course with four standing rejections and nothing new
+  # to read prints no fault lines at all — and this loop read that silence as success and
+  # stopped. It reported "clean after 1 round" at the exact moment it had run out of things
+  # to try. A gate that cannot fail is not a gate.
+  faults="$(env -u OPENAI_API_KEY python -m scripts.faulted_lessons --event "$EVENT" --quiet)"
   if [[ "$faults" -eq 0 ]]; then
     echo "=============== $EVENT — clean after $round round(s)"
     exit 0
   fi
   if [[ "$round" -eq "$ROUNDS" ]]; then
     echo "=============== $EVENT — STILL FAULTED after $ROUNDS rounds ($faults lessons)" >&2
+    env -u OPENAI_API_KEY python -m scripts.faulted_lessons --event "$EVENT" >&2 || true
     exit 1
   fi
   echo "=============== $EVENT — repairing $faults lesson(s)"
