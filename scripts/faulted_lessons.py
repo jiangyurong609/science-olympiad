@@ -9,8 +9,13 @@ gate, and this one reported success precisely when there was nothing left to try
 The decisions are in the database either way. Asking it is both correct and independent of how
 much the last review happened to print.
 
+A second state matters just as much and is easy to mistake for success: a lesson REPAIRED
+since the last review carries no decision at its new version at all. It is not faulted, and it
+is also not cleared — nothing has read what is there now. Counting only faults, a course whose
+every lesson had just been rewritten would report zero and look finished.
+
     DATABASE_URL=... PYTHONPATH=. python -m scripts.faulted_lessons --event solar-system-b-2027
-    # prints one slug per line; exit 0 if any are faulted, 1 if the course is clean
+    # prints one line per lesson; exit 0 if any are faulted OR unreviewed, 1 if all are clear
 """
 from __future__ import annotations
 
@@ -50,19 +55,42 @@ def faulted(db, event_slug: str) -> list[tuple[str, str, str]]:
     return list(seen.values())
 
 
+def unreviewed(db, event_slug: str) -> list[str]:
+    """Lessons with no automated decision at the version they are currently serving."""
+    event = db.scalar(select(Event).where(Event.slug == event_slug))
+    if event is None:
+        raise SystemExit(f"unknown event {event_slug!r}")
+    judged = set(db.scalars(
+        select(Lesson.slug)
+        .join(ReviewDecision, and_(
+            ReviewDecision.entity_type == "lesson",
+            ReviewDecision.entity_id == Lesson.id,
+            ReviewDecision.entity_version == Lesson.current_version,
+        ))
+        .where(Lesson.event_id == event.id, ReviewDecision.stage == "automated")
+    ).all())
+    everything = set(db.scalars(
+        select(Lesson.slug).where(Lesson.event_id == event.id)).all())
+    return sorted(everything - judged)
+
+
 def main() -> None:
     parser = argparse.ArgumentParser()
     parser.add_argument("--event", required=True)
-    parser.add_argument("--quiet", action="store_true", help="print only the count")
+    parser.add_argument("--quiet", action="store_true",
+                        help="print only the count of lessons not yet cleared")
     args = parser.parse_args()
     with SessionLocal() as db:
         rows = faulted(db, args.event)
+        pending = unreviewed(db, args.event)
     if args.quiet:
-        print(len(rows))
+        print(len(rows) + len(pending))
     else:
         for slug, decision, notes in rows:
-            print(f"{decision:8} {slug}  {notes}")
-    sys.exit(0 if rows else 1)
+            print(f"{decision:10} {slug}  {notes}")
+        for slug in pending:
+            print(f"{'unreviewed':10} {slug}  (no decision at its current version)")
+    sys.exit(0 if (rows or pending) else 1)
 
 
 if __name__ == "__main__":
