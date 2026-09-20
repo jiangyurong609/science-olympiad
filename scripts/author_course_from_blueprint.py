@@ -45,9 +45,16 @@ and blocks. The blocks must form this learning rhythm:
 3. at least three checkpoint blocks spread through the lesson;
 4. one summary block last with key points and next_step.
 
-If the supplied passages cannot support this lesson's objective, return
+If the supplied passages cannot support ANY of this lesson's objective, return
 {"insufficient_evidence": "<what is missing>"} and NOTHING ELSE. Do not write a lesson about
-what the sources fail to say. NEVER write a card, a step, an explanation or an answer choice
+what the sources fail to say.
+
+If the passages support MOST of the objective but not all of it, WRITE THE LESSON for the part
+they do support, and list the rest in a top-level "uncovered" array of short phrases. Do not
+refuse a whole lesson over one unsupported clause: a lesson that teaches four of five things
+well, and says plainly which fifth is missing, is worth far more to a student than no lesson at
+all, and the missing piece is recorded as a content gap for a human to source. Simply omit the
+unsupported material from the blocks — never mention its absence inside the lesson itself. NEVER write a card, a step, an explanation or an answer choice
 asserting that something is "not defined", "not supplied", "not provided", "not described",
 "cannot be determined" or "must not be inferred", and NEVER make such a statement the correct
 answer. A checkpoint keyed to the absence of evidence teaches a student nothing and silently
@@ -92,8 +99,22 @@ def _select_passages(
     keywords: list[str],
     *,
     require_video: bool,
-    limit: int = 10,
+    # 10 passages is roughly 21,000 characters, and it was the binding constraint on whether a
+    # lesson could be authored at all. The model's context is not the scarce resource here;
+    # 24 passages is about 58,000 characters and well within it.
+    limit: int = 24,
 ) -> list[SourcePassage]:
+    """Cover every keyword first, then fill by relevance.
+
+    Ranking purely by total keyword hits looked sensible and quietly starved the specific.
+    A lesson on fluvial landforms lists thirteen keywords; the top of that ranking fills with
+    passages that say "floodplain" and "point bar" many times each, and the ONE passage that
+    explains how an alluvial fan forms — from a page that is in the source set for exactly
+    that reason — never makes the cut. The author then reported alluvial fans as unsupported,
+    which reads as a gap in the corpus and was a gap in the selection.
+
+    So each keyword gets its best passage before any keyword gets its second.
+    """
     scored = sorted(
         (
             (_passage_score(passage, sources[passage.source_id], keywords), passage)
@@ -103,7 +124,12 @@ def _select_passages(
         reverse=True,
     )
     selected: list[SourcePassage] = []
-    used_sources: set[int] = set()
+    chosen_ids: set[int] = set()
+
+    def take(passage: SourcePassage) -> None:
+        selected.append(passage)
+        chosen_ids.add(passage.id)
+
     if require_video:
         video = next(
             (passage for score, passage in scored
@@ -111,27 +137,37 @@ def _select_passages(
             None,
         )
         if video:
-            selected.append(video)
-            used_sources.add(video.source_id)
-    for score, passage in scored:
-        if score <= 0 or passage.id in {row.id for row in selected}:
-            continue
+            take(video)
+
+    # One pass per keyword, in the blueprint's own order, so the terms an author named are the
+    # terms it actually gets evidence for.
+    for term in keywords:
         if len(selected) >= limit:
             break
-        # Start with source diversity, then fill remaining slots by relevance.
-        if passage.source_id in used_sources and len(used_sources) < 4:
-            continue
-        selected.append(passage)
-        used_sources.add(passage.source_id)
-    if len(selected) < limit:
-        for score, passage in scored:
-            if score <= 0 or passage.id in {row.id for row in selected}:
-                continue
-            selected.append(passage)
+        needle = term.lower()
+        best = next(
+            (passage for score, passage in scored
+             if passage.id not in chosen_ids and score > 0
+             and needle in f"{passage.heading} {passage.text}".lower()),
+            None,
+        )
+        if best is not None:
+            take(best)
+
+    # Remaining slots by overall relevance, preferring a source not yet drawn on.
+    used_sources = {passage.source_id for passage in selected}
+    for pool in (
+        [p for score, p in scored if score > 0 and p.source_id not in used_sources],
+        [p for score, p in scored if score > 0],
+    ):
+        for passage in pool:
             if len(selected) >= limit:
                 break
+            if passage.id in chosen_ids:
+                continue
+            take(passage)
+            used_sources.add(passage.source_id)
     return selected
-
 
 def _prompt(blueprint: dict, unit: dict, lesson: dict, passages: list[SourcePassage],
             sources: dict[int, Source]) -> str:
@@ -569,6 +605,29 @@ def author(*, apply: bool, generate: bool, regenerate: bool = False,
                     content=generated["blocks"], claim_ids=[], citations=citations,
                     review_status="ai_draft",
                 ))
+                # Whatever the sources could not support is recorded here, as a gap a human
+                # can close by finding a source — NOT written into the lesson. Before this,
+                # the author's only two moves were to teach an unsupported claim or to refuse
+                # the whole lesson, and it spent ten consecutive refusals declining to teach
+                # four-fifths of a subject because one clause was unsourced.
+                uncovered = [str(item)[:200] for item in
+                             (generated["payload"].get("uncovered") or []) if str(item).strip()]
+                if uncovered:
+                    note = "; ".join(uncovered)[:1000]
+                    gap = db.scalar(select(ContentGap).where(
+                        ContentGap.skill_id == skill.id,
+                        ContentGap.gap_type == "source_support",
+                    ))
+                    if gap is None:
+                        db.add(ContentGap(
+                            course_id=course.id, unit_id=unit.id, skill_id=skill.id,
+                            gap_type="source_support",
+                            description=f"Authored without source support for: {note}",
+                        ))
+                    else:
+                        gap.description = f"Authored without source support for: {note}"
+                    report.setdefault("uncovered", []).append(
+                        {"lesson": lesson_data["slug"], "missing": uncovered})
                 link = db.scalar(select(LessonSkill).where(
                     LessonSkill.lesson_id == lesson.id,
                     LessonSkill.skill_id == skill.id,

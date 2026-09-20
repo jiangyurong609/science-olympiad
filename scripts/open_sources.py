@@ -43,6 +43,24 @@ HOST_RIGHTS = {
                          "publisher": "NOAA Storm Prediction Center"},
     "www.epa.gov": {"rights_status": "public_domain", "license_name": "public_domain",
                     "publisher": "U.S. Environmental Protection Agency"},
+    "oceanservice.noaa.gov": {"rights_status": "public_domain", "license_name": "public_domain",
+                              "publisher": "NOAA National Ocean Service"},
+    "www.pmel.noaa.gov": {"rights_status": "public_domain", "license_name": "public_domain",
+                          "publisher": "NOAA Pacific Marine Environmental Laboratory"},
+    "www.nhlbi.nih.gov": {"rights_status": "public_domain", "license_name": "public_domain",
+                          "publisher": "National Heart, Lung, and Blood Institute"},
+    "www.niddk.nih.gov": {"rights_status": "public_domain", "license_name": "public_domain",
+                          "publisher": "National Institute of Diabetes and Digestive and Kidney Diseases"},
+    "www.niaid.nih.gov": {"rights_status": "public_domain", "license_name": "public_domain",
+                          "publisher": "National Institute of Allergy and Infectious Diseases"},
+    "www.niams.nih.gov": {"rights_status": "public_domain", "license_name": "public_domain",
+                          "publisher": "National Institute of Arthritis and Musculoskeletal and Skin Diseases"},
+    "medlineplus.gov": {"rights_status": "public_domain", "license_name": "public_domain",
+                        "publisher": "MedlinePlus, U.S. National Library of Medicine"},
+    "www.cdc.gov": {"rights_status": "public_domain", "license_name": "public_domain",
+                    "publisher": "Centers for Disease Control and Prevention"},
+    "www.cancer.gov": {"rights_status": "public_domain", "license_name": "public_domain",
+                       "publisher": "National Cancer Institute"},
 }
 
 # Hosts that refuse our crawler, recorded so the same URLs are not tried again. opentextbc.ca
@@ -132,6 +150,36 @@ DOMAIN_TERM_PATTERNS = {
                      r"arthus|autoimmun|lupus|sclerod|psoria|multiple sclerosis|rheumatoid|"
                      r"hashimoto|graves|transplant|allograft|autograft|reject|car-t|"
                      r"immunotherap|vaccin|cytokine|interleukin|receptor|cell|tissue|organ"),
+    "water_quality_marine": (r"water|marine|ocean|sea|estuar|coast|reef|coral|polyp|"
+                            r"zooxanthell|symbio|algae|seagrass|mangrove|plankton|fish|"
+                            r"invertebrate|urchin|lobster|shrimp|clam|sponge|snail|eel|"
+                            r"grouper|parrotfish|snapper|wrasse|starfish|cucumber|"
+                            r"salinity|saline|brackish|halocline|density|hydrometer|"
+                            r"salinomet|dissolved oxygen|oxygen|turbid|secchi|nephelomet|"
+                            r"ph\b|acid|alkalin|nitrate|nitrogen|phosphate|phosphorus|"
+                            r"nutrient|coliform|bacteria|solids|biochemical oxygen|bod|"
+                            r"aragonite|saturation|carbonate|calcif|temperature|thermocline|"
+                            r"bleach|disease|indicator|bioindicat|monitor|sampl|parameter|"
+                            r"pollut|runoff|sediment|siltat|nonpoint|eutroph|hypox|dead zone|"
+                            r"bloom|red tide|debris|plastic|pfas|contaminant|treatment|"
+                            r"potable|wastewater|sewage|watershed|drainage|basin|cycle|"
+                            r"food web|trophic|predat|herbivor|graz|population|ecosystem|"
+                            r"habitat|distribution|indo-pacific|atlantic|protected area"),
+    # The `physics` pattern covers motion and force and barely touches heat: grounding
+    # Thermodynamics against it rejects most of its best sentences as off_topic, because a page
+    # on entropy, emissivity or the Carnot cycle contains almost none of its vocabulary.
+    "thermodynamics": (r"thermodynam|thermal|heat|temperature|kelvin|celsius|fahrenheit|"
+                       r"absolute zero|thermomet|triple point|entropy|enthalpy|internal energy|"
+                       r"adiabat|isotherm|isochor|isobar|calor|joule|btu|boltzmann|"
+                       r"specific heat|heat capacity|latent|sensible|fusion|vaporiz|"
+                       r"phase|state of matter|melt|freez|boil|condens|sublim|"
+                       r"ideal gas|pressure|volume|mole|kinetic theory|molecul|"
+                       r"conduct|convect|radiat|emissiv|absorptan|absorb|reflect|albedo|"
+                       r"blackbody|black-body|planck|stefan|wien|irradian|exitance|flux|"
+                       r"insulat|r-value|aerogel|radiant barrier|thermal mass|greenhouse|"
+                       r"vacuum flask|equilibrium|carnot|otto|brayton|engine|cycle|"
+                       r"efficien|work|energy|power|watt|reservoir|inverse-square|"
+                       r"significant figure|si unit|metric|conversion"),
     "physics": (r"energy|force|motion|velocity|speed|accelerat|momentum|inertia|mass|weight|"
                 r"gravit|friction|roll|slide|torque|lever|pulley|wheel|axle|incline|machine|"
                 r"mechanical advantage|work|power|potential|kinetic|rotat|angular|circular|"
@@ -655,40 +703,302 @@ DOMAIN_SOURCES = {
     # 2027 Botany (Division B and C): plant structure, physiology, diversity and ecology.
     # Every page below was fetched and its extracted text measured before being added; the two
     # federal candidates tried (USDA hardiness map, NPS plants index) are shells and are absent.
+    # Botany, a 2027 event with no course in either division. 102 pages measured with
+    # `ground_event._fetch`, no two bodies identical — replacing a 30-URL set that covered
+    # barely a third of the manual's topics.
+    #
+    # `www.usda.gov` returns 403 to this crawler, the way weather.gov does, so the main USDA
+    # site is unusable; `fs.usda.gov` and `aphis.usda.gov` answer fine and carry the
+    # ethnobotany, pollination, invasives and GMO-regulation material. `ars.usda.gov` returned
+    # 502 on everything tried, which is why nutrient-deficiency symptoms rest on Wikipedia.
+    #
+    # Two NPS entries are lesson plans: real content on stomata, carbon movement and leaf
+    # adaptation, interleaved with classroom procedure ("have groups switch plants"). They
+    # pass the length bar honestly and will carry fewer claims than their size suggests.
     "botany": {
-        "publisher": "Wikipedia contributors",
-        "license": "CC-BY-SA 4.0 (facts used with attribution)",
+        "publisher": "Wikipedia contributors / USDA Forest Service / NPS / NASA / DOE",
+        "license": "public_domain (federal) and CC-BY-SA 4.0 (Wikipedia, facts with attribution)",
         "urls": [
-            "https://en.wikipedia.org/wiki/Plant_cell",
-            "https://en.wikipedia.org/wiki/Root",
-            "https://en.wikipedia.org/wiki/Plant_stem",
-            "https://en.wikipedia.org/wiki/Leaf",
-            "https://en.wikipedia.org/wiki/Flower",
-            "https://en.wikipedia.org/wiki/Photosynthesis",
-            "https://en.wikipedia.org/wiki/Xylem",
-            "https://en.wikipedia.org/wiki/Phloem",
-            "https://en.wikipedia.org/wiki/Stomata",
-            "https://en.wikipedia.org/wiki/Transpiration",
-            "https://en.wikipedia.org/wiki/Monocotyledon",
-            "https://en.wikipedia.org/wiki/Dicotyledon",
-            "https://en.wikipedia.org/wiki/Bryophyte",
-            "https://en.wikipedia.org/wiki/Fern",
-            "https://en.wikipedia.org/wiki/Gymnosperm",
-            "https://en.wikipedia.org/wiki/Flowering_plant",
-            "https://en.wikipedia.org/wiki/Alternation_of_generations",
-            "https://en.wikipedia.org/wiki/Pollination",
-            "https://en.wikipedia.org/wiki/Seed",
-            "https://en.wikipedia.org/wiki/Germination",
-            "https://en.wikipedia.org/wiki/Plant_hormone",
-            "https://en.wikipedia.org/wiki/Tropism",
-            "https://en.wikipedia.org/wiki/Meristem",
-            "https://en.wikipedia.org/wiki/Evolutionary_history_of_plants",
-            "https://en.wikipedia.org/wiki/Paleobotany",
-            "https://en.wikipedia.org/wiki/Genetically_modified_crops",
-            "https://en.wikipedia.org/wiki/Plant_pathology",
-            "https://en.wikipedia.org/wiki/Plant_nutrition",
-            "https://en.wikipedia.org/wiki/Cellular_respiration",
-            "https://en.wikipedia.org/wiki/Carbon_cycle",
+            # --- plant cell
+            "https://en.wikipedia.org/wiki/Plant_cell",  # organelles, plastids, plasmodesmata
+            "https://en.wikipedia.org/wiki/Cell_wall",  # primary and secondary wall, cellulose, lignin
+            "https://en.wikipedia.org/wiki/Vacuole",  # central vacuole, turgor, tonoplast
+            "https://en.wikipedia.org/wiki/Chloroplast",  # thylakoid and stroma, endosymbiosis
+            # --- root stem leaf
+            "https://en.wikipedia.org/wiki/Root",  # root cap, zones, taproot vs fibrous, mycorrhizae
+            "https://en.wikipedia.org/wiki/Plant_stem",  # nodes, internodes, stem modifications
+            "https://en.wikipedia.org/wiki/Leaf",  # blade and petiole, venation, mesophyll
+            "https://en.wikipedia.org/wiki/Plant_anatomy",  # tissue systems
+            "https://en.wikipedia.org/wiki/Plant_morphology",  # external form, growth habit
+            "https://www.nps.gov/articles/the-advantages-of-having-green-stems-in-arid-environments.htm",  # stem photosynthesis, arid adaptation
+            "https://www.fs.usda.gov/wildflowers/beauty/ferns/structure.shtml",  # frond, rhizome, pinnae
+            # --- reproductive structures
+            "https://en.wikipedia.org/wiki/Flower",  # sepal, petal, stamen, carpel
+            "https://en.wikipedia.org/wiki/Sporangium",  # sporangia, sori
+            "https://en.wikipedia.org/wiki/Plant_reproductive_morphology",  # flower and cone reproductive parts
+            "https://en.wikipedia.org/wiki/Alternation_of_generations",  # sporophyte and gametophyte
+            # --- growth
+            "https://en.wikipedia.org/wiki/Meristem",  # apical and lateral meristems, primary vs secondary growth
+            "https://en.wikipedia.org/wiki/Plant_hormone",  # auxin, gibberellin, cytokinin, ABA, ethylene
+            "https://en.wikipedia.org/wiki/Auxin",  # polar transport, apical dominance
+            "https://en.wikipedia.org/wiki/Tropism",  # photo, gravi and thigmotropism
+            "https://en.wikipedia.org/wiki/Vascular_cambium",  # secondary xylem and phloem, growth rings
+            "https://en.wikipedia.org/wiki/Germination",  # imbibition, dormancy, seedling emergence
+            # --- transport
+            "https://en.wikipedia.org/wiki/Xylem",  # tracheids, vessels, cohesion-tension
+            "https://en.wikipedia.org/wiki/Phloem",  # sieve elements, companion cells, translocation
+            "https://en.wikipedia.org/wiki/Vascular_tissue",  # vascular bundles
+            "https://en.wikipedia.org/wiki/Transpiration",  # transpiration stream, rates and controls
+            "https://en.wikipedia.org/wiki/Stoma",  # guard cells, gas exchange
+            "https://en.wikipedia.org/wiki/Plant_physiology",  # water relations, nutrition, growth control
+            "https://en.wikipedia.org/wiki/Plant_nutrition",  # macro and micronutrients, deficiency symptoms
+            # --- diversity
+            "https://en.wikipedia.org/wiki/Algae",  # algal groups, pigments, distinction from land plants
+            "https://en.wikipedia.org/wiki/Embryophyte",  # land plant lineages
+            "https://en.wikipedia.org/wiki/Woody_plant",  # wood formation, trees vs shrubs
+            "https://en.wikipedia.org/wiki/Herbaceous_plant",  # annual, biennial, perennial
+            "https://en.wikipedia.org/wiki/Wood",  # heartwood and sapwood, rings
+            "https://www.fs.usda.gov/wildflowers/beauty/ferns/what.shtml",  # ferns vs seed plants, spores not seeds
+            "https://en.wikipedia.org/wiki/Monocotyledon",  # monocot characters and families
+            "https://en.wikipedia.org/wiki/Dicotyledon",  # dicot characters, eudicot split
+            "https://en.wikipedia.org/wiki/Cryptogam",  # the historical cryptogam grouping
+            "https://en.wikipedia.org/wiki/Plant_taxonomy",  # ranks, classification, APG
+            "https://en.wikipedia.org/wiki/Bryophyte",  # mosses, liverworts, hornworts
+            "https://en.wikipedia.org/wiki/Moss",  # moss structure and life cycle
+            "https://en.wikipedia.org/wiki/Fern",  # fern life cycle, prothallus
+            "https://en.wikipedia.org/wiki/Gymnosperm",  # naked seeds, four extant groups
+            "https://en.wikipedia.org/wiki/Conifer",  # cones, needles, conifer wood
+            "https://en.wikipedia.org/wiki/Flowering_plant",  # angiosperm traits, double fertilization
+            # --- history
+            "https://en.wikipedia.org/wiki/History_of_botany",  # Theophrastus to modern systematics
+            "https://en.wikipedia.org/wiki/Botany",  # scope and subdisciplines
+            # --- genetics and reproduction
+            "https://en.wikipedia.org/wiki/Pollination",  # self and cross pollination, vectors
+            "https://en.wikipedia.org/wiki/Pollen",  # pollen grain structure, palynology
+            "https://en.wikipedia.org/wiki/Seed",  # seed coat, endosperm, embryo, dormancy
+            "https://en.wikipedia.org/wiki/Seed_dispersal",  # wind, water, animal, ballistic
+            "https://en.wikipedia.org/wiki/Mendelian_inheritance",  # segregation, independent assortment
+            "https://en.wikipedia.org/wiki/Plant_breeding",  # hybridization and selection
+            "https://www.fs.usda.gov/managing-land/wildflowers/pollinators/what-is-pollination",  # pollination mechanics
+            "https://www.fs.usda.gov/managing-land/wildflowers/pollinators/syndromes",  # pollination syndromes
+            "https://www.fs.usda.gov/wildflowers/pollinators/wind.shtml",  # wind and water pollination
+            "https://www.fs.usda.gov/managing-land/wildflowers/pollinators/who-are-the-pollinators",  # pollinator taxa
+            # --- photosynthesis
+            "https://en.wikipedia.org/wiki/Photosynthesis",  # light and dark reactions, pigments
+            "https://en.wikipedia.org/wiki/Calvin_cycle",  # carbon fixation, RuBisCO
+            "https://en.wikipedia.org/wiki/C4_carbon_fixation",  # C4 anatomy and advantage
+            "https://en.wikipedia.org/wiki/Crassulacean_acid_metabolism",  # CAM night fixation
+            "https://en.wikipedia.org/wiki/Cellular_respiration",  # glycolysis, Krebs, ETC
+            "https://www.energy.gov/science/doe-explainssolar-fuels",  # artificial vs natural photosynthesis
+            "https://www.energy.gov/science/ber/articles/landmark-photosynthesis-gene-discovery-boosts-plant-growth-advances-crop",  # photosynthetic efficiency genetics
+            "https://www.nps.gov/teachers/classrooms/matter-in-motion.htm",  # stomata, carbon movement (lesson plan)
+            # --- evolution
+            "https://en.wikipedia.org/wiki/Paleobotany",  # plant fossils and preservation
+            "https://en.wikipedia.org/wiki/Evolutionary_history_of_plants",  # land colonization, vascular tissue, seeds, flowers
+            # --- cycles
+            "https://en.wikipedia.org/wiki/Carbon_cycle",  # fluxes, reservoirs, photosynthetic uptake
+            "https://en.wikipedia.org/wiki/Nitrogen_cycle",  # fixation, nitrification, denitrification
+            "https://en.wikipedia.org/wiki/Nitrogen_fixation",  # rhizobia, nodules, nitrogenase
+            "https://en.wikipedia.org/wiki/Primary_production",  # GPP and NPP by biome
+            "https://science.nasa.gov/earth/earth-observatory/the-carbon-cycle/",  # fast and slow carbon cycle
+            "https://science.nasa.gov/earth/earth-observatory/measuring-vegetation-ndvi-evi/",  # NDVI, leaf reflectance
+            "https://www.energy.gov/science/doe-explainsthe-carbon-cycle",  # carbon reservoirs and plant uptake
+            "https://www.nps.gov/articles/000/plants-climateimpact.htm",  # plant responses to climate, phenology
+            # --- human use
+            "https://en.wikipedia.org/wiki/Ethnobotany",  # human plant use, methods
+            "https://en.wikipedia.org/wiki/Fruit",  # fruit types and dispersal
+            "https://www.fs.usda.gov/wildflowers/ethnobotany/food/index.shtml",  # native food plants
+            "https://www.fs.usda.gov/wildflowers/ethnobotany/medicinal/index.shtml",  # medicinal plants and compounds
+            "https://www.fs.usda.gov/wildflowers/ethnobotany/fibers.shtml",  # fiber plants, basketry, cordage
+            "https://www.fs.usda.gov/managing-land/wildflowers/pollinators/importance",  # pollination and the food supply
+            # --- ecology
+            "https://en.wikipedia.org/wiki/Competition_(biology)",  # intra and interspecific competition
+            "https://en.wikipedia.org/wiki/Plant_ecology",  # communities, limiting factors
+            "https://en.wikipedia.org/wiki/Ecological_succession",  # primary and secondary succession
+            "https://www.fs.usda.gov/wildflowers/invasives/index.shtml",  # invasive plants displacing natives
+            "https://www.fs.usda.gov/wildflowers/beauty/index.shtml",  # wildflower adaptations to habitat
+            "https://www.nps.gov/teachers/classrooms/plant-adaptations.htm",  # structure and function, desert leaves (lesson plan)
+            # --- GMO and agriculture
+            "https://en.wikipedia.org/wiki/Genetically_modified_crops",  # traits, Bt, herbicide tolerance
+            "https://en.wikipedia.org/wiki/Genetically_modified_organism",  # techniques, regulation, debate
+            "https://www.aphis.usda.gov/biotechnology",  # APHIS regulation of GE organisms
+            "https://www.aphis.usda.gov/biotechnology/regulations",  # 7 CFR 340 and the agency split
+            "https://www.aphis.usda.gov/biotechnology/about",  # Biotechnology Regulatory Services
+            "https://en.wikipedia.org/wiki/Agriculture",  # crop production and systems
+            "https://en.wikipedia.org/wiki/Cereal",  # grain crops, structure, yields
+            "https://www.energy.gov/science/doe-explainsbioenergy-research",  # crops as feedstock
+            "https://www.energy.gov/science/doe-explainsbiofuels",  # biomass to liquid fuel
+            # --- disease
+            "https://en.wikipedia.org/wiki/Plant_pathology",  # fungal, bacterial and viral pathogens
+            "https://en.wikipedia.org/wiki/Plant_disease_resistance",  # PAMP and effector-triggered immunity
+            "https://www.energy.gov/science/doe-explainsthe-plant-microbiome",  # root and leaf microbiome
+            # --- station work
+            "https://en.wikipedia.org/wiki/Herbarium",  # specimen preparation and curation
+            "https://en.wikipedia.org/wiki/Optical_microscope",  # magnification, objectives, illumination
+            "https://en.wikipedia.org/wiki/Microscope_slide",  # wet mounts and staining
+            "https://www.fs.usda.gov/managing-land/wildflowers/kids/vocabulary",  # botany and ecology glossary
+        ],
+    },
+    # Thermodynamics, a 2027 hybrid event with no course in either division. 125 pages
+    # measured with `ground_event._fetch`, no two bodies identical.
+    #
+    # The physics is carried by Wikipedia and by NASA Glenn's Beginner's Guide; NIST covers
+    # temperature and units genuinely well. The honest gap is the BUILD half: DOE's entire
+    # consumer `energy.gov/energysaver/*` section — insulation, R-value, radiant barriers,
+    # passive solar, the pages that would have taught the device — now returns 404 to this
+    # crawler, every one of eleven paths tried. So insulation, absorptivity, surface colour
+    # and thermal mass have no federal source at all and rest on Wikipedia.
+    #
+    # Fetch `grc.nasa.gov` SEQUENTIALLY. Eight parallel connections hang indefinitely; the
+    # same URLs return in under a second one at a time.
+    #
+    # Two scope items have no source and none should be invented for them: the competition's
+    # own rules (passive-only operation, banned materials, impound) and the specific
+    # lamp-above-device temperature prediction. Both belong to a coach reading the manual.
+    "thermodynamics": {
+        "publisher": "Wikipedia contributors / NASA / NIST / NOAA / DOE",
+        "license": "public_domain (federal) and CC-BY-SA 4.0 (Wikipedia, facts with attribution)",
+        "urls": [
+            # --- systems and properties
+            "https://en.wikipedia.org/wiki/Thermodynamic_system",  # open, closed, isolated systems
+            "https://en.wikipedia.org/wiki/Intensive_and_extensive_properties",  # intensive vs extensive
+            "https://www.grc.nasa.gov/www/k-12/airplane/gasprop.html",  # gas property definitions
+            "https://www.grc.nasa.gov/www/k-12/airplane/specvol.html",  # specific volume
+            "https://www.grc.nasa.gov/www/k-12/airplane/spec.html",  # specific quantities per unit mass
+            # --- temperature
+            "https://en.wikipedia.org/wiki/Temperature",  # kinetic definition, scales, measurement
+            "https://en.wikipedia.org/wiki/Zeroth_law_of_thermodynamics",  # transitivity of thermal equilibrium
+            "https://en.wikipedia.org/wiki/Scale_of_temperature",  # empirical vs thermodynamic scales
+            "https://en.wikipedia.org/wiki/Kelvin",  # kelvin, absolute scale
+            "https://en.wikipedia.org/wiki/Celsius",  # Celsius and conversions
+            "https://en.wikipedia.org/wiki/Fahrenheit",  # Fahrenheit and conversions
+            "https://en.wikipedia.org/wiki/Absolute_zero",  # 0 K and the third law
+            "https://en.wikipedia.org/wiki/Thermometer",  # thermometer types, calibration
+            "https://en.wikipedia.org/wiki/Triple_point",  # triple point of water
+            "https://www.nist.gov/si-redefinition/kelvin-introduction",  # what the kelvin is
+            "https://www.nist.gov/si-redefinition/kelvin/kelvin-thermodynamic-temperature",  # thermodynamic temperature
+            "https://www.nist.gov/si-redefinition/kelvin/kelvin-present-realization",  # realizing the kelvin
+            "https://www.nist.gov/si-redefinition/kelvin/kelvin-its-90",  # ITS-90 fixed points
+            "https://www.nist.gov/si-redefinition/kelvin/kelvin-future-realization",  # primary thermometry
+            "https://www.nist.gov/pml/owm/si-units-temperature",  # SI temperature unit and conversions
+            "https://www.nist.gov/pml/sensor-science/thermodynamic-metrology",  # thermodynamic measurement
+            "https://www.grc.nasa.gov/www/k-12/airplane/temptr.html",  # temperature and molecular motion
+            "https://www.grc.nasa.gov/www/k-12/airplane/thermo.html",  # the zeroth law
+            # --- heat units
+            "https://en.wikipedia.org/wiki/Heat",  # heat as energy in transit
+            "https://en.wikipedia.org/wiki/Calorie",  # calorie and kilocalorie
+            "https://en.wikipedia.org/wiki/British_thermal_unit",  # BTU and conversions
+            "https://en.wikipedia.org/wiki/Joule",  # joule, mechanical equivalent of heat
+            "https://en.wikipedia.org/wiki/Boltzmann_constant",  # energy per kelvin
+            # --- phases
+            "https://en.wikipedia.org/wiki/State_of_matter",  # solid, liquid, gas, plasma
+            "https://en.wikipedia.org/wiki/Phase_transition",  # first-order transitions, critical point
+            "https://en.wikipedia.org/wiki/Phase_diagram",  # P-T diagrams and phase boundaries
+            "https://en.wikipedia.org/wiki/Latent_heat",  # latent heat of fusion and vaporization
+            "https://en.wikipedia.org/wiki/Sensible_heat",  # sensible vs latent heat
+            "https://en.wikipedia.org/wiki/Enthalpy_of_fusion",  # melting enthalpy
+            # --- gas laws
+            "https://en.wikipedia.org/wiki/Ideal_gas_law",  # PV=nRT and the combined gas laws
+            "https://en.wikipedia.org/wiki/Ideal_gas",  # assumptions and deviations
+            "https://www.grc.nasa.gov/www/k-12/airplane/eqstat.html",  # equation of state worked
+            "https://www.grc.nasa.gov/www/k-12/airplane/kinth.html",  # kinetic theory of pressure
+            # --- heat transfer
+            "https://en.wikipedia.org/wiki/Heat_transfer",  # conduction, convection, radiation
+            "https://en.wikipedia.org/wiki/Thermal_conduction",  # Fourier's law
+            "https://en.wikipedia.org/wiki/Convection",  # natural vs forced convection
+            "https://en.wikipedia.org/wiki/Thermal_radiation",  # emission spectra, radiative exchange
+            "https://en.wikipedia.org/wiki/Thermal_conductivity_and_resistivity",  # k values and measurement
+            "https://en.wikipedia.org/wiki/Newton%27s_law_of_cooling",  # cooling rate and delta-T
+            "https://en.wikipedia.org/wiki/Thermal_contact_conductance",  # interface resistance
+            "https://www.grc.nasa.gov/www/k-12/airplane/heat.html",  # heat capacity and direction of transfer
+            "https://www.energy.gov/cmei/ito/process-heat-basics",  # delivering heat to a material
+            # --- heat capacity
+            "https://en.wikipedia.org/wiki/Heat_capacity",  # molar and volumetric heat capacity
+            "https://en.wikipedia.org/wiki/Specific_heat_capacity",  # Q = mc dT and tabulated values
+            "https://en.wikipedia.org/wiki/Calorimetry",  # calorimeter types
+            "https://en.wikipedia.org/wiki/Properties_of_water",  # water's specific and latent heats
+            "https://www.grc.nasa.gov/www/k-12/airplane/specheat.html",  # cp, cv and gamma
+            # --- processes
+            "https://en.wikipedia.org/wiki/Adiabatic_process",  # no heat exchange
+            "https://en.wikipedia.org/wiki/Isothermal_process",  # constant temperature
+            "https://en.wikipedia.org/wiki/Isochoric_process",  # constant volume
+            "https://en.wikipedia.org/wiki/Isobaric_process",  # constant pressure
+            "https://en.wikipedia.org/wiki/Work_(thermodynamics)",  # PV work and path dependence
+            "https://en.wikipedia.org/wiki/Enthalpy",  # H = U + PV
+            # --- cycles and engines
+            "https://en.wikipedia.org/wiki/Thermodynamic_cycle",  # PV and TS diagrams
+            "https://en.wikipedia.org/wiki/Heat_engine",  # reservoirs and work output
+            "https://en.wikipedia.org/wiki/Carnot_cycle",  # Carnot cycle and maximum efficiency
+            "https://en.wikipedia.org/wiki/Thermal_efficiency",  # efficiency and the Carnot limit
+            "https://www.grc.nasa.gov/www/k-12/airplane/carnot.html",  # Carnot cycle worked
+            "https://www.grc.nasa.gov/www/k-12/airplane/otto.html",  # Otto cycle, four strokes
+            "https://www.grc.nasa.gov/www/k-12/airplane/brayton.html",  # Brayton cycle
+            # --- laws
+            "https://en.wikipedia.org/wiki/First_law_of_thermodynamics",  # energy conservation, dU = Q - W
+            "https://en.wikipedia.org/wiki/Second_law_of_thermodynamics",  # Clausius and Kelvin statements
+            "https://en.wikipedia.org/wiki/Entropy",  # entropy, statistical meaning
+            "https://en.wikipedia.org/wiki/Internal_energy",  # U as a state function
+            "https://en.wikipedia.org/wiki/Third_law_of_thermodynamics",  # entropy at absolute zero
+            "https://www.grc.nasa.gov/www/k-12/airplane/thermo0.html",  # the laws overview
+            "https://www.grc.nasa.gov/www/k-12/airplane/thermo1.html",  # the first law applied
+            "https://www.grc.nasa.gov/www/k-12/airplane/thermo1f.html",  # energy conservation for a flow
+            "https://www.grc.nasa.gov/www/k-12/airplane/entropy.html",  # entropy and the second law
+            # --- history
+            "https://en.wikipedia.org/wiki/History_of_thermodynamics",  # caloric to kinetic theory
+            "https://en.wikipedia.org/wiki/William_Thomson,_1st_Baron_Kelvin",  # absolute scale, second law
+            "https://en.wikipedia.org/wiki/Joseph_Black",  # latent and specific heat
+            "https://en.wikipedia.org/wiki/James_Prescott_Joule",  # mechanical equivalent of heat
+            "https://en.wikipedia.org/wiki/Nicolas_L%C3%A9onard_Sadi_Carnot",  # the ideal engine
+            "https://en.wikipedia.org/wiki/Max_Planck",  # quantization, blackbody law
+            "https://en.wikipedia.org/wiki/Rudolf_Clausius",  # entropy and the second law
+            "https://en.wikipedia.org/wiki/Ludwig_Boltzmann",  # statistical entropy
+            "https://en.wikipedia.org/wiki/James_Clerk_Maxwell",  # distribution and kinetic theory
+            "https://www.nist.gov/si-redefinition/kelvin/kelvin-history",  # history of temperature standards
+            # --- radiation
+            "https://en.wikipedia.org/wiki/Black-body_radiation",  # ideal emitter, Wien displacement
+            "https://en.wikipedia.org/wiki/Planck%27s_law",  # spectral radiance
+            "https://en.wikipedia.org/wiki/Radiant_exitance",  # radiant exitance in W/m2
+            "https://en.wikipedia.org/wiki/Irradiance",  # incident flux per area
+            "https://en.wikipedia.org/wiki/Stefan%E2%80%93Boltzmann_law",  # M = sigma T^4
+            "https://science.nasa.gov/ems/01_intro/",  # electromagnetic spectrum
+            "https://science.nasa.gov/ems/02_anatomy/",  # anatomy of a wave
+            "https://science.nasa.gov/ems/03_behaviors/",  # reflection, absorption, transmission
+            "https://science.nasa.gov/ems/07_infraredwaves/",  # infrared as heat radiation
+            "https://science.nasa.gov/ems/08_nearinfraredwaves/",  # emitted vs reflected infrared
+            "https://science.nasa.gov/ems/09_visiblelight/",  # incandescent emission
+            "https://imagine.gsfc.nasa.gov/science/toolbox/emspectrum1.html",  # photon energy and blackbody temperature
+            "https://science.nasa.gov/earth/earth-observatory/climate-and-earths-energy-budget/",  # absorbed vs emitted radiation
+            "https://gml.noaa.gov/grad/about/rad.html",  # solar and thermal IR in the energy budget
+            "https://gml.noaa.gov/about/theme2.html",  # radiation and aerosol forcing
+            "https://gml.noaa.gov/grad/surfrad/index.html",  # surface radiation budget measurement
+            # --- collecting radiant energy
+            "https://en.wikipedia.org/wiki/Incandescent_light_bulb",  # filament temperature, radiant output
+            "https://en.wikipedia.org/wiki/Solar_thermal_collector",  # flat-plate collectors, glazing, absorber
+            "https://en.wikipedia.org/wiki/Solar_water_heating",  # collector to water heat transfer
+            "https://en.wikipedia.org/wiki/Solar_cooker",  # reflector geometry, aperture, absorber colour
+            "https://www.energy.gov/cmei/systems/solar-radiation-basics",  # direct and diffuse radiation
+            "https://www.energy.gov/cmei/systems/concentrating-solar-thermal-power",  # concentrating onto a receiver
+            "https://www.energy.gov/cmei/systems/how-does-solar-work",  # the solar resource
+            # --- absorptivity and insulation
+            "https://en.wikipedia.org/wiki/Absorptance",  # absorptance and emissivity
+            "https://en.wikipedia.org/wiki/Emissivity",  # emissivity by surface and finish
+            "https://en.wikipedia.org/wiki/Kirchhoff%27s_law_of_thermal_radiation",  # good absorbers are good emitters
+            "https://en.wikipedia.org/wiki/Albedo",  # reflectance and surface colour
+            "https://en.wikipedia.org/wiki/Thermal_insulation",  # insulation mechanisms and materials
+            "https://en.wikipedia.org/wiki/R-value_(insulation)",  # R-value, U-factor, units
+            "https://en.wikipedia.org/wiki/Radiant_barrier",  # low-emissivity foil
+            "https://en.wikipedia.org/wiki/Aerogel",  # very low conductivity insulation
+            "https://en.wikipedia.org/wiki/Thermal_mass",  # heat storage and temperature swing
+            "https://en.wikipedia.org/wiki/Greenhouse_effect",  # glazing and trapped infrared
+            "https://www.energy.gov/cmei/buildings/articles/innovative-aerogel-production-low-cost-and-high-r-insulation",  # aerogel R-value
+            "https://en.wikipedia.org/wiki/Vacuum_flask",  # defeating all three transfer modes
+            # --- measurement and geometry
+            "https://en.wikipedia.org/wiki/Inverse-square_law",  # flux falling as 1/d^2
+            "https://en.wikipedia.org/wiki/Thermal_equilibrium",  # equilibrium and approach to room temperature
+            "https://en.wikipedia.org/wiki/Significant_figures",  # significant figure rules
+            "https://en.wikipedia.org/wiki/International_System_of_Units",  # SI base units and prefixes
+            "https://www.nist.gov/pml/owm/metric-si/si-units",  # SI base and derived units
+            "https://www.nist.gov/pml/owm/si-units-length",  # metric length and conversions
         ],
     },
     # 2027 Meteorology: Severe Weather & Storms. The federal teaching resources for exactly
@@ -1201,6 +1511,182 @@ DOMAIN_SOURCES = {
             "https://en.wikipedia.org/wiki/Antihistamine",  # allergy treatment
         ],
     },
+    # 2027 Water Quality: marine, estuary and coral reef. 144 pages measured with
+    # `ground_event._fetch`, no two bodies identical.
+    #
+    # NOAA is the authority for this subject and is also where the measuring gets dangerous.
+    # Eleven guessed `oceanservice.noaa.gov/facts/` slugs return a 330-character "Page Not
+    # Found" body with HTTP 200 and the same hash — a soft 404 that an earlier pass recorded
+    # as one real page counted three times. The slugs here were harvested from the real index
+    # pages instead of guessed. All four `coris.noaa.gov/about/` pages redirect to a homepage,
+    # so CoRIS, which the plan named as a preferred host, cannot be used at all.
+    #
+    # `www.usgs.gov` is slow and intermittently 504s but is NOT blocked: six pages came
+    # through and carry turbidity, dissolved oxygen, pH, coliform, nitrate and phosphate. Five
+    # more timed out and are worth retrying rather than dropping.
+    #
+    # Wikipedia titles here are the CANONICAL ones, resolved through the MediaWiki API. A
+    # redirect is internal — the URL and status do not change and a "(Redirected from X)"
+    # banner adds about 35 characters — so `Grouper` and `Epinephelinae`, or `Dissolved
+    # oxygen` and `Oxygen saturation`, hash DIFFERENTLY while being the same article, and a
+    # content-hash guard cannot see it. 17 such alias pairs were resolved out of this list.
+    "water_quality_marine": {
+        "publisher": "NOAA / EPA / USGS / NPS / Wikipedia contributors",
+        "license": "public_domain (federal) and CC-BY-SA 4.0 (Wikipedia, facts with attribution)",
+        "urls": [
+            # --- NOAA estuaries tutorial
+            "https://oceanservice.noaa.gov/education/tutorial_estuaries/est01_whatis.html",  # what an estuary is
+            "https://oceanservice.noaa.gov/education/tutorial_estuaries/est02_economy.html",  # importance of estuaries
+            "https://oceanservice.noaa.gov/education/tutorial_estuaries/est03_ecosystem.html",  # estuary ecosystem structure
+            "https://oceanservice.noaa.gov/education/tutorial_estuaries/est04_geology.html",  # estuary formation
+            "https://oceanservice.noaa.gov/education/tutorial_estuaries/est05_circulation.html",  # salinity gradients, stratification
+            "https://oceanservice.noaa.gov/education/tutorial_estuaries/est06_habitats.html",  # estuarine habitats
+            "https://oceanservice.noaa.gov/education/tutorial_estuaries/est07_adaptations.html",  # osmoregulation, salinity tolerance
+            "https://oceanservice.noaa.gov/education/tutorial_estuaries/est08_natdisturb.html",  # natural disturbance
+            "https://oceanservice.noaa.gov/education/tutorial_estuaries/est09_humandis.html",  # human disturbance, nutrients, sediment
+            "https://oceanservice.noaa.gov/education/tutorial_estuaries/est10_monitor.html",  # every monitoring parameter and why each test
+            "https://oceanservice.noaa.gov/education/tutorial_estuaries/est11_future.html",  # estuary management
+            # --- NOAA corals tutorial
+            "https://oceanservice.noaa.gov/education/tutorial_corals/coral01_intro.html",  # coral anatomy and polyp
+            "https://oceanservice.noaa.gov/education/tutorial_corals/coral02_zooxanthellae.html",  # symbiosis, zooxanthellae
+            "https://oceanservice.noaa.gov/education/tutorial_corals/coral03_growth.html",  # calcification, aragonite skeleton
+            "https://oceanservice.noaa.gov/education/tutorial_corals/coral04_reefs.html",  # reef types and formation
+            "https://oceanservice.noaa.gov/education/tutorial_corals/coral05_distribution.html",  # Indo-Pacific vs Atlantic distribution
+            "https://oceanservice.noaa.gov/education/tutorial_corals/coral06_reproduction.html",  # reef organism life cycles
+            "https://oceanservice.noaa.gov/education/tutorial_corals/coral07_importance.html",  # reef ecosystem services
+            "https://oceanservice.noaa.gov/education/tutorial_corals/coral08_climatechange.html",  # bleaching, acidification, SST
+            "https://oceanservice.noaa.gov/education/tutorial_corals/coral09_pollution.html",  # sedimentation and nutrient pollution
+            "https://oceanservice.noaa.gov/education/tutorial_corals/coral10_disease.html",  # recently killed coral, reef health
+            "https://oceanservice.noaa.gov/education/tutorial_corals/coral11_fishing.html",  # overfishing, indicator fish
+            "https://oceanservice.noaa.gov/education/tutorial_corals/coral12_other_threats.html",  # crown-of-thorns, invasives
+            "https://oceanservice.noaa.gov/education/tutorial_corals/coral13_protecting-coral-law.html",  # reef management and law
+            "https://oceanservice.noaa.gov/education/tutorial_corals/coral14_protecting-coral-places.html",  # marine protected areas
+            "https://oceanservice.noaa.gov/education/tutorial_corals/coral15_restoring-corals.html",  # restoration
+            # --- NOAA ocean facts
+            "https://oceanservice.noaa.gov/hazards/hab/",  # harmful algal blooms, red tide, hypoxia
+            "https://oceanservice.noaa.gov/facts/estuary.html",  # estuary definition
+            "https://oceanservice.noaa.gov/facts/coral.html",  # coral as animal, plant and mineral
+            "https://oceanservice.noaa.gov/facts/coral_bleach.html",  # bleaching mechanism
+            "https://oceanservice.noaa.gov/facts/coral-pollution.html",  # land-based pollution on reefs
+            "https://oceanservice.noaa.gov/facts/coral-overfishing.html",  # overfishing, herbivore loss
+            "https://oceanservice.noaa.gov/facts/coral-spawning.html",  # coral reproduction
+            "https://oceanservice.noaa.gov/facts/reef-resilience.html",  # reef health indicators
+            "https://oceanservice.noaa.gov/facts/coral_economy.html",  # reef value
+            "https://oceanservice.noaa.gov/facts/coralreef-climate.html",  # climate and reefs
+            "https://oceanservice.noaa.gov/facts/artificial-reef.html",  # artificial reefs
+            "https://oceanservice.noaa.gov/facts/brain-coral.html",  # stony coral example
+            "https://oceanservice.noaa.gov/facts/sponge.html",  # demosponge ecology
+            "https://oceanservice.noaa.gov/facts/lionfish.html",  # harmful invasive species
+            "https://oceanservice.noaa.gov/facts/acidification.html",  # acidification, aragonite saturation
+            "https://oceanservice.noaa.gov/facts/thermocline.html",  # temperature structure
+            "https://oceanservice.noaa.gov/facts/sea-surface-temperature.html",  # SST measurement
+            "https://oceanservice.noaa.gov/facts/ocean-oxygen.html",  # dissolved oxygen
+            "https://oceanservice.noaa.gov/facts/eutrophication.html",  # nutrient enrichment
+            "https://oceanservice.noaa.gov/facts/deadzone.html",  # hypoxic dead zones
+            "https://oceanservice.noaa.gov/facts/redtide.html",  # red tide
+            "https://oceanservice.noaa.gov/facts/hab-solutions.html",  # HAB management
+            "https://oceanservice.noaa.gov/facts/nutpollution.html",  # nutrient pollution
+            "https://oceanservice.noaa.gov/facts/pollution.html",  # marine pollution overview
+            "https://oceanservice.noaa.gov/facts/plankton.html",  # base of the marine food web
+            "https://oceanservice.noaa.gov/facts/garbagepatch.html",  # the five garbage patches
+            "https://oceanservice.noaa.gov/facts/microplastics.html",  # microplastics
+            "https://oceanservice.noaa.gov/facts/disaster-debris.html",  # marine debris sources
+            "https://oceanservice.noaa.gov/facts/watershed.html",  # watersheds
+            "https://oceanservice.noaa.gov/facts/wetland.html",  # wetlands
+            "https://oceanservice.noaa.gov/facts/nature-based.html",  # nature-based coastal management
+            "https://www.pmel.noaa.gov/co2/story/Ocean+Acidification",  # carbonate chemistry, saturation state
+            # --- EPA
+            "https://www.epa.gov/nep/overview-national-estuary-program",  # estuary management
+            "https://www.epa.gov/coral-reefs/basic-information-about-coral-reefs",  # reef ecology
+            "https://www.epa.gov/coral-reefs/threats-coral-reefs",  # factors that harm reefs
+            "https://www.epa.gov/nutrientpollution/basic-information-nutrient-pollution",  # nitrogen and phosphorus pollution
+            "https://www.epa.gov/nutrientpollution/sources-and-solutions",  # nutrient sources
+            "https://www.epa.gov/nutrientpollution/effects-environment",  # HABs and hypoxia effects
+            "https://www.epa.gov/nps/basic-information-about-nonpoint-source-nps-pollution",  # nonpoint source pollution
+            "https://www.epa.gov/nps/nonpoint-source-agriculture",  # agricultural runoff, sediment
+            "https://www.epa.gov/npdes/stormwater-discharges-construction-activities",  # sedimentation pollution control
+            "https://www.epa.gov/wqc/national-recommended-water-quality-criteria-aquatic-life-criteria-table",  # numeric criteria per parameter
+            "https://www.epa.gov/sdwa/drinking-water-regulations-and-contaminants",  # potable water standards
+            "https://www.epa.gov/sdwa/how-epa-regulates-drinking-water-contaminants",  # treatment and regulation
+            "https://www.epa.gov/pfas/pfas-explained",  # PFAS basics
+            "https://www.epa.gov/pfas/our-current-understanding-human-health-and-environmental-risks-pfas",  # emerging contaminants
+            "https://www.epa.gov/marine-protection-permitting/about-marine-protection-research-and-sanctuaries-act",  # ocean dumping
+            # --- NPS
+            "https://www.nps.gov/subjects/oceans/coral-reefs.htm",  # reef ecology
+            "https://www.nps.gov/subjects/oceans/estuaries.htm",  # estuary ecology
+            # --- USGS water science school
+            "https://www.usgs.gov/water-science-school/science/turbidity-and-water",  # turbidity
+            "https://www.usgs.gov/water-science-school/science/dissolved-oxygen-and-water",  # dissolved oxygen
+            "https://www.usgs.gov/water-science-school/science/ph-and-water",  # pH
+            "https://www.usgs.gov/water-science-school/science/bacteria-and-e-coli-water",  # fecal coliform and E. coli
+            "https://www.usgs.gov/water-science-school/science/nitrogen-and-water",  # nitrates
+            "https://www.usgs.gov/water-science-school/science/phosphorus-and-water",  # phosphates
+            # --- Wikipedia
+            "https://en.wikipedia.org/wiki/Water_quality",  # parameters and their relationships
+            "https://en.wikipedia.org/wiki/Salinity",  # salinity
+            "https://en.wikipedia.org/wiki/Seawater",  # composition, density and salinity
+            "https://en.wikipedia.org/wiki/Oxygen_saturation",  # DO saturation; canonical title
+            "https://en.wikipedia.org/wiki/Turbidity",  # turbidity, NTU, Secchi
+            "https://en.wikipedia.org/wiki/PH",  # pH
+            "https://en.wikipedia.org/wiki/Ocean_temperature",  # temperature
+            "https://en.wikipedia.org/wiki/Nitrate",  # nitrates
+            "https://en.wikipedia.org/wiki/Phosphate",  # phosphates
+            "https://en.wikipedia.org/wiki/Biochemical_oxygen_demand",  # BOD
+            "https://en.wikipedia.org/wiki/Total_dissolved_solids",  # total solids
+            "https://en.wikipedia.org/wiki/Total_suspended_solids",  # suspended solids
+            "https://en.wikipedia.org/wiki/Fecal_coliform",  # fecal coliform
+            "https://en.wikipedia.org/wiki/Aragonite",  # aragonite
+            "https://en.wikipedia.org/wiki/Ocean_acidification",  # aragonite saturation state
+            "https://en.wikipedia.org/wiki/Density",  # density, salinometer theory
+            "https://en.wikipedia.org/wiki/Hydrometer",  # hydrometer build and calibration
+            "https://en.wikipedia.org/wiki/Salinometer",  # salinometer
+            "https://en.wikipedia.org/wiki/Mass_fraction_(chemistry)",  # percent salinity by mass
+            "https://en.wikipedia.org/wiki/Estuary",  # estuary ecology
+            "https://en.wikipedia.org/wiki/Seagrass",  # estuarine and reef macroflora
+            "https://en.wikipedia.org/wiki/Mangrove",  # estuarine habitat
+            "https://en.wikipedia.org/wiki/Coral_reef",  # reef ecology
+            "https://en.wikipedia.org/wiki/Coral_bleaching",  # bleaching, recently killed coral
+            "https://en.wikipedia.org/wiki/Coral_disease",  # reef health indicators
+            "https://en.wikipedia.org/wiki/Stony_coral_tissue_loss_disease",  # SCTLD
+            "https://en.wikipedia.org/wiki/Environmental_issues_with_coral_reefs",  # threats
+            "https://en.wikipedia.org/wiki/Coral_reef_protection",  # reef management
+            "https://en.wikipedia.org/wiki/Coral_reef_fish",  # reef fish ecology and distribution
+            "https://en.wikipedia.org/wiki/Zooxanthellae",  # symbiosis
+            "https://en.wikipedia.org/wiki/Symbiodinium",  # symbiont biology
+            "https://en.wikipedia.org/wiki/Algae",  # fleshy algae overview
+            "https://en.wikipedia.org/wiki/Harmful_algal_bloom",  # HABs
+            "https://en.wikipedia.org/wiki/Eutrophication",  # nutrient enrichment
+            "https://en.wikipedia.org/wiki/Dead_zone_(ecology)",  # hypoxic zones
+            "https://en.wikipedia.org/wiki/Hypoxia_(environmental)",  # hypoxia
+            "https://en.wikipedia.org/wiki/Great_Pacific_Garbage_Patch",  # garbage patch
+            "https://en.wikipedia.org/wiki/Ocean_gyre",  # the five gyres
+            "https://en.wikipedia.org/wiki/Marine_debris",  # marine debris
+            "https://en.wikipedia.org/wiki/PFAS",  # PFAS
+            "https://en.wikipedia.org/wiki/Environmental_impact_of_pharmaceuticals_and_personal_care_products",  # medicines as contaminants
+            "https://en.wikipedia.org/wiki/Water_purification",  # potable water treatment
+            "https://en.wikipedia.org/wiki/Sewage_treatment",  # waste water treatment
+            "https://en.wikipedia.org/wiki/Wastewater_treatment",  # treatment overview
+            "https://en.wikipedia.org/wiki/Water_cycle",  # water cycle
+            "https://en.wikipedia.org/wiki/Nutrient_cycle",  # nutrient cycling
+            "https://en.wikipedia.org/wiki/Nitrogen_cycle",  # nitrogen cycling in water
+            "https://en.wikipedia.org/wiki/Watershed_management",  # watershed management
+            "https://en.wikipedia.org/wiki/Drainage_basin",  # watersheds
+            "https://en.wikipedia.org/wiki/Siltation",  # sedimentation pollution; canonical title
+            "https://en.wikipedia.org/wiki/Nonpoint_source_pollution",  # nonpoint source pollution
+            "https://en.wikipedia.org/wiki/Marine_food_web",  # aquatic food webs
+            "https://en.wikipedia.org/wiki/Food_web",  # food chains and webs
+            "https://en.wikipedia.org/wiki/Trophic_level",  # trophic structure
+            "https://en.wikipedia.org/wiki/Symbiosis",  # community interactions
+            "https://en.wikipedia.org/wiki/Herbivore",  # grazing by parrotfish and urchins
+            "https://en.wikipedia.org/wiki/Population_dynamics",  # population dynamics
+            "https://en.wikipedia.org/wiki/Bioindicator",  # indicator organisms
+            "https://en.wikipedia.org/wiki/Reef_Check",  # the survey protocol behind the indicator list
+            "https://en.wikipedia.org/wiki/Indo-Pacific",  # Indo-Pacific distribution
+            "https://en.wikipedia.org/wiki/Atlantic_Ocean",  # Atlantic distribution
+            "https://en.wikipedia.org/wiki/Marine_protected_area",  # reef management
+            "https://en.wikipedia.org/wiki/Overfishing",  # overfishing
+        ],
+    },
     "hydrology": {
         "publisher": "USGS Water Science School / National Park Service",
         "license": "public_domain",
@@ -1338,6 +1824,10 @@ EVENT_DOMAIN_BY_SEASON = {
     # 2027 Division B/C: respiratory, digestive and immune systems. 2026 was nervous and
     # endocrine, which is what the `anatomy` domain still holds.
     ("anatomy-and-physiology", 2027): "anatomy_2027",
+    # 2027 Division B: marine and estuary ecology, coral reef organisms and water monitoring.
+    # 2026 was freshwater macroinvertebrates, which is what the `water` domain still holds, and
+    # reusing it would teach a whole season of the wrong ecosystem.
+    ("water-quality", 2027): "water_quality_marine",
 }
 
 # Rotations confirmed against the 2027 Division B rules manual that still have no source set,
@@ -1357,6 +1847,7 @@ assert not _unknown, f"EVENT_DOMAIN_BY_SEASON names domains with no sources: {so
 
 
 EVENT_DOMAIN = {
+    "thermodynamics": "thermodynamics",
     "rocks-and-minerals": "geology",
     "rocks-and-minerals-b": "geology",
     "rocks-and-minerals-c": "geology",

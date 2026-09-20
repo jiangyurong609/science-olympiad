@@ -183,6 +183,56 @@ SPECIMENS = {
         ("Stonefly", "Stonefly (Plecoptera)"), ("Mayfly", "Mayfly (Ephemeroptera)"),
         ("Walking stick", "Walking Stick (Phasmatodea)"), ("Ground beetle", "Ground Beetle (Coleoptera)"),
     ],
+    # 2027 Water Quality: the coral reef indicator organisms. Identification is roughly 30% of
+    # this event, so the roster IS the course as much as the prose is, and the region suffix is
+    # examinable content in its own right — the manual tests whether a taxon is global,
+    # Indo-Pacific only or Atlantic only.
+    #
+    # Three entries correct the scope outline, which named taxa one rank too high or named the
+    # wrong animal outright:
+    #   * "Lobsters (Nephropidae)" is the CLAWED lobsters — cold-temperate Atlantic animals
+    #     that do not live on coral reefs. The indicator is the spiny lobster, Palinuridae.
+    #   * "Sea cucumber (Holothuroidea)" is an entire class; the indicator is Indo-Pacific only
+    #     and restricted to Thelenota ananas and Stichopus chloronotus.
+    #   * "Sweetlips (Haemulidae)" includes the Atlantic grunts; the indicator is the
+    #     Indo-Pacific genus Plectorhinchus.
+    # Each of the three would have taught a wrong answer to a question the manual does ask.
+    #
+    # Two labels are chosen for their LICENCE, not their rank: Charonia tritonis rather than
+    # the genus page, and Gorgonia ventalina rather than Gorgonia, because the genus lead
+    # images are GPL — free, but not a licence `OK_LICENSES` accepts.
+    "water-quality": [
+        # Global
+        ("Stenopus hispidus", "Banded Coral Shrimp (Stenopus hispidus) — Global"),
+        ("Chaetodon", "Butterfly Fish (Chaetodon spp.) — Global"),
+        ("Crown-of-thorns starfish", "Crown-of-Thorns Starfish (Acanthaster planci) — Global"),
+        ("Red algae", "Fleshy Algae: Red Algae (Rhodophyta) — Global"),
+        ("Green algae", "Fleshy Algae: Green Algae (Chlorophyta) — Global"),
+        ("Brown algae", "Fleshy Algae: Brown Algae (Phaeophyta) — Global"),
+        ("Grouper", "Grouper over 30 cm (Epinephelinae) — Global"),
+        ("Scleractinia", "Hard Coral (Scleractinia) — Global"),
+        ("Spiny lobster", "Spiny Lobster (Palinuridae) — Global"),
+        ("Diadema (echinoderm)", "Long-Spined Black Sea Urchin (Diadema spp.) — Global"),
+        ("Moray eel", "Moray Eel (Muraenidae) — Global"),
+        ("Parrotfish", "Parrotfish over 20 cm (Scaridae) — Global"),
+        ("Eucidaris", "Pencil Urchin (Eucidaris spp.) — Global"),
+        ("Lutjanidae", "Snapper (Lutjanidae) — Global"),
+        ("Demosponge", "Demosponge (Demospongiae) — Global"),
+        ("Plectorhinchus", "Sweetlips (Plectorhinchus) — Global"),
+        ("Charonia tritonis", "Triton (Charonia tritonis) — Global"),
+        # Indo-Pacific only
+        ("Humpback grouper", "Barramundi Cod (Cromileptes altivelis) — Indo-Pacific"),
+        ("Green humphead parrotfish",
+         "Bumphead Parrotfish (Bolbometopon muricatum) — Indo-Pacific"),
+        ("Tridacna", "Giant Clam (Tridacna spp.) — Indo-Pacific"),
+        ("Humphead wrasse", "Humphead Wrasse (Cheilinus undulatus) — Indo-Pacific"),
+        ("Thelenota ananas", "Sea Cucumber (Thelenota ananas) — Indo-Pacific"),
+        ("Stichopus chloronotus", "Sea Cucumber (Stichopus chloronotus) — Indo-Pacific"),
+        # Atlantic only
+        ("Gorgonia ventalina", "Sea Fan (Gorgonia ventalina) — Atlantic"),
+        ("Flamingo tongue snail", "Flamingo Tongue Snail (Cyphoma gibbosum) — Atlantic"),
+        ("Nassau grouper", "Nassau Grouper (Epinephelus striatus) — Atlantic"),
+    ],
 }
 
 
