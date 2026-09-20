@@ -5,6 +5,7 @@ import argparse
 import json
 
 from sqlalchemy import select
+from sqlalchemy.exc import OperationalError
 
 from app.core.database import SessionLocal
 from app.models.entities import SourcePassage, SourceSnapshot
@@ -45,13 +46,28 @@ def main() -> None:
             if not payloads:
                 report["unusable_snapshots"].append(snapshot.id)
                 continue
+            if args.apply:
+                # Commit per snapshot, and retry once on a dropped connection. Held to a
+                # single commit at the end, one TLS drop on the Cloud SQL proxy threw away
+                # every passage extracted in the run — Botany lost 102 sources' worth and the
+                # build stopped with 86 passages and no lessons. A snapshot's passages are a
+                # complete unit of work; there is no reason to risk the rest of the run on it.
+                try:
+                    ensure_source_passages(db, snapshot, commit=True)
+                except OperationalError:
+                    db.rollback()
+                    print(f"   connection dropped on snapshot {snapshot.id} — retrying once",
+                          flush=True)
+                    try:
+                        ensure_source_passages(db, snapshot, commit=True)
+                    except OperationalError:
+                        db.rollback()
+                        report["failed_snapshots"] = report.get("failed_snapshots", [])
+                        report["failed_snapshots"].append(snapshot.id)
+                        continue
             report["passages"] += len(payloads)
             report["snapshots_extracted"] += 1
-            if args.apply:
-                ensure_source_passages(db, snapshot, commit=False)
-        if args.apply:
-            db.commit()
-        else:
+        if not args.apply:
             db.rollback()
     print(json.dumps(report, indent=2))
 
