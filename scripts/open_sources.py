@@ -68,6 +68,16 @@ DOMAIN_TERM_PATTERNS = {
                r"sporophyte|germinat|hormone|auxin|tropism|nutrient|nitrogen|cellulose|"
                r"cell wall|vacuole|respirat|stoma|petal|sepal|stamen|carpel|ovule|fruit|"
                r"taxonom|species|genus|evolution|fossil|pathogen|fungus|deficiency"),
+    "severe_weather": (r"storm|thunderstorm|tornado|hurricane|cyclone|typhoon|supercell|"
+                       r"mesocyclone|squall|derecho|downburst|microburst|gust|wind|shear|"
+                       r"hodograph|radar|reflectiv|doppler|velocity|echo|sounding|radiosonde|"
+                       r"skew-t|st[uü]ve|cape|cin|lcl|lifted|convect|instab|buoyan|updraft|"
+                       r"downdraft|precipitat|rain|hail|snow|sleet|freezing|riming|bergeron|"
+                       r"coalescen|cloud|cumulon|anvil|mammatus|lightning|charge|thunder|"
+                       r"front|air mass|dryline|jet stream|atmospheric river|surge|flood|"
+                       r"drought|heat wave|blizzard|nor'easter|ice storm|lake.effect|"
+                       r"fujita|saffir|enso|el ni|warning|watch|metar|station model|asos|"
+                       r"satellite|infrared|water vapor|pressure|temperature|dew point|humid"),
     "physics": (r"energy|force|motion|velocity|speed|accelerat|momentum|inertia|mass|weight|"
                 r"gravit|friction|roll|slide|torque|lever|pulley|wheel|axle|incline|machine|"
                 r"mechanical advantage|work|power|potential|kinetic|rotat|angular|circular|"
@@ -627,6 +637,106 @@ DOMAIN_SOURCES = {
             "https://en.wikipedia.org/wiki/Carbon_cycle",
         ],
     },
+    # 2027 Meteorology: Severe Weather & Storms. The federal teaching resources for exactly
+    # this — NOAA JetStream, the SPC FAQs, the oceanservice facts pages — are JavaScript
+    # shells or refuse this crawler outright, and an earlier pass concluded the subject was
+    # blocked on a browser-rendered snapshot path. It was blocked on having tried only
+    # federal hosts: 83 of 87 candidate pages here return substantive text, 3.4M characters
+    # with no two bodies identical, every one measured with `ground_event._fetch` before it
+    # was added. Wikipedia is rights-cleared in this project for fact grounding with
+    # attribution, never for reproducing its expression.
+    #
+    # Figures remain the open gap: radar imagery, hodographs and Stüve diagrams ARE this
+    # event, and no amount of prose teaches reading one.
+    "severe_weather": {
+        "publisher": "Wikipedia contributors / NOAA",
+        "license": "CC-BY-SA 4.0 (facts used with attribution)",
+        "urls": [
+            "https://en.wikipedia.org/wiki/Severe_weather",  # storm types and severe-weather overview
+            "https://en.wikipedia.org/wiki/Thunderstorm",  # single cell, multicell, life cycle
+            "https://en.wikipedia.org/wiki/Supercell",  # supercell structure and classification
+            "https://en.wikipedia.org/wiki/Mesocyclone",  # rotating updraft
+            "https://en.wikipedia.org/wiki/Squall_line",  # squall lines
+            "https://en.wikipedia.org/wiki/Derecho",  # derechos
+            "https://en.wikipedia.org/wiki/Bow_echo",  # bow echo radar signature
+            "https://en.wikipedia.org/wiki/Mesoscale_convective_system",  # MCS and MCC
+            "https://en.wikipedia.org/wiki/Downburst",  # downbursts and macrobursts
+            "https://en.wikipedia.org/wiki/Microburst",  # microbursts, wet and dry
+            "https://en.wikipedia.org/wiki/Outflow_boundary",  # gust fronts
+            "https://en.wikipedia.org/wiki/Tornado",  # tornado life cycle, tracks, geography
+            "https://en.wikipedia.org/wiki/Tornadogenesis",  # formation conditions
+            "https://en.wikipedia.org/wiki/Waterspout",  # waterspouts
+            "https://en.wikipedia.org/wiki/Fujita_scale",  # F scale
+            "https://en.wikipedia.org/wiki/Enhanced_Fujita_scale",  # EF scale and damage indicators
+            "https://en.wikipedia.org/wiki/Hook_echo",  # hook echo and debris ball
+            "https://en.wikipedia.org/wiki/Tornado_vortex_signature",  # TVS
+            "https://en.wikipedia.org/wiki/Weather_radar",  # radar products and interpretation
+            "https://en.wikipedia.org/wiki/NEXRAD",  # the US radar network
+            "https://en.wikipedia.org/wiki/Doppler_radar",  # base velocity, storm relative motion
+            "https://en.wikipedia.org/wiki/Polarimetric_radar",  # correlation coefficient, dual pol
+            "https://en.wikipedia.org/wiki/Hodograph",  # hodographs and wind profiles
+            "https://en.wikipedia.org/wiki/Skew-T_log-P_diagram",  # skew-T, LCL, CAPE on a sounding
+            "https://en.wikipedia.org/wiki/Atmospheric_sounding",  # soundings and St\u00fcve diagrams
+            "https://en.wikipedia.org/wiki/Radiosonde",  # radiosonde observation
+            "https://en.wikipedia.org/wiki/METAR",  # METAR decoding
+            "https://en.wikipedia.org/wiki/Station_model",  # surface station models
+            "https://en.wikipedia.org/wiki/Automated_airport_weather_station",  # ASOS and surface networks
+            "https://en.wikipedia.org/wiki/Convective_available_potential_energy",  # CAPE
+            "https://en.wikipedia.org/wiki/Lifted_condensation_level",  # LCL
+            "https://en.wikipedia.org/wiki/Convective_inhibition",  # CIN and capping
+            "https://en.wikipedia.org/wiki/Wind_shear",  # speed and directional shear
+            "https://en.wikipedia.org/wiki/Atmospheric_instability",  # stability and lapse rates
+            "https://en.wikipedia.org/wiki/Jet_stream",  # jet streams and large-scale circulation
+            "https://en.wikipedia.org/wiki/Air_mass",  # air masses
+            "https://en.wikipedia.org/wiki/Weather_front",  # fronts
+            "https://en.wikipedia.org/wiki/Dry_line",  # drylines
+            "https://en.wikipedia.org/wiki/Atmospheric_river",  # atmospheric rivers
+            "https://en.wikipedia.org/wiki/Precipitation",  # precipitation types and formation
+            "https://en.wikipedia.org/wiki/Wegener%E2%80%93Bergeron%E2%80%93Findeisen_process",  # Bergeron process
+            "https://en.wikipedia.org/wiki/Riming",  # riming and graupel
+            "https://en.wikipedia.org/wiki/Hail",  # hail growth and size
+            "https://en.wikipedia.org/wiki/Freezing_rain",  # freezing rain and temperature layers
+            "https://en.wikipedia.org/wiki/Ice_pellets",  # sleet
+            "https://en.wikipedia.org/wiki/Snow",  # snow, aggregation, snow load
+            "https://en.wikipedia.org/wiki/Lightning",  # electrification, charge separation, types
+            "https://en.wikipedia.org/wiki/Cloud_physics",  # collision-coalescence, droplet growth
+            "https://en.wikipedia.org/wiki/Thunder",  # thunder and lightning detection
+            "https://en.wikipedia.org/wiki/Tropical_cyclone",  # structure, stages, tracks
+            "https://en.wikipedia.org/wiki/Saffir%E2%80%93Simpson_scale",  # Saffir-Simpson
+            "https://en.wikipedia.org/wiki/Storm_surge",  # storm surge
+            "https://en.wikipedia.org/wiki/Tropical_cyclogenesis",  # formation conditions, shear, SST
+            "https://en.wikipedia.org/wiki/El_Ni%C3%B1o%E2%80%93Southern_Oscillation",  # ENSO influence on tracks
+            "https://en.wikipedia.org/wiki/Blizzard",  # blizzards
+            "https://en.wikipedia.org/wiki/Nor%27easter",  # nor'easters
+            "https://en.wikipedia.org/wiki/Lake-effect_snow",  # lake effect snow and fetch
+            "https://en.wikipedia.org/wiki/Ice_storm",  # ice storms
+            "https://en.wikipedia.org/wiki/Drought",  # drought definitions and causes
+            "https://en.wikipedia.org/wiki/Heat_wave",  # heat waves
+            "https://en.wikipedia.org/wiki/Flash_flood",  # flash flooding
+            "https://en.wikipedia.org/wiki/Flood",  # stream, river and urban flooding
+            "https://en.wikipedia.org/wiki/Debris_flow",  # debris flows and mudslides
+            "https://en.wikipedia.org/wiki/List_of_cloud_types",  # cloud types
+            "https://en.wikipedia.org/wiki/Cumulonimbus_cloud",  # cumulonimbus
+            "https://en.wikipedia.org/wiki/Mammatus_cloud",  # mammatus
+            "https://en.wikipedia.org/wiki/Arcus_cloud",  # shelf and roll clouds
+            "https://en.wikipedia.org/wiki/Severe_weather_terminology_(United_States)",  # watches and warnings
+            "https://en.wikipedia.org/wiki/Storm_Prediction_Center",  # SPC outlooks
+            "https://en.wikipedia.org/wiki/Weather_satellite",  # satellite imagery bands
+            "https://en.wikipedia.org/wiki/Geostationary_Operational_Environmental_Satellite",  # GOES
+            "https://en.wikipedia.org/wiki/Numerical_weather_prediction",  # computer model predictions
+            "https://en.wikipedia.org/wiki/Intensity-duration-frequency_curve",  # IDF curves and return periods
+            "https://en.wikipedia.org/wiki/Hurricane_Katrina",  # named event: Katrina 2005
+            "https://en.wikipedia.org/wiki/Hurricane_Andrew",  # named event: Andrew 1992
+            "https://en.wikipedia.org/wiki/Hurricane_Sandy",  # named event: Sandy 2012
+            "https://en.wikipedia.org/wiki/1900_Galveston_hurricane",  # named event: Galveston 1900
+            "https://en.wikipedia.org/wiki/2011_Super_Outbreak",  # named event: April 2011 outbreak
+            "https://en.wikipedia.org/wiki/Great_Flood_of_1993",  # named event: 1993 flood
+            "https://en.wikipedia.org/wiki/1993_Storm_of_the_Century",  # named event: March 1993
+            "https://en.wikipedia.org/wiki/Dust_Bowl",  # named event: Dust Bowl
+            "https://www.nhc.noaa.gov/aboutsshws.php",  # NHC on the Saffir-Simpson scale
+            "https://www.spc.noaa.gov/misc/about.html",  # SPC mission and products
+        ],
+    },
     "hydrology": {
         "publisher": "USGS Water Science School / National Park Service",
         "license": "public_domain",
@@ -754,6 +864,10 @@ EVENT_DOMAIN_BY_SEASON = {
     # 2027 Division B/C: "Earth's fresh waters" — drainage basins, fluvial landforms,
     # streamflow, groundwater and karst. 2026 was oceanography, 2025 glaciers.
     ("dynamic-planet", 2027): "hydrology",
+    # 2027 Division B/C: "Severe Weather & Storms" — radar and sounding interpretation, storm
+    # types, hazards and safety. 2026 was everyday weather and climate, which is what the
+    # `meteorology` domain still holds.
+    ("meteorology", 2027): "severe_weather",
 }
 
 # Rotations confirmed against the 2027 Division B rules manual that still have no source set,
