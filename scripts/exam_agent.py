@@ -170,7 +170,9 @@ def main() -> None:
             print(f"   [{(row['section'] or '')[:20]:20}] {row['reasons'][0][:104]}")
             print(f"      {row['stem'][:96]}")
 
-    out = Path(f"review-packet-{args.event}-{args.format}.json")
+    # Not the repo root: this is a run artifact, not source.
+    out_dir = Path("docs/review_packets"); out_dir.mkdir(parents=True, exist_ok=True)
+    out = out_dir / f"review-packet-{args.event}-{args.format}.json"
     out.write_text(json.dumps({"event": args.event, "format": args.format,
                                "verified": kept, "rejected": rejected,
                                "rounds": args.rounds}, indent=1))
