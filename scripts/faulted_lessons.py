@@ -27,7 +27,14 @@ from sqlalchemy import and_, select
 from app.core.database import SessionLocal
 from app.models.entities import Event, Lesson, ReviewDecision
 
-FAULTED = ("reject", "rejected", "revise")
+# `student_visibility.automated_review_rejected` blocks on "reject" and nothing else, so a
+# "revise" is advice about a lesson that is already fit to serve. Treating both as blocking
+# made this gate stricter than the invariant the platform actually enforces, and left the
+# hardening loop unable to ever finish: the video "event strategy" lessons carry revisions,
+# come from outside any blueprint, and cannot be repaired by the loop that was waiting on them.
+BLOCKING = ("reject", "rejected")
+ADVISORY = ("revise",)
+FAULTED = BLOCKING + ADVISORY
 
 
 def faulted(db, event_slug: str) -> list[tuple[str, str, str]]:
@@ -83,14 +90,19 @@ def main() -> None:
     with SessionLocal() as db:
         rows = faulted(db, args.event)
         pending = unreviewed(db, args.event)
+    blocking = [r for r in rows if r[1] in BLOCKING]
+    advisory = [r for r in rows if r[1] in ADVISORY]
     if args.quiet:
-        print(len(rows) + len(pending))
+        # The count the loop tests: what actually stops this course being served.
+        print(len(blocking) + len(pending))
     else:
-        for slug, decision, notes in rows:
+        for slug, decision, notes in blocking:
             print(f"{decision:10} {slug}  {notes}")
         for slug in pending:
             print(f"{'unreviewed':10} {slug}  (no decision at its current version)")
-    sys.exit(0 if (rows or pending) else 1)
+        for slug, decision, notes in advisory:
+            print(f"{'advisory':10} {slug}  {notes}")
+    sys.exit(0 if (blocking or pending) else 1)
 
 
 if __name__ == "__main__":
