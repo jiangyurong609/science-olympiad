@@ -63,7 +63,12 @@ def _snapshot(question: Question, shuffle_choices: bool) -> dict:
         # Every choice-index-keyed map must move with the shuffle, or the
         # per-choice diagnostic/misconception ends up pointing at a different
         # option than the student picked.
-        for field in ("distractor_error_types", "misconception_by_choice"):
+        # `rationale_by_choice` was missing from this tuple while the comment above claimed
+        # "every" such map moves. Nothing student-facing reads it yet, so no answer was ever
+        # mis-explained — but the authored 2027 papers all carry it, and it would have started
+        # pointing at the wrong option the moment a surface rendered it.
+        for field in ("distractor_error_types", "misconception_by_choice",
+                      "rationale_by_choice"):
             mapping = spec.get(field) or {}
             if mapping:
                 spec[field] = {
