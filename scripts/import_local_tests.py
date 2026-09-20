@@ -13,7 +13,12 @@ tournament PDFs. Two phases, split to control token cost:
 
 Usage:
   python -m scripts.import_local_tests --scan
+  python -m scripts.import_local_tests --scan --root docs/science_olympiad_tests/_extracted/public-rsoi-2026-B
   python -m scripts.import_local_tests --parse --limit 5
+
+--root narrows a scan to one subtree. A scan registers each PDF once, keyed by URL, and never
+revisits it — so a file that is still being written when the scan reaches it is registered
+truncated and stays that way. Point --root at the archives that have finished downloading.
 """
 from __future__ import annotations
 
@@ -99,19 +104,45 @@ def _build_event_index(db):
     Superseded events are excluded: a source mapped to one strands its import — the exam
     publishes under an event no catalog view lists (`import_past_test` now refuses this
     outright, but the mapping should never be created in the first place)."""
-    index = {}
+    # A 2026 event and its 2027 twin share a name and a division, so they collide on this
+    # key and whichever the query yielded LAST used to win — arbitrarily. That is how Anatomy
+    # & Physiology ended up with six past papers on the current event and three on the prior
+    # season one: same subject, same papers, two places, depending on row order. The current
+    # event wins now, because it is the one a student is shown.
+    rank = {"current": 3, "foundational": 2, "prior_season_practice": 1}
+    index: dict[tuple[str, str], Event] = {}
     for event in db.scalars(select(Event).where(Event.official_url != "")).all():
         if event.season_status == "superseded":
             continue
-        index[(_norm(event.name), event.division)] = event
+        key = (_norm(event.name), event.division)
+        held = index.get(key)
+        if held is None or rank.get(event.season_status, 0) > rank.get(held.season_status, 0):
+            index[key] = event
     return index
 
 
+_DIVISION_IN_PATH = re.compile(
+    r"division\s+([bc])\b|div\s+([bc])\b|\[div\s+([bc])\]|\b([bc])\b\s*$")
+# A filename states its own division in ways a folder name does not: `..._2019_c_umich_test`,
+# `Disease_Detectives_C_Test`, `2018-Thermodynamics-State-C`.
+_DIVISION_IN_NAME = re.compile(r"[_\- ]([bc])[_\- .]|[_\- ]([bc])\.[a-z]+$")
+
+
 def _detect_division(relpath: str) -> str | None:
-    m = re.search(r"division\s+([bc])\b|div\s+([bc])\b|\[div\s+([bc])\]|\b([bc])\b\s*$",
-                  relpath.lower())
-    if m:
-        return next(g for g in m.groups() if g).upper()
+    """Which division this paper is for — the FILE's own answer beats its folder's.
+
+    Tournaments hand both divisions one folder, named for both: `Disease Detectives B C`
+    holds `Disease_Detectives_B_Test.pdf` and `Disease_Detectives_C_Test.pdf` side by side.
+    Reading the folder gives "B" for both, and the Division C paper is then filed under the
+    Division B event and offered to middle-school students as their own past test.
+    """
+    low = relpath.lower()
+    name = low.rsplit("/", 1)[-1]
+    for pattern, text in ((_DIVISION_IN_NAME, name), (_DIVISION_IN_PATH, name),
+                          (_DIVISION_IN_PATH, low)):
+        m = pattern.search(text)
+        if m:
+            return next(g for g in m.groups() if g).upper()
     return None
 
 
@@ -140,13 +171,14 @@ def _iter_pdfs(root: Path):
         yield path
 
 
-def scan(db) -> None:
-    if not ROOT.exists():
-        raise SystemExit(f"Extracted tree not found: {ROOT}")
+def scan(db, root: Path | None = None) -> None:
+    root = root or ROOT
+    if not root.exists():
+        raise SystemExit(f"Extracted tree not found: {root}")
     index = _build_event_index(db)
     created = mapped = tests = keys = skipped_blank = unmapped = 0
     unmapped_dirs = set()
-    for path in _iter_pdfs(ROOT):
+    for path in _iter_pdfs(root):
         relpath = str(path.relative_to(ROOT))
         url = f"local://{relpath}"
         if db.scalar(select(Source).where(Source.url == url)):
@@ -250,6 +282,45 @@ def remap(db) -> None:
     print(f"\nRemapped {mapped} sources.")
 
 
+def rescope(db) -> None:
+    """Re-point already-registered local sources at the event the matcher picks TODAY.
+
+    `--scan` maps a source once and `--remap` only visits sources with no mapping at all, so
+    a fix to the matcher or a change in which twin is current leaves every existing mapping
+    as it was. This recomputes them.
+
+    It refuses to touch a source whose test has already been PARSED: the resulting Exam and
+    its Questions point at the old event, and moving the mapping alone would leave a source
+    claiming one event and its paper sitting on another. Move those with
+    `scripts/port_past_tests_to_current`, which moves the paper and its questions together.
+    """
+    index = _build_event_index(db)
+    parsed = {(e.blueprint or {}).get("exam_source_id")
+              for e in db.scalars(select(Exam)).all()}
+    parsed.discard(None)
+    changed = skipped = 0
+    for source in db.scalars(select(Source).where(Source.url.like("local://%"))).all():
+        meta = source.metadata_json or {}
+        relpath = meta.get("relpath", "")
+        event = _match_event(index, relpath) if relpath else None
+        if event is None:
+            continue
+        for esm in db.scalars(select(EventSourceMap).where(
+                EventSourceMap.source_id == source.id)).all():
+            if esm.event_id == event.id:
+                continue
+            if source.id in parsed:
+                skipped += 1
+                continue
+            old = db.get(Event, esm.event_id)
+            print(f"  {old.slug if old else esm.event_id} -> {event.slug}: {relpath}")
+            esm.event_id = event.id
+            changed += 1
+    db.commit()
+    print(f"\nRe-pointed {changed} mapping(s); left {skipped} alone because the test is "
+          f"already parsed into an exam.")
+
+
 def _paired_key(db, test_source: Source):
     """A same-event, same-folder answer-key source with the best filename overlap."""
     meta = test_source.metadata_json or {}
@@ -311,11 +382,14 @@ def parse(db, limit: int | None) -> None:
 def main() -> None:
     with SessionLocal() as db:
         if "--scan" in sys.argv:
-            scan(db)
+            root = _arg("--root")
+            scan(db, Path(root) if root else None)
         elif "--reclassify" in sys.argv:
             reclassify(db)
         elif "--remap" in sys.argv:
             remap(db)
+        elif "--rescope" in sys.argv:
+            rescope(db)
         elif "--parse" in sys.argv:
             parse(db, int(_arg("--limit")) if "--limit" in sys.argv else None)
         else:

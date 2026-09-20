@@ -53,6 +53,10 @@ PUBLISH_EVENTS = [
     ("water-quality-b-2027", "current"),
     ("botany-b-2027", "current"),
     ("thermodynamics-b-2027", "current"),
+    # Disease Detectives: the course exists, and its nine past papers sit on the 2026 twin
+    # because that twin was the current event when they were parsed. Publishing this event
+    # is what lets `port_past_tests_to_current` bring them across.
+    ("disease-detectives-b-2027", "current"),
     # Rocks & Minerals keeps its name and its rotation, but the 2027 course is the one built
     # against the 2027 National Rocks and Minerals List, and the event was never grounded
     # until today. The 2026 twin is demoted below.
