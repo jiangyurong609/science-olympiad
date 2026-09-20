@@ -18,7 +18,7 @@ from app.models.entities import (
 )
 from app.services.model_provider import ModelProviderError, OpenAICompatibleProvider
 from app.services.validation import build_similarity_report
-from scripts.author_rocks_vertical_slice import _select_passages
+from scripts.author_course_from_blueprint import _select_passages
 
 
 PROMPT_VERSION = "passage-grounded-skill-items-v1"

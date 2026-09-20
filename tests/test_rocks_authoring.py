@@ -4,8 +4,8 @@ from pathlib import Path
 import pytest
 
 from app.models.entities import Source, SourcePassage
-from scripts.author_rocks_vertical_slice import (
-    BLUEPRINT_PATH, _normalize_blocks, _select_passages,
+from scripts.author_course_from_blueprint import (
+    DEFAULT_BLUEPRINT, _normalize_blocks, _select_passages,
 )
 from scripts.author_skill_questions import _validate_item
 from scripts.import_course_manifest import (
@@ -54,7 +54,7 @@ def valid_lesson_payload():
 
 
 def test_rocks_blueprint_has_complete_unit_lesson_structure():
-    blueprint = json.loads(Path(BLUEPRINT_PATH).read_text())
+    blueprint = json.loads(Path(DEFAULT_BLUEPRINT).read_text())
     assert blueprint["event_slug"] == "rocks-and-minerals-b-2027"
     assert len(blueprint["units"]) == 6
     lessons = [lesson for unit in blueprint["units"] for lesson in unit["lessons"]]

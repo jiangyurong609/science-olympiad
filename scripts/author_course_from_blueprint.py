@@ -1,9 +1,16 @@
-"""Author the Rocks & Minerals Division B course from locator-bearing passages.
+"""Author a course from a blueprint, grounded in locator-bearing passages.
 
 The script is safe by default: it prints the scaffold plan without writing.
 ``--apply`` creates the review-only course graph. ``--generate`` additionally
 uses the configured model to draft lessons, but never records editor/SME
 approval and never makes the course student-visible.
+
+The blueprint names its own event (``event_slug``), so nothing here is specific to
+one subject; it was hardwired to the Rocks & Minerals path only because that was
+the first course it built.
+
+    python -m scripts.author_course_from_blueprint \
+        --blueprint data/courses/dynamic-planet-b-2027.json --apply --generate
 """
 from __future__ import annotations
 
@@ -24,10 +31,8 @@ from app.models.entities import (
 from app.services.model_provider import ModelProviderError, OpenAICompatibleProvider
 
 
-BLUEPRINT_PATH = (
-    Path(__file__).resolve().parent.parent
-    / "data" / "courses" / "rocks-and-minerals-b-2027.json"
-)
+BLUEPRINT_DIR = Path(__file__).resolve().parent.parent / "data" / "courses"
+DEFAULT_BLUEPRINT = BLUEPRINT_DIR / "rocks-and-minerals-b-2027.json"
 PROMPT_VERSION = "passage-grounded-five-part-lesson-v1"
 TEACHING_TYPES = {"property_cards", "steps", "worked_example"}
 
@@ -395,10 +400,16 @@ def _generate_one(provider, blueprint, unit_data, lesson_data, passages, sources
     }
 
 
-def author(*, apply: bool, generate: bool, regenerate: bool = False) -> dict:
-    blueprint = json.loads(BLUEPRINT_PATH.read_text())
+def author(*, apply: bool, generate: bool, regenerate: bool = False,
+           blueprint_path: Path | None = None) -> dict:
+    path = Path(blueprint_path or DEFAULT_BLUEPRINT)
+    if not path.exists():
+        raise SystemExit(f"no blueprint at {path}")
+    blueprint = json.loads(path.read_text())
     report = {
         "mode": "apply" if apply else "dry_run",
+        "blueprint": path.name,
+        "event_slug": blueprint["event_slug"],
         "generate": generate,
         "units": len(blueprint["units"]),
         "planned_lessons": sum(len(unit["lessons"]) for unit in blueprint["units"]),
@@ -544,11 +555,14 @@ def main() -> None:
     parser.add_argument("--apply", action="store_true")
     parser.add_argument("--generate", action="store_true")
     parser.add_argument("--regenerate", action="store_true")
+    parser.add_argument("--blueprint", default=str(DEFAULT_BLUEPRINT),
+                        help="path to a course blueprint JSON under data/courses/")
     args = parser.parse_args()
     if args.generate and not args.apply:
         raise SystemExit("--generate requires --apply")
     print(json.dumps(author(
         apply=args.apply, generate=args.generate, regenerate=args.regenerate,
+        blueprint_path=Path(args.blueprint),
     ), indent=2))
 
 
