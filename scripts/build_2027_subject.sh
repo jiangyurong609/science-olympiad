@@ -36,30 +36,48 @@ BLUEPRINT="data/courses/${EVENT}.json"
 [[ -f "$BLUEPRINT" ]] || { echo "no blueprint at $BLUEPRINT" >&2; exit 2; }
 : "${DATABASE_URL:?set DATABASE_URL}"
 export PYTHONPATH=. PYTHONUNBUFFERED=1
-run() { echo; echo "---- $EVENT: $1"; shift; "$@"; }
+# A step that dies must stop the subject. Without this the script sails past a killed grounding
+# run straight into authoring and writes a course from whatever fraction of the corpus had been
+# extracted when the OS ran out of memory — a plausible, quietly thin course rather than an error.
+#
+# `check` is called AFTER each pipeline rather than wrapping it, because the left-hand side of a
+# pipe runs in a subshell: an `exit` inside a wrapper would end the subshell and let the script
+# carry on, which is exactly the failure this is here to prevent.
+step() { echo; echo "---- $EVENT: $1"; }
+check() {
+  local status=$1 label=$2
+  if [[ "$status" -ne 0 ]]; then
+    echo "!!!! $EVENT: '$label' exited $status — stopping before the next step" >&2
+    exit "$status"
+  fi
+}
 
 # `--allow-live` because every 2027 event already serves one video "event strategy" lesson, so
 # without it the scaffold refuses every subject in the season.
-run "scaffold (creates the concepts grounding needs)" \
-  python -m scripts.author_course_from_blueprint --blueprint "$BLUEPRINT" --apply --allow-live \
+step "scaffold (creates the concepts grounding needs)"
+python -m scripts.author_course_from_blueprint --blueprint "$BLUEPRINT" --apply --allow-live \
   | grep -E '"units"|"planned_lessons"|"failed"'
+check "${PIPESTATUS[0]}" scaffold
 
-run "ground on the open sources" \
-  python -m scripts.ground_event --event "$EVENT" --apply \
+step "ground on the open sources"
+python -m scripts.ground_event --event "$EVENT" --apply \
   | grep -E "open sources|verified claims|blocks supported|skills supported|committed|duplicate body|FETCH FAILED|connection dropped"
+check "${PIPESTATUS[0]}" ground
 
-run "extract passages (the step the author actually reads)" \
-  python -m scripts.extract_source_passages --apply \
-  | grep -E '"passages"|"snapshots_extracted"'
+step "extract passages (the step the author actually reads)"
+python -m scripts.extract_source_passages --apply | grep -E '"passages"|"snapshots_extracted"'
+check "${PIPESTATUS[0]}" extract
 
-run "audit keywords against the corpus they will author from" \
-  python -m scripts.audit_blueprint_keywords --blueprint "$BLUEPRINT" \
+step "audit keywords against the corpus they will author from"
+python -m scripts.audit_blueprint_keywords --blueprint "$BLUEPRINT" \
   | python3 -c 'import json, sys; d = json.load(sys.stdin); print(f"   {d.get(\"missing_keywords\", 0)} of {d.get(\"keywords\", 0)} keywords match nothing"); [print("   MISS", m["lesson"], m["keywords"]) for m in d.get("misses", [])]'
+check "${PIPESTATUS[0]}" audit
 
-run "author the lessons" \
-  env -u OPENAI_API_KEY python -m scripts.author_course_from_blueprint \
+step "author the lessons"
+env -u OPENAI_API_KEY python -m scripts.author_course_from_blueprint \
     --blueprint "$BLUEPRINT" --apply --generate --allow-live \
   | python3 -c 'import json, sys; d = json.load(sys.stdin); print(f"   generated {d[\"generated_lessons\"]}, failed {len(d[\"failed\"])}"); [print("   FAIL", f["lesson"], f["reason"][:90]) for f in d["failed"]]; [print("   GAP ", u["lesson"], u["missing"]) for u in d.get("uncovered", [])]'
+check "${PIPESTATUS[0]}" author
 
 if [[ "$HARDEN" == true ]]; then
   echo; echo "---- $EVENT: review and repair until clean"
