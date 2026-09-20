@@ -20,7 +20,7 @@ import re
 from concurrent.futures import ThreadPoolExecutor, as_completed
 from pathlib import Path
 
-from sqlalchemy import select
+from sqlalchemy import func, select
 
 from app.core.database import SessionLocal
 from app.models.entities import (
@@ -211,13 +211,26 @@ def _course_sources(db, event: Event):
     return sources, passages
 
 
-def _ensure_scaffold(db, blueprint: dict):
+def _ensure_scaffold(db, blueprint: dict, *, allow_live: bool = False):
     event = db.scalar(select(Event).where(
         Event.slug == blueprint["event_slug"],
         Event.season == blueprint["season"],
     ))
     if not event:
-        raise ValueError("Rocks & Minerals Division B 2027 event is not registered")
+        raise ValueError(
+            f"no event {blueprint['event_slug']!r} in season {blueprint['season']}")
+    # Authoring rewrites the course's units and objectives and withdraws the legacy unit. Run
+    # against a course students are already reading, that silently reshapes live teaching and
+    # can take lessons dark — the failure this project has already had once. A course that is
+    # serving published lessons must be extended deliberately, not re-scaffolded by default.
+    published = db.scalar(select(func.count()).select_from(Lesson).where(
+        Lesson.event_id == event.id, Lesson.status == "published")) or 0
+    if published and not allow_live:
+        raise SystemExit(
+            f"{event.slug} already serves {published} published lesson(s). Re-scaffolding a "
+            f"live course rewrites its units and can take that teaching dark. Pass "
+            f"--allow-live only after deciding what happens to those lessons."
+        )
     course = db.scalar(select(Course).where(Course.event_id == event.id))
     if course is None:
         course = Course(
@@ -401,7 +414,7 @@ def _generate_one(provider, blueprint, unit_data, lesson_data, passages, sources
 
 
 def author(*, apply: bool, generate: bool, regenerate: bool = False,
-           blueprint_path: Path | None = None) -> dict:
+           blueprint_path: Path | None = None, allow_live: bool = False) -> dict:
     path = Path(blueprint_path or DEFAULT_BLUEPRINT)
     if not path.exists():
         raise SystemExit(f"no blueprint at {path}")
@@ -419,7 +432,7 @@ def author(*, apply: bool, generate: bool, regenerate: bool = False,
     if not apply:
         return report
     with SessionLocal() as db:
-        event, course, scaffold = _ensure_scaffold(db, blueprint)
+        event, course, scaffold = _ensure_scaffold(db, blueprint, allow_live=allow_live)
         sources, all_passages = _course_sources(db, event)
         generation_rows = []
         for unit_data, unit, lesson_data, skill, concept, sequence in scaffold:
@@ -557,12 +570,14 @@ def main() -> None:
     parser.add_argument("--regenerate", action="store_true")
     parser.add_argument("--blueprint", default=str(DEFAULT_BLUEPRINT),
                         help="path to a course blueprint JSON under data/courses/")
+    parser.add_argument("--allow-live", action="store_true",
+                        help="permit re-scaffolding a course that serves published lessons")
     args = parser.parse_args()
     if args.generate and not args.apply:
         raise SystemExit("--generate requires --apply")
     print(json.dumps(author(
         apply=args.apply, generate=args.generate, regenerate=args.regenerate,
-        blueprint_path=Path(args.blueprint),
+        blueprint_path=Path(args.blueprint), allow_live=args.allow_live,
     ), indent=2))
 
 
