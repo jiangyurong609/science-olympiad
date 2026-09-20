@@ -43,6 +43,20 @@ from app.services.student_visibility import DISPOSITION_UNREVIEWED_PRACTICE
 PUBLISH_EVENTS = [
     ("dynamic-planet-b-2027", "current"),
     ("roller-coaster-b-2027", "current"),
+    # The six subjects built for 2027. Four had no course at all because their only course
+    # taught the topic that rotated out; Botany and Thermodynamics had never had one. Each
+    # carries a full blueprint course, grounded on measured open sources, taken through
+    # review-and-repair until a round found nothing.
+    ("meteorology-b-2027", "current"),
+    ("solar-system-b-2027", "current"),
+    ("anatomy-and-physiology-b-2027", "current"),
+    ("water-quality-b-2027", "current"),
+    ("botany-b-2027", "current"),
+    ("thermodynamics-b-2027", "current"),
+    # Rocks & Minerals keeps its name and its rotation, but the 2027 course is the one built
+    # against the 2027 National Rocks and Minerals List, and the event was never grounded
+    # until today. The 2026 twin is demoted below.
+    ("rocks-and-minerals-b-2027", "current"),
 ]
 
 # (event id, why this course is not 2027 coverage). Division B verified against the manual.
