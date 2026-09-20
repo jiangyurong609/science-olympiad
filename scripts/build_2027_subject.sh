@@ -70,13 +70,13 @@ check "${PIPESTATUS[0]}" extract
 
 step "audit keywords against the corpus they will author from"
 python -m scripts.audit_blueprint_keywords --blueprint "$BLUEPRINT" \
-  | python3 -c 'import json, sys; d = json.load(sys.stdin); print(f"   {d.get(\"missing_keywords\", 0)} of {d.get(\"keywords\", 0)} keywords match nothing"); [print("   MISS", m["lesson"], m["keywords"]) for m in d.get("misses", [])]'
+  | python3 -c 'import json, sys; d = json.load(sys.stdin); print("   %d of %d keywords match nothing" % (d.get("missing_keywords", 0), d.get("keywords", 0))); [print("   MISS", m["lesson"], m["keywords"]) for m in d.get("misses", [])]'
 check "${PIPESTATUS[0]}" audit
 
 step "author the lessons"
 env -u OPENAI_API_KEY python -m scripts.author_course_from_blueprint \
     --blueprint "$BLUEPRINT" --apply --generate --allow-live \
-  | python3 -c 'import json, sys; d = json.load(sys.stdin); print(f"   generated {d[\"generated_lessons\"]}, failed {len(d[\"failed\"])}"); [print("   FAIL", f["lesson"], f["reason"][:90]) for f in d["failed"]]; [print("   GAP ", u["lesson"], u["missing"]) for u in d.get("uncovered", [])]'
+  | python3 -c 'import json, sys; d = json.load(sys.stdin); print("   generated %d, failed %d" % (d["generated_lessons"], len(d["failed"]))); [print("   FAIL", f["lesson"], f["reason"][:90]) for f in d["failed"]]; [print("   GAP ", u["lesson"], u["missing"]) for u in d.get("uncovered", [])]'
 check "${PIPESTATUS[0]}" author
 
 # Ground once more, now that the lessons exist. `attach_to_blocks` links each claim to the

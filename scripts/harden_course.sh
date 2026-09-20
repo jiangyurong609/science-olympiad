@@ -62,5 +62,5 @@ for (( round=1; round<=ROUNDS; round++ )); do
     args+=(--corrections "$CORRECTIONS")
   fi
   env -u OPENAI_API_KEY python -m scripts.author_course_from_blueprint "${args[@]}" \
-    | python3 -c 'import json, sys; d = json.load(sys.stdin); print(f"   repaired {d[\"generated_lessons\"]}, failed {len(d[\"failed\"])}")'
+    | python3 -c 'import json, sys; d = json.load(sys.stdin); print("   repaired %d, failed %d" % (d["generated_lessons"], len(d["failed"])))'
 done
