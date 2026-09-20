@@ -79,6 +79,16 @@ env -u OPENAI_API_KEY python -m scripts.author_course_from_blueprint \
   | python3 -c 'import json, sys; d = json.load(sys.stdin); print(f"   generated {d[\"generated_lessons\"]}, failed {len(d[\"failed\"])}"); [print("   FAIL", f["lesson"], f["reason"][:90]) for f in d["failed"]]; [print("   GAP ", u["lesson"], u["missing"]) for u in d.get("uncovered", [])]'
 check "${PIPESTATUS[0]}" author
 
+# Ground once more, now that the lessons exist. `attach_to_blocks` links each claim to the
+# lesson blocks it supports, and it can only do that for blocks that are there — grounding
+# before authoring reports "blocks supported: 7/13" against the one pre-existing video lesson
+# and nothing else, so coverage reads as near-zero for a course that is in fact well grounded.
+# Cheap now: the snapshots are cached and the claims are deduped in one query per source.
+step "re-ground to attach claims to the lessons just written"
+python -m scripts.ground_event --event "$EVENT" --apply \
+  | grep -E "verified claims|blocks supported|skills supported|committed"
+check "${PIPESTATUS[0]}" reground
+
 if [[ "$HARDEN" == true ]]; then
   echo; echo "---- $EVENT: review and repair until clean"
   bash scripts/harden_course.sh "$EVENT" --rounds "$ROUNDS"
