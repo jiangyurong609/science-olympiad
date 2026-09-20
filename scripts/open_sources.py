@@ -155,6 +155,31 @@ DOMAIN_TERM_PATTERNS = {
                            r"maillard|caramel|scald|raw milk|skim|buttermilk|kefir|"
                            r"titrat|specific heat|solub|solution|hydrogen bond|hydrophob|"
                            r"hydrophil|viscos|densit|mass|temperature"),
+    "remote_sensing_2027": (r"remote sensing|earth observation|satellite|sensor|imag|"
+                            r"electromagnetic|spectrum|wavelength|frequenc|radiation|light|"
+                            r"reflect|refract|snell|absor|scatter|rayleigh|\bmie\b|polariz|"
+                            r"irradiance|radiance|inverse.square|wien|displacement|"
+                            r"stefan|boltzmann|blackbody|black.body|planck|emissiv|"
+                            r"infrared|thermal|ultraviolet|visible|near.infrared|shortwave|"
+                            r"multispectral|hyperspectral|band|radiometer|scanner|imager|"
+                            r"radar|backscatter|synthetic aperture|\bsar\b|insar|"
+                            r"interferometr|altimet|elevation model|\bdem\b|lidar|"
+                            r"orbit|low earth|medium earth|high earth|geostationary|"
+                            r"geosynchronous|polar|sun.synchronous|kepler|period|altitude|"
+                            r"resolution|spatial|temporal|radiometric|spectral|"
+                            r"signal.to.noise|pixel|swath|revisit|"
+                            r"landsat|thematic mapper|\betm\b|\boli\b|sentinel|terra|"
+                            r"modis|aster|srtm|ecostress|goes|platform|mission|"
+                            r"false colou?r|natural colou?r|grayscale|greyscale|composite|"
+                            r"topographic|contour|scale|legend|orientation|marginal|"
+                            r"aerial photograph|orthophoto|coordinate|latitude|longitude|"
+                            r"slope|gradient|terrain|perimeter|area|distance|"
+                            r"albedo|reflectance|aerosol|ndvi|vegetation index|"
+                            r"land cover|land use|nlcd|classification|supervised|"
+                            r"unsupervised|change|"
+                            r"deforest|urban|habitat|wildfire|volcan|landslide|flood|"
+                            r"subsidence|glacier|glacial|fluvial|stream|drainage|meander|"
+                            r"surface temperature"),
     "cryptography_2027": (r"cipher|cryptogra|cryptanaly|crypt|encrypt|decrypt|encipher|"
                           r"plaintext|ciphertext|\bkey\b|keyword|alphabet|\bk1\b|\bk2\b|"
                           r"substitut|transposition|monoalphabet|polyalphabet|homophonic|"
@@ -1115,6 +1140,145 @@ DOMAIN_SOURCES = {
             "https://www.genome.gov/genetics-glossary/Translation",
             "https://www.genome.gov/genetics-glossary/Translocation",
             "https://www.genome.gov/genetics-glossary/X-Linked",
+        ],
+    },
+    "remote_sensing_2027": {
+        "publisher": "USGS / NASA / NOAA / Wikipedia contributors",
+        "license": "public_domain (federal) and CC-BY-SA 4.0 (Wikipedia, facts with attribution)",
+        # Remote Sensing 2027 is "Observable Earth" and the manual bounds it tightly: the
+        # five named equations (only Wien, the wave equation and radar altimetry range may
+        # be tested quantitatively), the passive and active sensor types, the six orbit
+        # classes, the four resolution kinds, and interpretation from a CLOSED list of
+        # platforms — Landsat 5-9 with TM/ETM/OLI, Sentinel-1A/1B and 2A/2B, Terra's MODIS
+        # and ASTER, SRTM, ECOSTRESS and GOES. Each of those has a page here; the old
+        # `remote_sensing` domain held fourteen pages and named three of them.
+        "urls": [
+            "https://en.wikipedia.org/wiki/Absorption_(electromagnetic_radiation)",
+            "https://en.wikipedia.org/wiki/Advanced_Spaceborne_Thermal_Emission_and_Reflection_Radiometer",
+            "https://en.wikipedia.org/wiki/Aerial_photography",
+            "https://en.wikipedia.org/wiki/Aerosol",
+            "https://en.wikipedia.org/wiki/Albedo",
+            "https://en.wikipedia.org/wiki/Altimeter",
+            "https://en.wikipedia.org/wiki/Backscatter",
+            "https://en.wikipedia.org/wiki/Black-body_radiation",
+            "https://en.wikipedia.org/wiki/Cardinal_direction",
+            "https://en.wikipedia.org/wiki/Contour_line",
+            "https://en.wikipedia.org/wiki/Deforestation",
+            "https://en.wikipedia.org/wiki/Digital_elevation_model",
+            "https://en.wikipedia.org/wiki/Drainage_system_(geomorphology)",
+            "https://en.wikipedia.org/wiki/Earth_observation_satellite",
+            "https://en.wikipedia.org/wiki/ECOSTRESS",
+            "https://en.wikipedia.org/wiki/Electromagnetic_radiation",
+            "https://en.wikipedia.org/wiki/Electromagnetic_spectrum",
+            "https://en.wikipedia.org/wiki/Elevation",
+            "https://en.wikipedia.org/wiki/Emissivity",
+            "https://en.wikipedia.org/wiki/Enhanced_Thematic_Mapper_Plus",
+            "https://en.wikipedia.org/wiki/False_color",
+            "https://en.wikipedia.org/wiki/Flood",
+            "https://en.wikipedia.org/wiki/Fluvial_processes",
+            "https://en.wikipedia.org/wiki/Frequency",
+            "https://en.wikipedia.org/wiki/Geographic_coordinate_system",
+            "https://en.wikipedia.org/wiki/Geostationary_Operational_Environmental_Satellite",
+            "https://en.wikipedia.org/wiki/Geostationary_orbit",
+            "https://en.wikipedia.org/wiki/Geosynchronous_orbit",
+            "https://en.wikipedia.org/wiki/Glacial_motion",
+            "https://en.wikipedia.org/wiki/Glacier",
+            "https://en.wikipedia.org/wiki/GOES",
+            "https://en.wikipedia.org/wiki/Grade_(slope)",
+            "https://en.wikipedia.org/wiki/Grayscale",
+            "https://en.wikipedia.org/wiki/Habitat_destruction",
+            "https://en.wikipedia.org/wiki/High_Earth_orbit",
+            "https://en.wikipedia.org/wiki/Hyperspectral_imaging",
+            "https://en.wikipedia.org/wiki/Image_resolution",
+            "https://en.wikipedia.org/wiki/Image_sensor",
+            "https://en.wikipedia.org/wiki/Infrared",
+            "https://en.wikipedia.org/wiki/Interferometric_synthetic-aperture_radar",
+            "https://en.wikipedia.org/wiki/Inverse-square_law",
+            "https://en.wikipedia.org/wiki/Irradiance",
+            "https://en.wikipedia.org/wiki/Kepler%27s_laws_of_planetary_motion",
+            "https://en.wikipedia.org/wiki/Land_cover",
+            "https://en.wikipedia.org/wiki/Land_use",
+            "https://en.wikipedia.org/wiki/Landsat_5",
+            "https://en.wikipedia.org/wiki/Landsat_7",
+            "https://en.wikipedia.org/wiki/Landsat_8",
+            "https://en.wikipedia.org/wiki/Landsat_9",
+            "https://en.wikipedia.org/wiki/Landsat_program",
+            "https://en.wikipedia.org/wiki/Landslide",
+            "https://en.wikipedia.org/wiki/Latitude",
+            "https://en.wikipedia.org/wiki/Lidar",
+            "https://en.wikipedia.org/wiki/Light",
+            "https://en.wikipedia.org/wiki/Longitude",
+            "https://en.wikipedia.org/wiki/Low_Earth_orbit",
+            "https://en.wikipedia.org/wiki/Map_legend",
+            "https://en.wikipedia.org/wiki/Meander",
+            "https://en.wikipedia.org/wiki/Medium_Earth_orbit",
+            "https://en.wikipedia.org/wiki/Mie_scattering",
+            "https://en.wikipedia.org/wiki/Moderate_Resolution_Imaging_Spectroradiometer",
+            "https://en.wikipedia.org/wiki/Multispectral_image",
+            "https://en.wikipedia.org/wiki/Near-infrared_spectroscopy",
+            "https://en.wikipedia.org/wiki/Normalized_difference_vegetation_index",
+            "https://en.wikipedia.org/wiki/Operational_Land_Imager",
+            "https://en.wikipedia.org/wiki/Orbit",
+            "https://en.wikipedia.org/wiki/Orbital_period",
+            "https://en.wikipedia.org/wiki/Orthophoto",
+            "https://en.wikipedia.org/wiki/Pixel",
+            "https://en.wikipedia.org/wiki/Planck%27s_law",
+            "https://en.wikipedia.org/wiki/Polar_orbit",
+            "https://en.wikipedia.org/wiki/Polarization_(waves)",
+            "https://en.wikipedia.org/wiki/Push_broom_scanner",
+            "https://en.wikipedia.org/wiki/Radar",
+            "https://en.wikipedia.org/wiki/Radar_altimeter",
+            "https://en.wikipedia.org/wiki/Radiance",
+            "https://en.wikipedia.org/wiki/Radiometer",
+            "https://en.wikipedia.org/wiki/Radiometric_resolution",
+            "https://en.wikipedia.org/wiki/Rayleigh_scattering",
+            "https://en.wikipedia.org/wiki/Reflectance",
+            "https://en.wikipedia.org/wiki/Reflection_(physics)",
+            "https://en.wikipedia.org/wiki/Refraction",
+            "https://en.wikipedia.org/wiki/Remote_sensing",
+            "https://en.wikipedia.org/wiki/RGB_color_model",
+            "https://en.wikipedia.org/wiki/Satellite",
+            "https://en.wikipedia.org/wiki/Scale_(map)",
+            "https://en.wikipedia.org/wiki/Scattering",
+            "https://en.wikipedia.org/wiki/Sentinel-1",
+            "https://en.wikipedia.org/wiki/Sentinel-2",
+            "https://en.wikipedia.org/wiki/Shuttle_Radar_Topography_Mission",
+            "https://en.wikipedia.org/wiki/Signal-to-noise_ratio",
+            "https://en.wikipedia.org/wiki/Snell%27s_law",
+            "https://en.wikipedia.org/wiki/Spatial_resolution",
+            "https://en.wikipedia.org/wiki/Spectral_resolution",
+            "https://en.wikipedia.org/wiki/Speed_of_light",
+            "https://en.wikipedia.org/wiki/Statistical_classification",
+            "https://en.wikipedia.org/wiki/Stefan%E2%80%93Boltzmann_law",
+            "https://en.wikipedia.org/wiki/Stream",
+            "https://en.wikipedia.org/wiki/Subsidence",
+            "https://en.wikipedia.org/wiki/Sun-synchronous_orbit",
+            "https://en.wikipedia.org/wiki/Supervised_learning",
+            "https://en.wikipedia.org/wiki/Surface_temperature",
+            "https://en.wikipedia.org/wiki/Synthetic-aperture_radar",
+            "https://en.wikipedia.org/wiki/Temporal_resolution",
+            "https://en.wikipedia.org/wiki/Terra_(satellite)",
+            "https://en.wikipedia.org/wiki/Terrain",
+            "https://en.wikipedia.org/wiki/Thematic_Mapper",
+            "https://en.wikipedia.org/wiki/Thermographic_camera",
+            "https://en.wikipedia.org/wiki/Topographic_map",
+            "https://en.wikipedia.org/wiki/Ultraviolet",
+            "https://en.wikipedia.org/wiki/Unsupervised_learning",
+            "https://en.wikipedia.org/wiki/Urbanization",
+            "https://en.wikipedia.org/wiki/Visible_spectrum",
+            "https://en.wikipedia.org/wiki/Volcano",
+            "https://en.wikipedia.org/wiki/Wavelength",
+            "https://en.wikipedia.org/wiki/Whisk_broom_scanner",
+            "https://en.wikipedia.org/wiki/Wien%27s_displacement_law",
+            "https://en.wikipedia.org/wiki/Wildfire",
+            "https://oceanservice.noaa.gov/facts/remotesensing.html",
+            "https://science.nasa.gov/earth/",
+            "https://science.nasa.gov/mission/ecostress/",
+            "https://science.nasa.gov/mission/terra/",
+            "https://www.usgs.gov/centers/eros/science/national-land-cover-database",
+            "https://www.usgs.gov/landsat-missions/landsat-collection-2",
+            "https://www.usgs.gov/landsat-missions/landsat-normalized-difference-vegetation-index",
+            "https://www.usgs.gov/landsat-missions/landsat-satellite-missions",
         ],
     },
     "cryptography_2027": {
@@ -3017,6 +3181,10 @@ EVENT_DOMAIN_BY_SEASON = {
     # mechanics for the build events. It has nothing on logic gates, PN junctions, GFCIs or
     # De Morgan's law, all of which the manual puts on the written test.
     ("circuit-lab", 2027): "circuits_2027",
+    # 2027 Division B/C: "Observable Earth". Interpretation is 65-75% of the points and is
+    # limited to a closed list of platforms; `remote_sensing` held fourteen pages and named
+    # three of them.
+    ("remote-sensing", 2027): "remote_sensing_2027",
 }
 
 # Rotations confirmed against the 2027 Division B rules manual that still have no source set,
