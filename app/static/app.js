@@ -1422,6 +1422,20 @@ function renderCourseMap() {
   }).join('');
 }
 
+// The card used to describe anything that was not competition-ready or foundational as
+// "Reviewed competition-style practice" — which called AI-authored, unreviewed content
+// reviewed, directly contradicting the "Not Expert Reviewed" badge beside it. Each class now
+// says what it actually is.
+function examBlurb(releaseClass) {
+  return {
+    competition_ready: 'Calibrated current-season simulation.',
+    foundational_practice: 'Foundational practice with guided review.',
+    imported_practice: 'Transcribed from a real past paper. Answer key not expert-reviewed.',
+    machine_practice: 'Written and machine-checked, in the format of a real paper. No subject expert has read it.',
+    past_test: 'Past test, transcribed and not yet reviewed.',
+  }[releaseClass] || 'Competition-style practice. Not expert-reviewed.';
+}
+
 function renderExams() {
   const event = activeEvent();
   const exams = state.exams.filter(exam => !event || (exam.event_id ? exam.event_id === event.id : exam.event === event.name));
@@ -1429,7 +1443,7 @@ function renderExams() {
   $('practice-exam-count').textContent = exams.length;
   $('exam-list').innerHTML = exams.map(exam => `<article class="exam-card surface">
     <div class="exam-card-main"><header><span class="event-label">${escapeHtml(exam.event)} · Div ${escapeHtml(exam.event_division || event?.division || '')}</span><span class="exam-badge release-${escapeHtml(exam.release_class)}">${escapeHtml(exam.release_label)}</span></header>
-    <h3>${escapeHtml(exam.title)}</h3><p>${exam.release_class === 'competition_ready' ? 'Calibrated current-season simulation.' : exam.release_class === 'foundational_practice' ? 'Foundational practice with guided review.' : 'Reviewed competition-style practice.'}</p></div>
+    <h3>${escapeHtml(exam.title)}</h3><p>${examBlurb(exam.release_class)}</p></div>
     <dl><div><dt>Questions</dt><dd>${exam.question_count}</dd></div><div><dt>Time</dt><dd>${exam.effective_duration_minutes || exam.duration_minutes} min</dd></div></dl>
     <button class="button button-dark" type="button" data-start-exam="${exam.id}">Start Exam</button>
   </article>`).join('');
