@@ -155,6 +155,42 @@ DOMAIN_TERM_PATTERNS = {
                            r"maillard|caramel|scald|raw milk|skim|buttermilk|kefir|"
                            r"titrat|specific heat|solub|solution|hydrogen bond|hydrophob|"
                            r"hydrophil|viscos|densit|mass|temperature"),
+    "cryptography_2027": (r"cipher|cryptogra|cryptanaly|crypt|encrypt|decrypt|encipher|"
+                          r"plaintext|ciphertext|\bkey\b|keyword|alphabet|\bk1\b|\bk2\b|"
+                          r"substitut|transposition|monoalphabet|polyalphabet|homophonic|"
+                          r"aristocrat|patristocrat|xenocrypt|baconian|bacon|atbash|caesar|"
+                          r"shift|rot13|affine|vigen|porta|tabula recta|nihilist|polybius|"
+                          r"checkerboard|straddling|columnar|rail fence|adfgvx|playfair|"
+                          r"bifid|trifid|morse|dot|dash|fractionat|cryptarithm|verbal "
+                          r"arithmetic|"
+                          r"frequenc|letter frequenc|bigram|trigram|digraph|index of "
+                          r"coincidence|kasiski|crib|known.plaintext|ciphertext.only|"
+                          r"brute.force|unicity|entropy|redundanc|"
+                          r"modul|congruen|remainder|base 10|decimal|carry|addition|"
+                          r"permutation|anagram|pattern|"
+                          r"steganograph|null cipher|pigpen|scytale|enigma|bletchley|turing|"
+                          r"al.kindi|babbage|kerckhoff|one.time pad|acaa?|american cryptogram"),
+    "circuits_2027": (r"charge|coulomb|electric field|electrostatic|static|triboelectric|"
+                      r"conductor|insulator|ground|earth|lightning|discharge|"
+                      r"current|direct current|alternating current|\bdc\b|\bac\b|"
+                      r"voltage|volt|potential difference|emf|electromotive|"
+                      r"resist|resistivit|ohm|conductance|"
+                      r"power|watt|energy|joule|kilowatt|ampere|amp|coulomb|"
+                      r"resistor|colou?r code|tolerance|series|parallel|network|circuit|"
+                      r"short circuit|open circuit|schematic|diagram|symbol|node|loop|"
+                      r"kirchhoff|voltage divider|current divider|equivalent resistance|"
+                      r"battery|cell|internal resistance|terminal|"
+                      r"multimeter|ammeter|voltmeter|ohmmeter|measure|probe|breadboard|"
+                      r"switch|spdt|spst|three.way|relay|fuse|breaker|gfci|residual.current|"
+                      r"interrupt|safety|shock|hazard|"
+                      r"semiconductor|silicon|doping|pn junction|p.n junction|diode|led|"
+                      r"light.emitting|rectif|forward bias|reverse bias|"
+                      r"logic gate|\band\b gate|\bor\b gate|\bnot\b gate|nand|nor|xor|"
+                      r"truth table|boolean|de morgan|universal|functional complete|"
+                      r"combinational|multiplexer|adder|karnaugh|binary|\bbit\b|"
+                      r"ampere|volta|hertz|boole|"
+                      r"usb|charger|ampere.hour|efficiency|joule heating|wire|gauge|"
+                      r"potentiometer|troubleshoot"),
     "forensics_2027": (r"forensic|evidence|crime|scene|suspect|locard|custody|"
                        r"solubilit|dissolv|soluble|insoluble|precipitat|"
                        r"\bph\b|acid|base|alkal|indicator|litmus|neutraliz|"
@@ -1079,6 +1115,227 @@ DOMAIN_SOURCES = {
             "https://www.genome.gov/genetics-glossary/Translation",
             "https://www.genome.gov/genetics-glossary/Translocation",
             "https://www.genome.gov/genetics-glossary/X-Linked",
+        ],
+    },
+    "cryptography_2027": {
+        "publisher": "Wikipedia contributors",
+        "license": "public_domain (federal) and CC-BY-SA 4.0 (Wikipedia, facts with attribution)",
+        # Codebusters 2027 lists its cipher types exhaustively and the Division B regional
+        # set is: Aristocrats and Patristocrats on K1 or random alphabets, Baconian,
+        # Xenocrypt in Spanish, Fractionated Morse, cryptarithms, Porta, complete columnar
+        # transposition, Nihilist, Atbash, Caesar, the 5x5 checkerboard and homophonic
+        # substitution. The `cryptography` domain holds thirteen pages and names four of
+        # them. Two of the manual's ciphers have no article of their own — Porta is covered
+        # through della Porta and the tabula recta, Fractionated Morse through Morse code
+        # and the fractionating ciphers that share its construction.
+        "urls": [
+            "https://en.wikipedia.org/wiki/Addition",
+            "https://en.wikipedia.org/wiki/ADFGVX_cipher",
+            "https://en.wikipedia.org/wiki/Affine_cipher",
+            "https://en.wikipedia.org/wiki/Al-Kindi",
+            "https://en.wikipedia.org/wiki/Alan_Turing",
+            "https://en.wikipedia.org/wiki/Alberti_cipher",
+            "https://en.wikipedia.org/wiki/Alphabet",
+            "https://en.wikipedia.org/wiki/American_Cryptogram_Association",
+            "https://en.wikipedia.org/wiki/Anagram",
+            "https://en.wikipedia.org/wiki/Atbash",
+            "https://en.wikipedia.org/wiki/Autokey_cipher",
+            "https://en.wikipedia.org/wiki/Bacon%27s_cipher",
+            "https://en.wikipedia.org/wiki/Beale_ciphers",
+            "https://en.wikipedia.org/wiki/Bifid_cipher",
+            "https://en.wikipedia.org/wiki/Bigram",
+            "https://en.wikipedia.org/wiki/Bletchley_Park",
+            "https://en.wikipedia.org/wiki/Book_cipher",
+            "https://en.wikipedia.org/wiki/Brute-force_attack",
+            "https://en.wikipedia.org/wiki/Caesar_cipher",
+            "https://en.wikipedia.org/wiki/Carry_(arithmetic)",
+            "https://en.wikipedia.org/wiki/Charles_Babbage",
+            "https://en.wikipedia.org/wiki/Cipher",
+            "https://en.wikipedia.org/wiki/Cipher_disk",
+            "https://en.wikipedia.org/wiki/Ciphertext",
+            "https://en.wikipedia.org/wiki/Ciphertext-only_attack",
+            "https://en.wikipedia.org/wiki/Classical_cipher",
+            "https://en.wikipedia.org/wiki/Columnar_transposition",
+            "https://en.wikipedia.org/wiki/Combinatorics",
+            "https://en.wikipedia.org/wiki/Confusion_and_diffusion",
+            "https://en.wikipedia.org/wiki/Constraint_satisfaction_problem",
+            "https://en.wikipedia.org/wiki/Crib_(cryptanalysis)",
+            "https://en.wikipedia.org/wiki/Cryptanalysis",
+            "https://en.wikipedia.org/wiki/Cryptanalysis_of_the_Enigma",
+            "https://en.wikipedia.org/wiki/Cryptogram",
+            "https://en.wikipedia.org/wiki/Cryptographic_key_types",
+            "https://en.wikipedia.org/wiki/Cryptography",
+            "https://en.wikipedia.org/wiki/Decimal",
+            "https://en.wikipedia.org/wiki/Digraph_(orthography)",
+            "https://en.wikipedia.org/wiki/Elementary_arithmetic",
+            "https://en.wikipedia.org/wiki/Enigma_machine",
+            "https://en.wikipedia.org/wiki/Entropy_(information_theory)",
+            "https://en.wikipedia.org/wiki/Four-square_cipher",
+            "https://en.wikipedia.org/wiki/Francis_Bacon",
+            "https://en.wikipedia.org/wiki/Frequency_analysis",
+            "https://en.wikipedia.org/wiki/Giovanni_Battista_della_Porta",
+            "https://en.wikipedia.org/wiki/Great_Cipher",
+            "https://en.wikipedia.org/wiki/Greatest_common_divisor",
+            "https://en.wikipedia.org/wiki/Grille_(cryptography)",
+            "https://en.wikipedia.org/wiki/Hill_cipher",
+            "https://en.wikipedia.org/wiki/History_of_cryptography",
+            "https://en.wikipedia.org/wiki/Homophonic_substitution_cipher",
+            "https://en.wikipedia.org/wiki/Index_of_coincidence",
+            "https://en.wikipedia.org/wiki/Kasiski_examination",
+            "https://en.wikipedia.org/wiki/Kerckhoffs%27s_principle",
+            "https://en.wikipedia.org/wiki/Key_(cryptography)",
+            "https://en.wikipedia.org/wiki/Keyword_cipher",
+            "https://en.wikipedia.org/wiki/Known-plaintext_attack",
+            "https://en.wikipedia.org/wiki/Letter_frequency",
+            "https://en.wikipedia.org/wiki/Modular_arithmetic",
+            "https://en.wikipedia.org/wiki/Modulo",
+            "https://en.wikipedia.org/wiki/Morse_code",
+            "https://en.wikipedia.org/wiki/Nihilist_cipher",
+            "https://en.wikipedia.org/wiki/Nomenclator_cipher",
+            "https://en.wikipedia.org/wiki/Null_cipher",
+            "https://en.wikipedia.org/wiki/Number_base",
+            "https://en.wikipedia.org/wiki/One-time_pad",
+            "https://en.wikipedia.org/wiki/Permutation",
+            "https://en.wikipedia.org/wiki/Pigeonhole_principle",
+            "https://en.wikipedia.org/wiki/Pigpen_cipher",
+            "https://en.wikipedia.org/wiki/Plaintext",
+            "https://en.wikipedia.org/wiki/Playfair_cipher",
+            "https://en.wikipedia.org/wiki/Polyalphabetic_cipher",
+            "https://en.wikipedia.org/wiki/Polybius_square",
+            "https://en.wikipedia.org/wiki/Positional_notation",
+            "https://en.wikipedia.org/wiki/Prosigns_for_Morse_code",
+            "https://en.wikipedia.org/wiki/Puzzle",
+            "https://en.wikipedia.org/wiki/Rail_fence_cipher",
+            "https://en.wikipedia.org/wiki/Redundancy_(information_theory)",
+            "https://en.wikipedia.org/wiki/ROT13",
+            "https://en.wikipedia.org/wiki/Running_key_cipher",
+            "https://en.wikipedia.org/wiki/Samuel_Morse",
+            "https://en.wikipedia.org/wiki/Scytale",
+            "https://en.wikipedia.org/wiki/Spanish_language",
+            "https://en.wikipedia.org/wiki/Spanish_orthography",
+            "https://en.wikipedia.org/wiki/Steganography",
+            "https://en.wikipedia.org/wiki/Straddling_checkerboard",
+            "https://en.wikipedia.org/wiki/Substitution_cipher",
+            "https://en.wikipedia.org/wiki/Substitution%E2%80%93permutation_network",
+            "https://en.wikipedia.org/wiki/Tabula_recta",
+            "https://en.wikipedia.org/wiki/Telegraphy",
+            "https://en.wikipedia.org/wiki/Transposition_cipher",
+            "https://en.wikipedia.org/wiki/Trifid_cipher",
+            "https://en.wikipedia.org/wiki/Trigram",
+            "https://en.wikipedia.org/wiki/Two-square_cipher",
+            "https://en.wikipedia.org/wiki/Unicity_distance",
+            "https://en.wikipedia.org/wiki/Verbal_arithmetic",
+            "https://en.wikipedia.org/wiki/Vigen%C3%A8re_cipher",
+            "https://en.wikipedia.org/wiki/Zodiac_Killer",
+            "https://www.nist.gov/cryptography",
+        ],
+    },
+    "circuits_2027": {
+        "publisher": "Wikipedia contributors",
+        "license": "public_domain (federal) and CC-BY-SA 4.0 (Wikipedia, facts with attribution)",
+        # Circuit Lab 2027 names both what is in scope and what is OUT: no AC circuit
+        # theory, no capacitance or inductance, no Thevenin or Norton, no sequential logic,
+        # no oscilloscopes, and no trigonometry, complex numbers, matrices or calculus. What
+        # is in: charge and Coulomb's law, DC circuits and Ohm's law, power and energy,
+        # series and parallel, control devices, silicon PN junctions and LEDs, and
+        # combinational logic through De Morgan and adders. The seven named historical
+        # figures each have a page here because the manual asks for them by name.
+        "urls": [
+            "https://en.wikipedia.org/wiki/Adder_(electronics)",
+            "https://en.wikipedia.org/wiki/Alessandro_Volta",
+            "https://en.wikipedia.org/wiki/Alternating_current",
+            "https://en.wikipedia.org/wiki/Ammeter",
+            "https://en.wikipedia.org/wiki/Ampere",
+            "https://en.wikipedia.org/wiki/Ampere_hour",
+            "https://en.wikipedia.org/wiki/AND_gate",
+            "https://en.wikipedia.org/wiki/Andr%C3%A9-Marie_Amp%C3%A8re",
+            "https://en.wikipedia.org/wiki/Battery_charger",
+            "https://en.wikipedia.org/wiki/Binary_arithmetic",
+            "https://en.wikipedia.org/wiki/Binary_number",
+            "https://en.wikipedia.org/wiki/Bit",
+            "https://en.wikipedia.org/wiki/Boolean_algebra",
+            "https://en.wikipedia.org/wiki/Breadboard",
+            "https://en.wikipedia.org/wiki/Charles-Augustin_de_Coulomb",
+            "https://en.wikipedia.org/wiki/Circuit_breaker",
+            "https://en.wikipedia.org/wiki/Circuit_diagram",
+            "https://en.wikipedia.org/wiki/Combinational_logic",
+            "https://en.wikipedia.org/wiki/Coulomb",
+            "https://en.wikipedia.org/wiki/Coulomb%27s_law",
+            "https://en.wikipedia.org/wiki/Current_divider",
+            "https://en.wikipedia.org/wiki/De_Morgan%27s_laws",
+            "https://en.wikipedia.org/wiki/Diode",
+            "https://en.wikipedia.org/wiki/Direct_current",
+            "https://en.wikipedia.org/wiki/Doping_(semiconductor)",
+            "https://en.wikipedia.org/wiki/Efficiency",
+            "https://en.wikipedia.org/wiki/Electric_battery",
+            "https://en.wikipedia.org/wiki/Electric_charge",
+            "https://en.wikipedia.org/wiki/Electric_current",
+            "https://en.wikipedia.org/wiki/Electric_field",
+            "https://en.wikipedia.org/wiki/Electric_power",
+            "https://en.wikipedia.org/wiki/Electrical_conductor",
+            "https://en.wikipedia.org/wiki/Electrical_injury",
+            "https://en.wikipedia.org/wiki/Electrical_network",
+            "https://en.wikipedia.org/wiki/Electrical_resistance_and_conductance",
+            "https://en.wikipedia.org/wiki/Electrical_safety",
+            "https://en.wikipedia.org/wiki/Electromotive_force",
+            "https://en.wikipedia.org/wiki/Electronic_color_code",
+            "https://en.wikipedia.org/wiki/Electronic_symbol",
+            "https://en.wikipedia.org/wiki/Electrostatic_discharge",
+            "https://en.wikipedia.org/wiki/Forward_bias",
+            "https://en.wikipedia.org/wiki/Functional_completeness",
+            "https://en.wikipedia.org/wiki/Fuse_(electrical)",
+            "https://en.wikipedia.org/wiki/Georg_Ohm",
+            "https://en.wikipedia.org/wiki/George_Boole",
+            "https://en.wikipedia.org/wiki/Gustav_Kirchhoff",
+            "https://en.wikipedia.org/wiki/Half_adder",
+            "https://en.wikipedia.org/wiki/Heinrich_Hertz",
+            "https://en.wikipedia.org/wiki/Insulator_(electricity)",
+            "https://en.wikipedia.org/wiki/Internal_resistance",
+            "https://en.wikipedia.org/wiki/Joule",
+            "https://en.wikipedia.org/wiki/Joule_heating",
+            "https://en.wikipedia.org/wiki/Karnaugh_map",
+            "https://en.wikipedia.org/wiki/Kilowatt-hour",
+            "https://en.wikipedia.org/wiki/Kirchhoff%27s_circuit_laws",
+            "https://en.wikipedia.org/wiki/Light-emitting_diode",
+            "https://en.wikipedia.org/wiki/Lightning",
+            "https://en.wikipedia.org/wiki/Logic_gate",
+            "https://en.wikipedia.org/wiki/Multimeter",
+            "https://en.wikipedia.org/wiki/Multiplexer",
+            "https://en.wikipedia.org/wiki/Multiway_switching",
+            "https://en.wikipedia.org/wiki/NAND_gate",
+            "https://en.wikipedia.org/wiki/NOR_gate",
+            "https://en.wikipedia.org/wiki/NOT_gate",
+            "https://en.wikipedia.org/wiki/Ohm",
+            "https://en.wikipedia.org/wiki/Ohm%27s_law",
+            "https://en.wikipedia.org/wiki/Ohmmeter",
+            "https://en.wikipedia.org/wiki/Open-circuit_voltage",
+            "https://en.wikipedia.org/wiki/OR_gate",
+            "https://en.wikipedia.org/wiki/P%E2%80%93n_junction",
+            "https://en.wikipedia.org/wiki/Potentiometer",
+            "https://en.wikipedia.org/wiki/Rectifier",
+            "https://en.wikipedia.org/wiki/Relay",
+            "https://en.wikipedia.org/wiki/Residual-current_device",
+            "https://en.wikipedia.org/wiki/Resistivity",
+            "https://en.wikipedia.org/wiki/Resistor",
+            "https://en.wikipedia.org/wiki/Semiconductor",
+            "https://en.wikipedia.org/wiki/Series_and_parallel_circuits",
+            "https://en.wikipedia.org/wiki/Short_circuit",
+            "https://en.wikipedia.org/wiki/Silicon",
+            "https://en.wikipedia.org/wiki/Static_electricity",
+            "https://en.wikipedia.org/wiki/Switch",
+            "https://en.wikipedia.org/wiki/Triboelectric_effect",
+            "https://en.wikipedia.org/wiki/Troubleshooting",
+            "https://en.wikipedia.org/wiki/Truth_table",
+            "https://en.wikipedia.org/wiki/USB",
+            "https://en.wikipedia.org/wiki/USB_hardware",
+            "https://en.wikipedia.org/wiki/Volt",
+            "https://en.wikipedia.org/wiki/Voltage",
+            "https://en.wikipedia.org/wiki/Voltage_divider",
+            "https://en.wikipedia.org/wiki/Voltaic_pile",
+            "https://en.wikipedia.org/wiki/Voltmeter",
+            "https://en.wikipedia.org/wiki/Watt",
+            "https://en.wikipedia.org/wiki/Wire_gauge",
+            "https://en.wikipedia.org/wiki/XOR_gate",
         ],
     },
     "dairy_food_science": {
@@ -2753,6 +3010,13 @@ EVENT_DOMAIN_BY_SEASON = {
     # identifying them. `forensics` holds thirteen general pages and not one of the named
     # substances, so an identification lesson had nothing about the thing being identified.
     ("crime-busters", 2027): "forensics_2027",
+    # 2027 Division B: the manual's cipher list is exhaustive and the `cryptography` domain
+    # names four of its thirteen types.
+    ("codebusters", 2027): "cryptography_2027",
+    # 2027 Division B: `circuit-lab` reaches the shared `physics` domain, which covers
+    # mechanics for the build events. It has nothing on logic gates, PN junctions, GFCIs or
+    # De Morgan's law, all of which the manual puts on the written test.
+    ("circuit-lab", 2027): "circuits_2027",
 }
 
 # Rotations confirmed against the 2027 Division B rules manual that still have no source set,
