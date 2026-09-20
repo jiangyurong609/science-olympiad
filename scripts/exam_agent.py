@@ -55,6 +55,10 @@ def _verify_rounds(provider, snapshots: dict[int, dict], rounds: int,
     """
     survivors = set(snapshots)
     reasons: dict[int, list[str]] = {}
+    # The serving gate reads the solver and verifier reports off the question. Checking without
+    # recording left exam 268 with 27 verified items that cleared no gate, because nothing it
+    # could inspect said so.
+    evidence: dict[int, dict] = {}
     for round_number in range(1, rounds + 1):
         if not survivors:
             break
@@ -64,6 +68,9 @@ def _verify_rounds(provider, snapshots: dict[int, dict], rounds: int,
             failed = []
             for future in as_completed(futures):
                 row = future.result()
+                if row.get("solver") or row.get("verifier"):
+                    evidence[row["item_id"]] = {"independent_solver": row.get("solver", {}),
+                                                "independent_verifier": row.get("verifier", {})}
                 if row["ok"]:
                     continue
                 item_id = row["item_id"]
@@ -76,7 +83,7 @@ def _verify_rounds(provider, snapshots: dict[int, dict], rounds: int,
         survivors -= set(failed)
         print(f"   round {round_number}: {len(survivors)} still clean, "
               f"{len(failed)} rejected this round", flush=True)
-    return survivors, reasons
+    return survivors, reasons, evidence
 
 
 def main() -> None:
@@ -117,7 +124,8 @@ def main() -> None:
         items = db.scalars(select(ExamItem).where(ExamItem.exam_id == exam_id)).all()
         snapshots = {i.id: {**i.snapshot, "position": i.position} for i in items}
         print(f"   {len(items)} items written; verifying", flush=True)
-        survivors, reasons = _verify_rounds(provider, snapshots, args.rounds, args.workers)
+        survivors, reasons, evidence = _verify_rounds(
+            provider, snapshots, args.rounds, args.workers)
 
         exam = db.get(Exam, exam_id)
         for item in items:
@@ -127,7 +135,8 @@ def main() -> None:
             if item.id in survivors:
                 report_json = dict(question.validation_report or {})
                 report_json.update(passed=True, structural_checks="passed",
-                                   verification_rounds=args.rounds)
+                                   verification_rounds=args.rounds,
+                                   **evidence.get(item.id, {}))
                 report_json["errors"] = [e for e in report_json.get("errors", [])
                                          if e != "unreviewed_machine_authored"]
                 question.validation_report = report_json
