@@ -25,7 +25,20 @@
           "slug": "airways-and-the-conducting-zone",
           "title": "The Airway from Nose to Bronchiole",
           "objective": "Order the structures of the conducting zone from nasal cavity to terminal bronchiole and state what each contributes to warming, filtering and delivering air.",
-          "keywords": ["terminal bronchiole", "conducting zone", "respiratory zone", "pseudostratified", "bronchiole", "bronchus", "trachea", "larynx", "goblet cell", "cilia", "nasal cavity", "cartilage"],
+          "keywords": [
+            "terminal bronchiole",
+            "conducting zone",
+            "respiratory zone",
+            "pseudostratified",
+            "bronchiole",
+            "bronchus",
+            "trachea",
+            "larynx",
+            "goblet cell",
+            "cilia",
+            "nasal cavity",
+            "cartilage"
+          ],
           "high_weight": true,
           "video": false
         },
@@ -33,7 +46,18 @@
           "slug": "alveoli-and-the-respiratory-membrane",
           "title": "Alveoli and the Surface Gas Must Cross",
           "objective": "Describe the alveolus, its cell types and its surfactant, and explain why the barrier between air and blood must stay thin and moist.",
-          "keywords": ["pulmonary surfactant", "alveolar macrophage", "pneumocyte", "alveolar sac", "alveolus", "surface tension", "elastic recoil", "pulmonary capillary", "gas exchange", "diffusion"],
+          "keywords": [
+            "pulmonary surfactant",
+            "alveolar macrophage",
+            "pneumocyte",
+            "alveolar sac",
+            "alveolus",
+            "surface tension",
+            "elastic recoil",
+            "pulmonary capillary",
+            "gas exchange",
+            "diffusion"
+          ],
           "high_weight": true,
           "video": true
         },
@@ -41,7 +65,20 @@
           "slug": "pleura-diaphragm-and-the-chest-wall",
           "title": "Pleura, Diaphragm and the Sealed Chest",
           "objective": "Name the pleural layers and their fluid, explain how intrapleural pressure couples lung to chest wall, and describe what the diaphragm and intercostal muscles do on inspiration.",
-          "keywords": ["intrapleural pressure", "visceral pleura", "parietal pleura", "pleural cavity", "pleural fluid", "phrenic nerve", "diaphragm", "intercostal", "pneumothorax", "thoracic cavity", "hilum", "lobe"],
+          "keywords": [
+            "intrapleural pressure",
+            "visceral pleura",
+            "parietal pleura",
+            "pleural cavity",
+            "pleural fluid",
+            "phrenic nerve",
+            "diaphragm",
+            "intercostal",
+            "pneumothorax",
+            "thoracic cavity",
+            "hilum",
+            "lobe"
+          ],
           "high_weight": true,
           "video": true
         }
@@ -60,7 +97,20 @@
           "slug": "mechanics-and-patterns-of-breathing",
           "title": "How a Breath Actually Happens",
           "objective": "Explain inhalation and exhalation as volume and pressure changes, and distinguish quiet breathing, hyperventilation, hypoventilation and apnea.",
-          "keywords": ["intrapleural pressure", "inhalation", "exhalation", "hyperventilation", "hypoventilation", "dead space", "tidal volume", "respiratory rate", "compliance", "apnea", "Boyle", "intercostal"],
+          "keywords": [
+            "intrapleural pressure",
+            "inhalation",
+            "exhalation",
+            "hyperventilation",
+            "hypoventilation",
+            "dead space",
+            "tidal volume",
+            "respiratory rate",
+            "compliance",
+            "apnea",
+            "Boyle",
+            "intercostal"
+          ],
           "high_weight": true,
           "video": true
         },
@@ -68,7 +118,19 @@
           "slug": "lung-volumes-and-capacities",
           "title": "Volumes, Capacities and What They Add Up To",
           "objective": "Define tidal, inspiratory reserve, expiratory reserve and residual volumes, and build vital capacity, inspiratory capacity, functional residual capacity and total lung capacity from them.",
-          "keywords": ["inspiratory reserve volume", "expiratory reserve volume", "functional residual capacity", "total lung capacity", "inspiratory capacity", "residual volume", "vital capacity", "tidal volume", "lung volumes", "plethysmography", "spirometer"],
+          "keywords": [
+            "inspiratory reserve volume",
+            "expiratory reserve volume",
+            "functional residual capacity",
+            "total lung capacity",
+            "inspiratory capacity",
+            "residual volume",
+            "vital capacity",
+            "tidal volume",
+            "lung volumes",
+            "plethysmography",
+            "spirometer"
+          ],
           "high_weight": true,
           "video": false
         },
@@ -76,7 +138,19 @@
           "slug": "reading-a-spirogram",
           "title": "Reading a Spirogram",
           "objective": "Compute FEV1 and FVC from a spirogram, use their ratio to separate an obstructive from a restrictive pattern, and say what a bronchodilator response adds.",
-          "keywords": ["FEV1", "forced vital capacity", "forced expiratory volume", "FVC", "spirogram", "peak expiratory flow", "obstructive", "restrictive", "bronchodilator", "spirometry", "lung function test"],
+          "keywords": [
+            "FEV1",
+            "forced vital capacity",
+            "forced expiratory volume",
+            "FVC",
+            "spirogram",
+            "peak expiratory flow",
+            "obstructive",
+            "restrictive",
+            "bronchodilator",
+            "spirometry",
+            "lung function test"
+          ],
           "high_weight": true,
           "video": true
         }
@@ -95,7 +169,19 @@
           "slug": "gas-exchange-and-partial-pressures",
           "title": "Partial Pressures and Diffusion",
           "objective": "Use partial pressure differences to predict the direction and rate of oxygen and carbon dioxide movement between alveolus, blood and tissue.",
-          "keywords": ["partial pressure", "PaO2", "PaCO2", "Fick", "alveolar", "concentration gradient", "perfusion", "pulmonary circulation", "diffusion", "carbon dioxide", "oxygen"],
+          "keywords": [
+            "partial pressure",
+            "PaO2",
+            "PaCO2",
+            "Fick",
+            "alveolar",
+            "concentration gradient",
+            "perfusion",
+            "pulmonary circulation",
+            "diffusion",
+            "carbon dioxide",
+            "oxygen"
+          ],
           "high_weight": true,
           "video": false
         },
@@ -103,7 +189,20 @@
           "slug": "oxygen-transport-and-the-dissociation-curve",
           "title": "Hemoglobin and the Dissociation Curve",
           "objective": "Explain cooperative oxygen binding, read percent saturation off a dissociation curve, and predict the shift produced by pH, carbon dioxide, temperature and 2,3-bisphosphoglycerate.",
-          "keywords": ["dissociation curve", "oxyhemoglobin", "Bohr effect", "P50", "cooperativity", "bisphosphoglycerate", "carbaminohemoglobin", "carbonic anhydrase", "oxygen saturation", "sigmoid", "bicarbonate", "hemoglobin"],
+          "keywords": [
+            "dissociation curve",
+            "oxyhemoglobin",
+            "Bohr effect",
+            "P50",
+            "cooperativity",
+            "bisphosphoglycerate",
+            "carbaminohemoglobin",
+            "carbonic anhydrase",
+            "oxygen saturation",
+            "sigmoid",
+            "bicarbonate",
+            "hemoglobin"
+          ],
           "high_weight": true,
           "video": true
         },
@@ -111,7 +210,20 @@
           "slug": "control-of-breathing-and-blood-gases",
           "title": "Respiratory Rhythm, Chemoreceptors and Blood Gases",
           "objective": "Name the brainstem centres that generate respiratory rhythm, explain which chemoreceptor responds to which stimulus, and classify a blood gas result as respiratory acidosis or alkalosis.",
-          "keywords": ["ventral respiratory group", "dorsal respiratory group", "respiratory center", "central chemoreceptor", "peripheral chemoreceptor", "carotid body", "aortic body", "medulla oblongata", "pons", "respiratory acidosis", "respiratory alkalosis", "arterial blood gas"],
+          "keywords": [
+            "ventral respiratory group",
+            "dorsal respiratory group",
+            "respiratory center",
+            "central chemoreceptor",
+            "peripheral chemoreceptor",
+            "carotid body",
+            "aortic body",
+            "medulla oblongata",
+            "pons",
+            "respiratory acidosis",
+            "respiratory alkalosis",
+            "arterial blood gas"
+          ],
           "high_weight": true,
           "video": false
         }
@@ -130,7 +242,19 @@
           "slug": "exercise-and-high-altitude",
           "title": "Exercise and High Altitude",
           "objective": "Describe how ventilation, oxygen consumption and cardiac output change during exercise, and explain acclimatisation and the altitude illnesses that follow when it fails.",
-          "keywords": ["VO2 max", "acclimatization", "altitude sickness", "HAPE", "HACE", "erythropoietin", "oxygen consumption", "hyperventilation", "cardiac output", "hypoxia", "lactate"],
+          "keywords": [
+            "VO2 max",
+            "acclimatization",
+            "altitude sickness",
+            "HAPE",
+            "HACE",
+            "erythropoietin",
+            "oxygen consumption",
+            "hyperventilation",
+            "cardiac output",
+            "hypoxia",
+            "lactate"
+          ],
           "high_weight": true,
           "video": false
         },
@@ -138,7 +262,20 @@
           "slug": "obstructive-and-inherited-airway-disease",
           "title": "COPD, Asthma, Cystic Fibrosis and Sleep Apnea",
           "objective": "Distinguish chronic bronchitis, emphysema, asthma, cystic fibrosis and sleep apnea by the airway or alveolar change each produces and how each is diagnosed.",
-          "keywords": ["chronic bronchitis", "alpha-1 antitrypsin", "emphysema", "obstructive sleep apnea", "central sleep apnea", "cystic fibrosis", "CFTR", "asthma", "COPD", "airway inflammation", "bronchoconstriction", "mucus"],
+          "keywords": [
+            "chronic bronchitis",
+            "alpha-1 antitrypsin",
+            "emphysema",
+            "obstructive sleep apnea",
+            "central sleep apnea",
+            "cystic fibrosis",
+            "CFTR",
+            "asthma",
+            "COPD",
+            "airway inflammation",
+            "bronchoconstriction",
+            "mucus"
+          ],
           "high_weight": true,
           "video": false
         },
@@ -146,7 +283,20 @@
           "slug": "infection-fibrosis-and-lung-cancer",
           "title": "Pneumonia, Tuberculosis, Fibrosis and Lung Cancer",
           "objective": "Identify pneumonia, tuberculosis, pleurisy, pulmonary edema, pulmonary fibrosis, the pneumoconioses and lung cancer from the compartment of the lung each involves.",
-          "keywords": ["latent tuberculosis", "idiopathic pulmonary fibrosis", "pneumoconiosis", "asbestosis", "silicosis", "pulmonary edema", "pleurisy", "non-small cell lung cancer", "small cell lung cancer", "tuberculosis", "pneumonia"],
+          "keywords": [
+            "latent tuberculosis",
+            "idiopathic pulmonary fibrosis",
+            "coal worker",
+            "pneumoconiosis",
+            "asbestosis",
+            "silicosis",
+            "pulmonary edema",
+            "pleurisy",
+            "non-small cell lung cancer",
+            "small cell lung cancer",
+            "tuberculosis",
+            "pneumonia"
+          ],
           "high_weight": false,
           "video": false
         },
@@ -154,7 +304,19 @@
           "slug": "treating-and-preventing-respiratory-disease",
           "title": "Drugs, Oxygen, Surgery and Prevention",
           "objective": "Match bronchodilators, inhaled corticosteroids, oxygen therapy, CPAP, mechanical ventilation, transplantation and smoking cessation to the respiratory problem each addresses.",
-          "keywords": ["pulmonary rehabilitation", "inhaled corticosteroid", "bronchodilator", "mechanical ventilation", "lung transplantation", "oxygen therapy", "CPAP", "smoking cessation", "corticosteroid", "antibiotic", "nebulizer"],
+          "keywords": [
+            "pulmonary rehabilitation",
+            "inhaled corticosteroid",
+            "bronchodilator",
+            "mechanical ventilation",
+            "lung transplantation",
+            "oxygen therapy",
+            "CPAP",
+            "smoking cessation",
+            "corticosteroid",
+            "antibiotic",
+            "nebulizer"
+          ],
           "high_weight": false,
           "video": false
         }
@@ -173,7 +335,20 @@
           "slug": "alimentary-canal-and-accessory-organs",
           "title": "The Canal and the Organs That Feed It",
           "objective": "Order the organs of the alimentary canal from mouth to anus and state what each accessory organ secretes into the tube.",
-          "keywords": ["alimentary canal", "gastrointestinal tract", "accessory organ", "salivary gland", "gallbladder", "pharynx", "esophagus", "small intestine", "large intestine", "pancreas", "stomach", "liver"],
+          "keywords": [
+            "alimentary canal",
+            "gastrointestinal tract",
+            "accessory organ",
+            "salivary gland",
+            "gallbladder",
+            "pharynx",
+            "esophagus",
+            "small intestine",
+            "large intestine",
+            "pancreas",
+            "stomach",
+            "liver"
+          ],
           "high_weight": true,
           "video": true
         },
@@ -181,7 +356,20 @@
           "slug": "the-four-layers-of-the-gut-wall",
           "title": "Mucosa, Submucosa, Muscularis, Serosa",
           "objective": "Identify the four layers of the gut wall in order from the lumen outward and name the nerve plexus and sublayer found in each.",
-          "keywords": ["muscularis mucosae", "muscularis externa", "myenteric plexus", "submucosal plexus", "lamina propria", "Auerbach", "Meissner", "submucosa", "adventitia", "serosa", "mucosa", "epithelium"],
+          "keywords": [
+            "muscularis mucosae",
+            "muscularis externa",
+            "myenteric plexus",
+            "submucosal plexus",
+            "lamina propria",
+            "Auerbach",
+            "Meissner",
+            "submucosa",
+            "adventitia",
+            "serosa",
+            "mucosa",
+            "epithelium"
+          ],
           "high_weight": true,
           "video": false
         },
@@ -189,7 +377,20 @@
           "slug": "comparing-the-linings-of-the-gut",
           "title": "Why Each Region Has the Lining It Has",
           "objective": "Contrast the epithelium of the esophagus, stomach, small intestine and large intestine and relate each to the abrasion, acid or absorption that region handles.",
-          "keywords": ["stratified squamous", "simple columnar", "gastric pit", "parietal cell", "chief cell", "microvilli", "goblet cell", "Paneth cell", "haustra", "rugae", "villi", "crypt"],
+          "keywords": [
+            "stratified squamous",
+            "simple columnar",
+            "gastric pit",
+            "parietal cell",
+            "chief cell",
+            "microvilli",
+            "goblet cell",
+            "Paneth cell",
+            "haustra",
+            "rugae",
+            "villi",
+            "crypt"
+          ],
           "high_weight": true,
           "video": false
         }
@@ -208,7 +409,19 @@
           "slug": "mechanical-digestion-and-motility",
           "title": "Chewing, Churning and Peristalsis",
           "objective": "Distinguish mechanical from chemical digestion and explain how mastication, peristalsis, segmentation and the sphincters move a bolus into chyme and onward.",
-          "keywords": ["mechanical digestion", "migrating motor complex", "segmentation", "peristalsis", "mastication", "pyloric sphincter", "sphincter", "swallowing", "motility", "chyme", "bolus"],
+          "keywords": [
+            "mechanical digestion",
+            "migrating motor complex",
+            "segmentation",
+            "peristalsis",
+            "mastication",
+            "pyloric sphincter",
+            "sphincter",
+            "swallowing",
+            "motility",
+            "chyme",
+            "bolus"
+          ],
           "high_weight": false,
           "video": true
         },
@@ -216,7 +429,20 @@
           "slug": "chemical-digestion-of-macronutrients",
           "title": "Enzymes, Substrates and Absorption",
           "objective": "Name the enzyme, its source and its products for protein, fat and carbohydrate digestion, and explain how bile makes fat digestible.",
-          "keywords": ["pepsinogen", "brush border", "emulsification", "bile salts", "pepsin", "trypsin", "amylase", "lipase", "lactase", "hydrochloric acid", "chemical digestion", "amino acid"],
+          "keywords": [
+            "pepsinogen",
+            "brush border",
+            "emulsification",
+            "bile salts",
+            "pepsin",
+            "trypsin",
+            "amylase",
+            "lipase",
+            "lactase",
+            "hydrochloric acid",
+            "chemical digestion",
+            "amino acid"
+          ],
           "high_weight": true,
           "video": false
         },
@@ -224,7 +450,19 @@
           "slug": "liver-pancreas-and-kupffer-cells",
           "title": "The Liver, the Pancreas and Kupffer Cells",
           "objective": "State the liver's and pancreas's digestive roles and describe what Kupffer cells do to material arriving from the gut.",
-          "keywords": ["Kupffer cell", "hepatocyte", "pancreatic juice", "acinar", "portal vein", "sinusoid", "bile duct", "bicarbonate", "detoxification", "gallbladder", "bile"],
+          "keywords": [
+            "Kupffer cell",
+            "hepatocyte",
+            "pancreatic juice",
+            "acinar",
+            "portal vein",
+            "sinusoid",
+            "bile duct",
+            "bicarbonate",
+            "detoxification",
+            "gallbladder",
+            "bile"
+          ],
           "high_weight": true,
           "video": false
         }
@@ -243,7 +481,20 @@
           "slug": "acid-disease-gerd-and-peptic-ulcers",
           "title": "Reflux, Gastritis and Peptic Ulcers",
           "objective": "Explain how reflux, Helicobacter pylori and NSAIDs injure the mucosa, and distinguish GERD, gastritis and peptic ulcer disease by site and cause.",
-          "keywords": ["peptic ulcer", "Helicobacter pylori", "gastroesophageal reflux", "proton pump inhibitor", "lower esophageal sphincter", "Barrett", "gastritis", "GERD", "heartburn", "NSAID", "mucosa"],
+          "keywords": [
+            "peptic ulcer",
+            "Helicobacter pylori",
+            "duodenal",
+            "gastroesophageal reflux",
+            "proton pump inhibitor",
+            "lower esophageal sphincter",
+            "Barrett",
+            "gastritis",
+            "GERD",
+            "heartburn",
+            "NSAID",
+            "mucosa"
+          ],
           "high_weight": true,
           "video": false
         },
@@ -251,7 +502,20 @@
           "slug": "intestinal-disease-and-malabsorption",
           "title": "IBD, Celiac Disease and the Malabsorbing Gut",
           "objective": "Distinguish Crohn's disease, ulcerative colitis, celiac disease, diverticular disease, lactose intolerance and appendicitis by the region and layer of bowel each affects.",
-          "keywords": ["ulcerative colitis", "inflammatory bowel disease", "celiac disease", "diverticulitis", "diverticulosis", "lactose intolerance", "appendicitis", "malabsorption", "Crohn", "lactase", "gluten", "diarrhea"],
+          "keywords": [
+            "ulcerative colitis",
+            "inflammatory bowel disease",
+            "celiac disease",
+            "diverticulitis",
+            "diverticulosis",
+            "lactose intolerance",
+            "appendicitis",
+            "malabsorption",
+            "Crohn",
+            "lactase",
+            "gluten",
+            "diarrhea"
+          ],
           "high_weight": true,
           "video": false
         },
@@ -259,7 +523,19 @@
           "slug": "hepatitis-obesity-and-digestive-cancers",
           "title": "Hepatitis, Obesity and Digestive Cancers",
           "objective": "Contrast hepatitis A, B and C by transmission and outcome, and relate chronic liver injury and obesity to cirrhosis and to esophageal, stomach, colorectal and liver cancer.",
-          "keywords": ["hepatitis B", "hepatitis C", "hepatitis A", "cirrhosis", "fatty liver", "colorectal cancer", "esophageal cancer", "stomach cancer", "liver cancer", "body mass index", "obesity"],
+          "keywords": [
+            "hepatitis B",
+            "hepatitis C",
+            "hepatitis A",
+            "cirrhosis",
+            "fatty liver",
+            "colorectal cancer",
+            "esophageal cancer",
+            "stomach cancer",
+            "liver cancer",
+            "body mass index",
+            "obesity"
+          ],
           "high_weight": false,
           "video": false
         }
@@ -278,7 +554,20 @@
           "slug": "organs-of-the-immune-system",
           "title": "Marrow, Thymus, Spleen, Nodes and Skin",
           "objective": "Distinguish primary from secondary lymphoid organs and state the immune function of bone marrow, thymus, spleen, lymph nodes and skin.",
-          "keywords": ["germinal center", "white pulp", "red pulp", "lymph node", "lymphatic system", "bone marrow", "thymus", "spleen", "lymphocyte", "stem cell", "epidermis", "tonsil"],
+          "keywords": [
+            "germinal center",
+            "white pulp",
+            "red pulp",
+            "lymph node",
+            "lymphatic system",
+            "bone marrow",
+            "thymus",
+            "spleen",
+            "lymphocyte",
+            "stem cell",
+            "epidermis",
+            "tonsil"
+          ],
           "high_weight": true,
           "video": true
         },
@@ -286,7 +575,19 @@
           "slug": "barriers-complement-and-toll-like-receptors",
           "title": "Barriers, Complement and Pattern Recognition",
           "objective": "Explain how physical and chemical barriers, the complement pathways and Toll-like receptors detect and attack a pathogen before any antibody exists.",
-          "keywords": ["Toll-like receptor", "membrane attack complex", "pathogen-associated molecular pattern", "pattern recognition receptor", "complement system", "classical pathway", "alternative pathway", "lectin pathway", "opsonization", "lysozyme", "innate immune"],
+          "keywords": [
+            "Toll-like receptor",
+            "membrane attack complex",
+            "pathogen-associated molecular pattern",
+            "pattern recognition receptor",
+            "complement system",
+            "classical pathway",
+            "alternative pathway",
+            "lectin pathway",
+            "opsonization",
+            "lysozyme",
+            "innate immune"
+          ],
           "high_weight": true,
           "video": false
         },
@@ -294,7 +595,20 @@
           "slug": "inflammation-and-the-innate-cells",
           "title": "Inflammation and the Cells That Arrive First",
           "objective": "Order the events of an inflammatory response and state what neutrophils, macrophages, natural killer cells and dendritic cells each contribute.",
-          "keywords": ["natural killer cell", "dendritic cell", "neutrophil", "macrophage", "phagocytosis", "chemotaxis", "vasodilation", "inflammation", "histamine", "cytokine", "fever", "pus"],
+          "keywords": [
+            "natural killer cell",
+            "dendritic cell",
+            "neutrophil",
+            "macrophage",
+            "phagocytosis",
+            "chemotaxis",
+            "vasodilation",
+            "inflammation",
+            "histamine",
+            "cytokine",
+            "fever",
+            "pus"
+          ],
           "high_weight": true,
           "video": true
         }
@@ -313,7 +627,19 @@
           "slug": "t-cells-b-cells-and-antigen-presentation",
           "title": "T Cells, B Cells and MHC",
           "objective": "Explain how an antigen-presenting cell displays antigen on MHC, and contrast what helper and cytotoxic T cells and B cells do once they recognise it.",
-          "keywords": ["major histocompatibility complex", "antigen-presenting cell", "cytotoxic T cell", "helper T cell", "clonal selection", "T cell receptor", "plasma cell", "adaptive immune", "CD4", "CD8", "antigen"],
+          "keywords": [
+            "major histocompatibility complex",
+            "antigen-presenting cell",
+            "cytotoxic T cell",
+            "helper T cell",
+            "clonal selection",
+            "T cell receptor",
+            "plasma cell",
+            "adaptive immune",
+            "CD4",
+            "CD8",
+            "antigen"
+          ],
           "high_weight": true,
           "video": true
         },
@@ -321,7 +647,20 @@
           "slug": "antibodies-memory-and-the-allergic-response",
           "title": "Antibodies, Memory and Allergy",
           "objective": "Name the immunoglobulin classes and their jobs, contrast primary and secondary responses, and describe how an IgE-mediated allergic reaction unfolds.",
-          "keywords": ["immunoglobulin", "secondary immune response", "primary immune response", "memory cell", "mast cell", "allergen", "histamine", "IgE", "IgG", "IgM", "IgA", "antibody"],
+          "keywords": [
+            "immunoglobulin",
+            "secondary immune response",
+            "primary immune response",
+            "memory cell",
+            "mast cell",
+            "allergen",
+            "histamine",
+            "IgE",
+            "IgG",
+            "IgM",
+            "IgA",
+            "antibody"
+          ],
           "high_weight": true,
           "video": false
         }
@@ -340,7 +679,21 @@
           "slug": "hypersensitivity-types-one-to-four",
           "title": "The Four Hypersensitivities",
           "objective": "Assign anaphylaxis, urticaria, myasthenia gravis, serum sickness and the Arthus reaction to hypersensitivity types I through IV and justify each by mechanism.",
-          "keywords": ["Gell and Coombs", "type I hypersensitivity", "type II hypersensitivity", "type III hypersensitivity", "type IV hypersensitivity", "Arthus reaction", "serum sickness", "myasthenia gravis", "anaphylaxis", "immune complex", "delayed-type", "urticaria"],
+          "keywords": [
+            "Gell and Coombs",
+            "type I hypersensitivity",
+            "contact dermatitis",
+            "type II hypersensitivity",
+            "type III hypersensitivity",
+            "type IV hypersensitivity",
+            "Arthus reaction",
+            "serum sickness",
+            "myasthenia gravis",
+            "anaphylaxis",
+            "immune complex",
+            "delayed-type",
+            "urticaria"
+          ],
           "high_weight": true,
           "video": false
         },
@@ -348,7 +701,19 @@
           "slug": "immunodeficiency-hiv-cvid-and-scid",
           "title": "Immunodeficiency: HIV, CVID and SCID",
           "objective": "Explain which immune compartment fails in HIV infection, common variable immunodeficiency and severe combined immunodeficiency, and what infections follow from each.",
-          "keywords": ["common variable immunodeficiency", "severe combined immunodeficiency", "primary immunodeficiency", "hypogammaglobulinemia", "opportunistic infection", "antiretroviral", "CD4", "HIV", "AIDS", "bone marrow transplant", "immunoglobulin replacement"],
+          "keywords": [
+            "common variable immunodeficiency",
+            "severe combined immunodeficiency",
+            "primary immunodeficiency",
+            "hypogammaglobulinemia",
+            "opportunistic infection",
+            "antiretroviral",
+            "CD4",
+            "HIV",
+            "AIDS",
+            "bone marrow transplant",
+            "immunoglobulin replacement"
+          ],
           "high_weight": true,
           "video": false
         },
@@ -356,7 +721,20 @@
           "slug": "autoimmune-disease",
           "title": "Autoimmunity: Nerve, Thyroid, Joint and Skin",
           "objective": "Name the self-target in multiple sclerosis, rheumatoid arthritis, Hashimoto thyroiditis, Graves' disease, lupus, scleroderma, dermatomyositis and psoriasis and its arthritis.",
-          "keywords": ["systemic lupus erythematosus", "psoriatic arthritis", "rheumatoid arthritis", "multiple sclerosis", "dermatomyositis", "scleroderma", "Hashimoto", "Graves", "psoriasis", "autoantibody", "autoimmunity", "myelin"],
+          "keywords": [
+            "systemic lupus erythematosus",
+            "psoriatic arthritis",
+            "rheumatoid arthritis",
+            "multiple sclerosis",
+            "dermatomyositis",
+            "scleroderma",
+            "Hashimoto",
+            "Graves",
+            "psoriasis",
+            "autoantibody",
+            "autoimmunity",
+            "myelin"
+          ],
           "high_weight": true,
           "video": false
         }
@@ -375,7 +753,19 @@
           "slug": "transplantation-and-rejection",
           "title": "Grafts, Matching and Rejection",
           "objective": "Distinguish autograft, allograft, isograft and xenograft, and explain how tissue matching and immunosuppressive drugs reduce hyperacute, acute and chronic rejection.",
-          "keywords": ["human leukocyte antigen", "hyperacute rejection", "transplant rejection", "immunosuppressive drug", "allograft", "autograft", "xenograft", "isograft", "acute rejection", "chronic rejection", "major histocompatibility complex"],
+          "keywords": [
+            "human leukocyte antigen",
+            "hyperacute rejection",
+            "transplant rejection",
+            "immunosuppressive drug",
+            "allograft",
+            "autograft",
+            "xenograft",
+            "isograft",
+            "acute rejection",
+            "chronic rejection",
+            "major histocompatibility complex"
+          ],
           "high_weight": false,
           "video": false
         },
@@ -383,7 +773,19 @@
           "slug": "cancer-immunotherapy-and-immune-treatment",
           "title": "Immunotherapy, CAR-T and Everyday Immune Drugs",
           "objective": "Explain how monoclonal antibodies, immune checkpoint inhibitors and CAR T-cell therapy act, and match corticosteroids, antihistamines and vaccines to the immune problem each treats.",
-          "keywords": ["chimeric antigen receptor", "immune checkpoint inhibitor", "T-cell transfer therapy", "monoclonal antibody", "CAR T", "immunotherapy", "immunosuppressive", "antihistamine", "corticosteroid", "vaccine", "antigen"],
+          "keywords": [
+            "chimeric antigen receptor",
+            "immune checkpoint inhibitor",
+            "T-cell transfer therapy",
+            "monoclonal antibody",
+            "CAR T",
+            "immunotherapy",
+            "immunosuppressive",
+            "antihistamine",
+            "corticosteroid",
+            "vaccine",
+            "antigen"
+          ],
           "high_weight": false,
           "video": false
         }
