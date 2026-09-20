@@ -383,7 +383,7 @@ def _one_batch(provider, event, section, chosen, index, want, avoid, topics,
 
 
 def _generate_section(provider, event, section, passages, sources,
-                      scope_topics: list[str]) -> list[dict]:
+                      scope_topics: list[str], constraints: list[str] | None = None) -> list[dict]:
     """Fill a section, walking the syllabus so no topic is lost to one bad batch.
 
     The first version ran a fixed number of batches and indexed slices with `attempt % len`.
@@ -543,7 +543,7 @@ def build(event_slug: str, format_key: str, apply: bool) -> dict:
     built: list[dict] = []
     with ThreadPoolExecutor(max_workers=3) as pool:
         futures = {pool.submit(_generate_section, provider, event, s, passages, sources,
-                                   scope_topics): s
+                                   scope_topics, constraints): s
                    for s in spec["sections"]}
         for future in as_completed(futures):
             section = futures[future]
