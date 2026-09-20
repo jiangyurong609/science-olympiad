@@ -75,18 +75,15 @@ FORMATS = {
                       "two matching sets, multiple choice, picture-based, scenario tie-breaker"),
         "duration_minutes": 50,
         "sections": [
-            {"key": "true_false", "title": "I. True/False", "kind": "true_false",
-             "count": 8, "points": 1,
-             "guidance": "Each statement must be a MULTI-CLAUSE claim that sounds authoritative "
-                         "and is decidable from the passage. Roughly half should be false "
-                         "because a correct mechanism is attached to a wrong conclusion, a "
-                         "wrong place, or an overreaching 'always/solely/primary'. Never write "
-                         "a bare definition, and never a taxonomy claim about which category a "
-                         "term belongs to — 'a knickpoint is not a sediment load' tests nothing. "
-                         "A good item is one a well-prepared student could plausibly get wrong "
-                         "for a reason worth correcting. The statement is yours to compose; "
-                         "quote the passage sentence that establishes the mechanism it hinges "
-                         "on."},
+            # The True/False section is NOT generated. Three separate attempts produced items
+            # that pair unrelated terms and assert a false category relation — "a knickpoint is
+            # a transported sediment load", "antidunes and dunes are forms of dissolved load",
+            # "bed load and dissolved load are grouped with sedimentary processes". No student
+            # ever believed any of those, so the items test nothing. Blocking the phrasing only
+            # moved it: the model rewrote "are grouped with" as "may include" and carried on.
+            # A real paper's True/False items are its hardest — multi-clause traps a
+            # well-prepared student can plausibly fall for — and that needs a human author.
+            # Shipping eight worthless items is worse than shipping a shorter paper.
             {"key": "matching_surface", "title": "II. Matching — Channels and Landforms",
              "kind": "matching", "count": 5, "points": 1,
              "guidance": "Each item names one landform or channel term and asks which "
@@ -556,6 +553,9 @@ def build(event_slug: str, format_key: str, apply: bool) -> dict:
     # An exam published under an event no catalog lists is findable by nobody. While the course
     # is `in_development` the exam is built but left unpublished, which is the same honest state
     # its lessons are in as drafts — it is published when the event goes live, not before.
+    # Two independent reasons not to publish, and the second bit me: once the event went live
+    # the paper published itself, while its items still earn `unreviewed_practice`, which
+    # refuses new attempts. A published exam a student cannot start is worse than no exam.
     event_hidden = event.season_status in HIDDEN_SEASON_STATUSES or not event.active
     exam = Exam(
         event_id=event.id,
@@ -563,7 +563,7 @@ def build(event_slug: str, format_key: str, apply: bool) -> dict:
               + (f" {existing + 1}" if existing else ""),
         duration_minutes=spec["duration_minutes"],
         question_ids=[q.id for q in questions],
-        published=not event_hidden,
+        published=False,       # flipped on only after the gates below are cleared and checked
         # NOT `machine_practice`. That class means every item cleared the deterministic
         # validator, an independent blind solver, an independent verifier and grounding in
         # approved claims — and `student_visibility` is explicit that it "is earned by
@@ -608,9 +608,16 @@ def build(event_slug: str, format_key: str, apply: bool) -> dict:
     db.commit()
     report.update(mode="apply", exam_id=exam.id, published=exam.published,
                   question_ids=[q.id for q in questions][:5])
+    from app.services import student_visibility as _sv
+    earned = _sv.classify_exam(db, exam)
+    report["earned_disposition"] = earned
+    print(f"   built unpublished · classifier earns it {earned!r}")
+    if earned != "machine_practice":
+        print("   it cannot be served yet: machine_practice requires an independent blind "
+              "solver, an independent verifier and grounding in approved claims.")
     if event_hidden:
-        print(f"   built unpublished: {event.slug} is {event.season_status!r}, so a published "
-              f"exam there would be reachable by nobody. Publish it when the event goes live.")
+        print(f"   {event.slug} is {event.season_status!r}, so it would be reachable by "
+              f"nobody even if published.")
     return report
 
 
