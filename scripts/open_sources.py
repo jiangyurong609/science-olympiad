@@ -155,6 +155,31 @@ DOMAIN_TERM_PATTERNS = {
                            r"maillard|caramel|scald|raw milk|skim|buttermilk|kefir|"
                            r"titrat|specific heat|solub|solution|hydrogen bond|hydrophob|"
                            r"hydrophil|viscos|densit|mass|temperature"),
+    "methodology_2027": (r"scientific method|hypothes|experiment|design|"
+                         r"independent variable|dependent variable|controlled variable|"
+                         r"constant|control|confound|randomi[sz]|replicat|trial|sample size|"
+                         r"operational definition|reproducib|repeatab|observational|"
+                         r"bias|blind|observer|"
+                         r"measur|accuracy|precision|error|uncertaint|significant figure|"
+                         r"unit|\bsi\b|metric|prefix|dimensional analysis|conversion|"
+                         r"\bdata\b|qualitative|quantitative|table|chart|graph|plot|"
+                         r"bar chart|line chart|scatter|histogram|axis|axes|"
+                         r"coordinate|slope|regression|curve|fit|correlat|causation|"
+                         r"extrapolat|interpolat|outlier|"
+                         r"mean|median|mode|range|standard deviation|variance|average|"
+                         r"descriptive statistic|dispersion|percent|ratio|proportion|"
+                         r"scientific notation|"
+                         r"claim|evidence|reasoning|argument|infer|deductive|inductive|"
+                         r"falsifiab|theory|\blaw\b|peer review|notebook|conclusion|"
+                         r"limitation|application|"
+                         r"technical writing|communicat|instruction|procedur|specification|"
+                         r"ambigu|plain language|readab|imperative|sequence|step|enumerat|"
+                         r"abbreviat|acronym|"
+                         r"spatial|orientation|rotat|translat|reflect|frame of reference|"
+                         r"relative|direction|perpendicular|parallel|angle|degree|"
+                         r"vertical|horizontal|symmetr|shape|cylinder|cube|sphere|"
+                         r"rectangle|triangle|prism|length|diameter|radius|width|height|"
+                         r"colou?r|adjacen|centroid|midpoint|position|above|below"),
     "remote_sensing_2027": (r"remote sensing|earth observation|satellite|sensor|imag|"
                             r"electromagnetic|spectrum|wavelength|frequenc|radiation|light|"
                             r"reflect|refract|snell|absor|scatter|rayleigh|\bmie\b|polariz|"
@@ -1140,6 +1165,141 @@ DOMAIN_SOURCES = {
             "https://www.genome.gov/genetics-glossary/Translation",
             "https://www.genome.gov/genetics-glossary/Translocation",
             "https://www.genome.gov/genetics-glossary/X-Linked",
+        ],
+    },
+    "methodology_2027": {
+        "publisher": "NIST / Wikipedia contributors",
+        "license": "public_domain (federal) and CC-BY-SA 4.0 (Wikipedia, facts with attribution)",
+        # Experimental Design and Write It Do It are the two events with NO written exam:
+        # one is scored by a checklist against a report written on site, the other by a
+        # rubric against an object somebody else built from your description. So this domain
+        # is built from what those two instruments actually score — for Experimental Design,
+        # every line of the official checklist (problem statement, hypothesis, the three
+        # variable kinds, procedure, data table, graph, the statistics, claim/evidence/
+        # reasoning, experimental error, limitations); for Write It Do It, the vocabulary a
+        # description has to be precise in (orientation, relative position, reference frame,
+        # shape, dimension, colour, sequence) and what makes technical prose unambiguous.
+        "urls": [
+            "https://en.wikipedia.org/wiki/Abbreviation",
+            "https://en.wikipedia.org/wiki/Accuracy_and_precision",
+            "https://en.wikipedia.org/wiki/Acronym",
+            "https://en.wikipedia.org/wiki/Adjacency",
+            "https://en.wikipedia.org/wiki/Ambiguity",
+            "https://en.wikipedia.org/wiki/Angle",
+            "https://en.wikipedia.org/wiki/Approximation_error",
+            "https://en.wikipedia.org/wiki/Argument",
+            "https://en.wikipedia.org/wiki/Arithmetic_mean",
+            "https://en.wikipedia.org/wiki/Average",
+            "https://en.wikipedia.org/wiki/Axis_(mathematics)",
+            "https://en.wikipedia.org/wiki/Bar_chart",
+            "https://en.wikipedia.org/wiki/Bias",
+            "https://en.wikipedia.org/wiki/Blinded_experiment",
+            "https://en.wikipedia.org/wiki/Cartesian_coordinate_system",
+            "https://en.wikipedia.org/wiki/Centroid",
+            "https://en.wikipedia.org/wiki/Chart",
+            "https://en.wikipedia.org/wiki/Color_term",
+            "https://en.wikipedia.org/wiki/Colour",
+            "https://en.wikipedia.org/wiki/Confounding",
+            "https://en.wikipedia.org/wiki/Controlling_for_a_variable",
+            "https://en.wikipedia.org/wiki/Conversion_of_units",
+            "https://en.wikipedia.org/wiki/Correlation",
+            "https://en.wikipedia.org/wiki/Correlation_does_not_imply_causation",
+            "https://en.wikipedia.org/wiki/Cube",
+            "https://en.wikipedia.org/wiki/Curve_fitting",
+            "https://en.wikipedia.org/wiki/Cylinder",
+            "https://en.wikipedia.org/wiki/Data",
+            "https://en.wikipedia.org/wiki/Deductive_reasoning",
+            "https://en.wikipedia.org/wiki/Degree_(angle)",
+            "https://en.wikipedia.org/wiki/Dependent_and_independent_variables",
+            "https://en.wikipedia.org/wiki/Descriptive_statistics",
+            "https://en.wikipedia.org/wiki/Design_of_experiments",
+            "https://en.wikipedia.org/wiki/Diameter",
+            "https://en.wikipedia.org/wiki/Dimensional_analysis",
+            "https://en.wikipedia.org/wiki/Enumeration",
+            "https://en.wikipedia.org/wiki/Evidence",
+            "https://en.wikipedia.org/wiki/Experiment",
+            "https://en.wikipedia.org/wiki/Extrapolation",
+            "https://en.wikipedia.org/wiki/Falsifiability",
+            "https://en.wikipedia.org/wiki/Frame_of_reference",
+            "https://en.wikipedia.org/wiki/Geometric_shape",
+            "https://en.wikipedia.org/wiki/Graph_of_a_function",
+            "https://en.wikipedia.org/wiki/Histogram",
+            "https://en.wikipedia.org/wiki/Hypothesis",
+            "https://en.wikipedia.org/wiki/Imperative_mood",
+            "https://en.wikipedia.org/wiki/Inductive_reasoning",
+            "https://en.wikipedia.org/wiki/Inference",
+            "https://en.wikipedia.org/wiki/Instruction_manual",
+            "https://en.wikipedia.org/wiki/International_System_of_Units",
+            "https://en.wikipedia.org/wiki/Interpolation",
+            "https://en.wikipedia.org/wiki/Lab_notebook",
+            "https://en.wikipedia.org/wiki/Length",
+            "https://en.wikipedia.org/wiki/Level_of_measurement",
+            "https://en.wikipedia.org/wiki/Line_chart",
+            "https://en.wikipedia.org/wiki/Linear_regression",
+            "https://en.wikipedia.org/wiki/Logical_reasoning",
+            "https://en.wikipedia.org/wiki/Mean",
+            "https://en.wikipedia.org/wiki/Measurement",
+            "https://en.wikipedia.org/wiki/Median",
+            "https://en.wikipedia.org/wiki/Metric_prefix",
+            "https://en.wikipedia.org/wiki/Midpoint",
+            "https://en.wikipedia.org/wiki/Mode_(statistics)",
+            "https://en.wikipedia.org/wiki/Null_hypothesis",
+            "https://en.wikipedia.org/wiki/Observational_error",
+            "https://en.wikipedia.org/wiki/Observational_study",
+            "https://en.wikipedia.org/wiki/Observer-expectancy_effect",
+            "https://en.wikipedia.org/wiki/Operational_definition",
+            "https://en.wikipedia.org/wiki/Orientation_(geometry)",
+            "https://en.wikipedia.org/wiki/Outlier",
+            "https://en.wikipedia.org/wiki/Parallel_(geometry)",
+            "https://en.wikipedia.org/wiki/Peer_review",
+            "https://en.wikipedia.org/wiki/Percentage",
+            "https://en.wikipedia.org/wiki/Perpendicular",
+            "https://en.wikipedia.org/wiki/Plain_language",
+            "https://en.wikipedia.org/wiki/Prism_(geometry)",
+            "https://en.wikipedia.org/wiki/Procedural_knowledge",
+            "https://en.wikipedia.org/wiki/Propagation_of_uncertainty",
+            "https://en.wikipedia.org/wiki/Proportionality_(mathematics)",
+            "https://en.wikipedia.org/wiki/Qualitative_property",
+            "https://en.wikipedia.org/wiki/Quantitative_research",
+            "https://en.wikipedia.org/wiki/Radius",
+            "https://en.wikipedia.org/wiki/Randomization",
+            "https://en.wikipedia.org/wiki/Range_(statistics)",
+            "https://en.wikipedia.org/wiki/Ratio",
+            "https://en.wikipedia.org/wiki/Readability",
+            "https://en.wikipedia.org/wiki/Rectangle",
+            "https://en.wikipedia.org/wiki/Reflection_(mathematics)",
+            "https://en.wikipedia.org/wiki/Relative_direction",
+            "https://en.wikipedia.org/wiki/Repeatability",
+            "https://en.wikipedia.org/wiki/Replication_(statistics)",
+            "https://en.wikipedia.org/wiki/Reproducibility",
+            "https://en.wikipedia.org/wiki/Rotation",
+            "https://en.wikipedia.org/wiki/Sample_size_determination",
+            "https://en.wikipedia.org/wiki/Scatter_plot",
+            "https://en.wikipedia.org/wiki/Scientific_control",
+            "https://en.wikipedia.org/wiki/Scientific_law",
+            "https://en.wikipedia.org/wiki/Scientific_method",
+            "https://en.wikipedia.org/wiki/Scientific_notation",
+            "https://en.wikipedia.org/wiki/Scientific_theory",
+            "https://en.wikipedia.org/wiki/Selection_bias",
+            "https://en.wikipedia.org/wiki/Sequence",
+            "https://en.wikipedia.org/wiki/Significant_figures",
+            "https://en.wikipedia.org/wiki/Slope",
+            "https://en.wikipedia.org/wiki/Spatial_relation",
+            "https://en.wikipedia.org/wiki/Specification_(technical_standard)",
+            "https://en.wikipedia.org/wiki/Sphere",
+            "https://en.wikipedia.org/wiki/Standard_deviation",
+            "https://en.wikipedia.org/wiki/Statistical_dispersion",
+            "https://en.wikipedia.org/wiki/Symmetry",
+            "https://en.wikipedia.org/wiki/Table_(information)",
+            "https://en.wikipedia.org/wiki/Technical_communication",
+            "https://en.wikipedia.org/wiki/Technical_writing",
+            "https://en.wikipedia.org/wiki/Translation_(geometry)",
+            "https://en.wikipedia.org/wiki/Triangle",
+            "https://en.wikipedia.org/wiki/Units_of_measurement",
+            "https://en.wikipedia.org/wiki/Variance",
+            "https://en.wikipedia.org/wiki/Vertical_and_horizontal",
+            "https://www.nist.gov/pml/owm/metric-si-prefixes",
+            "https://www.nist.gov/pml/owm/metric-si/si-units",
         ],
     },
     "remote_sensing_2027": {
@@ -3185,6 +3345,12 @@ EVENT_DOMAIN_BY_SEASON = {
     # limited to a closed list of platforms; `remote_sensing` held fourteen pages and named
     # three of them.
     ("remote-sensing", 2027): "remote_sensing_2027",
+    # 2027 Division B: neither of these events has a written exam. Experimental Design is
+    # scored by the official checklist against a report written on site; Write It Do It by a
+    # rubric against an object a partner built from a description. The domain is built from
+    # what those two instruments score, not from a paper that does not exist.
+    ("experimental-design", 2027): "methodology_2027",
+    ("write-it-do-it", 2027): "methodology_2027",
 }
 
 # Rotations confirmed against the 2027 Division B rules manual that still have no source set,
