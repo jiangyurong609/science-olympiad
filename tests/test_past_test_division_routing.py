@@ -62,3 +62,38 @@ def test_fetcher_falls_back_to_a_division_only_archive():
     # A university invitational runs Division C and its tree never says so.
     assert fetch_division("Circuit Lab/PUSO 2026 Circuit Lab Test.pdf", "princeton-a") == "C"
     assert fetch_division("Codebusters/RSOI Codebusters 2026.pdf", "rsoi-2026-C") == "C"
+
+
+def test_extracted_text_carries_no_nul_bytes():
+    """Postgres refuses a NUL byte in a text column, and a scan never retries a file.
+
+    One damaged PDF in the test exchange archive ended the scan with "A string literal
+    cannot contain NUL (0x00) characters" after 77 of 430 files. Because `--scan` is
+    idempotent by URL and only registers a file it has not seen, every file after that one
+    in the walk order would simply never have been registered — no error, just a corpus that
+    stops partway through the alphabet.
+    """
+    from scripts.import_local_tests import _pdf_text
+
+    import scripts.import_local_tests as module
+
+    class _FakePage:
+        def extract_text(self):
+            return "page text with a nul \x00 inside"
+
+    class _FakeReader:
+        pages = [_FakePage()]
+
+    original = module.__dict__.get("PdfReader")
+    try:
+        import pypdf
+        monkey = pypdf.PdfReader
+        pypdf.PdfReader = lambda *a, **k: _FakeReader()
+        from pathlib import Path
+        text = _pdf_text(Path(__file__))          # any readable file; the reader is faked
+    finally:
+        pypdf.PdfReader = monkey
+        if original is not None:
+            module.PdfReader = original
+    assert "\x00" not in text
+    assert "page text with a nul" in text

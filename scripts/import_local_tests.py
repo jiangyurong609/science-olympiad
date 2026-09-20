@@ -78,7 +78,12 @@ def _pdf_text(path: Path) -> str:
             extracted = ""
         if extracted:
             pages.append(f"[Page {number}]\n{extracted}")
-    return "\n\n".join(pages)[:500_000]
+    # A scanned or damaged PDF can yield NUL bytes, and Postgres refuses them outright:
+    # "A string literal cannot contain NUL (0x00) characters". One such file ends the whole
+    # scan, and since a scan never revisits a registered URL, the files after it in the walk
+    # are silently never seen again.
+    text = "\n\n".join(pages)[:500_000]
+    return text.replace("\x00", "")
 
 
 def _classify(name: str) -> str:
