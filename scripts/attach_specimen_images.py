@@ -21,14 +21,18 @@ from sqlalchemy import select
 
 from app.core.database import SessionLocal
 from app.models.entities import Event, Question
-from app.services.scoring import specimen_definitions
+from app.services.scoring import is_figure_missing, references_figure, specimen_definitions
 
 MANIFEST = Path("app/static/media/manifest.json")
 GENERIC = {"igneous", "sedimentary", "metamorphic"}  # rock-type descriptors, not names
 
 
 def _media_key(event_slug: str) -> str:
-    return re.sub(r"-(b|c)$", "", event_slug)
+    # Seasoned slugs too: `rocks-and-minerals-b-2027` and `rocks-and-minerals-b` share one
+    # media library. Stripping only the division suffix meant every 2027 event missed the
+    # manifest entirely and reported "no images for this event", which is indistinguishable
+    # from a library that does not hold the specimen.
+    return re.sub(r"-(b|c)$", "", re.sub(r"-(19|20)\d{2}$", "", event_slug))
 
 
 def _terms(item: dict) -> set[str]:
@@ -72,6 +76,56 @@ def _match_asset(name: str, entries: list[tuple]) -> dict | None:
     return None
 
 
+# An IDENTIFICATION item asks what the specimen in the photograph is; the specimen's name is
+# the ANSWER, so it appears in the key and nowhere in the stem. `_attach` matches on the stem
+# and therefore cannot help these — which is why 73 of Rocks & Minerals' image-bearing
+# questions had no image, and why a 32-item station paper was withdrawn at 2 items. Matching
+# the KEY restores them, and the photograph is the question rather than a decoration on it.
+#
+# Two things this must not do. It must not caption the image with the specimen's name, the way
+# the stem-matched path does ("Specimen A: Photograph of Quartz") — that alt text is served in
+# the DOM and would hand over the answer. And it must not fire on an item that merely happens
+# to be keyed to a mineral while pointing at a graph or a table, so the stem has to look like
+# an identification and must not be asking about a data display.
+_IDENTIFY_RE = re.compile(
+    r"\bidentify\b|\bwhat (?:is|are)\b|\bwhich (?:mineral|rock|specimen|sample)\b"
+    r"|\bname (?:the|this)\b|\bthe (?:specimen|sample|mineral|rock) (?:shown|pictured|in the)",
+    re.I)
+_DATA_DISPLAY_RE = re.compile(r"\b(graph|chart|table|map|diagram|plot|axis|curve|key below)\b", re.I)
+
+
+def _attach_from_key(db, event: Event, matchers: dict) -> tuple[int, int]:
+    """Give an identification item the photograph it is asking about, captioned neutrally."""
+    entries = matchers.get(_media_key(event.slug))
+    if not entries:
+        return 0, 0
+    questions = db.scalars(select(Question).where(Question.event_id == event.id)).all()
+    attached = 0
+    for question in questions:
+        stem = question.stem or ""
+        if question.assets or not references_figure(stem):
+            continue
+        if not is_figure_missing(stem, question.assets):
+            continue  # already answerable from the text; adding a photo would be decoration
+        if not _IDENTIFY_RE.search(stem) or _DATA_DISPLAY_RE.search(stem):
+            continue
+        if specimen_definitions(stem):
+            continue  # the stem names its specimens; _attach handles those
+        choices = question.choices or []
+        index = (question.answer_spec or {}).get("correct_index")
+        if not isinstance(index, int) or index >= len(choices):
+            continue
+        choice = choices[index]
+        answer = choice if isinstance(choice, str) else (choice or {}).get("text", "")
+        asset = _match_asset(answer, entries)
+        if not asset:
+            continue
+        question.assets = [{**asset, "alt": "Photograph of the specimen to identify"}]
+        attached += 1
+    db.commit()
+    return attached, len(questions)
+
+
 def _attach(db, event: Event, matchers: dict, replace: bool = False) -> tuple[int, int]:
     entries = matchers.get(_media_key(event.slug))
     if not entries:
@@ -101,6 +155,7 @@ def main() -> None:
     manifest = json.load(open(MANIFEST))
     matchers = _build_matchers(manifest)
     replace = "--replace" in sys.argv
+    from_key = "--from-key" in sys.argv
     with SessionLocal() as db:
         if "--event" in sys.argv:
             targets = [db.get(Event, int(sys.argv[sys.argv.index("--event") + 1]))]
@@ -111,7 +166,10 @@ def main() -> None:
             raise SystemExit(__doc__)
         total = 0
         for event in targets:
-            attached, n = _attach(db, event, matchers, replace)
+            if from_key:
+                attached, n = _attach_from_key(db, event, matchers)
+            else:
+                attached, n = _attach(db, event, matchers, replace)
             if n:
                 total += attached
                 print(f"  {event.slug:26} attached images to {attached}/{n} questions")
