@@ -94,22 +94,40 @@ def _content_blob(db, event_id: int) -> str:
     return " ".join(json.dumps(r.content) for r in rows).lower()
 
 
-def _terms(topic: str) -> list[str]:
-    """Distinctive terms from a topic line: parenthetical examples, else content words."""
-    inner = re.findall(r"\(([^)]*)\)", topic)
-    if inner:
-        parts = [p.strip() for chunk in inner for p in re.split(r",|;|/|\bor\b|\be\.g\.\b", chunk)]
-    else:
-        parts = [topic]
-    stop = {"and", "the", "of", "for", "with", "from", "their", "its", "eg", "ie", "limited",
-            "to", "including", "include", "such", "as", "state", "nationals", "only", "also"}
-    terms = []
-    for p in parts:
-        p = re.sub(r"[^a-z0-9 \-]", " ", p.lower()).strip()
-        words = [w for w in p.split() if len(w) > 3 and w not in stop]
-        if words:
-            terms.append(" ".join(words[:3]))
-    return terms[:6]
+STOP = {
+    "and", "the", "of", "for", "with", "from", "their", "its", "limited", "into", "also",
+    "including", "include", "includes", "such", "state", "nationals", "only", "other",
+    "types", "type", "using", "used", "between", "versus", "based", "these", "those", "when",
+    "which", "what", "role", "roles", "basic", "general", "common", "effects", "effect",
+    "properties", "property", "concepts", "concept", "understand", "identify", "identifying",
+    "analysis", "analyze", "questions", "data", "given", "form", "forms", "level", "levels",
+    "system", "systems", "than", "over", "across", "within", "about", "each", "both", "more",
+    "less", "plus", "plot", "plots", "scale", "scales", "size", "value", "values", "term",
+    "terms", "point", "points", "part", "parts", "where", "while", "under", "above",
+}
+
+
+def _topic_covered(topic: str, blob: str) -> bool:
+    """Whether a course's text plausibly teaches this topic.
+
+    Single distinctive words are too weak on their own. "channel", "sediment" and "discharge"
+    all appear in an oceanography course, so matching any one of them scored the 2027 freshwater
+    Dynamic Planet scope as fully covered by a course on tides and seawater. A two-word phrase
+    from the topic ("drainage basin", "stream order", "rolling resistance") is specific enough
+    to mean something, so a topic counts as covered when a phrase lands, or when most of its
+    distinctive words do.
+    """
+    text = re.sub(r"\[[^\]]*\]", " ", topic.lower())
+    text = re.sub(r"[^a-z0-9 \-]", " ", text)
+    tokens = [w for w in text.split() if len(w) > 3]
+    content = [w for w in tokens if len(w) > 4 and w not in STOP]
+    for first, second in zip(tokens, tokens[1:]):
+        if (first not in STOP or second not in STOP) and f"{first} {second}" in blob:
+            return True
+    if not content:
+        return False
+    hits = sum(1 for w in set(content) if w in blob)
+    return hits >= max(2, round(len(set(content)) * 0.6))
 
 
 def audit(season: int, division: str, only: str, min_cov: float) -> dict:
@@ -141,11 +159,7 @@ def audit(season: int, division: str, only: str, min_cov: float) -> dict:
             named = spec.get("named_entities") or []
             named_hits = [n for n in named if n.lower() in blob]
             topics = spec.get("topics") or []
-            topic_hits = []
-            for t in topics:
-                terms = _terms(t)
-                if terms and any(term in blob for term in terms):
-                    topic_hits.append(t)
+            topic_hits = [t for t in topics if _topic_covered(t, blob)]
             row = {
                 "event_id": ev["id"], "name": ev["name"], "season": ev["season"],
                 "season_status": ev["season_status"], "topic_focus": ev["topic_focus"] or "",
@@ -162,25 +176,41 @@ def audit(season: int, division: str, only: str, min_cov: float) -> dict:
             if best is None or (score or 0) > (best[0] or 0):
                 best = ((score or 0), row)
         score, row = best
+        # Which signal decides. When the rules name eight or more specific things, whether the
+        # course says them is a far better test of "is this even the right subject" than keyword
+        # overlap on prose: Rocks and Minerals scored 20% on keywords and was called a topic
+        # mismatch, which is the label for a course teaching something else entirely. Only when
+        # the rules name almost nothing does topic coverage have to lead.
+        named_leads = (row["named_required"] or 0) >= 8
+        lead = row["named_coverage"] if named_leads else row["topic_coverage"]
+        lead = 0.0 if lead is None else lead
+        # Broad topical coverage vetoes the mismatch label however few names land. Disease
+        # Detectives covers 23 of 24 topics and names 1 of 9 required references: it is
+        # unmistakably the right subject that has not been taught PulseNet or Bradford Hill,
+        # which is a gap to fill, not a course to rewrite.
+        if (row["topic_coverage"] or 0) >= 0.7:
+            lead = max(lead, min_cov * 0.4)
+        counts = (f"{row['topics_covered']}/{row['topics_required']} topics and "
+                  f"{row['named_covered']}/{row['named_required']} required names")
+        entry["decided_by"] = "named_entities" if named_leads else "topic_keywords"
         if row["lessons"] == 0:
             entry["verdict"] = "NO_CONTENT"
             entry["detail"] = "event exists in the catalog but serves no published lesson"
-        elif (row["topic_coverage"] or 0) < min_cov and (row["named_coverage"] or 0) < min_cov:
+        elif row["lessons"] < 3:
+            # A one-lesson stub cannot cover a season, whatever it happens to match.
+            entry["verdict"] = "NO_CONTENT"
+            entry["detail"] = (f"only {row['lessons']} published lesson(s) — a stub, not a course "
+                               f"({counts})")
+        elif lead < min_cov * 0.4:
             entry["verdict"] = "TOPIC_MISMATCH"
-            entry["detail"] = (
-                f"{row['lessons']} lessons cover {row['topics_covered']}/{row['topics_required']} "
-                f"topics and {row['named_covered']}/{row['named_required']} required names — "
-                f"this course teaches a different body of material"
-            )
-        elif (row["topic_coverage"] or 1) < 0.8 or (row["named_coverage"] or 1) < 0.8:
+            entry["detail"] = (f"{row['lessons']} lessons cover {counts} — this course teaches a "
+                               f"different body of material")
+        elif lead < 0.8:
             entry["verdict"] = "GAPS"
-            entry["detail"] = (
-                f"right subject, {row['topics_required'] - row['topics_covered']} topics and "
-                f"{row['named_required'] - row['named_covered']} required names not covered"
-            )
+            entry["detail"] = f"right subject, {row['lessons']} lessons cover {counts}"
         else:
             entry["verdict"] = "ALIGNED"
-            entry["detail"] = "content covers the tested scope"
+            entry["detail"] = f"content covers the tested scope ({counts})"
         report["events"].append(entry)
     return report
 
@@ -213,6 +243,11 @@ def main():
                   f" topics={tc} names={nc}")
             if c["named_missing"]:
                 print(f"                   missing names: {', '.join(c['named_missing'][:12])}")
+            # With no required names the topic list is the only evidence there is, so show it:
+            # for a rotated event the uncovered topics are the new season's whole subject.
+            if c["topics_missing"] and not c["named_required"]:
+                for t in c["topics_missing"][:8]:
+                    print(f"                   uncovered: {t[:96]}")
         print()
     print("summary: " + " · ".join(f"{k}={v}" for k, v in sorted(counts.items())))
     if args.json:

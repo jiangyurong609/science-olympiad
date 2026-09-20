@@ -365,6 +365,24 @@ DOMAIN_SOURCES = {
             "https://en.wikipedia.org/wiki/Structural_load",
             "https://en.wikipedia.org/wiki/Truss",
             "https://en.wikipedia.org/wiki/Friction",
+            # Added for Roller Coaster (2027 Division B): the event is scored on run time
+            # against a target, on loop height and on elevator mechanisms, so a team reasons
+            # about gravitational potential energy converting to translational *and*
+            # rotational kinetic energy, about rolling resistance setting the achievable
+            # time, and about the speed a loop needs at its top to keep the ball on track.
+            "https://en.wikipedia.org/wiki/Potential_energy",
+            "https://en.wikipedia.org/wiki/Kinetic_energy",
+            "https://en.wikipedia.org/wiki/Rolling",
+            "https://en.wikipedia.org/wiki/Rolling_resistance",
+            "https://en.wikipedia.org/wiki/Moment_of_inertia",
+            "https://en.wikipedia.org/wiki/Angular_momentum",
+            "https://en.wikipedia.org/wiki/Circular_motion",
+            "https://en.wikipedia.org/wiki/Centripetal_force",
+            "https://en.wikipedia.org/wiki/Banked_turn",
+            "https://en.wikipedia.org/wiki/Inertia",
+            "https://en.wikipedia.org/wiki/Acceleration",
+            "https://en.wikipedia.org/wiki/Terminal_velocity",
+            "https://en.wikipedia.org/wiki/Archimedes%27_screw",
         ],
     },
     "metrology": {
@@ -444,11 +462,87 @@ DOMAIN_SOURCES = {
             "https://en.wikipedia.org/wiki/Salinity",
         ],
     },
+    # 2027 Dynamic Planet: Earth's fresh waters. Assembled against that season's scope —
+    # hydrologic cycle and water budgets, climatic controls on freshwater distribution,
+    # drainage basins and stream networks, fluvial sediment transport and channel form,
+    # fluvial landforms, streamflow and floods, groundwater and karst. The USGS Water
+    # Science School is a federal work and is the best single teaching source for this event.
+    "hydrology": {
+        "publisher": "USGS Water Science School / National Park Service",
+        "license": "public_domain",
+        "urls": [
+            "https://www.usgs.gov/special-topics/water-science-school/science/water-cycle",
+            "https://www.usgs.gov/special-topics/water-science-school/science/watersheds-and-drainage-basins",
+            "https://www.usgs.gov/special-topics/water-science-school/science/surface-runoff-and-water-cycle",
+            "https://www.usgs.gov/special-topics/water-science-school/science/infiltration-and-water-cycle",
+            "https://www.usgs.gov/special-topics/water-science-school/science/evaporation-and-water-cycle",
+            "https://www.usgs.gov/special-topics/water-science-school/science/evapotranspiration-and-water-cycle",
+            "https://www.usgs.gov/special-topics/water-science-school/science/groundwater-storage-and-water-cycle",
+            "https://www.usgs.gov/special-topics/water-science-school/science/aquifers-and-groundwater",
+            "https://www.usgs.gov/special-topics/water-science-school/science/groundwater-decline-and-depletion",
+            "https://www.usgs.gov/special-topics/water-science-school/science/streamflow-and-water-cycle",
+            "https://www.usgs.gov/special-topics/water-science-school/science/how-streamflow-measured",
+            "https://www.usgs.gov/special-topics/water-science-school/science/floods-and-recurrence-intervals",
+            "https://www.usgs.gov/special-topics/water-science-school/science/sediment-and-suspended-sediment",
+            "https://www.usgs.gov/special-topics/water-science-school/science/lakes-and-reservoirs",
+            "https://www.usgs.gov/special-topics/water-science-school/science/springs-and-water-cycle",
+            "https://www.nps.gov/subjects/caves/index.htm",
+            "https://www.nps.gov/subjects/geology/fluvial-landforms.htm",
+            "https://www.nps.gov/subjects/rivers/index.htm",
+            "https://en.wikipedia.org/wiki/Drainage_basin",
+            "https://en.wikipedia.org/wiki/Drainage_system_(geomorphology)",
+            "https://en.wikipedia.org/wiki/Strahler_number",
+            "https://en.wikipedia.org/wiki/Drainage_density",
+            "https://en.wikipedia.org/wiki/Fluvial_processes",
+            "https://en.wikipedia.org/wiki/Sediment_transport",
+            "https://en.wikipedia.org/wiki/Hjulstr%C3%B6m_curve",
+            "https://en.wikipedia.org/wiki/Braided_river",
+            "https://en.wikipedia.org/wiki/Meander",
+            "https://en.wikipedia.org/wiki/Sinuosity",
+            "https://en.wikipedia.org/wiki/Oxbow_lake",
+            "https://en.wikipedia.org/wiki/Floodplain",
+            "https://en.wikipedia.org/wiki/Alluvial_fan",
+            "https://en.wikipedia.org/wiki/River_delta",
+            "https://en.wikipedia.org/wiki/Levee",
+            "https://en.wikipedia.org/wiki/Point_bar",
+            "https://en.wikipedia.org/wiki/Cut_bank",
+            "https://en.wikipedia.org/wiki/Base_level",
+            "https://en.wikipedia.org/wiki/Knickpoint",
+            "https://en.wikipedia.org/wiki/Graded_stream",
+            "https://en.wikipedia.org/wiki/Stream_capture",
+            "https://en.wikipedia.org/wiki/Discharge_(hydrology)",
+            "https://en.wikipedia.org/wiki/Hydrograph",
+            "https://en.wikipedia.org/wiki/Return_period",
+            "https://en.wikipedia.org/wiki/Manning_formula",
+            "https://en.wikipedia.org/wiki/Bed_form",
+            "https://en.wikipedia.org/wiki/Aquifer",
+            "https://en.wikipedia.org/wiki/Water_table",
+            "https://en.wikipedia.org/wiki/Artesian_aquifer",
+            "https://en.wikipedia.org/wiki/Karst",
+            "https://en.wikipedia.org/wiki/Sinkhole",
+            "https://en.wikipedia.org/wiki/Speleothem",
+            "https://en.wikipedia.org/wiki/Rain_shadow",
+            "https://en.wikipedia.org/wiki/Orographic_lift",
+            "https://en.wikipedia.org/wiki/Ephemeral_stream",
+            "https://en.wikipedia.org/wiki/Playa_lake",
+            "https://en.wikipedia.org/wiki/Evaporite",
+            "https://en.wikipedia.org/wiki/Critical_zone",
+            "https://en.wikipedia.org/wiki/Water_balance",
+            "https://en.wikipedia.org/wiki/Residence_time",
+        ],
+    },
 }
 
 # event slug (division-agnostic) -> domain
 def domain_for_event(slug: str) -> str | None:
-    """The open-source domain for an event slug, division and season suffixes removed.
+    """The open-source domain for an event slug, checked against the season first.
+
+    A rotating-topic event keeps its name and changes its subject. Dynamic Planet was mapped
+    to `oceanography` with no season in the key, so grounding a 2027 freshwater event pulled
+    ocean circulation and tides — and produced eight lessons on the wrong body of material,
+    which no audit of "does this course have sources?" would ever flag, because it does.
+    `EVENT_DOMAIN_BY_SEASON` is consulted before `EVENT_DOMAIN` so a rotation is a data change
+    rather than a silently wrong course.
 
     `EVENT_DOMAIN` is keyed on base slugs — `heredity`, not `heredity-b`. `build_courses`
     already stripped the suffix before looking one up; `ground_event` did not, and looked up
@@ -460,9 +554,40 @@ def domain_for_event(slug: str) -> str | None:
 
     Seasoned slugs (`botany-b-2027`) are handled here too, for the same reason.
     """
-    base = re.sub(r"-(19|20)\d{2}$", "", str(slug or ""))
+    raw = str(slug or "")
+    season_match = re.search(r"-((?:19|20)\d{2})$", raw)
+    season = int(season_match.group(1)) if season_match else None
+    base = re.sub(r"-(19|20)\d{2}$", "", raw)
     base = re.sub(r"-[bc]$", "", base)
+    if season is not None and (base, season) in EVENT_DOMAIN_BY_SEASON:
+        return EVENT_DOMAIN_BY_SEASON[(base, season)]
     return EVENT_DOMAIN.get(base)
+
+
+# (base slug, season) -> domain, for events whose tested subject rotates between seasons.
+# Every entry here is a topic confirmed against that season's official rules manual, and an
+# event that rotates MUST be listed for each season it is authored for — the fallback in
+# EVENT_DOMAIN is the last season someone checked, not a safe default.
+EVENT_DOMAIN_BY_SEASON = {
+    # 2027 Division B/C: "Earth's fresh waters" — drainage basins, fluvial landforms,
+    # streamflow, groundwater and karst. 2026 was oceanography, 2025 glaciers.
+    ("dynamic-planet", 2027): "hydrology",
+}
+
+# Rotations confirmed against the 2027 Division B rules manual that still have no source set,
+# listed so the gap is recorded rather than discovered later as a wrong course. Each needs a
+# DOMAIN_SOURCES entry before its event is grounded or re-authored for 2027:
+#   water-quality          2026 freshwater macroinvertebrates -> 2027 marine, estuary, coral reef
+#   anatomy-and-physiology 2026 nervous system                -> 2027 respiratory, digestive, immune
+#   solar-system           2026 object survey                 -> 2027 habitability and astrobiology
+#   meteorology            2026 everyday weather and climate   -> 2027 severe weather and storms
+# Until then `domain_for_event` returns their pre-rotation domain, which is the honest answer:
+# no 2027 sources have been assembled for them yet.
+
+# A domain named for a season must actually exist, or grounding skips the event and reports it
+# as having no sources — indistinguishable from a real content gap.
+_unknown = {d for d in EVENT_DOMAIN_BY_SEASON.values() if d not in DOMAIN_SOURCES}
+assert not _unknown, f"EVENT_DOMAIN_BY_SEASON names domains with no sources: {sorted(_unknown)}"
 
 
 EVENT_DOMAIN = {
@@ -500,4 +625,12 @@ EVENT_DOMAIN = {
     "scrambler": "physics",
     "electric-vehicle": "physics",
     "robot-tour": "physics",
+    # 2027 events that had no mapping at all, so grounding refused them as "no domain" and
+    # their courses stayed empty. Roller Coaster, Ping Pong Parachute and the gliders are
+    # mechanics events; Thermodynamics is heat transfer, which `physics` does not yet cover
+    # and is therefore left out rather than mapped to a set that cannot ground it.
+    "roller-coaster": "physics",
+    "ping-pong-parachute": "physics",
+    "elastic-launched-glider": "physics",
+    "elastic-launch-glider": "physics",
 }
