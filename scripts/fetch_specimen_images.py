@@ -302,9 +302,37 @@ def main() -> None:
             time.sleep(0.5)
         manifest[event] = rows
         print(f"[{event}] {len(rows)}/{len(specimens)} images")
-    (MEDIA_DIR / "manifest.json").write_text(json.dumps(manifest, indent=2))
-    total = sum(len(v) for v in manifest.values())
-    print(f"\nSaved {total} openly-licensed images across {len(manifest)} events.")
+    # Merge, never replace. A run whose licence lookups were failing rewrote this file with
+    # what it had managed to keep and destroyed the rest: rocks 56 -> 35, astronomy 20 -> 14,
+    # solar system 17 -> 2, entomology 21 -> 0, all of it committed before anyone noticed. A
+    # fetch is additive by nature — a specimen it could not retrieve this time is not a
+    # specimen that stopped existing.
+    path = MEDIA_DIR / "manifest.json"
+    existing: dict[str, list[dict]] = {}
+    if path.exists():
+        try:
+            existing = json.loads(path.read_text())
+        except json.JSONDecodeError:
+            existing = {}
+    merged: dict[str, list[dict]] = {k: list(v) for k, v in existing.items()}
+    replaced = 0
+    for event, rows in manifest.items():
+        by_label = {row.get("label"): row for row in merged.get(event, [])}
+        for row in rows:
+            if row.get("label") in by_label:
+                replaced += 1
+            by_label[row.get("label")] = row
+        merged[event] = sorted(by_label.values(), key=lambda r: str(r.get("label", "")))
+    for event in manifest:
+        before = len(existing.get(event, []))
+        after = len(merged[event])
+        if after < before:                      # cannot happen with a merge; assert it anyway
+            raise SystemExit(f"refusing to shrink the {event} manifest, {before} -> {after}")
+    path.write_text(json.dumps(merged, indent=2))
+    total = sum(len(v) for v in merged.values())
+    fetched = sum(len(v) for v in manifest.values())
+    print(f"\nFetched {fetched} images this run ({replaced} refreshed); "
+          f"manifest holds {total} across {len(merged)} events.")
 
 
 if __name__ == "__main__":
