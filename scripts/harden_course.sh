@@ -56,6 +56,24 @@ for (( round=1; round<=ROUNDS; round++ )); do
     env -u OPENAI_API_KEY python -m scripts.faulted_lessons --event "$EVENT" >&2 || true
     exit 1
   fi
+  # Repair keeps what the reviewer did not fault. That is right when the fault is a sentence
+  # and wrong when the fault is the FRAMING: "Proteins, Nucleic Acids, Lipids and
+  # Carbohydrates" was repaired to version 6 and stayed a lesson about comets delivering
+  # organics, because each round was told to leave alone everything not named. Re-authored
+  # from scratch against the same passages it became "Four molecular families support life"
+  # in one pass.
+  #
+  # So the first attempt repairs, and a lesson still faulted after that is written again from
+  # nothing. A second repair of the same lesson has already been shown not to work.
+  if [[ "$round" -ge 2 ]]; then
+    slugs="$(env -u OPENAI_API_KEY python -m scripts.faulted_lessons --event "$EVENT" \
+             | awk '{print $2}' | paste -sd, -)"
+    echo "=============== $EVENT — re-authoring $faults lesson(s) FROM SCRATCH"
+    args=(--blueprint "$BLUEPRINT" --apply --generate --allow-live --regenerate --only "$slugs")
+    env -u OPENAI_API_KEY python -m scripts.author_course_from_blueprint "${args[@]}" \
+      | python3 -c 'import json, sys; d = json.load(sys.stdin); print("   re-authored %d, failed %d" % (d["generated_lessons"], len(d["failed"])))'
+    continue
+  fi
   echo "=============== $EVENT — repairing $faults lesson(s)"
   args=(--blueprint "$BLUEPRINT" --apply --generate --allow-live --repair)
   # Findings from outside this pipeline are applied on the FIRST repair only. They describe the
