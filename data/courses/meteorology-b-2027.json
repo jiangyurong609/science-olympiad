@@ -25,7 +25,18 @@
           "slug": "observation-networks-and-instruments",
           "title": "Surface Networks, Balloons and Buoys",
           "objective": "Describe what ASOS, mesonets, radiosondes, buoys and aircraft reports each measure, and how often.",
-          "keywords": ["ASOS", "automated surface observing system", "mesonet", "radiosonde", "rawinsonde", "weather balloon", "buoy", "aircraft observation", "surface observation", "upper air"],
+          "keywords": [
+            "ASOS",
+            "automated surface observing system",
+            "mesonet",
+            "radiosonde",
+            "rawinsonde",
+            "weather balloon",
+            "buoy",
+            "aircraft observation",
+            "surface observation",
+            "upper air"
+          ],
           "high_weight": true,
           "video": true
         },
@@ -33,7 +44,18 @@
           "slug": "station-models-and-metar",
           "title": "Reading a Station Model and a METAR",
           "objective": "Decode temperature, dew point, wind barbs, pressure and the pressure tendency from a station model, and the same fields from a raw METAR.",
-          "keywords": ["station model", "METAR", "wind barb", "dew point", "sea level pressure", "pressure tendency", "sky cover", "visibility", "remarks", "altimeter"],
+          "keywords": [
+            "station model",
+            "METAR",
+            "wind barb",
+            "dew point",
+            "sea level pressure",
+            "pressure tendency",
+            "sky cover",
+            "visibility",
+            "remarks",
+            "altimeter"
+          ],
           "high_weight": true,
           "video": true
         },
@@ -41,7 +63,17 @@
           "slug": "satellite-imagery-channels",
           "title": "Visible, Infrared and Water Vapor",
           "objective": "Say what each satellite channel senses and which one answers a given question about a storm.",
-          "keywords": ["weather satellite", "GOES", "geostationary", "visible imagery", "infrared", "water vapor channel", "cloud top temperature", "overshooting top", "brightness temperature"],
+          "keywords": [
+            "weather satellite",
+            "GOES",
+            "geostationary",
+            "visible light",
+            "infrared",
+            "water vapor channel",
+            "cloud top temperature",
+            "overshooting top",
+            "brightness temperature"
+          ],
           "high_weight": false,
           "video": false
         }
@@ -60,7 +92,17 @@
           "slug": "reflectivity-and-radar-basics",
           "title": "How Radar Sees a Storm",
           "objective": "Explain how a radar beam produces reflectivity, why the beam rises with range, and how base and composite products differ.",
-          "keywords": ["weather radar", "NEXRAD", "reflectivity", "dBZ", "base reflectivity", "composite reflectivity", "radar beam", "elevation angle", "scan strategy", "attenuation"],
+          "keywords": [
+            "weather radar",
+            "NEXRAD",
+            "reflectivity",
+            "dBZ",
+            "composite reflectivity",
+            "radar beam",
+            "elevation angle",
+            "scan strategy",
+            "attenuation"
+          ],
           "high_weight": true,
           "video": true
         },
@@ -68,7 +110,18 @@
           "slug": "velocity-and-rotation",
           "title": "Velocity, Rotation and Storm Relative Motion",
           "objective": "Read inbound and outbound velocity couplets, identify a mesocyclone signature, and explain what storm relative motion adds.",
-          "keywords": ["Doppler radar", "base velocity", "velocity couplet", "inbound", "outbound", "storm relative motion", "mesocyclone", "tornado vortex signature", "TVS", "aliasing"],
+          "keywords": [
+            "Doppler radar",
+            "radial velocity",
+            "velocity couplet",
+            "inbound",
+            "outbound",
+            "storm relative motion",
+            "mesocyclone",
+            "tornado vortex signature",
+            "TVS",
+            "aliasing"
+          ],
           "high_weight": true,
           "video": true
         },
@@ -76,7 +129,17 @@
           "slug": "dual-pol-and-radar-signatures",
           "title": "Dual-Pol and the Signatures Worth Naming",
           "objective": "Use correlation coefficient and differential reflectivity to identify a debris ball, hail core and heavy rain, and name the hook echo and bow echo on sight.",
-          "keywords": ["polarimetric radar", "dual polarization", "correlation coefficient", "differential reflectivity", "debris ball", "hook echo", "bow echo", "hail core", "three body scatter"],
+          "keywords": [
+            "polarimetric radar",
+            "dual polarization",
+            "correlation coefficient",
+            "differential reflectivity",
+            "debris ball",
+            "hook echo",
+            "bow echo",
+            "hail signature",
+            "three body scatter"
+          ],
           "high_weight": true,
           "video": false
         }
@@ -95,7 +158,20 @@
           "slug": "stuve-and-skew-t-diagrams",
           "title": "Stüve and Skew-T Diagrams",
           "objective": "Trace a parcel on a thermodynamic diagram, find the LCL and level of free convection, and identify a capping inversion.",
-          "keywords": ["Stüve diagram", "skew-T", "log-P", "sounding", "parcel", "lifting condensation level", "LCL", "level of free convection", "dry adiabat", "moist adiabat", "mixing ratio", "inversion"],
+          "keywords": [
+            "Stüve diagram",
+            "skew-T",
+            "log-P",
+            "sounding",
+            "parcel",
+            "lifting condensation level",
+            "LCL",
+            "level of free convection",
+            "dry adiabat",
+            "moist adiabat",
+            "mixing ratio",
+            "inversion"
+          ],
           "high_weight": true,
           "video": true
         },
@@ -103,7 +179,18 @@
           "slug": "cape-cin-and-stability",
           "title": "CAPE, CIN and What Makes Air Unstable",
           "objective": "Relate lapse rate, CAPE and CIN to whether convection initiates and how strong the updraft can become.",
-          "keywords": ["convective available potential energy", "CAPE", "convective inhibition", "CIN", "lapse rate", "atmospheric instability", "buoyancy", "updraft", "capping", "environmental lapse rate"],
+          "keywords": [
+            "convective available potential energy",
+            "CAPE",
+            "convective inhibition",
+            "CIN",
+            "lapse rate",
+            "atmospheric instability",
+            "buoyancy",
+            "updraft",
+            "capping",
+            "environmental lapse rate"
+          ],
           "high_weight": true,
           "video": false
         },
@@ -111,7 +198,17 @@
           "slug": "wind-shear-and-hodographs",
           "title": "Wind Shear and the Hodograph",
           "objective": "Distinguish speed from directional shear, read a hodograph, and predict single cell, multicell or supercell from shear and CAPE together.",
-          "keywords": ["wind shear", "hodograph", "speed shear", "directional shear", "storm relative helicity", "bulk shear", "wind profile", "veering", "backing"],
+          "keywords": [
+            "wind shear",
+            "hodograph",
+            "speed shear",
+            "directional shear",
+            "storm relative helicity",
+            "bulk richardson",
+            "wind profile",
+            "veer",
+            "backing"
+          ],
           "high_weight": true,
           "video": true
         }
@@ -130,7 +227,20 @@
           "slug": "air-masses-fronts-and-drylines",
           "title": "Air Masses, Fronts and Drylines",
           "objective": "Classify air masses, identify cold, warm, stationary and occluded fronts on a surface map, and explain why a dryline focuses convection.",
-          "keywords": ["air mass", "continental polar", "maritime tropical", "cold front", "warm front", "stationary front", "occluded front", "dryline", "surface map", "convergence"],
+          "keywords": [
+            "air mass",
+            "continental polar",
+            "cyclonic",
+            "counterclockwise",
+            "maritime tropical",
+            "cold front",
+            "warm front",
+            "stationary front",
+            "occluded front",
+            "dryline",
+            "surface analysis",
+            "convergence"
+          ],
           "high_weight": true,
           "video": true
         },
@@ -138,7 +248,20 @@
           "slug": "jet-streams-and-circulation",
           "title": "Jet Streams and Large-Scale Circulation",
           "objective": "Relate jet stream position and divergence aloft to surface cyclones and severe weather outbreaks, and describe an atmospheric river.",
-          "keywords": ["jet stream", "atmospheric circulation", "polar jet", "subtropical jet", "divergence aloft", "trough", "ridge", "atmospheric river", "Rossby wave", "cyclogenesis"],
+          "keywords": [
+            "jet stream",
+            "atmospheric circulation",
+            "cyclonic",
+            "counterclockwise",
+            "polar jet",
+            "subtropical jet",
+            "divergence aloft",
+            "trough",
+            "ridge",
+            "atmospheric river",
+            "Rossby wave",
+            "cyclogenesis"
+          ],
           "high_weight": false,
           "video": false
         },
@@ -146,7 +269,17 @@
           "slug": "water-and-terrain-influence",
           "title": "Oceans, Lakes and Landforms",
           "objective": "Explain how sea surface temperature, ocean heat content, fetch, storm wakes and topography change where storms form and how strong they get.",
-          "keywords": ["sea surface temperature", "ocean heat content", "fetch", "heat transport", "storm wake", "upwelling", "topography", "orographic lift", "lee side", "terrain channeling"],
+          "keywords": [
+            "sea surface temperature",
+            "ocean heat content",
+            "fetch",
+            "heat transport",
+            "upwelling",
+            "topography",
+            "orographic lift",
+            "leeward",
+            "topograph"
+          ],
           "high_weight": false,
           "video": false
         }
@@ -165,7 +298,19 @@
           "slug": "storm-types-and-organisation",
           "title": "Single Cell, Multicell, Supercell",
           "objective": "Describe the life cycle of an ordinary cell and explain what shear adds to make a multicell, an MCS and a supercell.",
-          "keywords": ["thunderstorm", "single cell", "pulse storm", "multicell", "supercell", "mesoscale convective system", "mesoscale convective complex", "updraft", "downdraft", "gust front", "life cycle"],
+          "keywords": [
+            "thunderstorm",
+            "air-mass thunderstorm",
+            "pulse storm",
+            "multicell",
+            "supercell",
+            "mesoscale convective system",
+            "mesoscale convective complex",
+            "updraft",
+            "downdraft",
+            "gust front",
+            "life cycle"
+          ],
           "high_weight": true,
           "video": true
         },
@@ -173,7 +318,19 @@
           "slug": "straight-line-winds-and-derechos",
           "title": "Downbursts, Squall Lines and Derechos",
           "objective": "Distinguish straight-line wind damage from tornado damage, and identify microburst, macroburst, squall line and derecho by signature and scale.",
-          "keywords": ["downburst", "microburst", "macroburst", "straight-line wind", "gust front", "outflow boundary", "squall line", "derecho", "bow echo", "rear inflow jet", "damage pattern"],
+          "keywords": [
+            "downburst",
+            "microburst",
+            "macroburst",
+            "straight-line wind",
+            "gust front",
+            "outflow boundary",
+            "squall line",
+            "derecho",
+            "bow echo",
+            "rear inflow jet",
+            "damage pattern"
+          ],
           "high_weight": true,
           "video": false
         },
@@ -181,7 +338,19 @@
           "slug": "lightning-and-electrification",
           "title": "Lightning: Charge, Stroke and Detection",
           "objective": "Explain cloud electrification and charge separation, classify lightning types, and describe how detection networks locate strikes.",
-          "keywords": ["lightning", "cloud electrification", "charge separation", "graupel", "ice crystal", "cloud to ground", "intracloud", "stepped leader", "return stroke", "thunder", "lightning detection"],
+          "keywords": [
+            "lightning",
+            "electrification",
+            "charge separation",
+            "graupel",
+            "ice crystal",
+            "cloud to ground",
+            "intracloud",
+            "stepped leader",
+            "return stroke",
+            "thunder",
+            "lightning detection"
+          ],
           "high_weight": false,
           "video": true
         }
@@ -200,7 +369,19 @@
           "slug": "tornado-formation-and-life-cycle",
           "title": "How a Tornado Forms and Dies",
           "objective": "Trace tornadogenesis from a rotating updraft to a condensation funnel and the rope-out stage, and state where and when tornadoes are most likely.",
-          "keywords": ["tornado", "tornadogenesis", "mesocyclone", "rear flank downdraft", "condensation funnel", "rope stage", "tornado alley", "waterspout", "landspout", "tornado track", "diurnal timing"],
+          "keywords": [
+            "tornado",
+            "tornadogenesis",
+            "mesocyclone",
+            "rear flank downdraft",
+            "condensation funnel",
+            "dissipating stage",
+            "tornado alley",
+            "waterspout",
+            "landspout",
+            "tornado track",
+            "late afternoon"
+          ],
           "high_weight": true,
           "video": true
         },
@@ -208,7 +389,18 @@
           "slug": "rating-tornado-damage",
           "title": "Fujita, Enhanced Fujita and Reading Damage",
           "objective": "Explain what the F and EF scales actually rate, use damage indicators and degrees of damage, and say why EF replaced F.",
-          "keywords": ["Fujita scale", "Enhanced Fujita scale", "EF scale", "damage indicator", "degree of damage", "wind speed estimate", "survey", "damage path", "width", "rating"],
+          "keywords": [
+            "Fujita scale",
+            "Enhanced Fujita scale",
+            "EF scale",
+            "damage indicator",
+            "degree of damage",
+            "wind speed estimate",
+            "survey",
+            "damage path",
+            "width",
+            "rating"
+          ],
           "high_weight": true,
           "video": false
         }
@@ -227,7 +419,19 @@
           "slug": "precipitation-formation",
           "title": "From Droplet to Raindrop",
           "objective": "Contrast warm-rain collision-coalescence with the Bergeron process, and explain riming and aggregation in a mixed-phase cloud.",
-          "keywords": ["cloud physics", "collision coalescence", "Bergeron process", "Wegener Bergeron Findeisen", "riming", "graupel", "aggregation", "condensation nuclei", "supercooled", "mixed phase", "terminal velocity"],
+          "keywords": [
+            "cloud physics",
+            "collision coalescence",
+            "Bergeron process",
+            "Wegener-Bergeron-Findeisen",
+            "riming",
+            "graupel",
+            "aggregation",
+            "condensation nuclei",
+            "supercooled",
+            "mixed phase",
+            "terminal velocity"
+          ],
           "high_weight": true,
           "video": true
         },
@@ -235,7 +439,20 @@
           "slug": "precipitation-type-and-hail",
           "title": "Rain, Freezing Rain, Sleet, Snow and Hail",
           "objective": "Read a vertical temperature profile to predict precipitation type, and explain hail growth, hailstone layering and size reporting.",
-          "keywords": ["freezing rain", "ice pellets", "sleet", "snow", "warm layer", "melting layer", "refreeze", "hail", "hailstone", "hail size", "updraft strength", "hail growth"],
+          "keywords": [
+            "freezing rain",
+            "ice pellets",
+            "sleet",
+            "snow",
+            "warm layer",
+            "melting layer",
+            "refreeze",
+            "hail",
+            "hailstone",
+            "hail size",
+            "updraft strength",
+            "hail growth"
+          ],
           "high_weight": true,
           "video": true
         },
@@ -243,7 +460,20 @@
           "slug": "flooding-and-precipitation-impacts",
           "title": "Flooding, Debris Flows and Snow Load",
           "objective": "Distinguish flash, stream, river and urban flooding by cause and timescale, and connect rainfall rate to debris flows, snow load and travel hazards.",
-          "keywords": ["flash flood", "flood", "urban flooding", "river flood", "debris flow", "mudslide", "burn scar", "runoff", "snow load", "rainfall rate", "intensity duration frequency", "return period"],
+          "keywords": [
+            "flash flood",
+            "flood",
+            "urban flooding",
+            "river flood",
+            "debris flow",
+            "mudslide",
+            "wildfire",
+            "runoff",
+            "snow load",
+            "rainfall rate",
+            "intensity-duration-frequency",
+            "return period"
+          ],
           "high_weight": false,
           "video": false
         }
@@ -262,7 +492,22 @@
           "slug": "tropical-cyclone-structure-and-life-cycle",
           "title": "Tropical Cyclones: Structure, Stages and Track",
           "objective": "Name the parts of a tropical cyclone, order the stages from disturbance to hurricane, and explain how shear, SST and ENSO steer track and intensity.",
-          "keywords": ["tropical cyclone", "hurricane", "typhoon", "eye", "eyewall", "rainband", "tropical depression", "tropical storm", "tropical cyclogenesis", "sea surface temperature", "wind shear", "ENSO", "steering flow", "rapid intensification"],
+          "keywords": [
+            "tropical cyclone",
+            "hurricane",
+            "typhoon",
+            "eye",
+            "eyewall",
+            "rainband",
+            "tropical depression",
+            "tropical storm",
+            "tropical cyclogenesis",
+            "sea surface temperature",
+            "wind shear",
+            "ENSO",
+            "steering flow",
+            "rapid intensification"
+          ],
           "high_weight": true,
           "video": true
         },
@@ -270,7 +515,18 @@
           "slug": "saffir-simpson-and-storm-surge",
           "title": "Saffir-Simpson and Storm Surge",
           "objective": "Apply the Saffir-Simpson scale and explain why surge, not category, causes most hurricane deaths.",
-          "keywords": ["Saffir-Simpson", "category", "sustained wind", "storm surge", "surge height", "bathymetry", "landfall", "right front quadrant", "inland flooding", "evacuation"],
+          "keywords": [
+            "Saffir-Simpson",
+            "category",
+            "sustained wind",
+            "storm surge",
+            "surge height",
+            "bathymetry",
+            "landfall",
+            "right front quadrant",
+            "inland flooding",
+            "evacuation"
+          ],
           "high_weight": true,
           "video": false
         },
@@ -278,7 +534,18 @@
           "slug": "winter-storms",
           "title": "Blizzards, Nor'easters, Lake Effect and Ice",
           "objective": "Define a blizzard by its criteria, explain nor'easter and lake-effect development, and describe ice storm hazards.",
-          "keywords": ["blizzard", "nor'easter", "lake effect snow", "fetch", "ice storm", "freezing rain accumulation", "snow squall", "wind chill", "whiteout", "snow band"],
+          "keywords": [
+            "blizzard",
+            "nor'easter",
+            "lake effect snow",
+            "fetch",
+            "ice storm",
+            "freezing rain accumulation",
+            "snow squall",
+            "wind chill",
+            "whiteout",
+            "snow band"
+          ],
           "high_weight": false,
           "video": true
         }
@@ -297,7 +564,18 @@
           "slug": "drought-and-heat-waves",
           "title": "Drought and Heat Waves",
           "objective": "Distinguish meteorological, hydrological and agricultural drought, and explain what causes and sustains a heat wave.",
-          "keywords": ["drought", "meteorological drought", "hydrological drought", "agricultural drought", "heat wave", "heat dome", "ridge", "soil moisture", "evaporative demand", "heat index"],
+          "keywords": [
+            "drought",
+            "meteorological drought",
+            "hydrological drought",
+            "agricultural drought",
+            "heat wave",
+            "heat dome",
+            "ridge",
+            "soil moisture",
+            "evaporative demand",
+            "heat index"
+          ],
           "high_weight": false,
           "video": false
         },
@@ -305,7 +583,19 @@
           "slug": "watches-warnings-and-safety",
           "title": "Watches, Warnings and What To Do",
           "objective": "Distinguish a watch from a warning from an advisory, name the issuing office, and give the protective action for each severe hazard.",
-          "keywords": ["watch", "warning", "advisory", "severe thunderstorm warning", "tornado warning", "flash flood warning", "Storm Prediction Center", "National Weather Service", "convective outlook", "safety", "shelter"],
+          "keywords": [
+            "watch",
+            "warning",
+            "advisory",
+            "severe thunderstorm warning",
+            "tornado warning",
+            "flash flood warning",
+            "Storm Prediction Center",
+            "National Weather Service",
+            "convective outlook",
+            "safety",
+            "shelter"
+          ],
           "high_weight": true,
           "video": false
         },
@@ -313,7 +603,18 @@
           "slug": "reading-severe-weather-data",
           "title": "Working a Data Station Under Time",
           "objective": "Given a radar image, a sounding, a hodograph and a surface map of the same hour, build one consistent diagnosis and defend it.",
-          "keywords": ["data interpretation", "radar image", "sounding", "hodograph", "surface analysis", "diagnosis", "storm mode", "partial credit", "units", "estimation"],
+          "keywords": [
+            "data interpretation",
+            "radar image",
+            "sounding",
+            "hodograph",
+            "surface analysis",
+            "diagnosis",
+            "storm mode",
+            "partial credit",
+            "units",
+            "estimation"
+          ],
           "high_weight": true,
           "video": false
         }
