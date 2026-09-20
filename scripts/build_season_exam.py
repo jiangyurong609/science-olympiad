@@ -153,12 +153,19 @@ KIND_RULES = {
 choice explaining the specific reasoning error. Do NOT prefix the stem with "True or False:" —
 the choices already say so, and the real papers do not.""",
     "matching": """Each item has exactly four distinct choices and correct_index, plus
-rationale_by_choice for all four and misconception_by_choice for the three wrong ones.""",
+rationale_by_choice for all four and misconception_by_choice keyed by choice index for the three
+wrong ones. Every wrong index needs an entry or the item is discarded.""",
     "single_choice": """Each item has exactly four distinct choices and correct_index, plus
-rationale_by_choice for all four and misconception_by_choice for the three wrong ones.""",
+rationale_by_choice for all four and misconception_by_choice for the three wrong ones.
+Both are OBJECTS keyed by the choice index as a string, and misconception_by_choice must carry an
+entry for every index except the correct one. Omitting one discards the whole item. Shape:
+  "correct_index": 2,
+  "rationale_by_choice": {"0": "...", "1": "...", "2": "...", "3": "..."},
+  "misconception_by_choice": {"0": "...", "1": "...", "3": "..."}""",
     "data": """Each item has exactly four distinct choices and correct_index, plus
-rationale_by_choice for all four and misconception_by_choice for the three wrong ones. The data
-display goes INSIDE the stem, as plain text lines the student can read.""",
+rationale_by_choice for all four and misconception_by_choice keyed by choice index for the three
+wrong ones; every wrong index needs an entry or the item is discarded. The data display goes
+INSIDE the stem, as plain text lines the student can read.""",
     "short_answer": """This section is short answer. Give no choices. Instead give
 `answer` (the reference answer, one or two words) and `accepted` (an array of other acceptable
 spellings, synonyms and casings). Also give `misconception` naming the most likely wrong answer
@@ -297,37 +304,52 @@ def _one_batch(provider, event, section, chosen, index, want, avoid, topics) -> 
 
 def _generate_section(provider, event, section, passages, sources,
                       scope_topics: list[str]) -> list[dict]:
+    """Fill a section, walking the syllabus so no topic is lost to one bad batch.
+
+    The first version ran a fixed number of batches and indexed slices with `attempt % len`.
+    Eleven batches over nine slices gave the first two slices a second turn — they returned 8
+    items each — while three slices lost their single batch to validation and contributed
+    nothing at all, taking their topics out of the paper. A topic must not disappear because one
+    request came back malformed, and no topic should get double coverage by arithmetic accident.
+    """
     wanted = section["count"]
-    # Walk the syllabus in slices, so a long run spreads across topics instead of circling the
-    # handful that the section's own wording happens to favour.
+    steerable = section["kind"] in {"single_choice", "data", "true_false"}
     slices: list[list[str]] = []
-    if scope_topics and section["kind"] in {"single_choice", "data", "true_false"}:
-        per_batch = max(1, -(-len(scope_topics) // max(1, -(-wanted // BATCH_SIZE))))
-        slices = [scope_topics[i:i + per_batch] for i in range(0, len(scope_topics), per_batch)]
+    if scope_topics and steerable:
+        target_batches = max(1, -(-wanted // BATCH_SIZE))
+        per_slice = max(1, -(-len(scope_topics) // target_batches))
+        slices = [scope_topics[i:i + per_slice]
+                  for i in range(0, len(scope_topics), per_slice)]
+    passes = [slices] if slices else [[[]]]
+    # A cap per slice on the first pass, so an early topic cannot eat the whole paper before
+    # the later ones are asked for at all.
+    first_pass_cap = max(1, -(-wanted // max(1, len(slices)))) if slices else BATCH_SIZE
+
     collected: list[dict] = []
     seen: set[str] = set()
-    batches = -(-wanted // BATCH_SIZE) + 1
-    for attempt in range(batches):
-        if len(collected) >= wanted:
-            break
-        topics = slices[attempt % len(slices)] if slices else []
+
+    def run(topics: list[str], want: int) -> list[dict]:
         keywords = re.findall(r"[a-z]{4,}",
                               (" ".join(topics) or section["guidance"]).lower())
         chosen = _select_passages(passages, sources, keywords or [event.name.lower()],
-                                 require_video=False)[:14]
+                                  require_video=False)
         if not chosen:
-            continue
-        for p in chosen:               # the prompt needs the title, the row has only the id
-            p.source_title = sources[p.source_id].title
-        index = {p.id: p for p in chosen}
-        want = min(BATCH_SIZE, wanted - len(collected))
+            return []
+        for row in chosen:            # the prompt wants a title; the row carries only the id
+            row.source_title = sources[row.source_id].title
         try:
-            batch = _one_batch(provider, event, section, chosen, index, want,
-                               [i["stem"] for i in collected], topics)
+            return _one_batch(provider, event, section, chosen,
+                              {row.id: row for row in chosen}, want,
+                              [i["stem"] for i in collected], topics)
         except ModelProviderError as exc:
             print(f"      {section['title']}: provider error {exc}", flush=True)
-            break
+            return []
+
+    def keep(batch: list[dict], topics: list[str], cap: int) -> int:
+        added = 0
         for item in batch:
+            if len(collected) >= wanted or added >= cap:
+                break
             key = _normalize(item["stem"])[:120]
             if key in seen:
                 continue
@@ -336,6 +358,24 @@ def _generate_section(provider, event, section, passages, sources,
             item["source_points"] = section["points"]
             item["scope_topics"] = topics
             collected.append(item)
+            added += 1
+        return added
+
+    for topics in (slices or [[]]):
+        if len(collected) >= wanted:
+            break
+        cap = min(first_pass_cap, BATCH_SIZE)
+        got = keep(run(topics, min(cap, wanted - len(collected))), topics, cap)
+        if not got:
+            # One retry: a whole batch lost to validation would otherwise drop this topic.
+            keep(run(topics, min(cap, wanted - len(collected))), topics, cap)
+
+    # Top up anything still missing, cycling the syllabus again rather than one favoured slice.
+    rounds = 0
+    while len(collected) < wanted and rounds < len(slices or [[]]) * 2:
+        topics = (slices or [[]])[rounds % len(slices or [[]])]
+        keep(run(topics, min(BATCH_SIZE, wanted - len(collected))), topics, BATCH_SIZE)
+        rounds += 1
     return collected[:wanted]
 
 
