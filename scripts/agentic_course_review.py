@@ -131,7 +131,8 @@ def _reviewer_account(db) -> User:
     return user
 
 
-def run(event_slug: str | None, apply: bool, limit: int | None = None) -> dict:
+def run(event_slug: str | None, apply: bool, limit: int | None = None,
+        include_drafts: bool = False) -> dict:
     provider = OpenAICompatibleProvider()
     if not provider.configured:
         raise SystemExit("no model provider configured; cannot review")
@@ -140,7 +141,13 @@ def run(event_slug: str | None, apply: bool, limit: int | None = None) -> dict:
     rows: list[dict] = []
     with SessionLocal() as db:
         reviewer = _reviewer_account(db) if apply else None
-        query = select(Lesson).where(Lesson.status == "published")
+        # Reviewing only what is already published was right when every lesson in the catalog
+        # was live and the job was finding what should never have been served. It is backwards
+        # for a course being built: a draft is precisely the thing that wants reading BEFORE a
+        # student sees it. A 26-lesson subject authored this morning was skipped entirely, and
+        # the run reported "already_reviewed: 1" and looked like it had done its job.
+        statuses = ["published", "draft"] if include_drafts else ["published"]
+        query = select(Lesson).where(Lesson.status.in_(statuses))
         if event_slug:
             event = db.scalar(select(Event).where(Event.slug == event_slug))
             if not event:
@@ -253,6 +260,9 @@ def main() -> None:
     ap.add_argument("--apply", action="store_true")
     ap.add_argument("--limit", type=int, default=None)
     ap.add_argument("--calibrate", action="store_true")
+    ap.add_argument("--include-drafts", action="store_true",
+                    help="also review unpublished drafts, which is what a course being built "
+                         "consists of")
     args = ap.parse_args()
 
     if args.calibrate:
@@ -261,7 +271,7 @@ def main() -> None:
     if not args.event and not args.all:
         raise SystemExit("pass --event <slug> or --all")
 
-    result = run(args.event, args.apply, args.limit)
+    result = run(args.event, args.apply, args.limit, args.include_drafts)
     stats = result["stats"]
     print("=" * 92)
     print(f"AGENTIC COURSE REVIEW [{'APPLY' if args.apply else 'DRY RUN'}]")

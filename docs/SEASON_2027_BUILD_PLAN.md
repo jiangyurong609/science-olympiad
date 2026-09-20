@@ -75,7 +75,66 @@ Two traps found while measuring, both of which would have inflated a source coun
    serves the same shell for every path. A 403 that becomes a 200 is not the same as a page that
    becomes useful.
 
-## The plan, in dependency order
+## Status, 2026-09-20
+
+The four-tier plan below was written on 2026-09-19 and is kept for the record. Most of it has
+been overtaken, and one of its central conclusions was wrong.
+
+| Subject | Sources | Course | Exams |
+|---|---|---|---|
+| Dynamic Planet | 73 measured | 21 lessons; 13 repaired after review | 2 published |
+| Meteorology | 83 measured | 26 lessons authored | not yet |
+| Solar System | 141 measured | 27 planned | not yet |
+| Anatomy & Physiology | 207 measured | 32 planned | not yet |
+| Water Quality | 144 measured + 26-organism roster | 30 planned | not yet |
+| Botany | 102 measured | 28 planned | not yet |
+| Thermodynamics | 125 measured | 28 planned | not yet |
+
+**Tier 3 was wrong: Meteorology was never blocked on infrastructure.** The plan concluded it
+needed a browser-rendered snapshot path because every federal teaching resource for reading
+severe weather — JetStream, the SPC FAQs, the NOAA facts pages — is a JavaScript shell or
+refuses this crawler. That conclusion followed from the sample: only federal hosts had been
+tried. 87 candidate pages measured with `ground_event._fetch` returned 83 usable and 3.4
+million characters, with radar products, hodographs, skew-T, CAPE, every storm type, both
+damage scales and the named historical events all covered. No new capability was built and
+none was needed.
+
+The render path may still be worth having. It is not what stood between this event and a
+course.
+
+**What the measuring found**, recorded so nobody re-learns it:
+
+- Length is not a validity test. NIAID serves its 404 page with HTTP 200 and 8,807 characters
+  of navigation; NOAA serves a 330-character "Page Not Found" at eleven guessed slugs. Only an
+  identical content hash separates these from real pages, and `ensure_snapshot` now checks it.
+- Every `science.nasa.gov` page carries ~5,750 characters of identical chrome, interleaved so
+  a hash never collides. A 7,600-character NASA page holds under 1,900 characters of content.
+- NCBI Bookshelf is a .gov host serving copyrighted textbooks. Janeway, Alberts and StatPearls
+  (CC BY-NC-ND) are all unusable, which is why complement, Toll-like receptors and the Gell
+  and Coombs typing rest on Wikipedia.
+- `/all-content` turns a 2,511-character NIDDK teaser into the full 20,429-character article.
+- `www.usda.gov` and `ars.usda.gov` refuse or error on everything; `fs.usda.gov` and
+  `aphis.usda.gov` are fine. DOE's entire `energy.gov/energysaver/*` section is 404, which is
+  why Thermodynamics' build half has no federal source.
+- `grc.nasa.gov` must be fetched sequentially; eight parallel connections hang indefinitely.
+- scioly.org is NOT blocked by Anubis to this client — it returned 48,515 characters. It stays
+  out of `DOMAIN_SOURCES` because it is neither a federal work nor Wikipedia. That is a rights
+  decision, not a reachability one, and the two are worth keeping distinct.
+
+**Known gaps, none of them papered over.** Kepler-452 and LHS 1140 have no usable federal page.
+Every physical law the Solar System manual names has zero federal coverage now that the GRC
+Beginner's Guide pages 404. Reading and sketching data displays has no grounding source in any
+subject — it is a skill to author, not a fact to cite. The digestive effects of exercise are
+taught by no page in either pool. Thermodynamics' competition rules and Water Quality's device
+constraints live only in the copyrighted manual and must come from a coach.
+
+**Still open.** Figures remain the real constraint, and they are the event in three subjects:
+radar imagery, hodographs and Stuve diagrams for Meteorology; the 26 indicator organisms for
+Water Quality; specimen photographs for Rocks, where 141 of 148 now exist. Division C has no
+rules manual here, so only events whose rotation is demonstrably division-shared have been
+touched, and each such decision is recorded per event in `publish_2027_season`.
+
+## The original plan, in dependency order
 
 ### Tier 1 — buildable now, no new infrastructure
 
