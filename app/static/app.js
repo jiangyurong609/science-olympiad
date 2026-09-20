@@ -3801,6 +3801,9 @@ $('lesson-block').addEventListener('submit', async event => {
     } else if (exhausted) {
       feedback.innerHTML = `<h3>Not this time</h3>${result.misconception ? `<p>${escapeHtml(result.misconception)}</p>` : ''}${answerLine}${explanationLine}<p>This check is recorded as missed — review the answer, then continue.</p>`;
       form.querySelector('fieldset').disabled = true;
+      // Label it, like the correct branch does. Leaving it on setBusy's "Checking…" left the
+      // button reading as though a request were still in flight, permanently.
+      button.textContent = 'Answer shown';
       button.disabled = true;
       locked = true;
       await saveCurrentLessonProgress(true);

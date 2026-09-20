@@ -81,8 +81,12 @@ FORMATS = {
                          "and is decidable from the passage. Roughly half should be false "
                          "because a correct mechanism is attached to a wrong conclusion, a "
                          "wrong place, or an overreaching 'always/solely/primary'. Never write "
-                         "a bare definition. The statement is yours to compose; quote the "
-                         "passage sentence that establishes the mechanism it hinges on."},
+                         "a bare definition, and never a taxonomy claim about which category a "
+                         "term belongs to — 'a knickpoint is not a sediment load' tests nothing. "
+                         "A good item is one a well-prepared student could plausibly get wrong "
+                         "for a reason worth correcting. The statement is yours to compose; "
+                         "quote the passage sentence that establishes the mechanism it hinges "
+                         "on."},
             {"key": "matching_surface", "title": "II. Matching — Channels and Landforms",
              "kind": "matching", "count": 5, "points": 1,
              "guidance": "Each item names one landform or channel term and asks which "
@@ -218,6 +222,16 @@ def _strip_source_reference(stem: str) -> str:
     return out
 
 
+# The source-reference check catches "the passage". It does not catch the same defect phrased
+# without those words: "Bed load and dissolved load are grouped with sedimentary processes, and
+# neither term is identified as a fluvial landform" is still asking which heading a term sits
+# under on a reference page, not what is true of a river.
+CLASSIFICATION_STEM = re.compile(
+    r"\b(is|are)\s+(grouped|identified|classified|listed|included|categorized)\s+"
+    r"(with|as|among|within|under)\b|\bappears?\s+within\s+the\s+group\b|"
+    r"\bbelongs?\s+to\s+the\s+(group|category|list)\b", re.I)
+
+
 def _normalize(text: str) -> str:
     return re.sub(r"\s+", " ", (text or "")).strip().casefold()
 
@@ -245,6 +259,13 @@ def _validate(raw: dict, kind: str, passages: dict[int, SourcePassage]) -> dict:
         # Survived repair, so the reference is load-bearing: the item asks what a source says
         # rather than what is true, and a competitor has no source to consult.
         raise ValueError("stem depends on a source the student cannot see")
+    if CLASSIFICATION_STEM.search(stem):
+        raise ValueError("stem tests which category a term is filed under, not the science")
+    explanation = str(raw.get("explanation") or "").strip()
+    if len(explanation) < 40:
+        # Four items shipped with none at all. The explanation is the entire teaching value of
+        # a practice paper: without it a missed question tells a student only that they missed.
+        raise ValueError("explanation is missing or too short to teach the reasoning")
     passage_id = raw.get("passage_id")
     if not isinstance(passage_id, int) or passage_id not in passages:
         raise ValueError("item cites an unavailable passage")
@@ -266,7 +287,7 @@ def _validate(raw: dict, kind: str, passages: dict[int, SourcePassage]) -> dict:
         raise ValueError("timing or difficulty is invalid") from exc
 
     out = {
-        "stem": stem, "explanation": str(raw.get("explanation") or "").strip(),
+        "stem": stem, "explanation": explanation,
         "cognitive_level": cognitive, "difficulty": difficulty,
         "estimated_seconds": seconds, "passage_id": passage_id,
         "claim_text": claim, "evidence_excerpt": excerpt,
