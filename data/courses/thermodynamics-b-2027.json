@@ -1,0 +1,350 @@
+{
+  "event_slug": "thermodynamics-b-2027",
+  "season": 2027,
+  "title": "Thermodynamics",
+  "summary": "Heat is both the subject of the test and the whole problem of the build: the conduction, convection and radiation a written question asks you to compute are the same three things a collector has to catch or keep. Learn the physics once and spend it twice.",
+  "objectives": [
+    "Define a system, sort its properties into intensive and extensive, and apply the zeroth law to a temperature measurement.",
+    "Convert among temperature and energy units and compute heat from specific heat, latent heat and a calorimetry balance.",
+    "Apply the ideal gas law and predict what happens under an adiabatic, isothermal, isochoric or isobaric change.",
+    "Apply the first and second laws to a cycle and compute the efficiency of a heat engine.",
+    "Compute conduction, convection and radiation losses, and use the Stefan-Boltzmann and inverse-square laws on a radiant source.",
+    "Estimate the temperature rise of a known mass of water under a lamp, and justify the surfaces and insulation that protect it."
+  ],
+  "units": [
+    {
+      "slug": "systems-temperature-and-measurement",
+      "title": "Systems, Temperature and Measurement",
+      "summary": "Before anything can be computed, three things have to be pinned down: where the system ends, what temperature actually means, and how many digits the answer has earned.",
+      "objectives": [
+        "Draw a system boundary and sort the properties inside it into intensive and extensive.",
+        "Convert among Kelvin, Celsius and Fahrenheit and report a result to the right number of significant figures."
+      ],
+      "lessons": [
+        {
+          "slug": "systems-surroundings-and-state-properties",
+          "title": "Systems, Surroundings and State Properties",
+          "objective": "Classify a system as open, closed or isolated and sort its properties into intensive and extensive.",
+          "keywords": ["thermodynamic system", "intensive property", "extensive property", "isolated system", "closed system", "open system", "specific volume", "state variable", "surroundings", "boundary", "equilibrium"],
+          "high_weight": true,
+          "video": false
+        },
+        {
+          "slug": "temperature-and-the-zeroth-law",
+          "title": "Temperature, Thermal Equilibrium and the Zeroth Law",
+          "objective": "State the zeroth law and use it to explain why a thermometer reads the temperature of whatever it is in contact with.",
+          "keywords": ["zeroth law of thermodynamics", "thermal equilibrium", "thermodynamic temperature", "thermal contact", "transitive", "kinetic energy", "molecular motion", "thermometer", "temperature", "heat"],
+          "high_weight": true,
+          "video": false
+        },
+        {
+          "slug": "scales-thermometers-and-absolute-zero",
+          "title": "Scales, Thermometers and Absolute Zero",
+          "objective": "Convert among Kelvin, Celsius and Fahrenheit and explain what now fixes the kelvin and where absolute zero falls on each scale.",
+          "keywords": ["absolute zero", "triple point", "ITS-90", "thermodynamic temperature scale", "Boltzmann constant", "Celsius", "Fahrenheit", "kelvin", "thermometer", "fixed point", "temperature scale"],
+          "high_weight": true,
+          "video": true
+        },
+        {
+          "slug": "si-units-and-significant-figures",
+          "title": "SI Units and Significant Figures",
+          "objective": "Carry units through a multi-step calculation and report the result to the significant figures the data supports.",
+          "keywords": ["significant figures", "International System of Units", "SI base unit", "SI prefix", "derived unit", "scientific notation", "rounding", "uncertainty", "kilogram", "measurement"],
+          "high_weight": false,
+          "video": false
+        }
+      ]
+    },
+    {
+      "slug": "heat-work-and-heat-capacity",
+      "title": "Heat, Work and Heat Capacity",
+      "summary": "Heat and work are energy in transit and belong to no one; what a substance owns is internal energy and a capacity to take heat in.",
+      "objectives": [
+        "Distinguish heat and work from internal energy and get the signs right.",
+        "Compute the heat a temperature change requires from mass and specific heat capacity."
+      ],
+      "lessons": [
+        {
+          "slug": "heat-work-and-internal-energy",
+          "title": "Heat, Work and Internal Energy",
+          "objective": "Distinguish a path function from a state function and assign the sign of heat and of work for a given change.",
+          "keywords": ["internal energy", "thermodynamic work", "path function", "state function", "adiabatic work", "energy transfer", "sign convention", "surroundings", "system", "heat"],
+          "high_weight": true,
+          "video": false
+        },
+        {
+          "slug": "the-units-heat-is-measured-in",
+          "title": "The Units Heat Is Measured In",
+          "objective": "Define the joule, calorie, kilocalorie and British thermal unit and convert a quantity of heat among them.",
+          "keywords": ["British thermal unit", "kilocalorie", "mechanical equivalent of heat", "Boltzmann constant", "calorie", "therm", "joule", "watt", "SI unit", "heat"],
+          "high_weight": false,
+          "video": false
+        },
+        {
+          "slug": "heat-capacity-and-specific-heat",
+          "title": "Heat Capacity and Specific Heat",
+          "objective": "Compute the heat for a temperature change from mass, specific heat capacity and delta T, and explain why cp and cv differ.",
+          "keywords": ["specific heat capacity", "molar heat capacity", "heat capacity", "constant pressure", "constant volume", "specific heat", "temperature change", "calorimeter", "thermal energy", "water"],
+          "high_weight": true,
+          "video": true
+        }
+      ]
+    },
+    {
+      "slug": "calorimetry-and-water",
+      "title": "Calorimetry and Water",
+      "summary": "Water is the working substance of this event's device and of most of its arithmetic, and its unusually large specific heat is why both behave as they do.",
+      "objectives": [
+        "Balance heat lost against heat gained to solve for an unknown in a calorimetry problem.",
+        "Predict what a large specific heat and a large thermal mass do to a temperature curve."
+      ],
+      "lessons": [
+        {
+          "slug": "calorimetry-and-heat-balance",
+          "title": "Calorimetry: Heat Lost Equals Heat Gained",
+          "objective": "Solve for an unknown mass, specific heat or final temperature by balancing heat lost against heat gained.",
+          "keywords": ["calorimetry", "bomb calorimeter", "calorimeter", "specific heat capacity", "thermal equilibrium", "temperature change", "constant pressure", "enthalpy", "heat transfer", "mass"],
+          "high_weight": true,
+          "video": true
+        },
+        {
+          "slug": "water-thermal-mass-and-thermal-inertia",
+          "title": "Water, Thermal Mass and Thermal Inertia",
+          "objective": "Explain how hydrogen bonding gives water its specific heat, and predict how added thermal mass flattens a temperature curve.",
+          "keywords": ["thermal mass", "thermal inertia", "hydrogen bond", "heat of vaporization", "specific heat capacity", "heat storage", "boiling point", "density", "temperature swing", "water"],
+          "high_weight": false,
+          "video": false
+        }
+      ]
+    },
+    {
+      "slug": "phases-and-latent-heat",
+      "title": "Phases and Latent Heat",
+      "summary": "A substance taking in heat either gets hotter or changes phase, never both at once, and a heating curve is that sentence drawn.",
+      "objectives": [
+        "Read a phase diagram and locate the triple point and the critical point.",
+        "Separate sensible from latent heat on a heating curve and compute each."
+      ],
+      "lessons": [
+        {
+          "slug": "phases-transitions-and-phase-diagrams",
+          "title": "Phases, Transitions and Phase Diagrams",
+          "objective": "Name each phase transition and locate melting, boiling, sublimation, the triple point and the critical point on a phase diagram.",
+          "keywords": ["phase diagram", "phase transition", "triple point", "critical point", "sublimation", "deposition", "vapor pressure", "state of matter", "melting point", "plasma", "condensation"],
+          "high_weight": true,
+          "video": true
+        },
+        {
+          "slug": "latent-and-sensible-heat",
+          "title": "Latent and Sensible Heat",
+          "objective": "Compute the heat of a phase change from the enthalpy of fusion or of vaporization and distinguish it from sensible heat.",
+          "keywords": ["latent heat", "sensible heat", "enthalpy of fusion", "enthalpy of vaporization", "specific latent heat", "heat of fusion", "phase change", "vaporization", "melting", "condensation"],
+          "high_weight": true,
+          "video": false
+        }
+      ]
+    },
+    {
+      "slug": "gases-and-processes",
+      "title": "Gases and Processes",
+      "summary": "The ideal gas law is four variables and a constant, and every named process is that same law with one of them held still.",
+      "objectives": [
+        "Apply the ideal gas law and explain temperature as average molecular kinetic energy.",
+        "Predict pressure, volume, temperature, heat and work for each named process."
+      ],
+      "lessons": [
+        {
+          "slug": "ideal-gas-law-and-kinetic-theory",
+          "title": "The Ideal Gas Law and Kinetic Theory",
+          "objective": "Solve for any one of pressure, volume, temperature or moles, and relate temperature to the average kinetic energy of the molecules.",
+          "keywords": ["ideal gas law", "equation of state", "universal gas constant", "kinetic theory", "Boltzmann constant", "Avogadro", "absolute temperature", "ideal gas", "molecular motion", "mole", "pressure"],
+          "high_weight": true,
+          "video": true
+        },
+        {
+          "slug": "adiabatic-isothermal-isochoric-isobaric",
+          "title": "Adiabatic, Isothermal, Isochoric, Isobaric",
+          "objective": "State what is held constant in each named process and say what becomes of heat, work and internal energy.",
+          "keywords": ["adiabatic process", "isothermal process", "isochoric process", "isobaric process", "reversible process", "constant pressure", "constant volume", "internal energy", "compression", "expansion"],
+          "high_weight": true,
+          "video": false
+        }
+      ]
+    },
+    {
+      "slug": "laws-cycles-and-engines",
+      "title": "The Laws, Cycles and Engines",
+      "summary": "The first law says you cannot win and the second says you cannot break even; an engine's efficiency is the price of that second sentence.",
+      "objectives": [
+        "Apply the first law to a process and the second law to a direction.",
+        "Compute thermal efficiency for a cycle and compare it with the Carnot limit."
+      ],
+      "lessons": [
+        {
+          "slug": "the-first-law",
+          "title": "The First Law",
+          "objective": "Apply the first law to a single process and to a complete cycle, and show why internal energy returns to its starting value.",
+          "keywords": ["first law of thermodynamics", "conservation of energy", "internal energy", "enthalpy", "state function", "closed system", "work done", "heat added", "energy balance", "cycle"],
+          "high_weight": true,
+          "video": false
+        },
+        {
+          "slug": "the-second-law-and-entropy",
+          "title": "The Second Law and Entropy",
+          "objective": "State the second law in terms of both heat flow and entropy, and decide whether a proposed process can happen on its own.",
+          "keywords": ["second law of thermodynamics", "entropy", "entropy change", "irreversible process", "reversible process", "Clausius", "isolated system", "statistical mechanics", "spontaneous", "disorder"],
+          "high_weight": true,
+          "video": false
+        },
+        {
+          "slug": "heat-engines-and-thermodynamic-cycles",
+          "title": "Heat Engines and Thermodynamic Cycles",
+          "objective": "Trace a working fluid around an Otto or Brayton cycle and mark where heat enters, work is done and heat is rejected.",
+          "keywords": ["heat engine", "thermodynamic cycle", "Otto cycle", "Brayton cycle", "working fluid", "hot reservoir", "cold reservoir", "compression ratio", "net work", "refrigerator"],
+          "high_weight": false,
+          "video": false
+        },
+        {
+          "slug": "carnot-efficiency-and-the-third-law",
+          "title": "Carnot Efficiency and the Third Law",
+          "objective": "Compute Carnot efficiency from reservoir temperatures and explain why no cycle beats it and why absolute zero cannot be reached.",
+          "keywords": ["Carnot cycle", "Carnot efficiency", "thermal efficiency", "third law of thermodynamics", "residual entropy", "absolute zero", "isentropic", "hot reservoir", "cold reservoir", "reversible"],
+          "high_weight": true,
+          "video": true
+        }
+      ]
+    },
+    {
+      "slug": "heat-transfer",
+      "title": "Heat Transfer",
+      "summary": "Three modes with three different dependences on temperature, and deciding which one dominates is most of what a heat-transfer question is really asking.",
+      "objectives": [
+        "Compute a conduction rate from conductivity, area, thickness and temperature difference.",
+        "Identify which mode dominates in a given situation and what slows it."
+      ],
+      "lessons": [
+        {
+          "slug": "conduction-and-thermal-conductivity",
+          "title": "Conduction and Thermal Conductivity",
+          "objective": "Use Fourier's law to compute a conduction rate and rank common materials by thermal conductivity.",
+          "keywords": ["thermal conduction", "thermal conductivity", "Fourier's law", "temperature gradient", "thermal resistance", "thermal contact conductance", "heat flux", "steady state", "insulator", "conductor"],
+          "high_weight": true,
+          "video": true
+        },
+        {
+          "slug": "convection-and-newtons-law-of-cooling",
+          "title": "Convection and Newton's Law of Cooling",
+          "objective": "Distinguish natural from forced convection and use Newton's law of cooling to predict how a warm object approaches room temperature.",
+          "keywords": ["Newton's law of cooling", "natural convection", "forced convection", "convective heat transfer coefficient", "boundary layer", "buoyancy", "convection", "heat transfer", "fluid", "cooling"],
+          "high_weight": true,
+          "video": false
+        },
+        {
+          "slug": "emissivity-absorptance-and-kirchhoffs-law",
+          "title": "Emissivity, Absorptance and Kirchhoff's Law",
+          "objective": "Explain why a good absorber is a good emitter, and read emissivity, absorptance and albedo from a description of a surface.",
+          "keywords": ["Kirchhoff's law of thermal radiation", "emissivity", "absorptance", "absorptivity", "albedo", "reflectance", "thermal radiation", "black body", "infrared", "surface"],
+          "high_weight": true,
+          "video": false
+        }
+      ]
+    },
+    {
+      "slug": "radiation",
+      "title": "Radiation",
+      "summary": "Everything above absolute zero radiates, and the fourth-power law is the reason a lamp filament can heat water from across a bench.",
+      "objectives": [
+        "Relate a body's temperature to the spectrum it emits and to the total power it emits.",
+        "Compute the irradiance a surface receives from a source at a given distance."
+      ],
+      "lessons": [
+        {
+          "slug": "black-body-radiation-and-plancks-law",
+          "title": "Black-Body Radiation and Planck's Law",
+          "objective": "Describe how an emitted spectrum shifts with temperature and use Wien's displacement law to find its peak wavelength.",
+          "keywords": ["black-body radiation", "Planck's law", "Wien's displacement law", "spectral radiance", "black body", "electromagnetic spectrum", "wavelength", "photon", "infrared", "visible light", "spectrum"],
+          "high_weight": false,
+          "video": false
+        },
+        {
+          "slug": "stefan-boltzmann-and-radiant-exitance",
+          "title": "Stefan-Boltzmann and Radiant Exitance",
+          "objective": "Compute the radiant exitance of a surface from its temperature, emissivity and area, and show what doubling the temperature does.",
+          "keywords": ["radiant exitance", "Stefan-Boltzmann law", "Stefan", "radiant emittance", "radiant flux", "emissivity", "black body", "absolute temperature", "fourth power", "surface area"],
+          "high_weight": true,
+          "video": false
+        },
+        {
+          "slug": "irradiance-and-the-inverse-square-law",
+          "title": "Irradiance, Lamps and the Inverse-Square Law",
+          "objective": "Compute the irradiance a surface receives from a lamp at a given distance and describe what an incandescent filament actually radiates.",
+          "keywords": ["inverse-square law", "irradiance", "incandescent light bulb", "luminous efficacy", "radiant flux", "solar irradiance", "point source", "filament", "radiant energy", "power"],
+          "high_weight": true,
+          "video": true
+        }
+      ]
+    },
+    {
+      "slug": "the-radiant-collector",
+      "title": "The Radiant Collector",
+      "summary": "The build is an energy balance with two terms: what the aperture lets in and what the walls let out. Every design choice moves one of them.",
+      "objectives": [
+        "Choose surfaces, glazing and an aperture that raise the radiant power a collector absorbs.",
+        "Rank the conduction, convection and radiation losses from a warm enclosure and slow each one."
+      ],
+      "lessons": [
+        {
+          "slug": "absorbing-surfaces-colour-and-aperture",
+          "title": "Absorbing Surfaces, Colour and Aperture",
+          "objective": "Explain how surface colour, a selective coating, glazing and aperture size change the radiant power a collector absorbs.",
+          "keywords": ["solar thermal collector", "absorber plate", "selective surface", "solar cooker", "glazing", "greenhouse effect", "aperture", "albedo", "absorptance", "reflector", "concentrating"],
+          "high_weight": true,
+          "video": true
+        },
+        {
+          "slug": "insulating-against-all-three-modes",
+          "title": "Insulating Against All Three Modes",
+          "objective": "Match an insulation strategy to the loss it slows, and compare materials by R-value and by emissivity.",
+          "keywords": ["thermal insulation", "R-value", "radiant barrier", "aerogel", "reflective insulation", "vacuum flask", "thermal conductivity", "air gap", "emissivity", "convection", "heat loss"],
+          "high_weight": true,
+          "video": false
+        },
+        {
+          "slug": "predicting-the-temperature-of-heated-water",
+          "title": "Predicting the Temperature of Heated Water",
+          "objective": "Estimate the final temperature of a known mass of water from absorbed radiant power, heating time and specific heat, then correct the estimate for losses.",
+          "keywords": ["specific heat capacity", "irradiance", "absorptance", "Newton's law of cooling", "radiant flux", "calorimetry", "thermal equilibrium", "temperature change", "heat loss", "watt", "heat transfer"],
+          "high_weight": true,
+          "video": false
+        }
+      ]
+    },
+    {
+      "slug": "how-the-field-was-built",
+      "title": "How the Field Was Built",
+      "summary": "Thermodynamics was assembled by people trying to fix steam engines and explain melting ice, and the event asks which of them did which.",
+      "objectives": [
+        "Attribute latent heat, the ideal cycle and the mechanical equivalent of heat to the right people.",
+        "Say what entropy, kinetic theory and the quantum each replaced."
+      ],
+      "lessons": [
+        {
+          "slug": "black-carnot-and-joule",
+          "title": "Black, Carnot and Joule",
+          "objective": "Say what caloric theory got right, and attribute latent heat, the ideal cycle and the mechanical equivalent of heat correctly.",
+          "keywords": ["Joseph Black", "caloric theory", "Sadi Carnot", "James Prescott Joule", "mechanical equivalent of heat", "history of thermodynamics", "latent heat", "steam engine", "calorimetry", "thermodynamics"],
+          "high_weight": false,
+          "video": false
+        },
+        {
+          "slug": "kelvin-clausius-boltzmann-maxwell-and-planck",
+          "title": "Kelvin, Clausius, Boltzmann, Maxwell and Planck",
+          "objective": "Attribute the absolute scale, entropy, its statistical account, the distribution of molecular speeds and the quantum of radiation to the right figure.",
+          "keywords": ["William Thomson", "Rudolf Clausius", "Ludwig Boltzmann", "James Clerk Maxwell", "Max Planck", "Lord Kelvin", "statistical mechanics", "kinetic theory of gases", "absolute temperature", "entropy", "quantum"],
+          "high_weight": false,
+          "video": false
+        }
+      ]
+    }
+  ]
+}

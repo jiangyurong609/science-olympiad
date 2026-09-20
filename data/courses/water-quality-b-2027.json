@@ -1,0 +1,344 @@
+{
+  "event_slug": "water-quality-b-2027",
+  "season": 2027,
+  "title": "Water Quality: Marine Systems, Coral Reefs and Monitoring",
+  "summary": "Half of this event is an organism on a card and half is a number from a test kit, and they are the same question asked twice: what is this water doing to the things living in it? Work from the chemistry to the community it supports.",
+  "objectives": [
+    "Describe how estuaries and coral reefs are built and what each does for the water and the coast around it.",
+    "Measure and interpret salinity, pH, dissolved oxygen, turbidity, nutrients, solids and bacteria, and say what each test is for.",
+    "Relate carbonate chemistry and aragonite saturation to whether a coral can build and keep a skeleton.",
+    "Identify the listed reef macroflora and fauna by common name and give the region each is found in.",
+    "Explain what the abundance of an indicator organism says about the health of a reef.",
+    "Trace a pollutant — sediment, nutrient, PFAS or plastic — from its source to its effect on a marine community."
+  ],
+  "units": [
+    {
+      "slug": "estuaries-and-the-marine-edge",
+      "title": "Estuaries and the Marine Edge",
+      "summary": "An estuary is defined by a mixture, not a shoreline: fresh water meeting salt on a tidal schedule. Everything that lives there is built for a salinity that changes twice a day.",
+      "objectives": [
+        "Define an estuary and name the habitats that make one up.",
+        "Explain how estuaries form, why they are valuable, and how their organisms tolerate changing salinity."
+      ],
+      "lessons": [
+        {
+          "slug": "marine-and-estuarine-ecology",
+          "title": "What an Estuary Is and What Lives There",
+          "objective": "Define an estuary in terms of fresh and salt water mixing, and identify salt marsh, mangrove, seagrass and intertidal habitats and the organisms each supports.",
+          "keywords": ["brackish", "salt marsh", "seagrass", "mangrove", "intertidal", "estuarine", "estuary", "nursery", "salinity", "tide", "habitat"],
+          "high_weight": true,
+          "video": true
+        },
+        {
+          "slug": "why-estuaries-matter",
+          "title": "What Estuaries Do for Everything Around Them",
+          "objective": "State the ecological and economic functions of estuaries — nursery habitat, fisheries, filtration and storm buffering — and name the programme that manages them in the United States.",
+          "keywords": ["National Estuary Program", "nursery", "commercial fish", "storm surge", "ecosystem service", "flood", "filter", "recreation", "shoreline", "habitat loss", "estuary"],
+          "high_weight": false,
+          "video": false
+        },
+        {
+          "slug": "how-estuaries-form-and-how-life-copes",
+          "title": "Estuary Formation, Circulation and Salinity Tolerance",
+          "objective": "Classify an estuary by how it formed, describe the salt wedge and stratified circulation inside it, and explain how organisms handle a salinity that changes with the tide.",
+          "keywords": ["salt wedge", "bar-built", "drowned river valley", "coastal plain", "tectonic", "fjord", "stratification", "osmoregulation", "salinity tolerance", "freshwater inflow", "brackish"],
+          "high_weight": false,
+          "video": true
+        }
+      ]
+    },
+    {
+      "slug": "cycles-and-watersheds",
+      "title": "Cycles and Watersheds",
+      "summary": "Nothing enters the sea from nowhere. Water and nutrients arrive through a basin, and the basin is where most water quality problems are actually made.",
+      "objectives": [
+        "Trace water and the major nutrients through their cycles in an aquatic system.",
+        "Explain why a watershed is the management unit for water quality."
+      ],
+      "lessons": [
+        {
+          "slug": "the-water-cycle-in-aquatic-systems",
+          "title": "The Water Cycle Through an Aquatic System",
+          "objective": "Trace water through evaporation, condensation, precipitation, runoff, infiltration and groundwater, and say which reservoir holds the most of it.",
+          "keywords": ["water cycle", "evapotranspiration", "condensation", "evaporation", "precipitation", "infiltration", "groundwater", "runoff", "residence time", "reservoir", "discharge"],
+          "high_weight": false,
+          "video": true
+        },
+        {
+          "slug": "nutrient-cycling-in-water",
+          "title": "Nitrogen, Phosphorus and the Cycles They Run",
+          "objective": "Follow nitrogen and phosphorus through fixation, nitrification, denitrification, uptake and decomposition, and identify the step that limits growth in a marine system.",
+          "keywords": ["nitrogen fixation", "denitrification", "nitrification", "nitrogen cycle", "nutrient cycle", "biogeochemical", "ammonia", "decomposer", "phosphorus", "nitrate", "phosphate", "assimilation"],
+          "high_weight": true,
+          "video": false
+        },
+        {
+          "slug": "watersheds-and-their-management",
+          "title": "Watersheds and What Runs Off Them",
+          "objective": "Delineate a watershed from its divide, explain how nonpoint source pollution reaches the coast, and name the practices used to reduce it.",
+          "keywords": ["nonpoint source", "best management practice", "drainage basin", "watershed", "impervious", "stormwater", "riparian", "runoff", "divide", "land use", "tributary"],
+          "high_weight": true,
+          "video": false
+        }
+      ]
+    },
+    {
+      "slug": "aquatic-chemistry",
+      "title": "Aquatic Chemistry",
+      "summary": "Three properties of seawater decide almost everything else about it: how salty it is, how much oxygen it holds, and where its carbonate chemistry sits.",
+      "objectives": [
+        "Relate salinity to density and explain how both are measured.",
+        "Explain how temperature, oxygen solubility and carbonate chemistry limit marine life."
+      ],
+      "lessons": [
+        {
+          "slug": "salinity-density-and-seawater",
+          "title": "Salinity, Density and What Seawater Is Made Of",
+          "objective": "State the composition and typical salinity of seawater, express salinity in parts per thousand and practical salinity units, and explain how salinity and temperature set density.",
+          "keywords": ["practical salinity unit", "parts per thousand", "specific gravity", "halocline", "seawater", "salinity", "density", "dissolved salts", "chloride", "conductivity", "temperature"],
+          "high_weight": true,
+          "video": false
+        },
+        {
+          "slug": "dissolved-oxygen-and-temperature",
+          "title": "Dissolved Oxygen, Temperature and Stratification",
+          "objective": "Explain what controls how much oxygen water can hold, read a dissolved oxygen value against saturation, and connect the thermocline to where oxygen runs out.",
+          "keywords": ["dissolved oxygen", "oxygen saturation", "thermocline", "sea surface temperature", "hypoxia", "anoxic", "solubility", "milligrams per liter", "photosynthesis", "respiration", "aeration"],
+          "high_weight": true,
+          "video": false
+        },
+        {
+          "slug": "ph-carbonate-chemistry-and-aragonite-saturation",
+          "title": "pH, Carbonate Chemistry and Aragonite Saturation",
+          "objective": "Explain how carbon dioxide uptake lowers ocean pH, and use aragonite saturation state to predict whether a coral can build or keep a calcium carbonate skeleton.",
+          "keywords": ["aragonite saturation", "ocean acidification", "saturation state", "calcium carbonate", "bicarbonate", "carbonate", "calcification", "alkalinity", "aragonite", "carbon dioxide", "pH"],
+          "high_weight": true,
+          "video": false
+        }
+      ]
+    },
+    {
+      "slug": "the-monitoring-toolkit",
+      "title": "The Monitoring Toolkit",
+      "summary": "A monitoring sheet is not a list of unrelated numbers. Each test exists because it answers a specific question, and several of them answer it about each other.",
+      "objectives": [
+        "State the purpose of each water quality test and how its result is reported.",
+        "Explain the relationships among parameters, and how density reports salinity in a built instrument."
+      ],
+      "lessons": [
+        {
+          "slug": "core-water-quality-parameters",
+          "title": "The Core Parameters and Why Each Is Tested",
+          "objective": "State what salinity, pH, temperature, dissolved oxygen, turbidity and phosphate each measure, and explain how a change in one shows up in another.",
+          "keywords": ["nephelometric", "Secchi", "turbidity", "dissolved oxygen", "water quality", "monitoring", "parameter", "salinity", "phosphate", "sampling", "temperature", "pH"],
+          "high_weight": true,
+          "video": false
+        },
+        {
+          "slug": "nitrates-solids-bod-and-bacteria",
+          "title": "Nitrates, Solids, BOD and Fecal Coliform",
+          "objective": "Explain what biochemical oxygen demand, fecal coliform counts, nitrate, phosphate and dissolved and suspended solids each reveal about a water body and its sources of pollution.",
+          "keywords": ["biochemical oxygen demand", "fecal coliform", "total dissolved solids", "total suspended solids", "Escherichia coli", "indicator bacteria", "nitrate", "phosphate", "milligrams per liter", "nutrient", "sewage"],
+          "high_weight": true,
+          "video": false
+        },
+        {
+          "slug": "hydrometers-salinometers-and-percent-salinity",
+          "title": "Building and Calibrating a Salinometer",
+          "objective": "Explain how a floating hydrometer reports density, relate density to salinity, and calibrate a team-built salinometer against solutions of known mass fraction.",
+          "keywords": ["hydrometer", "salinometer", "specific gravity", "mass fraction", "Archimedes", "calibration", "buoyancy", "density", "graduated", "salinity", "reference temperature"],
+          "high_weight": true,
+          "video": true
+        }
+      ]
+    },
+    {
+      "slug": "food-webs-and-populations",
+      "title": "Food Webs and Populations",
+      "summary": "Marine productivity starts with organisms too small to see, and reef questions about overfishing are really questions about what happens when one trophic level is removed.",
+      "objectives": [
+        "Build a marine food web from producers to apex predators and trace energy through it.",
+        "Name the community interactions and population processes that set how many of something a reef holds."
+      ],
+      "lessons": [
+        {
+          "slug": "plankton-food-chains-and-trophic-levels",
+          "title": "Plankton, Food Chains and Trophic Levels",
+          "objective": "Order a marine food web from phytoplankton to apex predator, assign trophic levels, and explain why energy transfer limits the number of levels.",
+          "keywords": ["phytoplankton", "zooplankton", "primary producer", "primary production", "trophic level", "apex predator", "food web", "food chain", "detritus", "decomposer", "consumer"],
+          "high_weight": true,
+          "video": true
+        },
+        {
+          "slug": "community-interactions-and-population-dynamics",
+          "title": "Symbiosis, Grazing and Population Dynamics",
+          "objective": "Classify an interaction as mutualism, commensalism, parasitism, predation or competition, and explain how recruitment and carrying capacity control a reef population.",
+          "keywords": ["mutualism", "commensalism", "parasitism", "carrying capacity", "population dynamics", "recruitment", "symbiosis", "predation", "competition", "herbivore", "grazing"],
+          "high_weight": true,
+          "video": false
+        }
+      ]
+    },
+    {
+      "slug": "coral-reefs",
+      "title": "Coral Reefs",
+      "summary": "A reef is an animal, an alga and a mineral working together, and it only works inside a narrow band of temperature, light and carbonate chemistry. Most reef questions are about leaving that band.",
+      "objectives": [
+        "Explain the coral–zooxanthellae symbiosis and how a coral reproduces and grows a skeleton.",
+        "Identify what bleaching, disease and human pressure do to a reef, and how reefs are protected."
+      ],
+      "lessons": [
+        {
+          "slug": "coral-polyps-and-zooxanthellae",
+          "title": "The Polyp, Its Alga and Its Life Cycle",
+          "objective": "Describe the anatomy of a coral polyp, explain what each partner gains from the zooxanthellae symbiosis, and contrast spawning with budding as ways a colony grows.",
+          "keywords": ["zooxanthellae", "Symbiodinium", "nematocyst", "planula", "coral spawning", "budding", "polyp", "cnidarian", "tentacle", "symbiosis", "photosynthesis", "colony"],
+          "high_weight": true,
+          "video": true
+        },
+        {
+          "slug": "calcification-reef-types-and-where-reefs-grow",
+          "title": "Calcification, Reef Types and Reef Distribution",
+          "objective": "Explain how a coral deposits an aragonite skeleton, distinguish fringing reef, barrier reef and atoll, and state the temperature, light and latitude limits on where reefs grow.",
+          "keywords": ["fringing reef", "barrier reef", "atoll", "calcification", "aragonite", "Great Barrier Reef", "Indo-Pacific", "Caribbean", "latitude", "sea surface temperature", "skeleton"],
+          "high_weight": true,
+          "video": false
+        },
+        {
+          "slug": "bleaching-disease-and-recently-killed-coral",
+          "title": "Bleaching, Disease and Recently Killed Coral",
+          "objective": "Explain what a coral loses when it bleaches, distinguish the named coral diseases, and describe how a surveyor tells recently killed coral from old dead substrate.",
+          "keywords": ["stony coral tissue loss disease", "coral bleaching", "white band disease", "black band disease", "recently killed coral", "thermal stress", "coral disease", "zooxanthellae", "mortality", "coral cover", "resilience"],
+          "high_weight": true,
+          "video": true
+        },
+        {
+          "slug": "what-harms-a-reef-and-how-reefs-are-managed",
+          "title": "What Harms a Reef, and What Is Done About It",
+          "objective": "Rank the pressures on a reef — warming, acidification, sedimentation, nutrient pollution, overfishing and destructive fishing — and describe the protection and restoration responses to each.",
+          "keywords": ["crown-of-thorns", "destructive fishing", "marine protected area", "sedimentation", "nutrient pollution", "overfishing", "restoration", "climate change", "runoff", "invasive species", "reef"],
+          "high_weight": true,
+          "video": false
+        }
+      ]
+    },
+    {
+      "slug": "the-indicator-roster",
+      "title": "The Indicator Roster",
+      "summary": "The listed organisms are not a nature quiz; each one was chosen because its abundance answers a question about the reef. Learn the animal, then learn the question it answers.",
+      "objectives": [
+        "Identify each listed reef organism by common name and describe how it feeds.",
+        "State what the abundance of a given indicator says about fishing pressure, water quality or coral condition."
+      ],
+      "lessons": [
+        {
+          "slug": "indicator-organisms-and-what-they-measure",
+          "title": "Why These Organisms and Not Others",
+          "objective": "Explain what makes an organism a useful bioindicator, and state which aspect of reef health each category of indicator — grazer, predator, coral-eater, invertebrate — reports on.",
+          "keywords": ["bioindicator", "indicator species", "indicator organism", "Reef Check", "reef health", "abundance", "survey", "transect", "biological monitoring", "baseline", "overfishing"],
+          "high_weight": true,
+          "video": false
+        },
+        {
+          "slug": "grazers-urchins-and-fleshy-algae",
+          "title": "Grazers, Urchins and the Algae They Eat",
+          "objective": "Describe how parrotfish and long-spined and pencil urchins graze a reef, and explain why fleshy red, green and brown algae take over when grazers are removed.",
+          "keywords": ["parrotfish", "Diadema", "sea urchin", "fleshy algae", "macroalgae", "red algae", "green algae", "brown algae", "herbivore", "grazing", "algal", "overfishing"],
+          "high_weight": true,
+          "video": true
+        },
+        {
+          "slug": "predatory-and-targeted-reef-fish",
+          "title": "Groupers, Snappers, Morays and Wrasses",
+          "objective": "Identify grouper, snapper, sweetlips, moray eel and humphead wrasse by common name, describe how each feeds, and explain why their size and number track fishing pressure.",
+          "keywords": ["grouper", "snapper", "moray eel", "wrasse", "sweetlips", "coral reef fish", "predator", "carnivore", "fishery", "overfishing", "reef fish"],
+          "high_weight": true,
+          "video": false
+        },
+        {
+          "slug": "coral-eating-indicators-and-reef-predators",
+          "title": "Butterflyfish, Crown-of-Thorns and Their Predators",
+          "objective": "Explain why butterflyfish abundance tracks live coral cover, describe a crown-of-thorns outbreak, and name the predators whose loss allows one.",
+          "keywords": ["crown-of-thorns", "butterflyfish", "triton", "outbreak", "starfish", "coral polyp", "coral cover", "predation", "coral reef fish", "reef health", "bioindicator"],
+          "high_weight": true,
+          "video": false
+        },
+        {
+          "slug": "hard-corals-sea-fans-and-sponges",
+          "title": "Hard Corals, Sea Fans and Sponges",
+          "objective": "Distinguish hard stony corals from soft corals and sea fans, identify a demosponge, and explain what each contributes to reef structure and to filtering the water.",
+          "keywords": ["stony coral", "Scleractinia", "brain coral", "sea fan", "gorgonian", "soft coral", "demosponge", "sponge", "filter feeder", "calcium carbonate", "colony"],
+          "high_weight": true,
+          "video": false
+        },
+        {
+          "slug": "clams-shrimp-lobsters-and-sea-cucumbers",
+          "title": "Giant Clams, Shrimp, Lobsters and Sea Cucumbers",
+          "objective": "Identify giant clams, banded coral shrimp, lobsters and sea cucumbers by common name and describe the filter feeding, cleaning and detritus feeding each does on a reef.",
+          "keywords": ["giant clam", "sea cucumber", "lobster", "shrimp", "crustacean", "echinoderm", "filter feeder", "detritus", "invertebrate", "zooxanthellae", "overfishing"],
+          "high_weight": false,
+          "video": false
+        },
+        {
+          "slug": "global-indo-pacific-and-atlantic-distribution",
+          "title": "Global, Indo-Pacific Only, Atlantic Only",
+          "objective": "Assign a listed reef organism to a global, Indo-Pacific-only or Atlantic-only distribution and explain what separates the two ocean basins biologically.",
+          "keywords": ["Indo-Pacific", "Caribbean", "Atlantic", "Red Sea", "biogeographic", "endemic", "distribution", "Great Barrier Reef", "Florida", "range", "tropical"],
+          "high_weight": true,
+          "video": false
+        }
+      ]
+    },
+    {
+      "slug": "pollution-debris-and-treatment",
+      "title": "Pollution, Debris and Treatment",
+      "summary": "Most marine pollution is legal, diffuse and arrives from land. The contaminants that make headlines are usually the ones treatment plants were never designed to remove.",
+      "objectives": [
+        "Trace sediment, nutrients, emerging contaminants and plastic from source to marine effect.",
+        "Describe how drinking water and wastewater are treated and what each step removes."
+      ],
+      "lessons": [
+        {
+          "slug": "sedimentation-and-nonpoint-source-pollution",
+          "title": "Sediment: The Pollutant Nobody Sees",
+          "objective": "Explain how erosion from agriculture, construction and cleared land raises turbidity and smothers reefs, and name the controls used to stop it at the source.",
+          "keywords": ["siltation", "suspended sediment", "nonpoint source", "sedimentation", "best management practice", "turbidity", "stormwater", "erosion", "agriculture", "runoff", "smother"],
+          "high_weight": true,
+          "video": false
+        },
+        {
+          "slug": "nutrient-pollution-habs-and-harmful-species",
+          "title": "Nutrients, Harmful Algal Blooms and Dead Zones",
+          "objective": "Trace nitrogen and phosphorus from their sources to eutrophication, harmful algal blooms and hypoxic dead zones, and describe the harm done by bloom toxins and by invasive species such as lionfish.",
+          "keywords": ["harmful algal bloom", "eutrophication", "dead zone", "red tide", "nutrient pollution", "hypoxia", "cyanobacteria", "invasive species", "lionfish", "shellfish", "toxin", "nitrogen"],
+          "high_weight": true,
+          "video": true
+        },
+        {
+          "slug": "emerging-contaminants-pfas-and-medicines",
+          "title": "PFAS, Medicines and Other Emerging Contaminants",
+          "objective": "Explain why PFAS and pharmaceutical residues persist in water, how they reach aquatic organisms, and why conventional treatment does not remove them.",
+          "keywords": ["PFAS", "per- and polyfluoroalkyl", "forever chemicals", "PFOA", "PFOS", "bioaccumulation", "pharmaceuticals", "personal care products", "persistent", "drinking water", "wastewater"],
+          "high_weight": true,
+          "video": false
+        },
+        {
+          "slug": "garbage-patches-and-marine-debris",
+          "title": "The Five Garbage Patches and Marine Debris",
+          "objective": "Name the five subtropical gyres that concentrate floating debris, explain how a garbage patch forms and why it is not an island, and describe how microplastics enter the food web.",
+          "keywords": ["Great Pacific Garbage Patch", "garbage patch", "microplastic", "marine debris", "gyre", "convergence", "North Pacific", "South Atlantic", "Indian Ocean", "entanglement", "plastic"],
+          "high_weight": false,
+          "video": true
+        },
+        {
+          "slug": "treating-drinking-water-and-wastewater",
+          "title": "Making Water Drinkable and Sewage Safe",
+          "objective": "Order the steps of drinking water treatment and of primary, secondary and tertiary wastewater treatment, and state what each step removes.",
+          "keywords": ["coagulation", "flocculation", "activated sludge", "secondary treatment", "primary treatment", "disinfection", "chlorination", "filtration", "maximum contaminant level", "Safe Drinking Water Act", "sludge", "sedimentation"],
+          "high_weight": true,
+          "video": false
+        }
+      ]
+    }
+  ]
+}

@@ -78,6 +78,23 @@ summary: {type,heading,points:[string],next_step}
 """
 
 
+# Wikipedia titles the Stefan-Boltzmann law, the Saffir-Simpson scale and the
+# Wegener-Bergeron-Findeisen process with EN DASHES, and its prose follows the title. A
+# blueprint keyword written with an ordinary hyphen — which is what anyone types, and what the
+# 2027 scope outline uses — then matches none of it: "Wegener-Bergeron" selects 0 passages
+# while 5 passages contain "Wegener\u2013Bergeron". The lesson is authored without the one page
+# that explains its subject, and reports the subject as unsupported.
+# The same trap with apostrophes: NIDDK and MedlinePlus render "Crohn\u2019s" with a curly
+# apostrophe, so a keyword typed as "Crohn's" matches nothing on the page about it.
+_DASHES = str.maketrans({"\u2013": "-", "\u2014": "-", "\u2011": "-", "\u00ad": "-", "\u2212": "-",
+                         "\u2019": "'", "\u2018": "'", "\u201c": '"', "\u201d": '"'})
+
+
+def _fold(text: str) -> str:
+    """Lower-case and reduce every dash to a plain hyphen, for matching only."""
+    return text.translate(_DASHES).lower()
+
+
 def _terms(values: list[str]) -> list[str]:
     return [
         token for token in re.findall(r"[a-z0-9]+", " ".join(values).lower())
@@ -86,9 +103,9 @@ def _terms(values: list[str]) -> list[str]:
 
 
 def _passage_score(passage: SourcePassage, source: Source, keywords: list[str]) -> int:
-    haystack = f"{source.title} {passage.heading} {passage.text}".lower()
+    haystack = _fold(f"{source.title} {passage.heading} {passage.text}")
     return sum(
-        (6 if term in source.title.lower() else 0) + min(haystack.count(term), 4)
+        (6 if term in _fold(source.title) else 0) + min(haystack.count(term), 4)
         for term in _terms(keywords)
     )
 
@@ -144,11 +161,11 @@ def _select_passages(
     for term in keywords:
         if len(selected) >= limit:
             break
-        needle = term.lower()
+        needle = _fold(term)
         best = next(
             (passage for score, passage in scored
              if passage.id not in chosen_ids and score > 0
-             and needle in f"{passage.heading} {passage.text}".lower()),
+             and needle in _fold(f"{passage.heading} {passage.text}")),
             None,
         )
         if best is not None:
