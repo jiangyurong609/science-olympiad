@@ -12,7 +12,7 @@
     {
       "slug": "calcite",
       "label": "Calcite",
-      "url": "/static/media/rocks-and-minerals/calcite.png",
+      "url": "/static/media/rocks-and-minerals/calcite.jpg",
       "alt": "Photograph of Calcite for identification",
       "attribution": "PaleoNeolitic (montage creator)",
       "license": "CC BY 4.0",
@@ -561,7 +561,7 @@
     {
       "slug": "potassium-feldspars",
       "label": "Potassium feldspars",
-      "url": "/static/media/rocks-and-minerals/potassium-feldspars.png",
+      "url": "/static/media/rocks-and-minerals/potassium-feldspars.jpg",
       "alt": "Photograph of Potassium feldspars for identification",
       "attribution": "PaleoNeolitic",
       "license": "CC BY 4.0",
@@ -714,7 +714,7 @@
     {
       "slug": "smoky-quartz",
       "label": "Smoky Quartz",
-      "url": "/static/media/rocks-and-minerals/smoky-quartz.png",
+      "url": "/static/media/rocks-and-minerals/smoky-quartz.jpg",
       "alt": "Photograph of Smoky Quartz for identification",
       "attribution": "Rob Lavinsky",
       "license": "CC BY 3.0",
@@ -849,7 +849,7 @@
     {
       "slug": "sapphire-corundum",
       "label": "Sapphire (corundum)",
-      "url": "/static/media/rocks-and-minerals/sapphire-corundum.png",
+      "url": "/static/media/rocks-and-minerals/sapphire-corundum.jpg",
       "alt": "Photograph of Sapphire (corundum) for identification",
       "attribution": "Chip Clark, Smithsonian staff",
       "license": "Public domain",
@@ -1292,7 +1292,7 @@
     {
       "slug": "mars",
       "label": "Mars",
-      "url": "/static/media/astronomy/mars.png",
+      "url": "/static/media/astronomy/mars.jpg",
       "alt": "Photograph of Mars for identification",
       "attribution": "Kevin Gill from Los Angeles, CA, United States",
       "license": "CC BY 2.0",
@@ -1301,7 +1301,7 @@
     {
       "slug": "jupiter",
       "label": "Jupiter",
-      "url": "/static/media/astronomy/jupiter.png",
+      "url": "/static/media/astronomy/jupiter.jpg",
       "alt": "Photograph of Jupiter for identification",
       "attribution": "NASA/STSCI (S.T.A.R.S)",
       "license": "Public domain",
@@ -1319,7 +1319,7 @@
     {
       "slug": "andromeda-galaxy",
       "label": "Andromeda Galaxy",
-      "url": "/static/media/astronomy/andromeda-galaxy.png",
+      "url": "/static/media/astronomy/andromeda-galaxy.jpg",
       "alt": "Photograph of Andromeda Galaxy for identification",
       "attribution": "Brody Wesner",
       "license": "CC0",
@@ -1474,7 +1474,7 @@
     {
       "slug": "mars",
       "label": "Mars",
-      "url": "/static/media/solar-system/mars.png",
+      "url": "/static/media/solar-system/mars.jpg",
       "alt": "Photograph of Mars for identification",
       "attribution": "Kevin Gill from Los Angeles, CA, United States",
       "license": "CC BY 2.0",
@@ -1483,7 +1483,7 @@
     {
       "slug": "jupiter",
       "label": "Jupiter",
-      "url": "/static/media/solar-system/jupiter.png",
+      "url": "/static/media/solar-system/jupiter.jpg",
       "alt": "Photograph of Jupiter for identification",
       "attribution": "NASA/STSCI (S.T.A.R.S)",
       "license": "Public domain",
@@ -1492,7 +1492,7 @@
     {
       "slug": "saturn",
       "label": "Saturn",
-      "url": "/static/media/solar-system/saturn.png",
+      "url": "/static/media/solar-system/saturn.jpg",
       "alt": "Photograph of Saturn for identification",
       "attribution": "NASA / JPL-Caltech / SSI / color composite by Gordan Ugarkovic",
       "license": "Public domain",
@@ -1501,7 +1501,7 @@
     {
       "slug": "uranus",
       "label": "Uranus",
-      "url": "/static/media/solar-system/uranus.png",
+      "url": "/static/media/solar-system/uranus.jpg",
       "alt": "Photograph of Uranus for identification",
       "attribution": "Ardenau4",
       "license": "CC0",
@@ -1510,7 +1510,7 @@
     {
       "slug": "neptune",
       "label": "Neptune",
-      "url": "/static/media/solar-system/neptune.png",
+      "url": "/static/media/solar-system/neptune.jpg",
       "alt": "Photograph of Neptune for identification",
       "attribution": "NASA / Voyager 2 / PDS / OPUS / Ardenau4",
       "license": "CC0",
@@ -1537,7 +1537,7 @@
     {
       "slug": "europa",
       "label": "Europa",
-      "url": "/static/media/solar-system/europa.png",
+      "url": "/static/media/solar-system/europa.jpg",
       "alt": "Photograph of Europa for identification",
       "attribution": "NASA/JPL-Caltech/SwRI/MSSS/Kevin M. Gill",
       "license": "CC BY 2.0",
@@ -1546,7 +1546,7 @@
     {
       "slug": "io",
       "label": "Io",
-      "url": "/static/media/solar-system/io.png",
+      "url": "/static/media/solar-system/io.jpg",
       "alt": "Photograph of Io for identification",
       "attribution": "NASA",
       "license": "Public domain",
@@ -1564,7 +1564,7 @@
     {
       "slug": "ganymede",
       "label": "Ganymede",
-      "url": "/static/media/solar-system/ganymede.png",
+      "url": "/static/media/solar-system/ganymede.jpg",
       "alt": "Photograph of Ganymede for identification",
       "attribution": "NASA/JPL-Caltech/SwRI/MSSS/Kevin M. Gill",
       "license": "CC BY 2.0",
@@ -1591,7 +1591,7 @@
     {
       "slug": "pluto",
       "label": "Pluto",
-      "url": "/static/media/solar-system/pluto.png",
+      "url": "/static/media/solar-system/pluto.jpg",
       "alt": "Photograph of Pluto for identification",
       "attribution": "NASA/Johns Hopkins University Applied Physics Laboratory/Southwest Research Institute/Alex Parker",
       "license": "Public domain",
@@ -1710,7 +1710,7 @@
     {
       "slug": "cockroach-blattodea",
       "label": "Cockroach (Blattodea)",
-      "url": "/static/media/entomology/cockroach-blattodea.png",
+      "url": "/static/media/entomology/cockroach-blattodea.jpg",
       "alt": "Photograph of Cockroach (Blattodea) for identification",
       "attribution": "Wikimedia Commons",
       "license": "Public domain",

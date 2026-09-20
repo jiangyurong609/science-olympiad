@@ -689,6 +689,28 @@ DOMAIN_SOURCES = {
             "https://en.wikipedia.org/wiki/Critical_zone",
             "https://en.wikipedia.org/wiki/Water_balance",
             "https://en.wikipedia.org/wiki/Residence_time",
+            # Lakes, wetlands and the climate controls on them. The 2027 course's first
+            # authoring run keyed nine checkpoints to "the supplied evidence does not define
+            # this" — continentality, lake effect, turnover, wetland types — and a count of the
+            # retained passages shows why: 0 mentioned continentality and 1 mentioned turnover.
+            # The prompt has since been told to return insufficient_evidence instead of writing
+            # a lesson about the absence, which turns that gap into a refusal to author; these
+            # close the gap itself. Each measured with `ground_event._fetch` before being added.
+            "https://en.wikipedia.org/wiki/Lake_stratification",
+            "https://en.wikipedia.org/wiki/Thermocline",
+            "https://en.wikipedia.org/wiki/Dimictic_lake",
+            "https://en.wikipedia.org/wiki/Limnology",
+            "https://en.wikipedia.org/wiki/Eutrophication",
+            "https://en.wikipedia.org/wiki/Continental_climate",
+            "https://en.wikipedia.org/wiki/Lake-effect_snow",
+            "https://en.wikipedia.org/wiki/Wetland",
+            "https://en.wikipedia.org/wiki/Marsh",
+            "https://en.wikipedia.org/wiki/Swamp",
+            "https://en.wikipedia.org/wiki/Bog",
+            "https://en.wikipedia.org/wiki/Fen",
+            "https://en.wikipedia.org/wiki/Riparian_zone",
+            "https://en.wikipedia.org/wiki/Estuary",
+            "https://www.epa.gov/wetlands/what-wetland",
         ],
     },
 }

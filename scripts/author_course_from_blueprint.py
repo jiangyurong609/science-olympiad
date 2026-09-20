@@ -457,7 +457,8 @@ def _generate_one(provider, blueprint, unit_data, lesson_data, passages, sources
 
 
 def author(*, apply: bool, generate: bool, regenerate: bool = False,
-           blueprint_path: Path | None = None, allow_live: bool = False) -> dict:
+           blueprint_path: Path | None = None, allow_live: bool = False,
+           only: set[str] | None = None) -> dict:
     path = Path(blueprint_path or DEFAULT_BLUEPRINT)
     if not path.exists():
         raise SystemExit(f"no blueprint at {path}")
@@ -497,6 +498,8 @@ def author(*, apply: bool, generate: bool, regenerate: bool = False,
                 report["failed"].append({
                     "lesson": lesson_data["slug"], "reason": "no_matching_passages",
                 })
+                continue
+            if only and lesson_data["slug"] not in only:
                 continue
             generation_rows.append(
                 (unit_data, unit, lesson_data, skill, concept, sequence, passages)
@@ -615,12 +618,20 @@ def main() -> None:
                         help="path to a course blueprint JSON under data/courses/")
     parser.add_argument("--allow-live", action="store_true",
                         help="permit re-scaffolding a course that serves published lessons")
+    # `--regenerate` rewrites every lesson in the blueprint and sets each one back to draft.
+    # That is right for a first rebuild and wrong for a repair: when a review withdraws 15 of
+    # a course's 21 lessons, regenerating the blueprint would also pull the 6 that survived
+    # out of the catalog, and a student mid-course would watch the subject empty out. Name the
+    # lessons being repaired and the rest are left exactly as they are.
+    parser.add_argument("--only", default="",
+                        help="comma-separated lesson slugs to author; others are left untouched")
     args = parser.parse_args()
     if args.generate and not args.apply:
         raise SystemExit("--generate requires --apply")
     print(json.dumps(author(
         apply=args.apply, generate=args.generate, regenerate=args.regenerate,
         blueprint_path=Path(args.blueprint), allow_live=args.allow_live,
+        only={s.strip() for s in args.only.split(",") if s.strip()} or None,
     ), indent=2))
 
 
