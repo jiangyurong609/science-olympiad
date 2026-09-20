@@ -192,6 +192,119 @@ DOMAIN_TERM_PATTERNS = {
                        r"vacuum flask|equilibrium|carnot|otto|brayton|engine|cycle|"
                        r"efficien|work|energy|power|watt|reservoir|inverse-square|"
                        r"significant figure|si unit|metric|conversion"),
+    # Fourteen domains had no tuned vocabulary and silently fell back to the geology pattern.
+    # `ground_event` prints a warning nobody was reading, and the cost is measurable: Disease
+    # Detectives rejected 8,351 sentences as "off_topic" and kept 375 claims from 140 sources,
+    # because a page about attack rates and odds ratios contains none of
+    # `mineral|rock|crystal|igneous`. Meteorology, with a tuned pattern, keeps 2,077 from 83.
+    "epidemiology": (r"epidemi|outbreak|epidemic|pandemic|endemic|cluster|surveillance|"
+                     r"incidence|prevalence|attack rate|case fatality|mortality|morbidity|"
+                     r"rate|ratio|proportion|odds|risk|relative risk|confidence interval|"
+                     r"cohort|case-control|cross-sectional|ecological|randomi|trial|study|"
+                     r"bias|confound|recall|selection|misclassif|association|causal|"
+                     r"bradford hill|koch|postulate|exposure|outcome|case definition|"
+                     r"transmission|vector|vehicle|reservoir|host|agent|pathogen|infect|"
+                     r"bacteri|virus|viral|fungal|protozoa|prion|incubation|latent|carrier|"
+                     r"quarantine|isolation|contact tracing|vaccin|immuni|herd immunity|"
+                     r"prevention|screening|control measure|epidemic curve|line listing|"
+                     r"histogram|median|mean|mode|standard deviation|percentile|"
+                     r"pulsenet|pfge|serotype|whole genome|sequenc|specimen|laboratory"),
+    "genetics": (r"gene|genetic|genom|allele|chromosom|chromatid|centromere|telomere|"
+                 r"dna|rna|nucleotide|base pair|codon|anticodon|helix|strand|"
+                 r"replicat|transcri|translat|ribosome|polymerase|primer|promoter|"
+                 r"operon|repressor|activator|intron|exon|splic|mutation|missense|"
+                 r"nonsense|frameshift|silent|deletion|insertion|substitution|"
+                 r"dominan|recessive|codominan|epistas|heterozyg|homozyg|genotype|"
+                 r"phenotype|punnett|cross|hybrid|segregat|independent assortment|"
+                 r"pedigree|inherit|linkage|recombinat|crossing over|karyotype|"
+                 r"nondisjunction|trisomy|monosomy|aneuploid|meiosis|mitosis|gamete|"
+                 r"hardy|weinberg|allele frequency|drift|founder|bottleneck|fitness|"
+                 r"probability|ratio|polygen|quantitative trait|heritab|pcr|sanger"),
+    "remote_sensing": (r"remote sensing|satellite|sensor|orbit|imagery|image|band|"
+                       r"wavelength|spectrum|spectral|infrared|thermal|visible|microwave|"
+                       r"radar|lidar|radiometr|reflect|emiss|albedo|radiation|radiance|"
+                       r"resolution|pixel|swath|landsat|modis|goes|nadir|"
+                       r"electromagnetic|absorption|scatter|atmospher|aerosol|cloud|"
+                       r"vegetation|ndvi|land cover|sea surface|temperature|ice|ocean|"
+                       r"greenhouse|energy budget|climate|false colour|false color|"
+                       r"composite|calibrat|ground truth|interpret"),
+    "forensics": (r"forensic|evidence|crime|analys|identif|sample|unknown|test|"
+                  r"chromatograph|spectroscop|flame test|precipitat|solubil|acid|base|"
+                  r"ph\b|indicator|reagent|polymer|plastic|fiber|fibre|hair|"
+                  r"fingerprint|dna|blood|spatter|glass|refractive|density|"
+                  r"powder|crystal|metal|alloy|conductiv|magnet|"
+                  r"microscop|observ|measur|mass|volume|density|reaction|chemical|"
+                  r"physical propert|qualitative|quantitative|control|standard"),
+    "cryptography": (r"cipher|cryptogra|crypt|encrypt|decrypt|plaintext|ciphertext|"
+                     r"key|shift|caesar|substitut|transposit|vigen|affine|atbash|"
+                     r"hill cipher|playfair|baconian|morse|nihilist|porta|"
+                     r"frequency analys|letter frequency|cryptanaly|brute force|"
+                     r"modular|modulo|inverse|alphabet|encode|decode|message|"
+                     r"pattern|digraph|trigraph|keyword|rail fence|columnar"),
+    "methodology": (r"experiment|hypothes|variable|independent|dependent|control|"
+                    r"constant|procedure|method|data|measur|observ|record|"
+                    r"analys|graph|table|chart|axis|trend|correlat|"
+                    r"conclusion|evidence|claim|reason|error|uncertainty|precision|"
+                    r"accuracy|replicat|trial|sample|randomi|bias|validity|"
+                    r"qualitative|quantitative|unit|metric|significant figure"),
+    "chemistry": (r"chemical|chemistry|element|compound|molecul|atom|ion|isotope|"
+                  r"reaction|equation|stoichiometr|mole|molar|concentration|"
+                  r"solution|solvent|solute|solubil|precipitat|acid|base|ph\b|"
+                  r"titrat|indicator|buffer|oxidation|reduction|redox|electron|"
+                  r"bond|covalent|ionic|periodic|valence|gas|pressure|volume|"
+                  r"temperature|heat|energy|enthalp|equilibrium|rate|catalyst"),
+    "metrology": (r"measur|unit|metric|si\b|meter|metre|gram|liter|litre|second|"
+                  r"kelvin|mole|candela|ampere|prefix|kilo|centi|milli|micro|"
+                  r"convert|conversion|dimension|significant figure|precision|"
+                  r"accuracy|uncertainty|estimat|scale|balance|graduated|"
+                  r"volume|mass|length|density|area|temperature|calibrat"),
+    # The last six. These serve the archived 2026 events and Division C's Astronomy and
+    # Entomology, which students can still pick, so "prior season" is not a reason to leave
+    # them grounding against geology vocabulary.
+    "anatomy": (r"anatom|physiolog|body|organ|tissue|cell|system|nerve|neuron|neural|"
+                r"brain|spinal|cortex|synap|axon|dendrite|receptor|reflex|"
+                r"endocrine|hormone|gland|pituitary|thyroid|adrenal|pancrea|insulin|"
+                r"muscle|skelet|bone|joint|cartilage|tendon|ligament|contract|fiber|fibre|"
+                r"blood|heart|vessel|artery|vein|circulat|respirat|lung|digest|"
+                r"membrane|homeostas|regulat|stimulus|response|disease|disorder|"
+                r"function|structure|secret|transmit|signal"),
+    "astronomy": (r"star|stellar|sun|solar|planet|moon|satellite|orbit|galaxy|galactic|"
+                  r"nebula|cluster|universe|cosmic|cosmolog|redshift|doppler|"
+                  r"spectrum|spectral|magnitude|luminosity|flux|brightness|parallax|"
+                  r"light year|parsec|telescope|observator|wavelength|infrared|"
+                  r"ultraviolet|x-ray|radio|black hole|neutron star|white dwarf|"
+                  r"supernova|main sequence|hertzsprung|russell|fusion|hydrogen|helium|"
+                  r"mass|gravity|gravitat|kepler|newton|eclipse|transit|exoplanet|"
+                  r"nuclear|temperature|radiation|blackbody|accretion|binary"),
+    "entomology": (r"insect|arthropod|entomolog|order|family|genus|species|taxonom|"
+                   r"classif|identif|specimen|key\b|morpholog|anatomy|"
+                   r"head|thorax|abdomen|antenna|wing|elytra|leg|tarsus|mandible|"
+                   r"proboscis|ovipositor|exoskeleton|cuticle|molt|moult|instar|"
+                   r"metamorphos|larva|pupa|nymph|egg|complete metamorphosis|"
+                   r"coleoptera|lepidoptera|diptera|hymenoptera|hemiptera|odonata|"
+                   r"orthoptera|isoptera|habitat|ecolog|pollinat|predat|parasit|"
+                   r"pest|beneficial|vector|feed|host plant"),
+    "meteorology": (r"weather|atmospher|climate|air mass|front|pressure|barometr|"
+                    r"temperature|humid|dew point|relative humidity|precipitat|rain|"
+                    r"snow|cloud|cumul|stratus|cirrus|nimbus|fog|wind|jet stream|"
+                    r"circulation|coriolis|convect|advect|adiabat|lapse rate|"
+                    r"stability|inversion|condens|evaporat|saturation|"
+                    r"storm|thunderstorm|hurricane|tornado|forecast|station model|"
+                    r"isobar|isotherm|radiation|greenhouse|season|solstice|equinox"),
+    "oceanography": (r"ocean|sea|marine|water|salin|saltwater|seawater|brackish|"
+                     r"current|gyre|upwell|downwell|thermohaline|tide|tidal|wave|"
+                     r"swell|crest|trough|wavelength|surf|coast|shore|beach|"
+                     r"estuar|reef|coral|continental shelf|slope|abyssal|trench|"
+                     r"ridge|seafloor|sediment|plankton|nekton|benthic|pelagic|"
+                     r"thermocline|halocline|pycnocline|density|temperature|pressure|"
+                     r"dissolved oxygen|nutrient|productivity|el ni|enso|circulation"),
+    "water": (r"water|aquatic|freshwater|stream|river|lake|pond|wetland|watershed|"
+              r"macroinvertebrate|invertebrate|benthic|taxa|taxon|indicator|"
+              r"tolerance|pollut|contamin|runoff|nutrient|nitrate|phosphate|"
+              r"dissolved oxygen|turbid|ph\b|temperature|conductiv|hardness|"
+              r"alkalin|coliform|bacteria|sampling|monitor|quality|index|"
+              r"habitat|riparian|erosion|sediment|ecosystem|food web|"
+              r"eutroph|algae|bloom|treatment|filtration"),
     "physics": (r"energy|force|motion|velocity|speed|accelerat|momentum|inertia|mass|weight|"
                 r"gravit|friction|roll|slide|torque|lever|pulley|wheel|axle|incline|machine|"
                 r"mechanical advantage|work|power|potential|kinetic|rotat|angular|circular|"
