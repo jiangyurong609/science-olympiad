@@ -135,6 +135,34 @@ DOMAIN_TERM_PATTERNS = {
                        r"drought|heat wave|blizzard|nor'easter|ice storm|lake.effect|"
                        r"fujita|saffir|enso|el ni|warning|watch|metar|station model|asos|"
                        r"satellite|infrared|water vapor|pressure|temperature|dew point|humid"),
+    "genetics_2027": (r"gene|allele|genotype|phenotype|dominan|recessiv|codominan|"
+                      r"heterozyg|homozyg|zygot|mendel|punnett|hybrid|cross|pedigree|"
+                      r"inherit|trait|autosom|sex.link|x.link|carrier|penetran|epistas|"
+                      r"complementation|linkage|recombinat|crossover|centimorgan|map unit|"
+                      r"probabilit|ratio|chi.squared|expected|observed|"
+                      r"mitosis|meiosis|prophase|metaphase|anaphase|telophase|interphase|"
+                      r"cytokinesis|spindle|centromere|kinetochore|chromatid|homolog|"
+                      r"synapsis|chiasma|nondisjunction|aneuploid|ploidy|karyotype|trisomy|"
+                      r"chromosom|dna|rna|nucleotide|nucleobase|base pair|purine|pyrimidine|"
+                      r"adenine|thymine|guanine|cytosine|uracil|phosphodiester|deoxyribose|"
+                      # 5' and 3' ends. NOT `5.|3.` — a dot matches any character, so that
+                      # admits every sentence containing a number, which is most of them.
+                      r"helix|antiparallel|5['\u2032]|3['\u2032]|chargaff|replicat|polymerase|okazaki|"
+                      r"ligase|helicase|primase|primer|topoisomerase|proofread|semiconservat|"
+                      r"telomere|plasmid|chromatin|euchromat|heterochromat|nucleosome|histone|"
+                      r"mutation|point|frameshift|missense|nonsense|silent|insertion|deletion|"
+                      r"substitution|translocation|inversion|duplication|ultraviolet|uva|uvb|"
+                      r"dimer|excision repair|central dogma|transcription|translation|"
+                      r"promoter|operator|operon|lac|trp|activator|repressor|inducer|"
+                      # `cap` alone matches capacity, capture, capital, capillary.
+                      r"splic|intron|exon|spliceosome|capping|5['\u2032] cap|polyadenyl|"
+                      r"codon|anticodon|"
+                      r"ribosome|trna|mrna|rrna|synthetase|peptide|amino acid|protein|"
+                      r"hardy.weinberg|allele frequenc|equilibrium|genetic drift|founder|"
+                      r"bottleneck|migration|gene flow|fitness|selection|polygen|additive|"
+                      r"quantitative|heritab|population|pcr|denaturation|annealing|extension|"
+                      r"thermal cycler|taq|thermus|electrophoresis|sanger|dideoxy|"
+                      r"sequencing|restriction enzyme"),
     "astrobiology": (r"habitab|life|biosign|biolog|organic|amino|protein|nucleic|lipid|"
                      r"carbohydrate|extremophile|microb|metabol|chemolithoauto|tardigrade|"
                      r"ocean|water|ice|brine|clathrate|liquid|subsurface|plume|cryovolcan|"
@@ -632,6 +660,224 @@ DOMAIN_SOURCES = {
     #
     # One scope item has no source in either pool and no lesson rests on it: Evan's
     # postulates. Zero matches across all 140 documents.
+    "genetics_2027": {
+        "publisher": "NIH NHGRI / MedlinePlus / Wikipedia contributors",
+        "license": "public_domain (federal) and CC-BY-SA 4.0 (Wikipedia, facts with attribution)",
+        # Assembled against the 2027 Division B Heredity scope, which the manual calls
+        # exhaustive: Mendelian genetics and pedigrees; mitosis and meiosis and karyotypes;
+        # the molecular biology of DNA including replication, chromatin organisation, mutation
+        # classes and nucleotide excision repair; the central dogma through transcription,
+        # RNA maturation, translation and the lac and trp operons; Hardy-Weinberg and the
+        # forces that violate it; and PCR and Sanger sequencing. The `genetics` domain that
+        # `heredity` used to reach holds eighteen pages and grounded 350 claims for a
+        # thirty-two lesson course.
+        "urls": [
+            "https://en.wikipedia.org/wiki/ABO_blood_group_system",
+            "https://en.wikipedia.org/wiki/Activator_(genetics)",
+            "https://en.wikipedia.org/wiki/Allele",
+            "https://en.wikipedia.org/wiki/Allele_frequency",
+            "https://en.wikipedia.org/wiki/Aminoacyl-tRNA_synthetase",
+            "https://en.wikipedia.org/wiki/Anaphase",
+            "https://en.wikipedia.org/wiki/Aneuploidy",
+            "https://en.wikipedia.org/wiki/Anticodon",
+            "https://en.wikipedia.org/wiki/Autosome",
+            "https://en.wikipedia.org/wiki/Base_pair",
+            "https://en.wikipedia.org/wiki/Binomial_distribution",
+            "https://en.wikipedia.org/wiki/Cell_cycle",
+            "https://en.wikipedia.org/wiki/Centimorgan",
+            "https://en.wikipedia.org/wiki/Central_dogma_of_molecular_biology",
+            "https://en.wikipedia.org/wiki/Centromere",
+            "https://en.wikipedia.org/wiki/Chargaff%27s_rules",
+            "https://en.wikipedia.org/wiki/Chi-squared_test",
+            "https://en.wikipedia.org/wiki/Chiasma_(genetics)",
+            "https://en.wikipedia.org/wiki/Chromatin",
+            "https://en.wikipedia.org/wiki/Chromosomal_crossover",
+            "https://en.wikipedia.org/wiki/Chromosomal_inversion",
+            "https://en.wikipedia.org/wiki/Chromosomal_translocation",
+            "https://en.wikipedia.org/wiki/Chromosome",
+            "https://en.wikipedia.org/wiki/Codominance",
+            "https://en.wikipedia.org/wiki/Complementation_(genetics)",
+            "https://en.wikipedia.org/wiki/Cytokinesis",
+            "https://en.wikipedia.org/wiki/Deletion_(genetics)",
+            "https://en.wikipedia.org/wiki/Deoxyribose",
+            "https://en.wikipedia.org/wiki/Dideoxynucleotide",
+            "https://en.wikipedia.org/wiki/Dihybrid_cross",
+            "https://en.wikipedia.org/wiki/Directionality_(molecular_biology)",
+            "https://en.wikipedia.org/wiki/DNA",
+            "https://en.wikipedia.org/wiki/DNA_ligase",
+            "https://en.wikipedia.org/wiki/DNA_polymerase",
+            "https://en.wikipedia.org/wiki/DNA_repair",
+            "https://en.wikipedia.org/wiki/DNA_replication",
+            "https://en.wikipedia.org/wiki/DNA_sequencing",
+            "https://en.wikipedia.org/wiki/Dominance_(genetics)",
+            "https://en.wikipedia.org/wiki/Down_syndrome",
+            "https://en.wikipedia.org/wiki/Epistasis",
+            "https://en.wikipedia.org/wiki/Euchromatin",
+            "https://en.wikipedia.org/wiki/Exon",
+            "https://en.wikipedia.org/wiki/Fitness_(biology)",
+            "https://en.wikipedia.org/wiki/Five-prime_cap",
+            "https://en.wikipedia.org/wiki/Founder_effect",
+            "https://en.wikipedia.org/wiki/Frameshift_mutation",
+            "https://en.wikipedia.org/wiki/Gel_electrophoresis",
+            "https://en.wikipedia.org/wiki/Gene",
+            "https://en.wikipedia.org/wiki/Gene_duplication",
+            "https://en.wikipedia.org/wiki/Gene_flow",
+            "https://en.wikipedia.org/wiki/Genetic_code",
+            "https://en.wikipedia.org/wiki/Genetic_disorder",
+            "https://en.wikipedia.org/wiki/Genetic_drift",
+            "https://en.wikipedia.org/wiki/Genetic_linkage",
+            "https://en.wikipedia.org/wiki/Genetic_recombination",
+            "https://en.wikipedia.org/wiki/Genotype",
+            "https://en.wikipedia.org/wiki/Gregor_Mendel",
+            "https://en.wikipedia.org/wiki/Hardy%E2%80%93Weinberg_principle",
+            "https://en.wikipedia.org/wiki/Helicase",
+            "https://en.wikipedia.org/wiki/Heritability",
+            "https://en.wikipedia.org/wiki/Heterochromatin",
+            "https://en.wikipedia.org/wiki/Histone",
+            "https://en.wikipedia.org/wiki/Homologous_chromosome",
+            "https://en.wikipedia.org/wiki/Incomplete_dominance",
+            "https://en.wikipedia.org/wiki/Insertion_(genetics)",
+            "https://en.wikipedia.org/wiki/Interphase",
+            "https://en.wikipedia.org/wiki/Intron",
+            "https://en.wikipedia.org/wiki/Karyotype",
+            "https://en.wikipedia.org/wiki/Kinetochore",
+            "https://en.wikipedia.org/wiki/Klinefelter_syndrome",
+            "https://en.wikipedia.org/wiki/Lac_operon",
+            "https://en.wikipedia.org/wiki/Law_of_segregation",
+            "https://en.wikipedia.org/wiki/Locus_(genetics)",
+            "https://en.wikipedia.org/wiki/Meiosis",
+            "https://en.wikipedia.org/wiki/Mendelian_inheritance",
+            "https://en.wikipedia.org/wiki/Messenger_RNA",
+            "https://en.wikipedia.org/wiki/Metaphase",
+            "https://en.wikipedia.org/wiki/Missense_mutation",
+            "https://en.wikipedia.org/wiki/Mitosis",
+            "https://en.wikipedia.org/wiki/Monohybrid_cross",
+            "https://en.wikipedia.org/wiki/Multiple_alleles",
+            "https://en.wikipedia.org/wiki/Mutation",
+            "https://en.wikipedia.org/wiki/Natural_selection",
+            "https://en.wikipedia.org/wiki/Nondisjunction",
+            "https://en.wikipedia.org/wiki/Nonsense_mutation",
+            "https://en.wikipedia.org/wiki/Nucleic_acid_double_helix",
+            "https://en.wikipedia.org/wiki/Nucleobase",
+            "https://en.wikipedia.org/wiki/Nucleosome",
+            "https://en.wikipedia.org/wiki/Nucleotide",
+            "https://en.wikipedia.org/wiki/Nucleotide_excision_repair",
+            "https://en.wikipedia.org/wiki/Okazaki_fragments",
+            "https://en.wikipedia.org/wiki/Operon",
+            "https://en.wikipedia.org/wiki/Pedigree_chart",
+            "https://en.wikipedia.org/wiki/Peptide_bond",
+            "https://en.wikipedia.org/wiki/Phenotype",
+            "https://en.wikipedia.org/wiki/Phosphodiester_bond",
+            "https://en.wikipedia.org/wiki/Plasmid",
+            "https://en.wikipedia.org/wiki/Pleiotropy",
+            "https://en.wikipedia.org/wiki/Ploidy",
+            "https://en.wikipedia.org/wiki/Point_mutation",
+            "https://en.wikipedia.org/wiki/Polyadenylation",
+            "https://en.wikipedia.org/wiki/Polygene",
+            "https://en.wikipedia.org/wiki/Polymerase_chain_reaction",
+            "https://en.wikipedia.org/wiki/Population_bottleneck",
+            "https://en.wikipedia.org/wiki/Population_genetics",
+            "https://en.wikipedia.org/wiki/Primase",
+            "https://en.wikipedia.org/wiki/Primer_(molecular_biology)",
+            "https://en.wikipedia.org/wiki/Probability",
+            "https://en.wikipedia.org/wiki/Product_rule",
+            "https://en.wikipedia.org/wiki/Promoter_(genetics)",
+            "https://en.wikipedia.org/wiki/Proofreading_(biology)",
+            "https://en.wikipedia.org/wiki/Prophase",
+            "https://en.wikipedia.org/wiki/Protein_primary_structure",
+            "https://en.wikipedia.org/wiki/Punnett_square",
+            "https://en.wikipedia.org/wiki/Pyrimidine_dimer",
+            "https://en.wikipedia.org/wiki/Quantitative_trait_locus",
+            "https://en.wikipedia.org/wiki/Replication_fork",
+            "https://en.wikipedia.org/wiki/Repressor",
+            "https://en.wikipedia.org/wiki/Restriction_enzyme",
+            "https://en.wikipedia.org/wiki/Ribosomal_RNA",
+            "https://en.wikipedia.org/wiki/Ribosome",
+            "https://en.wikipedia.org/wiki/RNA_polymerase",
+            "https://en.wikipedia.org/wiki/RNA_splicing",
+            "https://en.wikipedia.org/wiki/Sanger_sequencing",
+            "https://en.wikipedia.org/wiki/Semiconservative_replication",
+            "https://en.wikipedia.org/wiki/Sex_linkage",
+            "https://en.wikipedia.org/wiki/Silent_mutation",
+            "https://en.wikipedia.org/wiki/Sister_chromatids",
+            "https://en.wikipedia.org/wiki/Spindle_apparatus",
+            "https://en.wikipedia.org/wiki/Start_codon",
+            "https://en.wikipedia.org/wiki/Stop_codon",
+            "https://en.wikipedia.org/wiki/Synapsis",
+            "https://en.wikipedia.org/wiki/Taq_polymerase",
+            "https://en.wikipedia.org/wiki/Telomere",
+            "https://en.wikipedia.org/wiki/Telophase",
+            "https://en.wikipedia.org/wiki/Test_cross",
+            "https://en.wikipedia.org/wiki/Thermal_cycler",
+            "https://en.wikipedia.org/wiki/Thermus_aquaticus",
+            "https://en.wikipedia.org/wiki/Topoisomerase",
+            "https://en.wikipedia.org/wiki/Transcription_(biology)",
+            "https://en.wikipedia.org/wiki/Transcription_factor",
+            "https://en.wikipedia.org/wiki/Transfer_RNA",
+            "https://en.wikipedia.org/wiki/Translation_(biology)",
+            "https://en.wikipedia.org/wiki/Trp_operon",
+            "https://en.wikipedia.org/wiki/Turner_syndrome",
+            "https://en.wikipedia.org/wiki/Ultraviolet",
+            "https://en.wikipedia.org/wiki/X-linked_dominant_inheritance",
+            "https://en.wikipedia.org/wiki/X-linked_recessive_inheritance",
+            "https://en.wikipedia.org/wiki/Xeroderma_pigmentosum",
+            "https://en.wikipedia.org/wiki/Y_linkage",
+            "https://en.wikipedia.org/wiki/Zygosity",
+            "https://medlineplus.gov/genetics/understanding/basics/chromosome/",
+            "https://medlineplus.gov/genetics/understanding/basics/dna/",
+            "https://medlineplus.gov/genetics/understanding/basics/gene/",
+            "https://medlineplus.gov/genetics/understanding/basics/noncodingdna/",
+            "https://medlineplus.gov/genetics/understanding/inheritance/inheritancepatterns/",
+            "https://medlineplus.gov/genetics/understanding/inheritance/penetranceexpressivity/",
+            "https://medlineplus.gov/genetics/understanding/mutationsanddisorders/genemutation/",
+            "https://medlineplus.gov/genetics/understanding/mutationsanddisorders/possiblemutations/",
+            "https://medlineplus.gov/genetics/understanding/traits/",
+            "https://www.genome.gov/about-genomics/fact-sheets/Chromosomes-Fact-Sheet",
+            "https://www.genome.gov/about-genomics/fact-sheets/Deoxyribonucleic-Acid-Fact-Sheet",
+            "https://www.genome.gov/about-genomics/fact-sheets/DNA-Sequencing-Fact-Sheet",
+            "https://www.genome.gov/about-genomics/fact-sheets/Genetic-Mapping-Fact-Sheet",
+            "https://www.genome.gov/about-genomics/fact-sheets/Polymerase-Chain-Reaction-Fact-Sheet",
+            "https://www.genome.gov/about-genomics/introduction-to-genomics",
+            "https://www.genome.gov/genetics-glossary",
+            "https://www.genome.gov/genetics-glossary/Allele",
+            "https://www.genome.gov/genetics-glossary/Autosomal-Dominant",
+            "https://www.genome.gov/genetics-glossary/Base-Pair",
+            "https://www.genome.gov/genetics-glossary/Chromatin",
+            "https://www.genome.gov/genetics-glossary/Chromosome",
+            "https://www.genome.gov/genetics-glossary/Codon",
+            "https://www.genome.gov/genetics-glossary/Deletion",
+            "https://www.genome.gov/genetics-glossary/DNA-Replication",
+            "https://www.genome.gov/genetics-glossary/DNA-Sequencing",
+            "https://www.genome.gov/genetics-glossary/Dominant",
+            "https://www.genome.gov/genetics-glossary/Double-Helix",
+            "https://www.genome.gov/genetics-glossary/Exon",
+            "https://www.genome.gov/genetics-glossary/Gene",
+            "https://www.genome.gov/genetics-glossary/Genotype",
+            "https://www.genome.gov/genetics-glossary/Heterozygous",
+            "https://www.genome.gov/genetics-glossary/Histone",
+            "https://www.genome.gov/genetics-glossary/Homozygous",
+            "https://www.genome.gov/genetics-glossary/Insertion",
+            "https://www.genome.gov/genetics-glossary/Intron",
+            "https://www.genome.gov/genetics-glossary/Karyotype",
+            "https://www.genome.gov/genetics-glossary/Meiosis",
+            "https://www.genome.gov/genetics-glossary/Messenger-RNA-mRNA",
+            "https://www.genome.gov/genetics-glossary/Mitosis",
+            "https://www.genome.gov/genetics-glossary/Mutation",
+            "https://www.genome.gov/genetics-glossary/Nucleotide",
+            "https://www.genome.gov/genetics-glossary/Pedigree",
+            "https://www.genome.gov/genetics-glossary/Phenotype",
+            "https://www.genome.gov/genetics-glossary/Plasmid",
+            "https://www.genome.gov/genetics-glossary/Polymerase-Chain-Reaction",
+            "https://www.genome.gov/genetics-glossary/Recessive",
+            "https://www.genome.gov/genetics-glossary/Ribosome",
+            "https://www.genome.gov/genetics-glossary/Telomere",
+            "https://www.genome.gov/genetics-glossary/Transcription",
+            "https://www.genome.gov/genetics-glossary/Transfer-RNA",
+            "https://www.genome.gov/genetics-glossary/Translation",
+            "https://www.genome.gov/genetics-glossary/Translocation",
+            "https://www.genome.gov/genetics-glossary/X-Linked",
+        ],
+    },
     "epidemiology": {
         "publisher": "CDC / NIH / Wikipedia contributors",
         "license": "public_domain (federal) and CC-BY-SA 4.0 (Wikipedia, facts with attribution)",
@@ -2134,6 +2380,11 @@ EVENT_DOMAIN_BY_SEASON = {
     # 2026 was freshwater macroinvertebrates, which is what the `water` domain still holds, and
     # reusing it would teach a whole season of the wrong ecosystem.
     ("water-quality", 2027): "water_quality_marine",
+    # 2027 Division B: the manual's Heredity topic list runs from Mendelian crosses to Sanger
+    # sequencing and calls itself exhaustive. The `genetics` domain holds eighteen pages,
+    # which grounded 350 claims across a thirty-two lesson blueprint — a course written from
+    # that would be thin everywhere and say so nowhere.
+    ("heredity", 2027): "genetics_2027",
 }
 
 # Rotations confirmed against the 2027 Division B rules manual that still have no source set,
