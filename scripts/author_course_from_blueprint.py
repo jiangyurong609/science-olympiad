@@ -17,6 +17,7 @@ from __future__ import annotations
 import argparse
 import json
 import re
+from collections import Counter
 from concurrent.futures import ThreadPoolExecutor, as_completed
 from pathlib import Path
 
@@ -171,19 +172,30 @@ def _select_passages(
         if best is not None:
             take(best)
 
-    # Remaining slots by overall relevance, preferring a source not yet drawn on.
-    used_sources = {passage.source_id for passage in selected}
-    for pool in (
-        [p for score, p in scored if score > 0 and p.source_id not in used_sources],
-        [p for score, p in scored if score > 0],
-    ):
-        for passage in pool:
-            if len(selected) >= limit:
-                break
-            if passage.id in chosen_ids:
-                continue
-            take(passage)
-            used_sources.add(passage.source_id)
+    # Remaining slots by relevance, capped per source.
+    #
+    # These used to go to sources not yet drawn on, which reads as healthy diversity and
+    # starves a focused lesson. "Proteins, Nucleic Acids, Lipids and Carbohydrates" has four
+    # obvious sources holding 94 passages between them, and got SEVEN of its twenty-four
+    # slots; the other seventeen went one apiece to Enceladus, Rosetta, OSIRIS-REx, Titan and
+    # a dozen more that mention "organic compound" once. The lesson was then written from what
+    # it was given, and three separate reviewers rejected it for teaching habitability instead
+    # of biomolecules. Three repair attempts could not fix it, because the evidence in front
+    # of the author was genuinely about something else.
+    #
+    # A cap keeps one page from supplying an entire lesson without pretending a mission page
+    # is as relevant as the article on proteins.
+    per_source_cap = max(3, limit // 4)
+    counts: Counter[int] = Counter(passage.source_id for passage in selected)
+    for score, passage in scored:
+        if len(selected) >= limit:
+            break
+        if score <= 0 or passage.id in chosen_ids:
+            continue
+        if counts[passage.source_id] >= per_source_cap:
+            continue
+        take(passage)
+        counts[passage.source_id] += 1
     return selected
 
 def _prompt(blueprint: dict, unit: dict, lesson: dict, passages: list[SourcePassage],
