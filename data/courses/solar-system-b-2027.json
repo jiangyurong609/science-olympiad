@@ -238,7 +238,7 @@
         {
           "slug": "building-blocks-of-life",
           "title": "Proteins, Nucleic Acids, Lipids, Carbohydrates",
-          "objective": "Name the four classes of biological macromolecule, what each does, and which elements they require.",
+          "objective": "Name the four classes of biological macromolecule and the elements they require, and say what each one tells a mission looking for habitable conditions or biosignatures.",
           "keywords": [
             "protein",
             "amino acid",
@@ -250,7 +250,9 @@
             "carbohydrate",
             "organic compound",
             "macromolecule",
-            "phosphorus"
+            "phosphorus",
+            "biosignature",
+            "habitability"
           ],
           "high_weight": true,
           "video": false
