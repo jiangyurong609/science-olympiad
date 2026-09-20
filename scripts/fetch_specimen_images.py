@@ -38,6 +38,102 @@ SPECIMENS = {
         ("Barite", "Barite"), ("Amethyst", "Amethyst"), ("Topaz", "Topaz"),
         ("Tourmaline", "Tourmaline"), ("Kyanite", "Kyanite"), ("Rhodochrosite", "Rhodochrosite"),
         ("Bornite", "Bornite"), ("Serpentine subgroup", "Serpentine"),
+        # The official 2027 National Rocks and Minerals List names 150 specimens and
+        # identification is 30-50% of the event's points, limited to that list. These are
+        # the entries that had no image; a station paper without them is unanswerable,
+        # which is how exam 239 lost 30 of its 32 items to the blind solver.
+        ("Ulexite", "Ulexite"),
+        ("Aragonite", "Aragonite"),
+        ("Magnesite", "Magnesite"),
+        ("Siderite", "Siderite"),
+        ("Copper", "Copper"),
+        ("Diamond", "Diamond"),
+        ("Gold", "Gold"),
+        ("Silver", "Silver"),
+        ("Goethite", "Goethite/Limonite"),
+        ("Pyrolusite", "Pyrolusite"),
+        ("Rutile", "Rutile"),
+        ("Zincite", "Zincite"),
+        ("Turquoise", "Turquoise"),
+        ("Fluorapatite", "Fluorapatite"),
+        ("Pyromorphite", "Pyromorphite"),
+        ("Vanadinite", "Vanadinite"),
+        ("Celestine (mineral)", "Celestite/Celestine"),
+        ("Alabaster", "Alabaster (massive gypsum)"),
+        ("Selenite (mineral)", "Selenite (crystalline gypsum)"),
+        ("Stibnite", "Stibnite"),
+        ("Amphibole", "Amphibole Group"),
+        ("Actinolite", "Actinolite"),
+        ("Hornblende", "Hornblende"),
+        ("Tremolite", "Tremolite"),
+        ("Apophyllite", "Apophyllite"),
+        ("Beryl", "Beryl"),
+        ("Dioptase", "Dioptase"),
+        ("Epidote", "Epidote"),
+        ("Feldspar Group", "Feldspar Group"),
+        ("Plagioclase feldspars", "Plagioclase feldspars"),
+        ("Albite", "Albite"),
+        ("Labradorite", "Labradorite"),
+        ("Alkali feldspar", "Potassium feldspars"),
+        ("Amazonite", "Amazonite"),
+        ("Grossular", "Grossular"),
+        ("Kaolinite", "Kaolinite"),
+        ("Mica", "Mica Group"),
+        ("Lepidolite", "Lepidolite"),
+        ("Prehnite", "Prehnite"),
+        ("Pyroxene", "Pyroxene Group"),
+        ("Augite", "Augite"),
+        ("Rhodonite", "Rhodonite"),
+        ("Spodumene", "Spodumene"),
+        ("Aventurine", "Aventurine"),
+        ("Chalcedony", "Agate/Chalcedony"),
+        ("Citrine", "Citrine"),
+        ("Jasper", "Jasper"),
+        ("Opal", "Opal"),
+        ("Rose Quartz", "Rose Quartz"),
+        ("Smoky Quartz", "Smoky Quartz"),
+        ("Tiger's eye", "Tiger's Eye"),
+        ("Sodalite", "Sodalite"),
+        ("Staurolite", "Staurolite"),
+        ("Stilbite", "Stilbite"),
+        ("Willemite", "Willemite"),
+        ("Wollastonite", "Wollastonite"),
+        ("Zircon", "Zircon"),
+        ("Emerald", "Emerald (beryl)"),
+        ("Aquamarine (gem)", "Aquamarine (beryl)"),
+        ("Morganite", "Morganite (beryl)"),
+        ("Kunzite", "Kunzite (spodumene)"),
+        ("Hiddenite", "Hiddenite (spodumene)"),
+        ("Peridot", "Peridot (olivine)"),
+        ("Ruby", "Ruby (corundum)"),
+        ("Sapphire", "Sapphire (corundum)"),
+        ("Pearl", "Pearl"),
+        ("Amber", "Amber"),
+        ("Pegmatite", "Pegmatite"),
+        ("Peridotite", "Peridotite"),
+        ("Scoria", "Scoria"),
+        ("Syenite", "Syenite"),
+        ("Tuff", "Tuff"),
+        ("Banded iron formation", "Banded Iron Formation"),
+        ("Bauxite", "Bauxite"),
+        ("Diatomite", "Diatomite"),
+        ("Dolostone", "Dolostone"),
+        ("Anthracite", "Anthracite"),
+        ("Bituminous coal", "Bituminous coal"),
+        ("Lignite", "Lignite"),
+        ("Chalk", "Chalk"),
+        ("Coquina", "Coquina"),
+        ("Fossil Limestone", "Fossil Limestone"),
+        ("Oolitic Limestone", "Oolitic Limestone"),
+        ("Travertine", "Travertine"),
+        ("Arkose", "Arkose"),
+        ("Greywacke", "Greywacke"),
+        ("Quartz Sandstone", "Quartz Sandstone"),
+        ("Amphibolite", "Amphibolite"),
+        ("Garnet Schist", "Garnet Schist"),
+        ("Mica Schist", "Mica Schist"),
+        ("Soapstone", "Talc Schist (Soapstone)"),
+        ("Serpentinite", "Serpentinite"),
         # Rocks
         ("Granite", "Granite (igneous)"), ("Basalt", "Basalt (igneous)"),
         ("Obsidian", "Obsidian (igneous)"), ("Pumice", "Pumice (igneous)"),
@@ -94,7 +190,13 @@ def _commons_filename(file_url: str) -> str:
     """The canonical Commons File: name for a Wikipedia image URL. Thumbnail
     URLs look like .../thumb/a/ab/Real_Name.jpg/640px-Real_Name.jpg — there the
     real file is the segment BEFORE the NNNpx- thumbnail, not the last one."""
-    parts = file_url.split("/")
+    # Wikipedia now appends UTM tracking to lead-image URLs
+    # (...Ulexite-Calcite-40062.jpg?utm_source=en.wikipedia.org&utm_campaign=api&...).
+    # Carrying that into the Commons lookup asks for a File: whose name ends in "?utm_source=",
+    # which is always missing — and the caller reported that as "license not open, skip". 106 of
+    # 148 specimens were discarded as non-free when every one of them was CC-BY-SA.
+    clean = file_url.split("#", 1)[0].split("?", 1)[0]
+    parts = clean.split("/")
     name = parts[-2] if "thumb" in parts and len(parts) >= 2 else parts[-1]
     return unquote(name)
 
@@ -183,7 +285,7 @@ def main() -> None:
                 print(f"  [{event}] {label}: no lead image"); continue
             lic = commons_license(lead)
             if not lic:
-                print(f"  [{event}] {label}: license not open, skip"); continue
+                print(f"  [{event}] {label}: licence not confirmed open, skip"); continue
             slug = re.sub(r"[^a-z0-9]+", "-", label.lower()).strip("-")
             ext = ".jpg" if ".jp" in lead.lower() else (".png" if ".png" in lead.lower() else ".jpg")
             dest = event_dir / f"{slug}{ext}"
