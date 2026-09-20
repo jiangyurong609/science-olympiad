@@ -183,55 +183,56 @@ SPECIMENS = {
         ("Stonefly", "Stonefly (Plecoptera)"), ("Mayfly", "Mayfly (Ephemeroptera)"),
         ("Walking stick", "Walking Stick (Phasmatodea)"), ("Ground beetle", "Ground Beetle (Coleoptera)"),
     ],
-    # 2027 Water Quality: the coral reef indicator organisms. Identification is roughly 30% of
-    # this event, so the roster IS the course as much as the prose is, and the region suffix is
-    # examinable content in its own right — the manual tests whether a taxon is global,
-    # Indo-Pacific only or Atlantic only.
+    # 2027 Water Quality: the coral reef organisms the Division B manual lists by name, in the
+    # manual's own groupings. Identification is 30% of the event (Part II), so the roster IS
+    # the course as much as the prose is, and the region grouping is examinable in its own
+    # right — the manual splits the list into global, Indo-Pacific only and Atlantic only.
     #
-    # Three entries correct the scope outline, which named taxa one rank too high or named the
-    # wrong animal outright:
-    #   * "Lobsters (Nephropidae)" is the CLAWED lobsters — cold-temperate Atlantic animals
-    #     that do not live on coral reefs. The indicator is the spiny lobster, Palinuridae.
-    #   * "Sea cucumber (Holothuroidea)" is an entire class; the indicator is Indo-Pacific only
-    #     and restricted to Thelenota ananas and Stichopus chloronotus.
-    #   * "Sweetlips (Haemulidae)" includes the Atlantic grunts; the indicator is the
-    #     Indo-Pacific genus Plectorhinchus.
-    # Each of the three would have taught a wrong answer to a question the manual does ask.
+    # THIS LIST IS THE MANUAL'S, NOT REEF CHECK'S. An earlier version of this roster "corrected"
+    # three entries against the Reef Check indicator list found on scioly.org — spiny lobster
+    # for Nephropidae, two named Indo-Pacific sea cucumbers for Holothuroidea, Plectorhinchus
+    # for Haemulidae. Read against the rules manual, all three corrections were wrong: the
+    # manual says Nephropidae, says Holothuroidea, says Haemulidae, and lists all three as
+    # found around the globe. A community list that a real event is often scored against is
+    # still not the document the event is scored against.
     #
-    # Two labels are chosen for their LICENCE, not their rank: Charonia tritonis rather than
-    # the genus page, and Gorgonia ventalina rather than Gorgonia, because the genus lead
-    # images are GPL — free, but not a licence `OK_LICENSES` accepts.
+    # Where the Wikipedia title differs from the manual's label it is noted: the manual's
+    # wording is what a student is examined on, and the title is only where the photograph
+    # comes from.
     "water-quality": [
-        # Global
-        ("Stenopus hispidus", "Banded Coral Shrimp (Stenopus hispidus) — Global"),
-        ("Chaetodon", "Butterfly Fish (Chaetodon spp.) — Global"),
-        ("Crown-of-thorns starfish", "Crown-of-Thorns Starfish (Acanthaster planci) — Global"),
-        ("Red algae", "Fleshy Algae: Red Algae (Rhodophyta) — Global"),
-        ("Green algae", "Fleshy Algae: Green Algae (Chlorophyta) — Global"),
-        ("Brown algae", "Fleshy Algae: Brown Algae (Phaeophyta) — Global"),
-        ("Grouper", "Grouper over 30 cm (Epinephelinae) — Global"),
-        ("Scleractinia", "Hard Coral (Scleractinia) — Global"),
-        ("Spiny lobster", "Spiny Lobster (Palinuridae) — Global"),
-        ("Diadema (echinoderm)", "Long-Spined Black Sea Urchin (Diadema spp.) — Global"),
-        ("Moray eel", "Moray Eel (Muraenidae) — Global"),
-        ("Parrotfish", "Parrotfish over 20 cm (Scaridae) — Global"),
-        ("Eucidaris", "Pencil Urchin (Eucidaris spp.) — Global"),
-        ("Lutjanidae", "Snapper (Lutjanidae) — Global"),
-        ("Demosponge", "Demosponge (Demospongiae) — Global"),
-        ("Plectorhinchus", "Sweetlips (Plectorhinchus) — Global"),
-        ("Charonia tritonis", "Triton (Charonia tritonis) — Global"),
-        # Indo-Pacific only
-        ("Humpback grouper", "Barramundi Cod (Cromileptes altivelis) — Indo-Pacific"),
-        ("Green humphead parrotfish",
-         "Bumphead Parrotfish (Bolbometopon muricatum) — Indo-Pacific"),
-        ("Tridacna", "Giant Clam (Tridacna spp.) — Indo-Pacific"),
-        ("Humphead wrasse", "Humphead Wrasse (Cheilinus undulatus) — Indo-Pacific"),
-        ("Thelenota ananas", "Sea Cucumber (Thelenota ananas) — Indo-Pacific"),
-        ("Stichopus chloronotus", "Sea Cucumber (Stichopus chloronotus) — Indo-Pacific"),
-        # Atlantic only
-        ("Gorgonia ventalina", "Sea Fan (Gorgonia ventalina) — Atlantic"),
-        ("Flamingo tongue snail", "Flamingo Tongue Snail (Cyphoma gibbosum) — Atlantic"),
-        ("Nassau grouper", "Nassau Grouper (Epinephelus striatus) — Atlantic"),
+        # Found around the globe
+        ("Stenopus hispidus", "Banded coral shrimp (Stenopus hispidus)"),
+        ("Chaetodon", "Butterfly fish (Chaetodon spp.)"),
+        ("Crown-of-thorns starfish", "Crown of thorns starfish (Acanthaster planci)"),
+        ("Red algae", "Fleshy algae: Rhodophyta"),
+        ("Green algae", "Fleshy algae: Chlorophyta"),
+        ("Brown algae", "Fleshy algae: Phaeophyta"),
+        ("Grouper", "Grouper >30 cm (Serranidae, Epinephelinae)"),
+        ("Scleractinia", "Hard/stony corals (Scleractinia)"),
+        ("Lobster", "Lobsters (Nephropidae)"),  # Nephropidae redirects to Lobster
+        ("Diadema (echinoderm)", "Long-spined black sea urchins (Diadematidae/Diadema spp.)"),
+        ("Moray eel", "Moray eel (Muraenidae)"),
+        ("Parrotfish", "Parrotfish >20 cm (Scaridae)"),
+        ("Eucidaris", "Pencil urchins (Eucidaris spp.)"),
+        ("Sea cucumber", "Sea cucumber (Holothuroidea)"),  # Holothuroidea redirects here
+        ("Lutjanidae", "Snapper (Lutjanidae)"),
+        ("Demosponge", "Demosponges (Demospongiae)"),
+        # Wikipedia's "Sweetlips" is a 1,028-character disambiguation stub, so the family page
+        # is used for the image; the manual's label is Haemulidae and stands.
+        ("Haemulidae", "Sweetlips (Haemulidae)"),
+        # The genus page's lead image is GPL, which `OK_LICENSES` does not accept; the type
+        # species carries a CC BY-SA photograph and is within "Charonia spp."
+        ("Charonia tritonis", "Triton (Charoniidae/Charonia spp.)"),
+        # Found in the Indo-Pacific region only
+        ("Humpback grouper", "Barramundi cod (Cromileptes altivelis)"),
+        ("Green humphead parrotfish", "Bumphead parrotfish (Bolbometopon muricatum)"),
+        ("Tridacna", "Giant clams (Tridacna spp.)"),
+        ("Humphead wrasse", "Humphead wrasse (Cheilinus undulatus)"),
+        # Found in the Atlantic region only
+        ("Flamingo tongue snail", "Flamingo tongue snail (Cyphoma gibbosum)"),
+        # Same GPL problem as Charonia; G. ventalina is within Gorgonia.
+        ("Gorgonia ventalina", "Gorgonia (Octocorallia)"),
+        ("Nassau grouper", "Nassau grouper (Epinephelus striatus)"),
     ],
 }
 
