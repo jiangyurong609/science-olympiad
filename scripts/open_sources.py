@@ -1685,6 +1685,44 @@ DOMAIN_SOURCES = {
             "https://en.wikipedia.org/wiki/Atlantic_Ocean",  # Atlantic distribution
             "https://en.wikipedia.org/wiki/Marine_protected_area",  # reef management
             "https://en.wikipedia.org/wiki/Overfishing",  # overfishing
+            # --- the 23 organisms the manual names, one page each
+            #
+            # Identification is 30% of this event (Part II), and the manual asks for the
+            # general ecology, life cycle and feeding habits of each listed organism. The
+            # topic sources above cover reefs and estuaries and say almost nothing about any
+            # INDIVIDUAL organism, and the course said so itself: its identification lessons
+            # reported "Sweetlips identification and feeding", "identify a demosponge" and
+            # "Banded coral shrimp cleaning" as unsupported. Thirty percent of the event had
+            # no evidence behind it.
+            #
+            # These are the same pages the specimen-image roster uses, so the photograph a
+            # student sees and the text the course teaches from come from one place. All 25
+            # measured, all distinct.
+            "https://en.wikipedia.org/wiki/Stenopus_hispidus",  # Banded coral shrimp (Stenopus hispidus)
+            "https://en.wikipedia.org/wiki/Chaetodon",  # Butterfly fish (Chaetodon spp.)
+            "https://en.wikipedia.org/wiki/Crown-of-thorns_starfish",  # Crown of thorns starfish (Acanthaster planci)
+            "https://en.wikipedia.org/wiki/Red_algae",  # Fleshy algae: Rhodophyta
+            "https://en.wikipedia.org/wiki/Green_algae",  # Fleshy algae: Chlorophyta
+            "https://en.wikipedia.org/wiki/Brown_algae",  # Fleshy algae: Phaeophyta
+            "https://en.wikipedia.org/wiki/Grouper",  # Grouper >30 cm (Serranidae, Epinephelinae)
+            "https://en.wikipedia.org/wiki/Scleractinia",  # Hard/stony corals (Scleractinia)
+            "https://en.wikipedia.org/wiki/Lobster",  # Lobsters (Nephropidae)
+            "https://en.wikipedia.org/wiki/Diadema_(echinoderm)",  # Long-spined black sea urchins (Diadematidae/Diadema spp.)
+            "https://en.wikipedia.org/wiki/Moray_eel",  # Moray eel (Muraenidae)
+            "https://en.wikipedia.org/wiki/Parrotfish",  # Parrotfish >20 cm (Scaridae)
+            "https://en.wikipedia.org/wiki/Eucidaris",  # Pencil urchins (Eucidaris spp.)
+            "https://en.wikipedia.org/wiki/Sea_cucumber",  # Sea cucumber (Holothuroidea)
+            "https://en.wikipedia.org/wiki/Lutjanidae",  # Snapper (Lutjanidae)
+            "https://en.wikipedia.org/wiki/Demosponge",  # Demosponges (Demospongiae)
+            "https://en.wikipedia.org/wiki/Haemulidae",  # Sweetlips (Haemulidae)
+            "https://en.wikipedia.org/wiki/Charonia_tritonis",  # Triton (Charoniidae/Charonia spp.)
+            "https://en.wikipedia.org/wiki/Humpback_grouper",  # Barramundi cod (Cromileptes altivelis)
+            "https://en.wikipedia.org/wiki/Green_humphead_parrotfish",  # Bumphead parrotfish (Bolbometopon muricatum)
+            "https://en.wikipedia.org/wiki/Tridacna",  # Giant clams (Tridacna spp.)
+            "https://en.wikipedia.org/wiki/Humphead_wrasse",  # Humphead wrasse (Cheilinus undulatus)
+            "https://en.wikipedia.org/wiki/Flamingo_tongue_snail",  # Flamingo tongue snail (Cyphoma gibbosum)
+            "https://en.wikipedia.org/wiki/Gorgonia_ventalina",  # Gorgonia (Octocorallia)
+            "https://en.wikipedia.org/wiki/Nassau_grouper",  # Nassau grouper (Epinephelus striatus)
         ],
     },
     "hydrology": {
