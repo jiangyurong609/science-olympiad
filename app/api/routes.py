@@ -42,6 +42,7 @@ from app.services.crawler import CrawlError, crawl_source
 from app.services.generation import generate_questions
 from app.services.claim_extraction import extract_claims
 from app.services.scoring import finalize_attempt, score_response, is_gradeable, _question_from_snapshot
+from app.services.season_status import ARCHIVED_SEASON_STATUSES, HIDDEN_SEASON_STATUSES
 from app.services.answer_grading import grade_attempt_overrides, grade_single
 from app.services.mock_exam import assemble_mock_exam, event_question_pool
 from app.services.blueprint import blueprint_for
@@ -463,11 +464,16 @@ import re as _re
 # Statuses whose events must never reach a student. `superseded` marks a duplicate whose twin
 # holds more content — 34 events existed once per season, the newer copy carrying stubs — and
 # it was missing here, so retiring them changed nothing until now.
-RETIRED_SEASON_STATUSES = {"archived_superseded", "superseded"}
+# Defined in app/services/season_status.py so the catalog filter and the past-test importer
+# cannot drift apart: `in_development` (a season's event being authored) had to be hidden from
+# students AND refused by the importer, and two separate literal sets is how the last hole of
+# this kind stayed open. `in_development` is deliberately not `superseded`, which means
+# "duplicate twin of a canonical event" and carries different consequences.
+RETIRED_SEASON_STATUSES = set(HIDDEN_SEASON_STATUSES)
 # Prior-season practice is NOT retired — those events rotated out of the current season but
 # still hold real lessons, questions and exams, so they stay in the catalog (labelled by
 # season_status) rather than disappearing. Both appear on the archive surface.
-ARCHIVE_SEASON_STATUSES = {"prior_season_practice", "archived_superseded"}
+ARCHIVE_SEASON_STATUSES = set(ARCHIVED_SEASON_STATUSES)
 
 
 def _norm_event_key(event: Event) -> tuple[str, str]:
@@ -480,6 +486,8 @@ def _canonical_event_for(db: Session, event: Event) -> Event | None:
     for candidate in db.scalars(select(Event).where(
         Event.active.is_(True),
         Event.season_status.notin_(ARCHIVE_SEASON_STATUSES),
+        # An event still being authored is not a canonical destination for archived content.
+        Event.season_status.notin_(RETIRED_SEASON_STATUSES),
     )).all():
         if _norm_event_key(candidate) == key and candidate.id != event.id:
             return candidate

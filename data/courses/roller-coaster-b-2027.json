@@ -1,0 +1,167 @@
+{
+ "event_slug": "roller-coaster-b-2027",
+ "season": 2027,
+ "title": "Roller Coaster",
+ "summary": "Build a gravity-driven track that delivers a ball to the finish line at a target time, and understand the scoring function well enough to design against it.",
+ "objectives": [
+  "Account for a run using gravitational potential energy, rolling kinetic energy and friction losses.",
+  "Design for a target time revealed on competition day rather than for the fastest possible run.",
+  "Earn the discretionary points the scoring function offers for loop height and elevators.",
+  "Test and calibrate so a practised run repeats within a fraction of a second.",
+  "Present a device that passes inspection and answer a judge's questions about it."
+ ],
+ "units": [
+  {
+   "slug": "the-event-and-the-score",
+   "title": "The Event and the Score",
+   "summary": "In a build event the scoring function is the design brief. Read it first, because it says plainly where the points are and which instincts to distrust.",
+   "objectives": [
+    "State every term of the run score and which are under the team's control before the tournament.",
+    "Explain why a smaller device and a slower run can both raise the score."
+   ],
+   "lessons": [
+    {
+     "slug": "reading-the-scoring-function",
+     "title": "Reading the Scoring Function as a Design Brief",
+     "objective": "Break the run score into its size, time, elevator and loop terms and decide where the next hour of build time is best spent.",
+     "keywords": ["scoring", "run score", "size score", "time score", "bonus", "penalty",
+                  "tiers", "tie-breaker", "design trade-off", "optimization"],
+     "high_weight": true
+    },
+    {
+     "slug": "constraints-and-legality",
+     "title": "Constraints, Impound, and Staying Legal",
+     "objective": "Check a device against the size envelope, the gravity-only propulsion rule and the visibility requirement before it is ever impounded.",
+     "keywords": ["impound", "size envelope", "construction parameters", "gravitational potential energy",
+                  "propulsion", "eye protection", "safety", "inspection", "building policy",
+                  "visible"],
+     "high_weight": true
+    }
+   ]
+  },
+  {
+   "slug": "energy-on-a-track",
+   "title": "Energy on a Gravity Track",
+   "summary": "Height is the only fuel the device gets. Everything after the release is that energy being spent.",
+   "objectives": [
+    "Convert gravitational potential energy to kinetic energy along a path.",
+    "Account for the energy that friction and rolling resistance remove."
+   ],
+   "lessons": [
+    {
+     "slug": "potential-to-kinetic-energy",
+     "title": "From Height to Speed: Potential and Kinetic Energy",
+     "objective": "Compute the speed a sphere reaches after a drop and explain why the path shape does not change that speed, only the time taken to reach it.",
+     "keywords": ["gravitational potential energy", "kinetic energy", "conservation of energy",
+                  "work", "height", "mass", "speed", "acceleration", "free fall"],
+     "high_weight": true,
+     "video": true
+    },
+    {
+     "slug": "friction-and-rolling-resistance",
+     "title": "Where the Energy Goes: Friction and Rolling Resistance",
+     "objective": "Distinguish sliding friction from rolling resistance and predict how surface and ball choice change the energy left at the finish.",
+     "keywords": ["friction", "rolling resistance", "coefficient of friction", "energy loss",
+                  "dissipation", "surface roughness", "track material", "normal force"],
+     "high_weight": true
+    },
+    {
+     "slug": "rolling-spheres-and-inertia",
+     "title": "Rolling, Not Sliding: Why the Ball Matters",
+     "objective": "Explain how a rolling sphere stores energy in rotation, and predict how diameter, mass and material change travel time.",
+     "keywords": ["rolling", "rotational kinetic energy", "moment of inertia", "angular velocity",
+                  "sphere", "diameter", "density", "steel ball", "marble", "inertia"],
+     "high_weight": true
+    }
+   ]
+  },
+  {
+   "slug": "hitting-the-target-time",
+   "title": "Hitting the Target Time",
+   "summary": "The target time is revealed on the day, so the device has to be tunable rather than fast.",
+   "objectives": [
+    "Extend or shorten a run time predictably without rebuilding the track.",
+    "Design adjustment mechanisms that survive the setup period."
+   ],
+   "lessons": [
+    {
+     "slug": "controlling-run-time",
+     "title": "Controlling Run Time: Path Length, Slope, and Speed",
+     "objective": "Use gentle gradients, added path length and controlled speed regulation to place a run inside the target window.",
+     "keywords": ["target time", "run time", "path length", "slope", "gradient",
+                  "speed regulation", "switchback", "spiral", "terminal velocity",
+                  "timing"],
+     "high_weight": true,
+     "video": true
+    },
+    {
+     "slug": "tunable-design-and-calibration",
+     "title": "Tunable Design and Calibration",
+     "objective": "Build adjustable elements and a calibration table so a revealed target time becomes a setting rather than a problem.",
+     "keywords": ["calibration", "adjustment", "repeatability", "trial", "data table",
+                  "testing", "variance", "setup period", "stopwatch", "measurement"],
+     "high_weight": true
+    }
+   ]
+  },
+  {
+   "slug": "loops-and-elevators",
+   "title": "Loops and Elevators",
+   "summary": "These are the optional point sources, and each is a physics problem with a legality condition attached.",
+   "objectives": [
+    "Design a loop the ball completes while staying in contact with the track.",
+    "Build lever-based elevators that raise the sphere and keep it on the track."
+   ],
+   "lessons": [
+    {
+     "slug": "loop-physics-and-geometry",
+     "title": "Loop Physics: Staying on the Track at the Top",
+     "objective": "Use centripetal force to find the minimum speed at the top of a loop, and measure loop height from the point of intersection.",
+     "keywords": ["loop", "circular motion", "centripetal force", "centripetal acceleration",
+                  "minimum speed", "concave", "point of intersection", "loop height",
+                  "banked turn", "contact force"],
+     "high_weight": true,
+     "video": true
+    },
+    {
+     "slug": "elevators-levers-and-pulleys",
+     "title": "Elevators: Levers, Wheel and Axle, and Pulleys",
+     "objective": "Build a first-class-lever elevator and a second-class-lever elevator with a pulley, and explain why each runs at a mechanical advantage below one.",
+     "keywords": ["simple machine", "lever", "first-class lever", "second-class lever",
+                  "fulcrum", "wheel and axle", "pulley", "mechanical advantage",
+                  "ideal mechanical advantage", "counterweight", "elevator"],
+     "high_weight": true
+    }
+   ]
+  },
+  {
+   "slug": "build-test-compete",
+   "title": "Build, Test, and Compete",
+   "summary": "A device that works once is not finished; the score comes from the better of two runs on an unfamiliar table.",
+   "objectives": [
+    "Build a rigid, transportable track whose behaviour does not change between venues.",
+    "Run a testing programme that produces a reliable second run."
+   ],
+   "lessons": [
+    {
+     "slug": "construction-and-stopping",
+     "title": "Construction, Transport, and the Automatic Stop",
+     "objective": "Build for rigidity and repeatability, and design an automatic stopping mechanism that acts after the finish line.",
+     "keywords": ["construction", "rigidity", "bracing", "adhesive", "track support",
+                  "transport", "automatic stopping", "finish line", "backstop",
+                  "tolerance"],
+     "high_weight": true
+    },
+    {
+     "slug": "testing-programme-and-competition-day",
+     "title": "A Testing Programme and Competition Day",
+     "objective": "Plan a testing programme that records every run, and rehearse setup, release and the judge's questions.",
+     "keywords": ["testing", "design log", "trial data", "release", "pencil", "setup",
+                  "run", "competition day", "judge questions", "troubleshooting",
+                  "failure analysis"],
+     "high_weight": true
+    }
+   ]
+  }
+ ]
+}

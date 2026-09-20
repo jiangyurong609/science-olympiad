@@ -24,6 +24,7 @@ from app.services.pdf_figures import (
     RESOLVING_MATCHES, attach_figures_to_items, extract_figures,
 )
 from app.services.scoring import is_gradeable
+from app.services.season_status import HIDDEN_SEASON_STATUSES
 
 MAX_TEXT_CHARS = 30_000
 PROMPT_VERSION = "past-test-parse-v1"
@@ -533,7 +534,7 @@ def import_past_test(
     # publishes into a place no student can find — which is how the 2026 Meteorology paper
     # imported cleanly, verified cleanly, and then could not be found. Source mappings can
     # go stale after a season consolidation; the import must refuse them, not follow them.
-    if getattr(event, "season_status", "") == "superseded":
+    if getattr(event, "season_status", "") in HIDDEN_SEASON_STATUSES:
         raise ValueError(
             f"Event {event.slug!r} is superseded; repoint the source mapping to the live "
             "event before importing, or the exam will publish where no catalog lists it")

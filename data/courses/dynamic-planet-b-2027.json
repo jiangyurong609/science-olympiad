@@ -1,0 +1,293 @@
+{
+ "event_slug": "dynamic-planet-b-2027",
+ "season": 2027,
+ "title": "Dynamic Planet: Earth's Fresh Waters",
+ "summary": "Follow water from rainfall through a drainage basin to the sea and into the ground, and read a river's history from the landforms it leaves and the data it generates.",
+ "objectives": [
+  "Account for water quantitatively through a cycle, a budget and a reservoir residence time.",
+  "Read a drainage basin from a map: divides, stream order, drainage pattern and density.",
+  "Explain a channel's form and landforms from the sediment and discharge that made them.",
+  "Interpret hydrographs, longitudinal profiles, flood-frequency plots and grain-size data.",
+  "Trace groundwater through aquifers and karst, and predict how pumping and land use change it."
+ ],
+ "units": [
+  {
+   "slug": "water-budget",
+   "title": "Accounting for Water",
+   "summary": "Every question about fresh water is finally a bookkeeping question: what comes in, what leaves, and what is stored in between.",
+   "objectives": [
+    "Name the fluxes of the hydrologic cycle and say which direction each moves water.",
+    "Compute a water budget and a reservoir residence time."
+   ],
+   "lessons": [
+    {
+     "slug": "hydrologic-cycle-and-fluxes",
+     "title": "The Hydrologic Cycle and Its Fluxes",
+     "objective": "Trace water through precipitation, evaporation, evapotranspiration, infiltration and runoff, and state which flux dominates in a given setting.",
+     "keywords": ["hydrologic cycle", "water cycle", "precipitation", "evaporation",
+                  "transpiration", "evapotranspiration", "infiltration", "runoff",
+                  "condensation", "flux"],
+     "high_weight": true,
+     "video": true
+    },
+    {
+     "slug": "reservoirs-residence-time-water-budgets",
+     "title": "Reservoirs, Residence Time, and Water Budgets",
+     "objective": "Compute a residence time from storage and flux, and balance a water budget for a basin or lake.",
+     "keywords": ["storage reservoir", "residence time", "water budget", "water balance",
+                  "critical zone", "groundwater storage", "soil moisture", "inflow",
+                  "outflow"],
+     "high_weight": true
+    }
+   ]
+  },
+  {
+   "slug": "where-fresh-water-falls",
+   "title": "Where Fresh Water Falls",
+   "summary": "Climate decides how much water a landscape ever gets, and topography decides where it lands.",
+   "objectives": [
+    "Predict precipitation from topography and position on a continent.",
+    "Place a landscape on the arid-to-humid spectrum from its streams and deposits."
+   ],
+   "lessons": [
+    {
+     "slug": "climatic-and-topographic-controls",
+     "title": "Climatic and Topographic Controls on Precipitation",
+     "objective": "Explain orographic lift, rain shadow, continentality and lake effect, and use them to predict which side of a range is wet.",
+     "keywords": ["orographic lift", "rain shadow", "continentality", "lake effect",
+                  "elevation", "snowfall", "seasonality", "precipitation intensity",
+                  "windward", "leeward"],
+     "video": true
+    },
+    {
+     "slug": "arid-to-humid-landscapes",
+     "title": "Arid, Semiarid, and Humid Landscapes",
+     "objective": "Read a climate regime from perennial versus ephemeral streams, playas and evaporite deposits.",
+     "keywords": ["arid", "semiarid", "humid", "perennial stream", "ephemeral stream",
+                  "intermittent stream", "playa", "evaporite", "aridity"]
+    }
+   ]
+  },
+  {
+   "slug": "drainage-basins",
+   "title": "Reading a Drainage Basin",
+   "summary": "A watershed is the unit of this event: learn to see one on a map and most map questions become answerable.",
+   "objectives": [
+    "Trace a drainage divide and delineate a basin on a topographic map.",
+    "Assign stream order and name a drainage pattern from network geometry."
+   ],
+   "lessons": [
+    {
+     "slug": "watersheds-divides-and-basins",
+     "title": "Watersheds, Divides, and Basin Characteristics",
+     "objective": "Delineate a drainage basin from contours and describe its shape, relief and area.",
+     "keywords": ["watershed", "drainage basin", "drainage divide", "catchment",
+                  "basin area", "relief", "topographic map", "contour"],
+     "high_weight": true,
+     "video": true
+    },
+    {
+     "slug": "stream-order-patterns-and-density",
+     "title": "Stream Order, Drainage Patterns, and Density",
+     "objective": "Assign Strahler stream order and infer bedrock and structure from dendritic, trellis, radial and rectangular patterns.",
+     "keywords": ["stream order", "Strahler", "drainage pattern", "dendritic", "trellis",
+                  "radial", "rectangular", "drainage density", "drainage texture",
+                  "tributary"],
+     "high_weight": true
+    }
+   ]
+  },
+  {
+   "slug": "streamflow-and-floods",
+   "title": "Streamflow and Floods",
+   "summary": "Discharge is the number that drives a river's behaviour, and the hydrograph is how it is read.",
+   "objectives": [
+    "Compute discharge and relate velocity, area and load.",
+    "Read a hydrograph and interpret a recurrence interval honestly."
+   ],
+   "lessons": [
+    {
+     "slug": "discharge-velocity-and-hydrographs",
+     "title": "Discharge, Velocity, and the Hydrograph",
+     "objective": "Compute discharge from cross-sectional area and velocity, and read rising limb, peak, lag and baseflow from a hydrograph.",
+     "keywords": ["discharge", "streamflow", "velocity", "cross-sectional area",
+                  "hydrograph", "baseflow", "peak flow", "lag time", "stage",
+                  "open-channel flow", "Manning"],
+     "high_weight": true,
+     "video": true
+    },
+    {
+     "slug": "floods-frequency-and-recurrence",
+     "title": "Floods, Frequency, and Recurrence Intervals",
+     "objective": "Interpret a recurrence interval as a probability, and explain why a 100-year flood can occur twice in a decade.",
+     "keywords": ["flood", "flood frequency", "recurrence interval", "return period",
+                  "exceedance probability", "flood stage", "floodplain", "discharge record"],
+     "high_weight": true
+    }
+   ]
+  },
+  {
+   "slug": "sediment-and-channel-form",
+   "title": "Sediment and Channel Form",
+   "summary": "A channel's shape is the visible result of the sediment and water moving through it.",
+   "objectives": [
+    "Classify sediment by size, sorting and rounding and infer its transport history.",
+    "Explain a channel planform from slope, discharge and sediment supply."
+   ],
+   "lessons": [
+    {
+     "slug": "sediment-properties-and-transport",
+     "title": "Sediment Properties and How Rivers Move Them",
+     "objective": "Distinguish bed, suspended and dissolved load, and separate competence from capacity using a grain-size and velocity relationship.",
+     "keywords": ["grain size", "sorting", "rounding", "sphericity", "bed load",
+                  "suspended load", "dissolved load", "competence", "capacity",
+                  "sediment transport", "Hjulstrom", "entrainment", "saltation"],
+     "high_weight": true
+    },
+    {
+     "slug": "channel-planform-and-bedforms",
+     "title": "Channel Planform, Sinuosity, and Bedforms",
+     "objective": "Classify a channel as braided, meandering, straight or anastomosing, calculate sinuosity, and identify ripples, dunes, antidunes and bars.",
+     "keywords": ["channel planform", "braided river", "meandering", "anastomosing",
+                  "sinuosity", "thalweg", "ripple", "dune", "antidune", "bar",
+                  "bedform", "sediment supply"],
+     "high_weight": true,
+     "video": true
+    }
+   ]
+  },
+  {
+   "slug": "fluvial-landforms",
+   "title": "Rivers as Sculptors",
+   "summary": "Given a landform, name the process that made it — this is where most points in a fluvial event live.",
+   "objectives": [
+    "Relate the longitudinal profile to base level and dynamic equilibrium.",
+    "Identify erosional and depositional landforms and the process behind each."
+   ],
+   "lessons": [
+    {
+     "slug": "longitudinal-profile-and-base-level",
+     "title": "Longitudinal Profile, Base Level, and Graded Streams",
+     "objective": "Explain gradient and base level, and predict a stream's response to a change in either using dynamic equilibrium.",
+     "keywords": ["longitudinal profile", "gradient", "base level", "graded stream",
+                  "dynamic equilibrium", "downcutting", "aggradation", "incision",
+                  "knickpoint", "waterfall"],
+     "high_weight": true
+    },
+    {
+     "slug": "erosional-and-depositional-landforms",
+     "title": "Floodplain and Channel Landforms",
+     "objective": "Identify point bars, cut banks, oxbow lakes, natural levees, deltas and alluvial fans, and state the process that forms each.",
+     "keywords": ["point bar", "cut bank", "oxbow lake", "meander scar", "natural levee",
+                  "floodplain", "delta", "alluvial fan", "stream capture", "abrasion",
+                  "hydraulic action", "v-shaped valley", "terrace"],
+     "high_weight": true,
+     "video": true
+    }
+   ]
+  },
+  {
+   "slug": "groundwater-and-karst",
+   "title": "Water Underground",
+   "summary": "Most liquid fresh water is below the surface, and it obeys rules a surface-water intuition gets wrong.",
+   "objectives": [
+    "Locate the water table and classify an aquifer.",
+    "Predict groundwater flow and the effects of pumping and recharge change."
+   ],
+   "lessons": [
+    {
+     "slug": "water-table-and-aquifers",
+     "title": "The Water Table and Aquifer Types",
+     "objective": "Distinguish the zones of aeration and saturation, and classify confined, unconfined and artesian aquifers by porosity and permeability.",
+     "keywords": ["zone of aeration", "zone of saturation", "water table", "aquifer",
+                  "aquitard", "confined aquifer", "unconfined aquifer", "artesian",
+                  "porosity", "permeability", "capillary fringe"],
+     "high_weight": true,
+     "video": true
+    },
+    {
+     "slug": "groundwater-flow-and-surface-interaction",
+     "title": "Groundwater Flow and Its Link to Rivers",
+     "objective": "Use hydraulic gradient to predict flow direction, and explain gaining and losing streams, recharge, cones of depression and saltwater intrusion.",
+     "keywords": ["hydraulic gradient", "hydraulic head", "groundwater flow", "recharge",
+                  "discharge area", "gaining stream", "losing stream", "cone of depression",
+                  "drawdown", "saltwater intrusion", "subsidence", "spring"],
+     "high_weight": true
+    },
+    {
+     "slug": "karst-landscapes",
+     "title": "Karst: Landscapes Made by Dissolution",
+     "objective": "Explain carbonate dissolution and identify sinkholes, caves, disappearing streams, springs and solution valleys.",
+     "keywords": ["karst", "dissolution", "carbonate", "limestone", "sinkhole", "cave",
+                  "disappearing stream", "solution valley", "spring", "speleothem",
+                  "stalactite", "stalagmite", "carbonic acid"],
+     "high_weight": true,
+     "video": true
+    }
+   ]
+  },
+  {
+   "slug": "standing-water-and-people",
+   "title": "Lakes, Wetlands, and Human Hands",
+   "summary": "Standing water stratifies and turns over on a schedule, and almost every basin now also has people in it.",
+   "objectives": [
+    "Explain lake stratification and seasonal turnover.",
+    "Predict how dams, levees, channelization and pumping change a basin."
+   ],
+   "lessons": [
+    {
+     "slug": "lakes-stratification-and-turnover",
+     "title": "Lakes, Stratification, and Turnover",
+     "objective": "Explain how a lake forms, balance its budget, and describe thermal stratification and spring and fall turnover.",
+     "keywords": ["lake", "reservoir", "glacial lake", "oxbow lake", "tarn",
+                  "thermal stratification", "epilimnion", "thermocline", "hypolimnion",
+                  "turnover", "dimictic", "lake budget", "water density"],
+     "video": true
+    },
+    {
+     "slug": "wetlands-and-shorelines",
+     "title": "Wetlands and Lake Shorelines",
+     "objective": "Distinguish bogs, marshes, swamps and fens, and describe the processes shaping a lake shoreline.",
+     "keywords": ["wetland", "bog", "marsh", "swamp", "fen", "peat", "shoreline",
+                  "littoral", "wave erosion", "lacustrine deposit", "paleochannel"]
+    },
+    {
+     "slug": "human-impacts-on-fresh-water",
+     "title": "Human Impacts on Fresh Water",
+     "objective": "Predict the downstream and subsurface consequences of dams, levees, channelization, land-use change and groundwater pumping.",
+     "keywords": ["dam", "reservoir", "levee", "channelization", "urbanization",
+                  "impervious surface", "groundwater pumping", "depletion", "subsidence",
+                  "sediment starvation", "water pollution", "land use"],
+     "high_weight": true
+    }
+   ]
+  },
+  {
+   "slug": "competition-application",
+   "title": "Competition Application",
+   "summary": "The event is half data interpretation, so the last skill is reading the displays a supervisor will actually hand you.",
+   "objectives": [
+    "Extract an answer from a topographic map, hydrograph, profile or grain-size plot.",
+    "Structure a station answer so partial credit is earned under time pressure."
+   ],
+   "lessons": [
+    {
+     "slug": "reading-freshwater-data-displays",
+     "title": "Reading Maps, Hydrographs, and Cross-Sections",
+     "objective": "Work a mixed set of freshwater data displays and justify each answer from the evidence shown.",
+     "keywords": ["topographic map", "contour interval", "hydrograph", "longitudinal profile",
+                  "channel cross-section", "grain-size distribution", "flood frequency plot",
+                  "stage-discharge", "data interpretation"],
+     "high_weight": true
+    },
+    {
+     "slug": "station-strategy-and-partial-credit",
+     "title": "Station Strategy and Earning Partial Credit",
+     "objective": "Budget time across stations and write answers that earn the reasoning points even when the identification is uncertain.",
+     "keywords": ["station", "timing", "partial credit", "evidence", "justification",
+                  "tie-breaker", "answer sheet", "units", "significant figures"]
+    }
+   ]
+  }
+ ]
+}
