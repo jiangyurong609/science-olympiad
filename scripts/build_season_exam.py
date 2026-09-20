@@ -26,6 +26,8 @@ import json
 import re
 from concurrent.futures import ThreadPoolExecutor, as_completed
 
+from pathlib import Path
+
 from sqlalchemy import func, select
 
 from app.core.database import SessionLocal
@@ -37,7 +39,32 @@ from app.services.scoring import is_gradeable
 from app.services.season_status import HIDDEN_SEASON_STATUSES
 from scripts.author_course_from_blueprint import _select_passages
 
-PROMPT_VERSION = "season-exam-sectioned-v1"
+PROMPT_VERSION = "season-exam-sectioned-v2"
+REPO = Path(__file__).resolve().parent.parent
+
+
+def _scope_topics(event) -> list[str]:
+    """This event's tested topics, from the season scope manifest.
+
+    Without these, a long single-section run is steered by nothing: every batch gets the same
+    passage selection and writes about the same few ideas. The first 32-item state paper spent
+    7 items on Strahler ordering and 8 on drainage basins and never once asked about groundwater,
+    karst, sediment, floods or lakes — four of thirteen topics for a whole paper. The syllabus is
+    already written down; the exam should walk it.
+    """
+    base = re.sub(r"-(19|20)\d{2}$", "", event.slug)
+    division = "b" if base.endswith("-b") else "c" if base.endswith("-c") else None
+    season = re.search(r"-((?:19|20)\d{2})$", event.slug)
+    if not (division and season):
+        return []
+    path = REPO / f"docs/season_{season.group(1)}/division_{division}_scope.json"
+    if not path.exists():
+        return []
+    name = re.sub(r"[^a-z0-9]+", " ", event.name.lower()).strip()
+    for spec in json.loads(path.read_text()).get("events", []):
+        if re.sub(r"[^a-z0-9]+", " ", spec["event"].lower()).strip() == name:
+            return [t for t in spec.get("topics", []) if t]
+    return []
 
 # Section shapes taken from real papers for this event family. `points` is what the source paper
 # pays for such an item; the platform scores one point per item, so it is recorded for
@@ -237,7 +264,7 @@ def _validate(raw: dict, kind: str, passages: dict[int, SourcePassage]) -> dict:
 BATCH_SIZE = 4
 
 
-def _one_batch(provider, event, section, chosen, index, want, avoid) -> list[dict]:
+def _one_batch(provider, event, section, chosen, index, want, avoid, topics) -> list[dict]:
     system = f"{BASE_RULES}\n\n{KIND_RULES[section['kind']]}"
     payload = provider.generate_json(system, json.dumps({
         "event": event.name,
@@ -245,7 +272,8 @@ def _one_batch(provider, event, section, chosen, index, want, avoid) -> list[dic
         "section": section["title"],
         "item_count": want,
         "section_guidance": section["guidance"],
-        "avoid_these_stems": avoid[-12:],
+        "write_about_these_topics_only": topics,
+        "avoid_these_stems": avoid[-16:],
         "passages": [{"passage_id": p.id, "locator": p.locator,
                       "source_title": p.source_title,
                       "text": p.text[:1600]} for p in chosen],
@@ -267,28 +295,35 @@ def _one_batch(provider, event, section, chosen, index, want, avoid) -> list[dic
     return items
 
 
-def _generate_section(provider, event, section, passages, sources) -> list[dict]:
-    keywords = re.findall(r"[a-z]{4,}", section["guidance"].lower())
-    chosen = _select_passages(passages, sources, keywords or [event.name.lower()],
-                              require_video=False)[:14]
-    if not chosen:
-        raise ValueError("no passages available for this section")
-    for p in chosen:                      # the prompt needs the title, the row has only the id
-        p.source_title = sources[p.source_id].title
-    index = {p.id: p for p in chosen}
+def _generate_section(provider, event, section, passages, sources,
+                      scope_topics: list[str]) -> list[dict]:
     wanted = section["count"]
+    # Walk the syllabus in slices, so a long run spreads across topics instead of circling the
+    # handful that the section's own wording happens to favour.
+    slices: list[list[str]] = []
+    if scope_topics and section["kind"] in {"single_choice", "data", "true_false"}:
+        per_batch = max(1, -(-len(scope_topics) // max(1, -(-wanted // BATCH_SIZE))))
+        slices = [scope_topics[i:i + per_batch] for i in range(0, len(scope_topics), per_batch)]
     collected: list[dict] = []
     seen: set[str] = set()
-    # One extra pass beyond the arithmetic minimum, so a batch losing an item to validation
-    # does not leave the section short.
     batches = -(-wanted // BATCH_SIZE) + 1
-    for _ in range(batches):
+    for attempt in range(batches):
         if len(collected) >= wanted:
             break
+        topics = slices[attempt % len(slices)] if slices else []
+        keywords = re.findall(r"[a-z]{4,}",
+                              (" ".join(topics) or section["guidance"]).lower())
+        chosen = _select_passages(passages, sources, keywords or [event.name.lower()],
+                                 require_video=False)[:14]
+        if not chosen:
+            continue
+        for p in chosen:               # the prompt needs the title, the row has only the id
+            p.source_title = sources[p.source_id].title
+        index = {p.id: p for p in chosen}
         want = min(BATCH_SIZE, wanted - len(collected))
         try:
             batch = _one_batch(provider, event, section, chosen, index, want,
-                               [i["stem"] for i in collected])
+                               [i["stem"] for i in collected], topics)
         except ModelProviderError as exc:
             print(f"      {section['title']}: provider error {exc}", flush=True)
             break
@@ -299,6 +334,7 @@ def _generate_section(provider, event, section, passages, sources) -> list[dict]
             seen.add(key)
             item["section"] = section["title"]
             item["source_points"] = section["points"]
+            item["scope_topics"] = topics
             collected.append(item)
     return collected[:wanted]
 
@@ -323,10 +359,14 @@ def build(event_slug: str, format_key: str, apply: bool) -> dict:
     provider = OpenAICompatibleProvider()
     if not provider.configured:
         raise SystemExit("model provider is not configured")
+    scope_topics = _scope_topics(event)
+    print(f"   steering across {len(scope_topics)} scope topics"
+          if scope_topics else "   no scope manifest topics; sections steer themselves")
 
     built: list[dict] = []
     with ThreadPoolExecutor(max_workers=3) as pool:
-        futures = {pool.submit(_generate_section, provider, event, s, passages, sources): s
+        futures = {pool.submit(_generate_section, provider, event, s, passages, sources,
+                                   scope_topics): s
                    for s in spec["sections"]}
         for future in as_completed(futures):
             section = futures[future]
@@ -434,6 +474,7 @@ def build(event_slug: str, format_key: str, apply: bool) -> dict:
                 "explanation": question.explanation,
                 "section": item["section"],
                 "source_points": item["source_points"],
+                "scope_topics": item.get("scope_topics") or [],
             },
         ))
     db.commit()
