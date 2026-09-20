@@ -55,13 +55,35 @@ MIN_KEYWORD_OVERLAP = 3
 
 # Government sites carry navigation and security boilerplate that is verbatim-present in the
 # snapshot but asserts nothing about the subject. Provenance is not claimhood.
+#
+# Widened after reading what actually reached the claim table for Dynamic Planet: a CMS byline
+# ("Watersheds and Drainage Basins Completed By Water Science School September 17, 2026"), a
+# link menu ("• Water Science School HOME • Water Cycle Diagrams • Glossary of Water Cycle
+# Terms"), a dataset promo repeated on every USGS page, Wikipedia's "[ edit ]" section markers
+# and raw LaTeX from a formula. Each passed the old filter, sat in the pool as an approvable
+# scientific claim, and would have grounded an exam question.
 BOILERPLATE = re.compile(
     r"(skip to|official websites? use|share sensitive information|https?://|lock \(|"
     r"\.gov websites?|belongs to an official|secure websites?|cookie|javascript|"
     r"privacy policy|accessibility|last updated|contact us|sign up|subscribe|"
-    r"national park (service|system)|park service|newsroom|press release)",
+    r"national park (service|system)|park service|newsroom|press release|"
+    # CMS furniture and dataset promos
+    r"completed by|water science school|surface water data for the nation|"
+    r"national water information system|data for the nation|"
+    r"click (here|the)|read more|learn more about|related (topics|content)|"
+    # navigation and markup
+    r"\[\s*edit\s*\]|\{\\displaystyle|\|\s*\||^\s*[•·]|[•·].*[•·]|"
+    r"^\s*(home|glossary|index|contents|references|see also|external links)\b)",
     re.I,
 )
+# A claim states something about the world. A heading glued to a sentence, a title-case
+# fragment, or a citation-riddled line does not, however much subject vocabulary it carries.
+NOT_A_STATEMENT = re.compile(
+    r"^[A-Z][A-Za-z ]{0,60}(Completed|Overview|Introduction|Summary)\b|"     # heading + text
+    r"(\[\s*\d+\s*\]\s*){2,}|"                                            # [1] [2] [3]
+    r"^\s*[A-Z][a-z]+(\s+[A-Z][a-z]+){3,}\s*$"                              # Title Case Line
+)
+
 # The subject vocabulary a claim must use. Set per run from the event's domain — this was one
 # hardcoded geology regex, so grounding a hydrology or physics event rejected nearly every
 # candidate as "off_topic" and reported it as "no verified claims".
@@ -85,6 +107,12 @@ PREDICATE = re.compile(r"\b(is|are|was|were|has|have|contains?|forms?|occurs?|co
 def is_claimlike(sentence: str) -> tuple[bool, str]:
     """Whether a scraped sentence is a scientific claim rather than site furniture."""
     if BOILERPLATE.search(sentence):
+        return False, "boilerplate"
+    if NOT_A_STATEMENT.search(sentence):
+        return False, "not_a_statement"
+    # A sentence carrying a date stamp or a bare measurement of the page itself is furniture.
+    if re.search(r"\b(January|February|March|April|May|June|July|August|September|October|"
+                 r"November|December)\s+\d{1,2},\s+\d{4}\b", sentence):
         return False, "boilerplate"
     if not DOMAIN_TERMS.search(sentence):
         return False, "off_topic"
