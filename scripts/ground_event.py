@@ -105,6 +105,46 @@ PREDICATE = re.compile(r"\b(is|are|was|were|has|have|contains?|forms?|occurs?|co
                        r"appears?|ranges?|measures?|indicates?|means?)\b", re.I)
 
 
+# Extracted maths is not maths. Wikipedia renders formulae as MathML plus a LaTeX fallback,
+# and the text extractor keeps the glyphs while losing the structure: the combined gas law comes
+# out as "P 1 V 1 T 1 = P 2 V 2 T 2", with the fraction bars gone. As a sentence that is not
+# merely unreadable, it is FALSE — and an exam item was written against it that computed 3 where
+# the real law gives 12. Newton's tidal term came out as "G m 2 r d 3" and as a raw
+# "{\\displaystyle Gm~{\\frac {2r}{d^{3}}}}" dump.
+#
+# A reviewer caught all four. They should never have reached a reviewer: a sentence carrying
+# LaTeX markup, or a run of bare single digits spaced between variables, cannot be evidence for
+# anything, because the relationship that made it true is exactly what extraction dropped.
+LATEX_DEBRIS = re.compile(r"\\displaystyle|\\frac|\\sqrt|\\text\{|\{\\[a-z]")
+
+
+def looks_like_stripped_math(sentence: str) -> bool:
+    """A formula whose structure the extractor dropped, leaving loose symbols.
+
+    "P 1 V 1 T 1 = P 2 V 2 T 2" and "G m 2 r d 3" are what the combined gas law and Newton's
+    tidal term become when the fraction bars and exponents are lost. Measured rather than
+    pattern-matched: a real sentence is not mostly one-character words.
+    """
+    tokens = sentence.split()
+    if len(tokens) < 4:
+        return False
+    single = [len(t.strip("().,=~")) == 1 for t in tokens]
+    if sum(single) >= 4 and sum(single) / len(tokens) >= 0.5:
+        return True
+    # A formula can also sit at the end of an otherwise ordinary sentence — "the law is
+    # written as: P 1 V 1 T 1 = P 2 V 2 T 2" — where the ratio over the whole sentence stays
+    # low. A RUN of loose symbols is the giveaway wherever it appears.
+    run = best = 0
+    for is_single in single:
+        run = run + 1 if is_single else 0
+        best = max(best, run)
+    return best >= 5
+
+
+def is_math_debris(sentence: str) -> bool:
+    return bool(LATEX_DEBRIS.search(sentence)) or looks_like_stripped_math(sentence)
+
+
 def is_claimlike(sentence: str) -> tuple[bool, str]:
     """Whether a scraped sentence is a scientific claim rather than site furniture."""
     if BOILERPLATE.search(sentence):
@@ -121,6 +161,8 @@ def is_claimlike(sentence: str) -> tuple[bool, str]:
         return False, "not_a_proposition"
     if sentence.count(",") > 6 or sentence.isupper():
         return False, "list_or_heading"
+    if is_math_debris(sentence):
+        return False, "math_markup"
     return True, "claimlike"
 
 
