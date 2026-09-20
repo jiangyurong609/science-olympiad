@@ -61,6 +61,16 @@ HOST_RIGHTS = {
                     "publisher": "Centers for Disease Control and Prevention"},
     "www.cancer.gov": {"rights_status": "public_domain", "license_name": "public_domain",
                        "publisher": "National Cancer Institute"},
+    # The CDC's "Principles of Epidemiology in Public Health Practice" — the reference the
+    # 2027 rules manual names for this event — is 404 on every live www.cdc.gov path. It
+    # survives complete on the archive host, which is the same federal work at a different
+    # address, not a third-party mirror.
+    "archive.cdc.gov": {"rights_status": "public_domain", "license_name": "public_domain",
+                        "publisher": "Centers for Disease Control and Prevention (archive)"},
+    "www.fda.gov": {"rights_status": "public_domain", "license_name": "public_domain",
+                    "publisher": "U.S. Food and Drug Administration"},
+    "www.genome.gov": {"rights_status": "public_domain", "license_name": "public_domain",
+                       "publisher": "National Human Genome Research Institute"},
 }
 
 # Hosts that refuse our crawler, recorded so the same URLs are not tried again. opentextbc.ca
@@ -75,7 +85,9 @@ HOST_RIGHTS = {
 # DOMAIN_SOURCES because it is neither a federal work nor Wikipedia, which is a rights decision
 # and not a reachability one — the two are worth keeping distinct.
 BLOCKED_HOSTS = {"opentextbc.ca", "www.ninds.nih.gov", "ninds.nih.gov",
-                 "www.organdonor.gov", "organdonor.gov"}
+                 "www.organdonor.gov", "organdonor.gov",
+                 # measured 403 on every path tried, like weather.gov
+                 "www.fsis.usda.gov", "www.nih.gov", "www.usda.gov", "www.ars.usda.gov"}
 
 
 def rights_for(url: str, spec: dict) -> dict:
@@ -492,26 +504,169 @@ DOMAIN_SOURCES = {
             "https://en.wikipedia.org/wiki/Genomics",
         ],
     },
+    # 2027 Disease Detectives. 140 pages measured with `ground_event._fetch`, all distinct.
+    #
+    # The find that matters: the CDC's "Principles of Epidemiology in Public Health Practice"
+    # (SS1978), which the rules manual names as the reference for this event, returns 404 on
+    # every live `www.cdc.gov/csels/dsepd/ss1978/...` path. All 40 sections were probed. It is
+    # complete on `archive.cdc.gov`, and one section alone — lesson 6 section 2 — is 102,306
+    # characters working through all thirteen outbreak-investigation steps.
+    #
+    # Deliberately absent: who.int, which is CC BY-NC-SA 3.0 IGO and so neither a US federal
+    # work nor compatible with the licences cleared here; and NCBI Bookshelf, whose
+    # epidemiology-relevant open collection is StatPearls at CC BY-NC-ND, failing the same
+    # test twice over.
+    #
+    # One scope item has no source in either pool and no lesson rests on it: Evan's
+    # postulates. Zero matches across all 140 documents.
     "epidemiology": {
-        "publisher": "CDC / public-domain references",
-        "license": "public_domain",
+        "publisher": "CDC / NIH / Wikipedia contributors",
+        "license": "public_domain (federal) and CC-BY-SA 4.0 (Wikipedia, facts with attribution)",
         "urls": [
-            "https://en.wikipedia.org/wiki/Epidemiology",
-            "https://en.wikipedia.org/wiki/Incidence_(epidemiology)",
-            "https://en.wikipedia.org/wiki/Prevalence",
-            "https://en.wikipedia.org/wiki/Case%E2%80%93control_study",
-            "https://en.wikipedia.org/wiki/Cohort_study",
-            "https://en.wikipedia.org/wiki/Odds_ratio",
-            "https://en.wikipedia.org/wiki/Relative_risk",
-            "https://en.wikipedia.org/wiki/Attack_rate",
-            "https://en.wikipedia.org/wiki/Epidemic_curve",
-            "https://en.wikipedia.org/wiki/Confounding",
-            "https://en.wikipedia.org/wiki/Basic_reproduction_number",
-            "https://en.wikipedia.org/wiki/Herd_immunity",
-            "https://en.wikipedia.org/wiki/Koch%27s_postulates",
-            "https://en.wikipedia.org/wiki/Outbreak",
-            "https://en.wikipedia.org/wiki/Epidemiological_method",
-            "https://en.wikipedia.org/wiki/Public_health_surveillance",
+            # --- CDC Principles of Epidemiology (SS1978) - the manual's named reference, live only on archive.cdc.gov
+            "https://archive.cdc.gov/www_cdc_gov/csels/dsepd/ss1978/lesson1/section1.html",  # clinician vs epidemiologist
+            "https://archive.cdc.gov/www_cdc_gov/csels/dsepd/ss1978/lesson1/section2.html",  # history: Hippocrates, Graunt, Farr, Snow
+            "https://archive.cdc.gov/www_cdc_gov/csels/dsepd/ss1978/lesson1/section3.html",  # uses of epidemiology
+            "https://archive.cdc.gov/www_cdc_gov/csels/dsepd/ss1978/lesson1/section4.html",  # core functions, field investigation
+            "https://archive.cdc.gov/www_cdc_gov/csels/dsepd/ss1978/lesson1/section5.html",  # the epidemiologic approach, case definition
+            "https://archive.cdc.gov/www_cdc_gov/csels/dsepd/ss1978/lesson1/section6.html",  # descriptive epidemiology: time, place, person
+            "https://archive.cdc.gov/www_cdc_gov/csels/dsepd/ss1978/lesson1/section7.html",  # analytic epidemiology, comparison groups
+            "https://archive.cdc.gov/www_cdc_gov/csels/dsepd/ss1978/lesson1/section8.html",  # epidemiologic triad, component causes
+            "https://archive.cdc.gov/www_cdc_gov/csels/dsepd/ss1978/lesson1/section9.html",  # natural history and spectrum of disease
+            "https://archive.cdc.gov/www_cdc_gov/csels/dsepd/ss1978/lesson1/section10.html",  # chain of infection
+            "https://archive.cdc.gov/www_cdc_gov/csels/dsepd/ss1978/lesson1/section11.html",  # sporadic, endemic, hyperendemic, epidemic
+            "https://archive.cdc.gov/www_cdc_gov/csels/dsepd/ss1978/lesson2/section2.html",  # types of variables
+            "https://archive.cdc.gov/www_cdc_gov/csels/dsepd/ss1978/lesson2/section3.html",  # frequency distributions and tables
+            "https://archive.cdc.gov/www_cdc_gov/csels/dsepd/ss1978/lesson2/section4.html",  # properties of frequency distributions
+            "https://archive.cdc.gov/www_cdc_gov/csels/dsepd/ss1978/lesson2/section6.html",  # mean, median, mode
+            "https://archive.cdc.gov/www_cdc_gov/csels/dsepd/ss1978/lesson2/section7.html",  # range, interquartile range, standard deviation
+            "https://archive.cdc.gov/www_cdc_gov/csels/dsepd/ss1978/lesson2/section8.html",  # choosing the right summary measure
+            "https://archive.cdc.gov/www_cdc_gov/csels/dsepd/ss1978/lesson3/section1.html",  # ratio, proportion, rate, attack rate
+            "https://archive.cdc.gov/www_cdc_gov/csels/dsepd/ss1978/lesson3/section2.html",  # incidence and prevalence
+            "https://archive.cdc.gov/www_cdc_gov/csels/dsepd/ss1978/lesson3/section3.html",  # death rate, case fatality, YPLL
+            "https://archive.cdc.gov/www_cdc_gov/csels/dsepd/ss1978/lesson3/section5.html",  # risk ratio, rate ratio, odds ratio
+            "https://archive.cdc.gov/www_cdc_gov/csels/dsepd/ss1978/lesson3/section6.html",  # attributable risk
+            "https://archive.cdc.gov/www_cdc_gov/csels/dsepd/ss1978/lesson4/section1.html",  # displaying data
+            "https://archive.cdc.gov/www_cdc_gov/csels/dsepd/ss1978/lesson4/section2.html",  # one, two and three variable tables
+            "https://archive.cdc.gov/www_cdc_gov/csels/dsepd/ss1978/lesson4/section3.html",  # line graphs, histograms, epidemic curves
+            "https://archive.cdc.gov/www_cdc_gov/csels/dsepd/ss1978/lesson4/section4.html",  # bar charts, pie, spot and area maps
+            "https://archive.cdc.gov/www_cdc_gov/csels/dsepd/ss1978/lesson4/section5.html",  # choosing and constructing a display
+            "https://archive.cdc.gov/www_cdc_gov/csels/dsepd/ss1978/lesson5/section1.html",  # introduction to surveillance
+            "https://archive.cdc.gov/www_cdc_gov/csels/dsepd/ss1978/lesson5/section2.html",  # purpose and characteristics of surveillance
+            "https://archive.cdc.gov/www_cdc_gov/csels/dsepd/ss1978/lesson5/section3.html",  # identifying health problems for surveillance
+            "https://archive.cdc.gov/www_cdc_gov/csels/dsepd/ss1978/lesson5/section4.html",  # passive, active and sentinel data collection
+            "https://archive.cdc.gov/www_cdc_gov/csels/dsepd/ss1978/lesson5/section5.html",  # analysing and interpreting surveillance data
+            "https://archive.cdc.gov/www_cdc_gov/csels/dsepd/ss1978/lesson5/section6.html",  # disseminating data and interpretations
+            "https://archive.cdc.gov/www_cdc_gov/csels/dsepd/ss1978/lesson5/section7.html",  # evaluating surveillance, predictive value positive
+            "https://archive.cdc.gov/www_cdc_gov/csels/dsepd/ss1978/lesson6/section1.html",  # why outbreaks are investigated
+            "https://archive.cdc.gov/www_cdc_gov/csels/dsepd/ss1978/lesson6/section2.html",  # all 13 outbreak investigation steps, worked
+            # --- CDC Field Epidemiology Manual
+            "https://www.cdc.gov/field-epi-manual/php/chapters/defining-field-epi.html",  # descriptive vs analytic field epidemiology
+            "https://www.cdc.gov/field-epi-manual/php/chapters/initiating-operations.html",  # preparing for field work
+            "https://www.cdc.gov/field-epi-manual/php/chapters/field-investigation.html",  # case definition, line listing, epi curve, spot map
+            "https://www.cdc.gov/field-epi-manual/php/chapters/collecting-data.html",  # surveillance sources, PulseNet, syndromic surveillance
+            "https://www.cdc.gov/field-epi-manual/php/chapters/data-collection-management.html",  # questionnaires, variables, data quality
+            "https://www.cdc.gov/field-epi-manual/php/chapters/describing-epi-data.html",  # time, place, person; epi curves
+            "https://www.cdc.gov/field-epi-manual/php/chapters/design-conduct-analyze-field-studies.html",  # cohort vs case-control, bias, sample size
+            "https://www.cdc.gov/field-epi-manual/php/chapters/analyze-interpret-data.html",  # 2x2 tables, RR, OR, p-values, vaccine efficacy
+            "https://www.cdc.gov/field-epi-manual/php/chapters/epi-lab-collaboration.html",  # molecular subtyping, PFGE, WGS, serotyping
+            "https://www.cdc.gov/field-epi-manual/php/chapters/interventions.html",  # control measures, breaking transmission
+            "https://www.cdc.gov/field-epi-manual/php/chapters/gis-data.html",  # cluster maps, choropleth, spatial analysis
+            "https://www.cdc.gov/field-epi-manual/php/chapters/healthcare-settings.html",  # healthcare-associated outbreaks
+            "https://www.cdc.gov/field-epi-manual/php/chapters/community-settings.html",  # community outbreak investigation
+            "https://www.cdc.gov/field-epi-manual/php/chapters/environmental-origin.html",  # environmental and waterborne investigation
+            "https://www.cdc.gov/field-epi-manual/php/chapters/acute-enteric-disease.html",  # foodborne and enteric outbreaks, attack rates
+            "https://www.cdc.gov/field-epi-manual/php/chapters/biologic-toxic-agents.html",  # agent classes, toxic exposures
+            # --- CDC programmes and agents
+            "https://www.cdc.gov/mmwr/preview/mmwrhtml/rr5013a1.htm",  # surveillance system attributes, representativeness
+            "https://www.cdc.gov/one-health/about/index.html",  # agent-host-environment, zoonotic spillover
+            "https://www.cdc.gov/pulsenet/about/index.html",  # PulseNet
+            "https://www.cdc.gov/nndss/about/index.html",  # nationally notifiable disease surveillance
+            "https://www.cdc.gov/nchs/nvss/index.htm",  # vital statistics, death certificates
+            "https://www.cdc.gov/nchs/nhanes/about/index.html",  # survey-based surveillance
+            "https://www.cdc.gov/brfss/about/index.htm",  # behavioural risk factor surveillance
+            "https://www.cdc.gov/vaccines/basics/index.html",  # immunization as primary prevention
+            "https://www.cdc.gov/vaccines/glossary/",  # vaccine terminology, efficacy, herd immunity
+            "https://www.cdc.gov/vaccines/basics/explaining-how-vaccines-work.html",  # immunity and vaccination
+            "https://www.cdc.gov/flu-vaccines-work/php/effectiveness-studies/index.html",  # test-negative vaccine effectiveness design
+            "https://www.cdc.gov/antimicrobial-resistance/about/index.html",  # agent factors, control strategy
+            "https://www.cdc.gov/prions/about/index.html",  # prion disease
+            "https://www.cdc.gov/mosquitoes/about/index.html",  # vector and vector control
+            "https://www.cdc.gov/ticks/about/index.html",  # vector-borne transmission
+            "https://www.cdc.gov/salmonella/about/index.html",  # enteric outbreak agent
+            "https://www.cdc.gov/norovirus/about/index.html",  # propagated spread
+            "https://www.cdc.gov/listeria/about/index.html",  # PulseNet clusters
+            "https://www.cdc.gov/ecoli/about/index.html",  # serotype
+            "https://www.fda.gov/food/consumers/what-you-need-know-about-foodborne-illnesses",  # foodborne illness, vehicle
+            "https://medlineplus.gov/infectiousdiseases.html",  # infectious agent classes, plain language
+            "https://www.niaid.nih.gov/diseases-conditions/infectious-diseases",  # infectious disease research areas
+            "https://www.niaid.nih.gov/research/vaccines",  # vaccines and immunity
+            # --- Wikipedia
+            "https://en.wikipedia.org/wiki/Epidemiology",  # scope, definitions, measures
+            "https://en.wikipedia.org/wiki/John_Snow",  # Broad Street, natural experiment
+            "https://en.wikipedia.org/wiki/Public_health_surveillance",  # surveillance types
+            "https://en.wikipedia.org/wiki/Notifiable_disease",  # notifiable and reportable systems
+            "https://en.wikipedia.org/wiki/Sentinel_surveillance",  # sentinel surveillance
+            "https://en.wikipedia.org/wiki/Outbreak",  # outbreak vs epidemic, common source vs propagated
+            "https://en.wikipedia.org/wiki/Epidemic",  # epidemic, pandemic, thresholds
+            "https://en.wikipedia.org/wiki/Endemic_(epidemiology)",  # endemic, hyperendemic, sporadic
+            "https://en.wikipedia.org/wiki/Cluster_(epidemiology)",  # disease cluster investigation
+            "https://en.wikipedia.org/wiki/Pathogen",  # agent classes, pathogenicity, virulence
+            "https://en.wikipedia.org/wiki/Pathogenic_bacteria",  # bacterial causes
+            "https://en.wikipedia.org/wiki/Viral_disease",  # viral causes
+            "https://en.wikipedia.org/wiki/Mycosis",  # fungal causes
+            "https://en.wikipedia.org/wiki/Protozoan_infection",  # protist causes
+            "https://en.wikipedia.org/wiki/Prion",  # prion causes
+            "https://en.wikipedia.org/wiki/Non-communicable_disease",  # noninfectious causes, risk factors
+            "https://en.wikipedia.org/wiki/Natural_history_of_disease",  # natural history timeline
+            "https://en.wikipedia.org/wiki/Subclinical_infection",  # spectrum of disease, carrier
+            "https://en.wikipedia.org/wiki/Incubation_period",  # incubation and latent periods
+            "https://en.wikipedia.org/wiki/Transmission_(medicine)",  # modes of transmission, vehicle, vector
+            "https://en.wikipedia.org/wiki/Case%E2%80%93control_study",  # case-control design
+            "https://en.wikipedia.org/wiki/Cohort_study",  # cohort design
+            "https://en.wikipedia.org/wiki/Cross-sectional_study",  # cross-sectional design
+            "https://en.wikipedia.org/wiki/Ecological_study",  # ecological design
+            "https://en.wikipedia.org/wiki/Randomized_controlled_trial",  # experimental design, randomization, blinding
+            "https://en.wikipedia.org/wiki/Case_definition",  # confirmed, probable, suspect
+            "https://en.wikipedia.org/wiki/Epidemic_curve",  # epi curve shapes
+            "https://en.wikipedia.org/wiki/Attack_rate",  # attack rate and secondary attack rate
+            "https://en.wikipedia.org/wiki/Relative_risk",  # risk ratio
+            "https://en.wikipedia.org/wiki/Odds_ratio",  # odds ratio, cross-product
+            "https://en.wikipedia.org/wiki/Risk_difference",  # attributable risk
+            "https://en.wikipedia.org/wiki/Contingency_table",  # 2x2 table structure
+            "https://en.wikipedia.org/wiki/Incidence_(epidemiology)",  # incidence proportion and rate, person-time
+            "https://en.wikipedia.org/wiki/Prevalence",  # point and period prevalence
+            "https://en.wikipedia.org/wiki/Mortality_rate",  # crude, cause-specific, age-adjusted
+            "https://en.wikipedia.org/wiki/Case_fatality_rate",  # case fatality
+            "https://en.wikipedia.org/wiki/Confounding",  # confounding and its control
+            "https://en.wikipedia.org/wiki/Selection_bias",  # selection bias
+            "https://en.wikipedia.org/wiki/Information_bias_(epidemiology)",  # information bias, misclassification
+            "https://en.wikipedia.org/wiki/Recall_bias",  # recall bias
+            "https://en.wikipedia.org/wiki/Ecological_fallacy",  # ecological fallacy
+            "https://en.wikipedia.org/wiki/Bradford_Hill_criteria",  # the nine Hill criteria
+            "https://en.wikipedia.org/wiki/Koch%27s_postulates",  # Koch's postulates and their limits
+            "https://en.wikipedia.org/wiki/Causal_pie_model",  # component, sufficient and necessary cause
+            "https://en.wikipedia.org/wiki/Directed_acyclic_graph",  # DAG structure
+            "https://en.wikipedia.org/wiki/Causal_graph",  # causal DAGs, backdoor paths
+            "https://en.wikipedia.org/wiki/GRADE_approach",  # certainty of evidence
+            "https://en.wikipedia.org/wiki/Herd_immunity",  # herd immunity threshold
+            "https://en.wikipedia.org/wiki/Vaccine_efficacy",  # efficacy and effectiveness
+            "https://en.wikipedia.org/wiki/Basic_reproduction_number",  # R0
+            "https://en.wikipedia.org/wiki/Ring_vaccination",  # ring vaccination
+            "https://en.wikipedia.org/wiki/Preventive_healthcare",  # primary, secondary, tertiary prevention
+            "https://en.wikipedia.org/wiki/Screening_(medicine)",  # screening as secondary prevention
+            "https://en.wikipedia.org/wiki/Quarantine",  # quarantine
+            "https://en.wikipedia.org/wiki/Isolation_(health_care)",  # isolation and precautions
+            "https://en.wikipedia.org/wiki/Contact_tracing",  # contact tracing
+            "https://en.wikipedia.org/wiki/Infection_control",  # infection prevention and control
+            "https://en.wikipedia.org/wiki/Pulsed-field_gel_electrophoresis",  # PFGE method
+            "https://en.wikipedia.org/wiki/PulseNet",  # PulseNet pattern matching
+            "https://en.wikipedia.org/wiki/Single-nucleotide_polymorphism",  # SNP typing
+            "https://en.wikipedia.org/wiki/Whole_genome_sequencing",  # WGS for outbreak subtyping
+            "https://en.wikipedia.org/wiki/Molecular_epidemiology",  # molecular epidemiology
+            "https://en.wikipedia.org/wiki/Histogram",  # histogram, class intervals
+            "https://en.wikipedia.org/wiki/Choropleth_map",  # choropleth and area maps
+            "https://en.wikipedia.org/wiki/Sensitivity_and_specificity",  # sensitivity, specificity, predictive value
         ],
     },
     "entomology": {

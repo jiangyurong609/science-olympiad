@@ -269,7 +269,15 @@ def ensure_snapshot(db: Session, source: Source, apply: bool) -> SourceSnapshot 
     if len(text) < 400:
         print(f"   too little text at {source.url} ({len(text)} chars)")
         return None
-    digest = hashlib.sha256(text.encode()).hexdigest()
+    # A Wikipedia REDIRECT serves the target article's whole body under the requested URL,
+    # prefixed with a "(Redirected from X)" line. The body is identical; the hash is not, so
+    # hash dedupe alone waves it through — four pairs in one subject's source list, each one
+    # the same article counted twice. Folding that line out before hashing is what makes the
+    # duplicate visible. Measured pairs: Substitution_mutation = Point_mutation,
+    # Vaccine_effectiveness = Vaccine_efficacy, Attributable_risk = Risk_difference,
+    # Person-time = Incidence.
+    canonical = re.sub(r"\(Redirected from [^)]*\)", "", text)
+    digest = hashlib.sha256(canonical.encode()).hexdigest()
     # A body we have already stored under a DIFFERENT url is not a second source. Two ways
     # this happens, both measured rather than guessed at:
     #

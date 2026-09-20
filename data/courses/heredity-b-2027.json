@@ -1,0 +1,770 @@
+{
+  "event_slug": "heredity-b-2027",
+  "season": 2027,
+  "title": "Heredity: Classical and Molecular Genetics",
+  "summary": "Heredity is scored on work you can show. Nearly every station ends in a number or a diagram you have to produce — a ratio from a cross, a carrier probability from a pedigree, an allele frequency from a population, a protein change from one swapped base — so the molecular half is taught as the machinery that explains those results, not as vocabulary.",
+  "objectives": [
+    "Work monohybrid, dihybrid and test crosses to stated genotypic and phenotypic ratios, and use probability rules where a grid would be slower.",
+    "Read a pedigree for dominant versus recessive and autosomal versus sex-linked, and compute the probability that a named individual is a carrier.",
+    "Account for the results Mendel's two laws do not predict: linkage and recombination, incomplete dominance, codominance, complementation and recessive epistasis.",
+    "Compare mitosis with meiosis stage by stage, and read a human karyotype for nondisjunction, aneuploidy and structural rearrangement.",
+    "Trace a gene from DNA sequence through replication, transcription, RNA processing and translation, and give the protein-level consequence of a substitution, insertion or deletion.",
+    "Compute Hardy–Weinberg allele and genotype frequencies, and name the violated assumption behind an observed change."
+  ],
+  "units": [
+    {
+      "slug": "mendels-laws-and-monohybrid-crosses",
+      "title": "Mendel's Laws and the Monohybrid Cross",
+      "summary": "Mendel's results are the only part of this event a student can rederive from first principles; everything later in the season is a departure from them and has to be recognised as one.",
+      "objectives": [
+        "State the law of segregation and the law of independent assortment in terms of alleles and gametes.",
+        "Work a monohybrid cross or a test cross through to genotypic and phenotypic ratios."
+      ],
+      "lessons": [
+        {
+          "slug": "mendels-laws-of-inheritance",
+          "title": "Segregation and Independent Assortment",
+          "objective": "State the law of segregation and the law of independent assortment, and identify which observed cross result each one predicts.",
+          "keywords": [
+            "law of segregation",
+            "law of independent assortment",
+            "true-breeding",
+            "dominant allele",
+            "recessive allele",
+            "F1 generation",
+            "F2 generation",
+            "homozygous",
+            "heterozygous",
+            "Mendel",
+            "gamete",
+            "allele"
+          ],
+          "high_weight": true,
+          "video": false
+        },
+        {
+          "slug": "monohybrid-crosses-and-punnett-squares",
+          "title": "Monohybrid Crosses and Punnett Squares",
+          "objective": "Build a Punnett square for a monohybrid cross and report both ratios, including the 3:1 phenotypic and 1:2:1 genotypic results.",
+          "keywords": [
+            "monohybrid cross",
+            "Punnett square",
+            "genotypic ratio",
+            "phenotypic ratio",
+            "1:2:1",
+            "3:1",
+            "heterozygous",
+            "homozygous",
+            "gamete",
+            "dominant allele",
+            "offspring"
+          ],
+          "high_weight": true,
+          "video": true
+        },
+        {
+          "slug": "test-crosses-and-unknown-genotypes",
+          "title": "Test Crosses: Finding a Hidden Genotype",
+          "objective": "Given an individual showing a dominant phenotype, set up a test cross and decide its genotype from the offspring ratio.",
+          "keywords": [
+            "test cross",
+            "testcross",
+            "1:1",
+            "homozygous",
+            "heterozygous",
+            "recessive allele",
+            "dominant allele",
+            "offspring",
+            "genotype",
+            "phenotype"
+          ],
+          "high_weight": true,
+          "video": false
+        }
+      ]
+    },
+    {
+      "slug": "dihybrid-crosses-and-probability",
+      "title": "Two Genes at Once, and the Arithmetic That Beats a Grid",
+      "summary": "A 16-box square is slow and error-prone under time; the same answers fall out of the product and sum rules in a fraction of the time, and three-gene questions leave no alternative.",
+      "objectives": [
+        "Work a dihybrid cross to the 9:3:3:1 ratio and explain where it comes from.",
+        "Compute an offspring probability using the product rule and the sum rule instead of a grid."
+      ],
+      "lessons": [
+        {
+          "slug": "dihybrid-crosses-and-the-9-3-3-1-ratio",
+          "title": "Dihybrid Crosses and 9:3:3:1",
+          "objective": "Enumerate the four gamete types from a dihybrid parent and work the cross to the 9:3:3:1 phenotypic ratio.",
+          "keywords": [
+            "dihybrid cross",
+            "9:3:3:1",
+            "law of independent assortment",
+            "Punnett square",
+            "phenotypic ratio",
+            "genotypic ratio",
+            "gamete",
+            "heterozygous",
+            "offspring",
+            "allele"
+          ],
+          "high_weight": true,
+          "video": true
+        },
+        {
+          "slug": "probability-rules-for-crosses",
+          "title": "Product Rule, Sum Rule and the Forked Line",
+          "objective": "Compute the probability of a specified offspring genotype by multiplying independent single-gene probabilities and adding mutually exclusive outcomes, without drawing the full square.",
+          "keywords": [
+            "product rule",
+            "sum rule",
+            "forked-line method",
+            "independent events",
+            "mutually exclusive",
+            "trihybrid",
+            "probability",
+            "dihybrid cross",
+            "Punnett square",
+            "binomial",
+            "offspring"
+          ],
+          "high_weight": true,
+          "video": false
+        }
+      ]
+    },
+    {
+      "slug": "inheritance-beyond-mendel",
+      "title": "Where Mendel's Ratios Break",
+      "summary": "State and national papers are built on the exceptions: a ratio that is not 3:1 or 9:3:3:1 is the question, and the job is to name which departure produced it.",
+      "objectives": [
+        "Identify incomplete dominance, codominance and multiple-allele systems from heterozygote phenotypes.",
+        "Compute recombination frequency from offspring counts and read a modified dihybrid ratio as epistasis."
+      ],
+      "lessons": [
+        {
+          "slug": "incomplete-dominance-codominance-multiple-alleles",
+          "title": "Incomplete Dominance, Codominance and Multiple Alleles",
+          "objective": "Classify a heterozygote phenotype as incomplete dominance or codominance, and predict ABO blood types from parental genotypes.",
+          "keywords": [
+            "incomplete dominance",
+            "codominance",
+            "multiple alleles",
+            "ABO blood group",
+            "blood type",
+            "heterozygous",
+            "dominant allele",
+            "phenotype",
+            "genotype",
+            "allele"
+          ],
+          "high_weight": true,
+          "video": false
+        },
+        {
+          "slug": "recessive-epistasis-and-complementation",
+          "title": "Recessive Epistasis and the Complementation Test",
+          "objective": "Recognise recessive epistasis from a modified dihybrid ratio, and read a complementation test as same-gene or different-gene mutations.",
+          "keywords": [
+            "recessive epistasis",
+            "epistatic",
+            "epistasis",
+            "complementation test",
+            "complementation group",
+            "gene interaction",
+            "dihybrid cross",
+            "phenotypic ratio",
+            "9:3:3:1",
+            "homozygous"
+          ],
+          "high_weight": true,
+          "video": false
+        },
+        {
+          "slug": "linkage-crossing-over-and-recombination",
+          "title": "Linked Genes, Crossing Over and Map Distance",
+          "objective": "Compute recombination frequency from recombinant and parental offspring counts and convert it to map distance in centimorgans.",
+          "keywords": [
+            "recombination frequency",
+            "centimorgan",
+            "map unit",
+            "linkage map",
+            "linked genes",
+            "genetic linkage",
+            "crossing over",
+            "chiasma",
+            "recombinant",
+            "law of independent assortment",
+            "offspring"
+          ],
+          "high_weight": true,
+          "video": false
+        }
+      ]
+    },
+    {
+      "slug": "pedigrees-and-inherited-risk",
+      "title": "Pedigrees",
+      "summary": "A pedigree is a data set, not a family tree: the symbols are fixed, the inheritance pattern is deduced from skipped generations and affected sexes, and the answer is usually a probability.",
+      "objectives": [
+        "Construct a pedigree from a family description using standard symbols.",
+        "Deduce the inheritance pattern and compute a carrier probability for a named individual."
+      ],
+      "lessons": [
+        {
+          "slug": "reading-and-building-a-pedigree",
+          "title": "Reading and Building a Pedigree",
+          "objective": "Construct a pedigree from a family description using standard symbols, and label the proband, affected individuals and obligate carriers.",
+          "keywords": [
+            "pedigree",
+            "proband",
+            "affected individual",
+            "unaffected",
+            "carrier",
+            "family health history",
+            "inheritance pattern",
+            "generation",
+            "symbol",
+            "trait"
+          ],
+          "high_weight": true,
+          "video": false
+        },
+        {
+          "slug": "autosomal-and-sex-linked-pedigree-patterns",
+          "title": "Autosomal or Sex-Linked, Dominant or Recessive",
+          "objective": "Decide from a pedigree whether a trait is autosomal dominant, autosomal recessive, X-linked recessive or X-linked dominant, and compute the carrier probability for a named individual.",
+          "keywords": [
+            "X-linked recessive",
+            "X-linked dominant",
+            "autosomal recessive",
+            "autosomal dominant",
+            "hemizygous",
+            "color vision deficiency",
+            "hemophilia",
+            "sex-linked",
+            "carrier",
+            "penetrance",
+            "pedigree",
+            "probability"
+          ],
+          "high_weight": true,
+          "video": false
+        }
+      ]
+    },
+    {
+      "slug": "cell-division-and-karyotypes",
+      "title": "Mitosis, Meiosis and the Human Karyotype",
+      "summary": "Segregation and independent assortment are not abstractions — they are anaphase I. The karyotype is where a meiotic error becomes something you can count on a page.",
+      "objectives": [
+        "Order the stages of mitosis and meiosis and say what each produces.",
+        "Read a human karyotype and attribute an aneuploidy to nondisjunction."
+      ],
+      "lessons": [
+        {
+          "slug": "mitosis-stage-by-stage",
+          "title": "Mitosis, Stage by Stage",
+          "objective": "Order prophase, metaphase, anaphase, telophase and cytokinesis, and state what happens to sister chromatids and the spindle in each.",
+          "keywords": [
+            "prophase",
+            "metaphase",
+            "anaphase",
+            "telophase",
+            "cytokinesis",
+            "interphase",
+            "sister chromatid",
+            "spindle",
+            "centromere",
+            "mitosis",
+            "diploid"
+          ],
+          "high_weight": true,
+          "video": true
+        },
+        {
+          "slug": "meiosis-and-gamete-formation",
+          "title": "Meiosis and Where Variation Comes From",
+          "objective": "Order the events of meiosis I and meiosis II, and identify the two stages at which crossing over and independent assortment generate gamete variety.",
+          "keywords": [
+            "meiosis I",
+            "meiosis II",
+            "synapsis",
+            "tetrad",
+            "crossing over",
+            "homologous chromosome",
+            "sister chromatid",
+            "haploid",
+            "diploid",
+            "gamete",
+            "law of independent assortment"
+          ],
+          "high_weight": true,
+          "video": true
+        },
+        {
+          "slug": "karyotypes-and-nondisjunction",
+          "title": "Karyotypes, Nondisjunction and Aneuploidy",
+          "objective": "Read a human karyotype for chromosome number, sex chromosomes and banding, and attribute trisomy 21, 45,X or 47,XXY to nondisjunction in meiosis.",
+          "keywords": [
+            "nondisjunction",
+            "trisomy 21",
+            "47,XXY",
+            "45,X",
+            "aneuploidy",
+            "monosomy",
+            "banding pattern",
+            "short arm",
+            "long arm",
+            "karyotype",
+            "sex chromosome",
+            "autosome"
+          ],
+          "high_weight": true,
+          "video": false
+        }
+      ]
+    },
+    {
+      "slug": "dna-structure-replication-and-packaging",
+      "title": "DNA: Structure, Replication and Packaging",
+      "summary": "Directionality does most of the work in this unit: 5' to 3' is why one strand lags, why primers point the way they do, and why a sequencing reaction reads in the direction it does.",
+      "objectives": [
+        "Label a nucleotide, a base pair and the 5' and 3' ends of an antiparallel duplex.",
+        "Name the enzymes at a replication fork and say what each one does on the leading and lagging strands."
+      ],
+      "lessons": [
+        {
+          "slug": "nucleotides-base-pairing-and-directionality",
+          "title": "Nucleotides, Base Pairing and 5' to 3'",
+          "objective": "Label the three parts of a nucleotide, pair the bases with the correct hydrogen bond count, and identify the 5' and 3' ends of each strand in an antiparallel duplex.",
+          "keywords": [
+            "nitrogenous base",
+            "sugar-phosphate backbone",
+            "deoxyribose",
+            "phosphate group",
+            "complementary base",
+            "antiparallel",
+            "5' end",
+            "3' end",
+            "hydrogen bond",
+            "purine",
+            "pyrimidine",
+            "double helix"
+          ],
+          "high_weight": true,
+          "video": true
+        },
+        {
+          "slug": "dna-replication-at-the-fork",
+          "title": "The Replication Fork and Its Enzymes",
+          "objective": "Trace replication from origin to finished strands, naming helicase, primase, DNA polymerase and ligase, and explain why the lagging strand is built as Okazaki fragments.",
+          "keywords": [
+            "replication fork",
+            "leading strand",
+            "lagging strand",
+            "Okazaki fragment",
+            "semiconservative",
+            "origin of replication",
+            "primase",
+            "helicase",
+            "DNA ligase",
+            "proofreading",
+            "DNA polymerase",
+            "template strand"
+          ],
+          "high_weight": true,
+          "video": true
+        },
+        {
+          "slug": "chromatin-chromosomes-and-plasmids",
+          "title": "From Double Helix to Chromosome, and the Plasmid Exception",
+          "objective": "Order DNA, nucleosome, chromatin fibre and chromosome by scale, contrast euchromatin with heterochromatin, and say how a plasmid differs from a bacterial chromosome.",
+          "keywords": [
+            "nucleosome",
+            "histone",
+            "euchromatin",
+            "heterochromatin",
+            "chromatin",
+            "plasmid",
+            "bacterial chromosome",
+            "circular DNA",
+            "supercoil",
+            "chromatid",
+            "centromere"
+          ],
+          "high_weight": false,
+          "video": false
+        }
+      ]
+    },
+    {
+      "slug": "mutation-and-dna-repair",
+      "title": "Mutation and Repair",
+      "summary": "Two different questions get asked about the same event: what changed in the DNA, and what that does to the protein. They have different answers, and the second one is where the points are.",
+      "objectives": [
+        "Classify a change as substitution, insertion, deletion, inversion, duplication or translocation.",
+        "Predict whether a base change is silent, missense, nonsense or frameshift and give its protein-level effect."
+      ],
+      "lessons": [
+        {
+          "slug": "mutation-classes-at-the-dna-level",
+          "title": "What Changed: Substitutions, Indels and Rearrangements",
+          "objective": "Classify a change as a substitution, insertion, deletion, inversion, duplication or translocation from a before-and-after sequence or karyotype.",
+          "keywords": [
+            "point mutation",
+            "substitution",
+            "insertion",
+            "deletion",
+            "inversion",
+            "duplication",
+            "translocation",
+            "copy number",
+            "germline",
+            "somatic",
+            "mutation"
+          ],
+          "high_weight": true,
+          "video": false
+        },
+        {
+          "slug": "protein-level-consequences-of-mutation",
+          "title": "Silent, Missense, Nonsense, Frameshift",
+          "objective": "Given a base change and a codon table, decide whether it is silent, missense, nonsense or frameshift and state the effect on the polypeptide.",
+          "keywords": [
+            "frameshift",
+            "missense",
+            "nonsense",
+            "silent mutation",
+            "premature stop codon",
+            "reading frame",
+            "sickle cell",
+            "codon",
+            "amino acid",
+            "polypeptide",
+            "genetic code"
+          ],
+          "high_weight": true,
+          "video": false
+        },
+        {
+          "slug": "uv-damage-and-nucleotide-excision-repair",
+          "title": "UV Damage and Nucleotide Excision Repair",
+          "objective": "Explain how UVB produces a pyrimidine dimer and how nucleotide excision repair removes it, using xeroderma pigmentosum as the failure case.",
+          "keywords": [
+            "pyrimidine dimer",
+            "thymine dimer",
+            "nucleotide excision repair",
+            "xeroderma pigmentosum",
+            "cyclobutane",
+            "UVB",
+            "UVA",
+            "ultraviolet",
+            "DNA damage",
+            "mutation"
+          ],
+          "high_weight": false,
+          "video": false
+        }
+      ]
+    },
+    {
+      "slug": "the-central-dogma",
+      "title": "The Central Dogma",
+      "summary": "One sequence, three readings: the template strand, the mature mRNA and the polypeptide. Most molecular questions are asking you to convert between them without losing directionality.",
+      "objectives": [
+        "Convert a DNA template into pre-mRNA, mature mRNA and an amino acid sequence.",
+        "Name the parts and steps of transcription, RNA processing and translation in order."
+      ],
+      "lessons": [
+        {
+          "slug": "central-dogma-overview",
+          "title": "DNA to RNA to Protein",
+          "objective": "State the central dogma, say which molecule carries information at each step, and identify where the exceptions to it sit.",
+          "keywords": [
+            "central dogma",
+            "messenger RNA",
+            "gene expression",
+            "template strand",
+            "transcription",
+            "translation",
+            "ribosome",
+            "codon",
+            "polypeptide",
+            "protein"
+          ],
+          "high_weight": false,
+          "video": false
+        },
+        {
+          "slug": "transcription-initiation-elongation-termination",
+          "title": "Transcription: Promoter to Terminator",
+          "objective": "Walk RNA polymerase from promoter recognition through elongation to termination, naming the template and coding strands and the terminator.",
+          "keywords": [
+            "RNA polymerase",
+            "promoter",
+            "transcription bubble",
+            "coding strand",
+            "template strand",
+            "sigma factor",
+            "TATA box",
+            "terminator",
+            "initiation",
+            "elongation",
+            "termination",
+            "transcription"
+          ],
+          "high_weight": true,
+          "video": false
+        },
+        {
+          "slug": "rna-processing-and-maturation",
+          "title": "Splicing, Capping and the Poly(A) Tail",
+          "objective": "Convert a pre-mRNA to a mature mRNA by removing introns, joining exons and adding the 5' cap and poly(A) tail.",
+          "keywords": [
+            "pre-mRNA",
+            "RNA splicing",
+            "spliceosome",
+            "intron",
+            "exon",
+            "5' cap",
+            "poly(A) tail",
+            "polyadenylation",
+            "alternative splicing",
+            "mature mRNA"
+          ],
+          "high_weight": false,
+          "video": false
+        },
+        {
+          "slug": "translation-at-the-ribosome",
+          "title": "Translation at the Ribosome",
+          "objective": "Translate an mRNA sequence into amino acids with a codon table, naming the start codon, anticodon pairing, peptide bond formation and the release factor that ends it.",
+          "keywords": [
+            "anticodon",
+            "start codon",
+            "stop codon",
+            "release factor",
+            "transfer RNA",
+            "peptide bond",
+            "genetic code",
+            "ribosome",
+            "messenger RNA",
+            "codon",
+            "polypeptide"
+          ],
+          "high_weight": true,
+          "video": true
+        }
+      ]
+    },
+    {
+      "slug": "gene-regulation-and-operons",
+      "title": "Gene Regulation and the Operons",
+      "summary": "The lac and trp operons are worth learning as opposites: one is switched on by the sugar it digests, the other switched off by the amino acid it builds.",
+      "objectives": [
+        "Distinguish an activator from a repressor by what it binds and what it does to transcription.",
+        "Predict the transcription state of the lac and trp operons from the nutrients present."
+      ],
+      "lessons": [
+        {
+          "slug": "activators-repressors-and-operators",
+          "title": "Activators, Repressors and the Operator",
+          "objective": "Distinguish an activator from a repressor by its binding site and its effect on transcription rate.",
+          "keywords": [
+            "repressor",
+            "activator",
+            "operator",
+            "corepressor",
+            "transcription factor",
+            "enhancer",
+            "inducible",
+            "binding site",
+            "promoter",
+            "gene expression"
+          ],
+          "high_weight": false,
+          "video": false
+        },
+        {
+          "slug": "the-lac-operon",
+          "title": "The lac Operon",
+          "objective": "Predict whether the lac operon is transcribed for a given combination of lactose and glucose, naming allolactose, the lac repressor and catabolite repression.",
+          "keywords": [
+            "lac operon",
+            "allolactose",
+            "lac repressor",
+            "catabolite repression",
+            "inducer",
+            "polycistronic",
+            "structural gene",
+            "lactose",
+            "operator",
+            "operon"
+          ],
+          "high_weight": true,
+          "video": true
+        },
+        {
+          "slug": "the-trp-operon",
+          "title": "The trp Operon and Attenuation",
+          "objective": "Explain how tryptophan switches the trp operon off, both through the corepressor and through attenuation at the leader sequence.",
+          "keywords": [
+            "trp operon",
+            "attenuator",
+            "attenuation",
+            "leader sequence",
+            "corepressor",
+            "repressible",
+            "tryptophan",
+            "repressor",
+            "operon",
+            "transcription"
+          ],
+          "high_weight": false,
+          "video": false
+        }
+      ]
+    },
+    {
+      "slug": "population-and-quantitative-genetics",
+      "title": "Populations, Frequencies and Continuous Traits",
+      "summary": "The scale changes from a family to a population, and so does the arithmetic: two equations, five assumptions, and a short list of named ways those assumptions fail.",
+      "objectives": [
+        "Compute allele and genotype frequencies under Hardy–Weinberg from one observed frequency.",
+        "Attribute a change in allele frequency to drift, founder effect, bottleneck, migration or unequal fitness."
+      ],
+      "lessons": [
+        {
+          "slug": "hardy-weinberg-calculations",
+          "title": "Working the Hardy–Weinberg Equations",
+          "objective": "Given one genotype frequency in a population, compute p, q and the two remaining genotype frequencies.",
+          "keywords": [
+            "Hardy–Weinberg equilibrium",
+            "Hardy–Weinberg principle",
+            "genotype frequency",
+            "allele frequency",
+            "random mating",
+            "homozygous",
+            "heterozygous",
+            "equilibrium",
+            "population genetics",
+            "probability"
+          ],
+          "high_weight": true,
+          "video": true
+        },
+        {
+          "slug": "when-hardy-weinberg-fails",
+          "title": "The Five Assumptions and What Breaks Them",
+          "objective": "Name the Hardy–Weinberg assumptions and identify which one a described population violates.",
+          "keywords": [
+            "Hardy–Weinberg principle",
+            "random mating",
+            "gene flow",
+            "genetic drift",
+            "mutation rate",
+            "natural selection",
+            "inbreeding",
+            "allele frequency",
+            "equilibrium",
+            "population genetics"
+          ],
+          "high_weight": true,
+          "video": false
+        },
+        {
+          "slug": "drift-founder-effect-bottleneck-and-fitness",
+          "title": "Drift, Founder Effect, Bottleneck, Migration and Fitness",
+          "objective": "Distinguish genetic drift, founder effect, bottleneck and migration as causes of allele-frequency change, and compute relative fitness from survival or reproduction counts.",
+          "keywords": [
+            "founder effect",
+            "bottleneck",
+            "genetic drift",
+            "relative fitness",
+            "gene flow",
+            "effective population size",
+            "migration",
+            "natural selection",
+            "allele frequency",
+            "inbreeding"
+          ],
+          "high_weight": true,
+          "video": false
+        },
+        {
+          "slug": "additive-alleles-and-continuous-variation",
+          "title": "Additive Alleles and Continuous Variation",
+          "objective": "Explain how additive alleles at several loci produce a continuous, bell-shaped distribution, and separate genetic from environmental contributions to a trait such as height or skin colour.",
+          "keywords": [
+            "additive effect",
+            "polygenic inheritance",
+            "continuous variation",
+            "quantitative trait locus",
+            "bell curve",
+            "normal distribution",
+            "polygenic",
+            "heritability",
+            "multifactorial",
+            "human height",
+            "skin color",
+            "environmental factor"
+          ],
+          "high_weight": false,
+          "video": false
+        }
+      ]
+    },
+    {
+      "slug": "pcr-and-sequencing",
+      "title": "PCR and Sequencing",
+      "summary": "Two bench methods built from the replication machinery of an earlier unit: one copies a region until there is enough of it, the other stops copies deliberately to read the sequence off.",
+      "objectives": [
+        "Give the temperature and purpose of each PCR step and the role of each component.",
+        "Explain how chain termination makes a Sanger reaction readable, and how it differs from ordinary PCR."
+      ],
+      "lessons": [
+        {
+          "slug": "polymerase-chain-reaction",
+          "title": "PCR: Denature, Anneal, Extend",
+          "objective": "State the temperature and purpose of denaturation, annealing and extension, name the components of the reaction, and say why copy number grows exponentially with cycles.",
+          "keywords": [
+            "polymerase chain reaction",
+            "denaturation",
+            "annealing",
+            "thermostable",
+            "Thermus aquaticus",
+            "melting temperature",
+            "template DNA",
+            "primer",
+            "amplification",
+            "exponential",
+            "extension"
+          ],
+          "high_weight": true,
+          "video": true
+        },
+        {
+          "slug": "sanger-sequencing",
+          "title": "Sanger Sequencing and Chain Termination",
+          "objective": "Explain how dideoxynucleotides terminate a growing chain, how the fragments are separated and read, and what Sanger sequencing does that ordinary PCR does not.",
+          "keywords": [
+            "Sanger sequencing",
+            "dideoxynucleotide",
+            "chain termination",
+            "capillary electrophoresis",
+            "chromatogram",
+            "read length",
+            "next-generation sequencing",
+            "fluorescent",
+            "primer",
+            "DNA polymerase",
+            "template DNA"
+          ],
+          "high_weight": false,
+          "video": false
+        }
+      ]
+    }
+  ]
+}

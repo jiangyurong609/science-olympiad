@@ -1,0 +1,768 @@
+{
+  "event_slug": "disease-detectives-b-2027",
+  "season": 2027,
+  "title": "Disease Detectives: Epidemiology, Outbreaks and Control",
+  "summary": "Every question in this event is a population question wearing a scenario: who got sick, who did not, and what separates the two groups. The scenario is the wrapper; a two-by-two table, a rate with the right denominator, and a case definition are the work.",
+  "objectives": [
+    "Contrast how a clinician and an epidemiologist respond to the same sick person, and state what each is responsible for.",
+    "Place a disease on the natural history timeline and name the agent, host and environmental factors that put it there.",
+    "Calculate and interpret attack rates, incidence, prevalence, mortality measures, relative risk and odds ratios from a two-by-two table.",
+    "Choose the study design a question calls for, and name the bias and confounding each design is exposed to.",
+    "Run an outbreak investigation in order: verify, define a case, describe by time, place and person, generate a hypothesis, test it, and act.",
+    "Read an epidemic curve, a line listing, a subdivided table and a cluster map, and say what pattern each one shows."
+  ],
+  "units": [
+    {
+      "slug": "what-epidemiology-is",
+      "title": "What Epidemiology Is",
+      "summary": "Epidemiology is not medicine practised on more people. The clinician's patient is a person and the epidemiologist's patient is a community, and almost every difference between the two jobs follows from that one substitution.",
+      "objectives": [
+        "State what epidemiologists study, whom they study it in, and what they do with the answer.",
+        "Use outbreak, epidemic, pandemic, endemic and cluster with the precision the event expects."
+      ],
+      "lessons": [
+        {
+          "slug": "clinician-and-epidemiologist",
+          "title": "The Clinician's Patient and the Epidemiologist's Patient",
+          "objective": "Given a sick person, state what the clinician does and what the epidemiologist does, and explain why the epidemiologist needs a denominator the clinician does not.",
+          "keywords": [
+            "epidemiologist",
+            "clinician",
+            "population at risk",
+            "specified populations",
+            "denominator",
+            "determinants",
+            "distribution",
+            "public health practice",
+            "community",
+            "diagnosis",
+            "epidemiology"
+          ],
+          "high_weight": false,
+          "video": false
+        },
+        {
+          "slug": "how-epidemiology-developed",
+          "title": "From Hippocrates to Broad Street to Framingham",
+          "objective": "Trace the development of epidemiology from Hippocrates through William Farr's vital statistics and John Snow's Broad Street investigation to the Framingham cohort, and say what method each step added.",
+          "keywords": [
+            "John Snow",
+            "Broad Street",
+            "William Farr",
+            "Hippocrates",
+            "Framingham",
+            "natural experiment",
+            "vital statistics",
+            "germ theory",
+            "cholera",
+            "London",
+            "epidemiology"
+          ],
+          "high_weight": false,
+          "video": true
+        },
+        {
+          "slug": "what-epidemiologists-do",
+          "title": "The Core Functions and the Steps in Solving a Health Problem",
+          "objective": "Name the core epidemiologic functions — surveillance, field investigation, analytic studies, evaluation, linkages and policy development — and put the steps of solving a health problem in order.",
+          "keywords": [
+            "core epidemiologic functions",
+            "field investigation",
+            "analytic studies",
+            "policy development",
+            "public health surveillance",
+            "descriptive epidemiology",
+            "analytic epidemiology",
+            "evaluation",
+            "epidemiologist",
+            "control measures"
+          ],
+          "high_weight": false,
+          "video": false
+        },
+        {
+          "slug": "outbreak-epidemic-pandemic-endemic",
+          "title": "Outbreak, Epidemic, Pandemic, Endemic, Cluster",
+          "objective": "Given a description of disease occurrence, classify it as sporadic, endemic, hyperendemic, an outbreak, an epidemic or a pandemic, and say what makes a cluster worth investigating.",
+          "keywords": [
+            "hyperendemic",
+            "sporadic",
+            "pandemic",
+            "endemic",
+            "epidemic",
+            "outbreak",
+            "cluster",
+            "index case",
+            "expected number",
+            "occurrence",
+            "surveillance"
+          ],
+          "high_weight": true,
+          "video": false
+        }
+      ]
+    },
+    {
+      "slug": "disease-agents-and-transmission",
+      "title": "Disease, Its Causes and How It Moves",
+      "summary": "A disease is a timeline before it is a diagnosis, and the timeline is the reason incubation periods matter more here than symptom lists do. What the event actually asks is where an intervention could break the chain.",
+      "objectives": [
+        "Place exposure, subclinical disease, onset and outcome on the natural history timeline.",
+        "Name an agent by class and trace it through the chain of infection from reservoir to susceptible host."
+      ],
+      "lessons": [
+        {
+          "slug": "natural-history-and-spectrum-of-disease",
+          "title": "The Natural History and Spectrum of Disease",
+          "objective": "Order exposure, pathologic changes, the incubation period, onset of symptoms, clinical disease and resolution on a timeline, and explain why most infections sit below the clinical horizon.",
+          "keywords": [
+            "natural history of disease",
+            "spectrum of disease",
+            "incubation period",
+            "pathologic changes",
+            "subclinical",
+            "convalescence",
+            "susceptibility",
+            "onset of symptoms",
+            "carrier",
+            "infectivity",
+            "resolution"
+          ],
+          "high_weight": true,
+          "video": false
+        },
+        {
+          "slug": "infectious-agents-by-class",
+          "title": "Bacteria, Viruses, Fungi, Protists and Prions",
+          "objective": "Assign an infectious agent to its class — bacterial, viral, fungal, protozoan or prion — and state what distinguishes a prion from every other agent on the list.",
+          "keywords": [
+            "prion",
+            "protozoa",
+            "helminth",
+            "fungi",
+            "bacteria",
+            "virus",
+            "infectious agent",
+            "microorganism",
+            "pathogen",
+            "parasite",
+            "toxin"
+          ],
+          "high_weight": false,
+          "video": false
+        },
+        {
+          "slug": "noninfectious-causes-of-disease",
+          "title": "Disease Without a Pathogen",
+          "objective": "Identify genetic, nutritional, occupational, behavioural and environmental causes of noninfectious disease, and explain why chronic disease epidemiology needs long follow-up that outbreak work does not.",
+          "keywords": [
+            "noncommunicable",
+            "noninfectious",
+            "chronic disease",
+            "carcinogen",
+            "occupational exposure",
+            "risk factor",
+            "tobacco",
+            "obesity",
+            "injury",
+            "genetic",
+            "environmental"
+          ],
+          "high_weight": false,
+          "video": false
+        },
+        {
+          "slug": "triad-and-chain-of-infection",
+          "title": "The Agent-Host-Environment Triad and the Chain of Infection",
+          "objective": "Label the epidemiologic triad for a given disease and walk the chain of infection from reservoir through portal of exit, mode of transmission, portal of entry and susceptible host, naming where each link can be broken.",
+          "keywords": [
+            "epidemiologic triad",
+            "chain of infection",
+            "portal of exit",
+            "portal of entry",
+            "susceptible host",
+            "mode of transmission",
+            "reservoir",
+            "vehicle",
+            "vector",
+            "agent",
+            "host",
+            "environment"
+          ],
+          "high_weight": true,
+          "video": true
+        }
+      ]
+    },
+    {
+      "slug": "frequency-measures",
+      "title": "Counting Disease: Frequency Measures",
+      "summary": "Ratio, proportion and rate are three different things and the event grades them as three different things. Nearly every lost point here is a denominator that did not match the numerator.",
+      "objectives": [
+        "Distinguish a ratio from a proportion from a rate and build each one with the correct denominator.",
+        "Calculate incidence, prevalence and the mortality measures from raw counts."
+      ],
+      "lessons": [
+        {
+          "slug": "ratios-proportions-and-rates",
+          "title": "Ratio, Proportion, Rate: Three Different Answers",
+          "objective": "Given counts, calculate a ratio, a proportion and a rate for the same data, choose the multiplier, and state in words what each result means.",
+          "keywords": [
+            "frequency measure",
+            "proportion",
+            "numerator",
+            "denominator",
+            "multiplier",
+            "per 100,000",
+            "ratio",
+            "rate",
+            "population at risk",
+            "percentage"
+          ],
+          "high_weight": true,
+          "video": false
+        },
+        {
+          "slug": "incidence-and-prevalence",
+          "title": "Incidence Proportion, Incidence Rate and Prevalence",
+          "objective": "Calculate incidence proportion, incidence rate using person-time, point prevalence and period prevalence from the same population, and explain why a long-lasting disease raises prevalence without raising incidence.",
+          "keywords": [
+            "incidence proportion",
+            "incidence rate",
+            "person-time",
+            "point prevalence",
+            "period prevalence",
+            "attack rate",
+            "prevalence",
+            "new cases",
+            "existing cases",
+            "population at risk",
+            "duration"
+          ],
+          "high_weight": true,
+          "video": false
+        },
+        {
+          "slug": "death-rates-and-case-fatality",
+          "title": "Death Rate, Mortality Rate and Case-Fatality",
+          "objective": "Calculate crude mortality rate, cause-specific mortality rate, case-fatality rate, proportionate mortality and infant mortality rate, and explain why case-fatality uses cases and not the population as its denominator.",
+          "keywords": [
+            "case-fatality rate",
+            "crude mortality rate",
+            "cause-specific mortality",
+            "proportionate mortality",
+            "infant mortality rate",
+            "years of potential life lost",
+            "age-adjusted",
+            "death rate",
+            "mortality rate",
+            "live births",
+            "denominator"
+          ],
+          "high_weight": true,
+          "video": false
+        }
+      ]
+    },
+    {
+      "slug": "two-by-two-tables",
+      "title": "Two-by-Two Tables and Measures of Association",
+      "summary": "The two-by-two table is the single most examined object in this event. Fill it correctly and relative risk and odds ratio are arithmetic; fill it wrongly and everything downstream is wrong in a way that still looks like a number.",
+      "objectives": [
+        "Build a two-by-two table from a line listing and compute food-specific attack rates.",
+        "Compute and interpret relative risk and odds ratio, and say which design each belongs to."
+      ],
+      "lessons": [
+        {
+          "slug": "attack-rates-and-the-two-by-two-table",
+          "title": "Attack Rates and Filling In the Table",
+          "objective": "Build a two-by-two table of exposed and unexposed against ill and well, calculate food-specific attack rates for each item, and identify the exposure most likely to be the vehicle.",
+          "keywords": [
+            "food-specific attack rate",
+            "two-by-two table",
+            "attack rate",
+            "secondary attack rate",
+            "unexposed",
+            "exposed",
+            "line listing",
+            "vehicle",
+            "ill",
+            "well",
+            "outbreak"
+          ],
+          "high_weight": true,
+          "video": true
+        },
+        {
+          "slug": "relative-risk",
+          "title": "Relative Risk: Comparing Two Attack Rates",
+          "objective": "Calculate relative risk as the ratio of the attack rate in the exposed to the attack rate in the unexposed, interpret values above, below and at the null value of 1, and state why it requires a cohort.",
+          "keywords": [
+            "risk ratio",
+            "relative risk",
+            "null value",
+            "attack rate",
+            "exposed",
+            "unexposed",
+            "cohort study",
+            "risk difference",
+            "two-by-two table",
+            "comparison group",
+            "interpretation"
+          ],
+          "high_weight": true,
+          "video": false
+        },
+        {
+          "slug": "odds-ratio",
+          "title": "Odds Ratio: When You Cannot Compute a Risk",
+          "objective": "Calculate an odds ratio as the cross-product of a two-by-two table, interpret it, and explain why a case-control study forces the odds ratio and when it approximates the relative risk.",
+          "keywords": [
+            "odds ratio",
+            "cross-product",
+            "odds of exposure",
+            "case-control study",
+            "rare disease",
+            "controls",
+            "cases",
+            "two-by-two table",
+            "confidence interval",
+            "relative risk",
+            "exposure"
+          ],
+          "high_weight": true,
+          "video": true
+        }
+      ]
+    },
+    {
+      "slug": "surveillance",
+      "title": "Surveillance",
+      "summary": "Surveillance is not data collection; it is data collection with a loop back to the people who can act. A system that publishes nothing has failed even if every case was reported.",
+      "objectives": [
+        "Walk the five steps of a surveillance system from identifying the problem to evaluating it.",
+        "Classify a surveillance system by type and judge it against the standard attributes."
+      ],
+      "lessons": [
+        {
+          "slug": "the-five-steps-of-surveillance",
+          "title": "The Five Steps of a Surveillance System",
+          "objective": "Put a surveillance system's five steps in order — identify the health problem, collect data, analyse and interpret, disseminate, evaluate and improve — and say what the dissemination step is for.",
+          "keywords": [
+            "public health surveillance",
+            "notifiable disease",
+            "disseminating",
+            "surveillance system",
+            "case report",
+            "health department",
+            "analysis and interpretation",
+            "feedback",
+            "evaluation",
+            "morbidity",
+            "mortality"
+          ],
+          "high_weight": true,
+          "video": false
+        },
+        {
+          "slug": "surveillance-types-and-attributes",
+          "title": "Passive, Active, Sentinel, Syndromic — and How to Judge Them",
+          "objective": "Distinguish passive, active, sentinel and syndromic surveillance, and evaluate a system against simplicity, flexibility, data quality, acceptability, sensitivity, predictive value positive, representativeness, timeliness and stability.",
+          "keywords": [
+            "predictive value positive",
+            "syndromic surveillance",
+            "sentinel surveillance",
+            "passive surveillance",
+            "active surveillance",
+            "representativeness",
+            "acceptability",
+            "timeliness",
+            "flexibility",
+            "data quality",
+            "stability",
+            "simplicity"
+          ],
+          "high_weight": true,
+          "video": false
+        }
+      ]
+    },
+    {
+      "slug": "study-design",
+      "title": "Study Design",
+      "summary": "The design is chosen before the data exist, and it decides which measure of association you are allowed to compute. Most design questions are really asking which measure the scenario has earned.",
+      "objectives": [
+        "Separate experimental from observational studies by who assigns the exposure.",
+        "Match case-control, cohort, cross-sectional and ecological designs to the questions each answers well."
+      ],
+      "lessons": [
+        {
+          "slug": "experimental-versus-observational-studies",
+          "title": "Who Assigns the Exposure",
+          "objective": "Classify a study as experimental or observational by who assigns the exposure, and describe how randomization and a comparison group work in a randomized controlled trial or community trial.",
+          "keywords": [
+            "randomized controlled trial",
+            "experimental study",
+            "observational study",
+            "community trial",
+            "randomization",
+            "comparison group",
+            "intervention",
+            "investigator",
+            "exposure",
+            "clinical trial",
+            "placebo"
+          ],
+          "high_weight": false,
+          "video": false
+        },
+        {
+          "slug": "case-control-studies",
+          "title": "Case-Control: Start From the Disease",
+          "objective": "Describe how a case-control study selects cases and controls and works backwards to exposure, compute its odds ratio, and state its advantages for rare disease and its exposure to recall bias.",
+          "keywords": [
+            "case-control study",
+            "controls",
+            "odds ratio",
+            "recall bias",
+            "rare disease",
+            "matching",
+            "retrospective",
+            "exposure history",
+            "cases",
+            "selection",
+            "questionnaire"
+          ],
+          "high_weight": true,
+          "video": false
+        },
+        {
+          "slug": "cohort-studies",
+          "title": "Cohort: Start From the Exposure",
+          "objective": "Describe how a prospective or retrospective cohort study follows exposed and unexposed groups forward to disease, compute incidence and relative risk from it, and state the cost of long follow-up.",
+          "keywords": [
+            "cohort study",
+            "retrospective cohort",
+            "prospective",
+            "relative risk",
+            "incidence rate",
+            "person-time",
+            "lost to follow-up",
+            "unexposed",
+            "exposed",
+            "follow-up",
+            "attack rate"
+          ],
+          "high_weight": true,
+          "video": false
+        },
+        {
+          "slug": "cross-sectional-and-ecological-studies",
+          "title": "Cross-Sectional and Ecological Studies",
+          "objective": "Explain what a cross-sectional survey measures at one point in time and what an ecological study compares between groups, and identify the temporality problem and the ecological fallacy each one risks.",
+          "keywords": [
+            "ecological fallacy",
+            "cross-sectional study",
+            "ecological study",
+            "aggregate data",
+            "temporality",
+            "prevalence",
+            "snapshot",
+            "survey",
+            "correlation",
+            "population level",
+            "causation"
+          ],
+          "high_weight": false,
+          "video": false
+        }
+      ]
+    },
+    {
+      "slug": "errors-bias-and-causation",
+      "title": "Errors, Bias and Causation",
+      "summary": "An association is not a cause, and the gap between them is where State and Nationals questions live. Bias and confounding are the two named ways a true-looking number gets there dishonestly.",
+      "objectives": [
+        "Name the bias a study design is exposed to and distinguish bias from confounding.",
+        "Apply the Bradford Hill criteria, Koch's postulates and the component cause model to a claimed cause."
+      ],
+      "lessons": [
+        {
+          "slug": "bias-and-confounding",
+          "title": "Selection Bias, Information Bias, Confounding",
+          "objective": "Identify selection bias, information bias, recall bias and misclassification in a described study, and distinguish all of them from confounding, which is a third variable and not a mistake in measurement.",
+          "keywords": [
+            "information bias",
+            "selection bias",
+            "recall bias",
+            "misclassification",
+            "confounder",
+            "confounding",
+            "systematic error",
+            "random error",
+            "stratification",
+            "matching",
+            "bias"
+          ],
+          "high_weight": true,
+          "video": false
+        },
+        {
+          "slug": "bradford-hill-and-kochs-postulates",
+          "title": "Bradford Hill and Koch's Postulates",
+          "objective": "Apply the Bradford Hill criteria — strength of association, consistency, specificity, temporality, biological gradient, plausibility, coherence, experiment and analogy — to a claimed cause, and state what Koch's postulates require that Hill's criteria do not.",
+          "keywords": [
+            "Bradford Hill",
+            "Koch's postulates",
+            "biological gradient",
+            "strength of association",
+            "temporality",
+            "plausibility",
+            "specificity",
+            "consistency",
+            "coherence",
+            "analogy",
+            "causation"
+          ],
+          "high_weight": true,
+          "video": false
+        },
+        {
+          "slug": "dags-component-causes-and-grade",
+          "title": "Causal Diagrams, Component Causes and GRADE",
+          "objective": "Read a directed acyclic graph to find the confounder on a path, explain a sufficient cause as a pie made of component causes, and say what GRADE rates when it rates evidence.",
+          "keywords": [
+            "directed acyclic graph",
+            "component cause",
+            "sufficient cause",
+            "necessary cause",
+            "causal pie",
+            "causal graph",
+            "certainty of evidence",
+            "GRADE",
+            "confounder",
+            "causal inference",
+            "evidence"
+          ],
+          "high_weight": false,
+          "video": false
+        }
+      ]
+    },
+    {
+      "slug": "outbreak-investigation",
+      "title": "Outbreak Investigation",
+      "summary": "The steps are numbered for a reason: a case definition written after you have looked at the data is a case definition that found what you expected. Control measures do not wait for the last step.",
+      "objectives": [
+        "Put the steps of an outbreak investigation in order and say what each one produces.",
+        "Write a case definition and use descriptive epidemiology to generate a testable hypothesis."
+      ],
+      "lessons": [
+        {
+          "slug": "steps-of-an-outbreak-investigation",
+          "title": "The Steps, In Order",
+          "objective": "List the steps of an outbreak investigation from preparing for field work and verifying the diagnosis through to communicating findings, and explain why control measures can begin before the analysis is finished.",
+          "keywords": [
+            "verify the diagnosis",
+            "outbreak investigation",
+            "confirm the existence",
+            "control measures",
+            "case definition",
+            "field investigation",
+            "descriptive epidemiology",
+            "hypothesis",
+            "communicate findings",
+            "epidemic curve",
+            "case finding"
+          ],
+          "high_weight": true,
+          "video": true
+        },
+        {
+          "slug": "writing-a-case-definition",
+          "title": "A Case Definition Built From Person, Place and Time",
+          "objective": "Write a case definition with clinical criteria plus restrictions on person, place and time, classify cases as confirmed, probable or suspect, and explain the trade-off between a sensitive and a specific definition.",
+          "keywords": [
+            "case definition",
+            "confirmed case",
+            "probable case",
+            "suspect case",
+            "clinical criteria",
+            "time, place, and person",
+            "case finding",
+            "sensitive",
+            "specific",
+            "laboratory confirmation",
+            "case count"
+          ],
+          "high_weight": true,
+          "video": false
+        },
+        {
+          "slug": "generating-and-testing-a-hypothesis",
+          "title": "From Description to a Hypothesis You Can Test",
+          "objective": "Use descriptive epidemiology and open-ended interviews to generate a hypothesis about source and mode of transmission, then choose a retrospective cohort or case-control study to test it and compute the association.",
+          "keywords": [
+            "hypothesis generation",
+            "analytic epidemiology",
+            "retrospective cohort",
+            "case-control study",
+            "attack rate",
+            "questionnaire",
+            "chi-square",
+            "exposure",
+            "mode of transmission",
+            "statistical significance",
+            "p-value"
+          ],
+          "high_weight": true,
+          "video": false
+        },
+        {
+          "slug": "molecular-fingerprinting-and-pulsenet",
+          "title": "PFGE, SNPs and PulseNet",
+          "objective": "Explain how pulsed-field gel electrophoresis and whole genome sequencing produce a fingerprint that links isolates, and describe what PulseNet does with matching patterns from different states.",
+          "keywords": [
+            "pulsed-field gel electrophoresis",
+            "PulseNet",
+            "whole genome sequencing",
+            "single nucleotide polymorphism",
+            "DNA fingerprint",
+            "molecular epidemiology",
+            "serotype",
+            "isolate",
+            "subtype",
+            "laboratory",
+            "cluster"
+          ],
+          "high_weight": true,
+          "video": true
+        }
+      ]
+    },
+    {
+      "slug": "reading-epidemiologic-data",
+      "title": "Reading Epidemiologic Data",
+      "summary": "An epidemic curve is a histogram of onset dates, and its shape is a hypothesis about exposure before it is a picture. Tables, maps and graphs are graded the same way: what does the pattern claim.",
+      "objectives": [
+        "Read an epidemic curve for source, exposure period and probable incubation period.",
+        "Extract the pattern from a line listing, a subdivided table, a map and a line graph."
+      ],
+      "lessons": [
+        {
+          "slug": "epidemic-curves",
+          "title": "Reading an Epidemic Curve",
+          "objective": "Plot cases by date of onset as a histogram, classify the curve as point source, continuous common source or propagated, and use the peak and the incubation period to estimate the exposure period.",
+          "keywords": [
+            "epidemic curve",
+            "point source",
+            "common source",
+            "propagated",
+            "date of onset",
+            "incubation period",
+            "histogram",
+            "index case",
+            "x-axis",
+            "outbreak",
+            "exposure"
+          ],
+          "high_weight": true,
+          "video": true
+        },
+        {
+          "slug": "tables-graphs-and-maps",
+          "title": "Line Listings, Subdivided Tables, Graphs and Cluster Maps",
+          "objective": "Read a line listing row by row, interpret a two-variable table, choose between a bar chart and an arithmetic-scale line graph, and locate a cluster on a spot map or an area map.",
+          "keywords": [
+            "line listing",
+            "two-variable table",
+            "arithmetic-scale line graph",
+            "class interval",
+            "frequency distribution",
+            "spot map",
+            "area map",
+            "bar chart",
+            "choropleth",
+            "histogram",
+            "trend",
+            "table"
+          ],
+          "high_weight": true,
+          "video": true
+        }
+      ]
+    },
+    {
+      "slug": "prevention-and-control",
+      "title": "Prevention and Control",
+      "summary": "Prevention is sorted by when it acts, not by how hard it tries: before the disease, before the symptoms, or after the damage. Control questions ask which link of the chain you are cutting.",
+      "objectives": [
+        "Assign an intervention to primary, secondary or tertiary prevention and say what it acts on.",
+        "Choose a control strategy for a scenario and calculate vaccine efficacy and the herd immunity threshold."
+      ],
+      "lessons": [
+        {
+          "slug": "levels-of-prevention",
+          "title": "Primary, Secondary and Tertiary Prevention",
+          "objective": "Classify an intervention as primary, secondary or tertiary prevention, and explain why screening is secondary prevention while immunization and health promotion are primary.",
+          "keywords": [
+            "primary prevention",
+            "secondary prevention",
+            "tertiary prevention",
+            "health promotion",
+            "early detection",
+            "rehabilitation",
+            "screening",
+            "immunization",
+            "risk factor",
+            "preventive",
+            "intervention"
+          ],
+          "high_weight": true,
+          "video": true
+        },
+        {
+          "slug": "strategies-of-disease-control",
+          "title": "Cutting the Chain: Control Strategies",
+          "objective": "Given an outbreak scenario, choose control measures that act on the agent, the reservoir, the mode of transmission or the susceptible host, and name the link each one breaks.",
+          "keywords": [
+            "control measures",
+            "contact tracing",
+            "vector control",
+            "source of infection",
+            "mode of transmission",
+            "susceptible host",
+            "quarantine",
+            "isolation",
+            "hand hygiene",
+            "reservoir",
+            "disinfection",
+            "outbreak control"
+          ],
+          "high_weight": true,
+          "video": false
+        },
+        {
+          "slug": "herd-immunity-and-vaccine-efficacy",
+          "title": "Herd Immunity and Vaccine Efficacy",
+          "objective": "Calculate vaccine efficacy from the attack rates in vaccinated and unvaccinated groups, compute a herd immunity threshold from the basic reproduction number, and distinguish efficacy from effectiveness.",
+          "keywords": [
+            "herd immunity threshold",
+            "vaccine efficacy",
+            "vaccine effectiveness",
+            "basic reproduction number",
+            "unvaccinated",
+            "vaccinated",
+            "attack rate",
+            "herd immunity",
+            "ring vaccination",
+            "immunization",
+            "susceptible"
+          ],
+          "high_weight": true,
+          "video": true
+        }
+      ]
+    }
+  ]
+}
