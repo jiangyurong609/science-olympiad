@@ -135,6 +135,26 @@ DOMAIN_TERM_PATTERNS = {
                        r"drought|heat wave|blizzard|nor'easter|ice storm|lake.effect|"
                        r"fujita|saffir|enso|el ni|warning|watch|metar|station model|asos|"
                        r"satellite|infrared|water vapor|pressure|temperature|dew point|humid"),
+    "dairy_food_science": (r"milk|dairy|cream|butter|cheese|yogurt|yoghurt|curd|whey|"
+                           r"casein|micelle|lactose|lactase|lactic|galactose|glucose|"
+                           r"sugar|saccharid|carbohydrate|starch|glycosid|"
+                           r"lipid|fat|triglycerid|fatty acid|saturated|unsaturated|trans|"
+                           r"ester|hydrolys|saponif|hydrogenat|rancid|butterfat|globule|"
+                           r"homogeni|emulsi|colloid|surfactant|micell|"
+                           r"protein|amino acid|peptide|denatur|isoelectric|rennet|chymosin|"
+                           r"coagulat|acid|ph\b|vinegar|acetic|citric|ferment|probiotic|"
+                           r"lactobacil|streptococ|bifidobact|culture|"
+                           r"pasteuriz|uht|steriliz|preserv|spoil|shelf life|refrigerat|"
+                           r"freeze|frozen|evaporated|condensed|powdered|"
+                           r"freezing point|colligative|molal|van 't hoff|eutectic|"
+                           r"endotherm|enthalpy|fusion|supercool|churn|overrun|"
+                           r"plant milk|soy|almond|oat|allerg|anaphyla|immunoglobulin|"
+                           r"vitamin|riboflavin|calcium|phosphorus|potassium|mineral|"
+                           r"dietary reference|daily value|rda|nutrition facts|label|serving|"
+                           r"osteoporos|rickets|deficien|organic|certif|"
+                           r"maillard|caramel|scald|raw milk|skim|buttermilk|kefir|"
+                           r"titrat|specific heat|solub|solution|hydrogen bond|hydrophob|"
+                           r"hydrophil|viscos|densit|mass|temperature"),
     "genetics_2027": (r"gene|allele|genotype|phenotype|dominan|recessiv|codominan|"
                       r"heterozyg|homozyg|zygot|mendel|punnett|hybrid|cross|pedigree|"
                       r"inherit|trait|autosom|sex.link|x.link|carrier|penetran|epistas|"
@@ -876,6 +896,163 @@ DOMAIN_SOURCES = {
             "https://www.genome.gov/genetics-glossary/Translation",
             "https://www.genome.gov/genetics-glossary/Translocation",
             "https://www.genome.gov/genetics-glossary/X-Linked",
+        ],
+    },
+    "dairy_food_science": {
+        "publisher": "FDA / MedlinePlus / Wikipedia contributors",
+        "license": "public_domain (federal) and CC-BY-SA 4.0 (Wikipedia, facts with attribution)",
+        # Food Science 2027 is a dairy event, and its written exam is scoped by the manual to
+        # dairy topics only: the lipids, carbohydrates and proteins of milk; casein and whey;
+        # emulsification and the fat globule; esterification and saturated versus unsaturated
+        # fats; pasteurization, preservation and probiotics; lactose intolerance and lactose
+        # free milk; non-dairy "milks"; allergens; labeling regulation and RDA; and the
+        # freezing point depression that makes the ice cream task work. Nothing here is about
+        # food science in general, because the exam is not.
+        "urls": [
+            "https://en.wikipedia.org/wiki/Acetic_acid",
+            "https://en.wikipedia.org/wiki/Acid",
+            "https://en.wikipedia.org/wiki/Almond_milk",
+            "https://en.wikipedia.org/wiki/Amino_acid",
+            "https://en.wikipedia.org/wiki/Bifidobacterium",
+            "https://en.wikipedia.org/wiki/Butter",
+            "https://en.wikipedia.org/wiki/Butterfat",
+            "https://en.wikipedia.org/wiki/Buttermilk",
+            "https://en.wikipedia.org/wiki/Calcium",
+            "https://en.wikipedia.org/wiki/Caramelization",
+            "https://en.wikipedia.org/wiki/Carbohydrate",
+            "https://en.wikipedia.org/wiki/Casein",
+            "https://en.wikipedia.org/wiki/Cheddar_cheese",
+            "https://en.wikipedia.org/wiki/Cheese",
+            "https://en.wikipedia.org/wiki/Chymosin",
+            "https://en.wikipedia.org/wiki/Citric_acid",
+            "https://en.wikipedia.org/wiki/Coagulation",
+            "https://en.wikipedia.org/wiki/Colligative_properties",
+            "https://en.wikipedia.org/wiki/Colloid",
+            "https://en.wikipedia.org/wiki/Condensed_milk",
+            "https://en.wikipedia.org/wiki/Cottage_cheese",
+            "https://en.wikipedia.org/wiki/Cream",
+            "https://en.wikipedia.org/wiki/Curd",
+            "https://en.wikipedia.org/wiki/Dairy_product",
+            "https://en.wikipedia.org/wiki/Denaturation_(biochemistry)",
+            "https://en.wikipedia.org/wiki/Density",
+            "https://en.wikipedia.org/wiki/Dietary_Reference_Intake",
+            "https://en.wikipedia.org/wiki/Disaccharide",
+            "https://en.wikipedia.org/wiki/Emulsifier",
+            "https://en.wikipedia.org/wiki/Emulsion",
+            "https://en.wikipedia.org/wiki/Endothermic_process",
+            "https://en.wikipedia.org/wiki/Enthalpy_of_fusion",
+            "https://en.wikipedia.org/wiki/Essential_amino_acid",
+            "https://en.wikipedia.org/wiki/Essential_fatty_acid",
+            "https://en.wikipedia.org/wiki/Ester",
+            "https://en.wikipedia.org/wiki/Esterification",
+            "https://en.wikipedia.org/wiki/Eutectic_system",
+            "https://en.wikipedia.org/wiki/Evaporated_milk",
+            "https://en.wikipedia.org/wiki/Fatty_acid",
+            "https://en.wikipedia.org/wiki/Fermentation",
+            "https://en.wikipedia.org/wiki/Food_allergy",
+            "https://en.wikipedia.org/wiki/Food_chemistry",
+            "https://en.wikipedia.org/wiki/Food_preservation",
+            "https://en.wikipedia.org/wiki/Food_science",
+            "https://en.wikipedia.org/wiki/Food_spoilage",
+            "https://en.wikipedia.org/wiki/Freeze-drying",
+            "https://en.wikipedia.org/wiki/Freezing-point_depression",
+            "https://en.wikipedia.org/wiki/Galactose",
+            "https://en.wikipedia.org/wiki/Glucose",
+            "https://en.wikipedia.org/wiki/Glycosidic_bond",
+            "https://en.wikipedia.org/wiki/Homogenization_(chemistry)",
+            "https://en.wikipedia.org/wiki/Hydrogen_bond",
+            "https://en.wikipedia.org/wiki/Hydrogenation",
+            "https://en.wikipedia.org/wiki/Hydrolysis",
+            "https://en.wikipedia.org/wiki/Hydrophile",
+            "https://en.wikipedia.org/wiki/Hydrophobe",
+            "https://en.wikipedia.org/wiki/Ice_cream",
+            "https://en.wikipedia.org/wiki/Ice_cream_maker",
+            "https://en.wikipedia.org/wiki/Isoelectric_point",
+            "https://en.wikipedia.org/wiki/Kefir",
+            "https://en.wikipedia.org/wiki/Lactase",
+            "https://en.wikipedia.org/wiki/Lactic_acid",
+            "https://en.wikipedia.org/wiki/Lactic_acid_fermentation",
+            "https://en.wikipedia.org/wiki/Lactobacillus",
+            "https://en.wikipedia.org/wiki/Lactose",
+            "https://en.wikipedia.org/wiki/Lactose_intolerance",
+            "https://en.wikipedia.org/wiki/Lipid",
+            "https://en.wikipedia.org/wiki/Maillard_reaction",
+            "https://en.wikipedia.org/wiki/Micelle",
+            "https://en.wikipedia.org/wiki/Milk",
+            "https://en.wikipedia.org/wiki/Milk_allergy",
+            "https://en.wikipedia.org/wiki/Milk_fat_globule_membrane",
+            "https://en.wikipedia.org/wiki/Molality",
+            "https://en.wikipedia.org/wiki/Monosaccharide",
+            "https://en.wikipedia.org/wiki/Mozzarella",
+            "https://en.wikipedia.org/wiki/Nutrition_facts_label",
+            "https://en.wikipedia.org/wiki/Oat_milk",
+            "https://en.wikipedia.org/wiki/Omega-3_fatty_acid",
+            "https://en.wikipedia.org/wiki/Organic_certification",
+            "https://en.wikipedia.org/wiki/Organic_food",
+            "https://en.wikipedia.org/wiki/Osteoporosis",
+            "https://en.wikipedia.org/wiki/Pasteurization",
+            "https://en.wikipedia.org/wiki/Peptide_bond",
+            "https://en.wikipedia.org/wiki/PH",
+            "https://en.wikipedia.org/wiki/Phosphorus",
+            "https://en.wikipedia.org/wiki/Plant_milk",
+            "https://en.wikipedia.org/wiki/Polysaccharide",
+            "https://en.wikipedia.org/wiki/Potassium",
+            "https://en.wikipedia.org/wiki/Powdered_milk",
+            "https://en.wikipedia.org/wiki/Probiotic",
+            "https://en.wikipedia.org/wiki/Protein",
+            "https://en.wikipedia.org/wiki/Protein_structure",
+            "https://en.wikipedia.org/wiki/Rancidification",
+            "https://en.wikipedia.org/wiki/Raw_milk",
+            "https://en.wikipedia.org/wiki/Reference_Daily_Intake",
+            "https://en.wikipedia.org/wiki/Refrigeration",
+            "https://en.wikipedia.org/wiki/Rennet",
+            "https://en.wikipedia.org/wiki/Riboflavin",
+            "https://en.wikipedia.org/wiki/Rickets",
+            "https://en.wikipedia.org/wiki/Ricotta",
+            "https://en.wikipedia.org/wiki/Saponification",
+            "https://en.wikipedia.org/wiki/Saturated_fat",
+            "https://en.wikipedia.org/wiki/Scalded_milk",
+            "https://en.wikipedia.org/wiki/Scurvy",
+            "https://en.wikipedia.org/wiki/Shelf_life",
+            "https://en.wikipedia.org/wiki/Skimmed_milk",
+            "https://en.wikipedia.org/wiki/Solubility",
+            "https://en.wikipedia.org/wiki/Solution_(chemistry)",
+            "https://en.wikipedia.org/wiki/Soy_milk",
+            "https://en.wikipedia.org/wiki/Specific_heat_capacity",
+            "https://en.wikipedia.org/wiki/Starch",
+            "https://en.wikipedia.org/wiki/Streptococcus_thermophilus",
+            "https://en.wikipedia.org/wiki/Supercooling",
+            "https://en.wikipedia.org/wiki/Surfactant",
+            "https://en.wikipedia.org/wiki/Titration",
+            "https://en.wikipedia.org/wiki/Trans_fat",
+            "https://en.wikipedia.org/wiki/Triglyceride",
+            "https://en.wikipedia.org/wiki/Ultra-high-temperature_processing",
+            "https://en.wikipedia.org/wiki/Unsaturated_fat",
+            "https://en.wikipedia.org/wiki/Van_%27t_Hoff_factor",
+            "https://en.wikipedia.org/wiki/Viscosity",
+            "https://en.wikipedia.org/wiki/Vitamin",
+            "https://en.wikipedia.org/wiki/Vitamin_A",
+            "https://en.wikipedia.org/wiki/Vitamin_B12",
+            "https://en.wikipedia.org/wiki/Vitamin_D",
+            "https://en.wikipedia.org/wiki/Whey",
+            "https://en.wikipedia.org/wiki/Yogurt",
+            "https://medlineplus.gov/calcium.html",
+            "https://medlineplus.gov/carbohydrates.html",
+            "https://medlineplus.gov/dietaryfats.html",
+            "https://medlineplus.gov/dietaryproteins.html",
+            "https://medlineplus.gov/foodallergy.html",
+            "https://medlineplus.gov/foodsafety.html",
+            "https://medlineplus.gov/lactoseintolerance.html",
+            "https://medlineplus.gov/minerals.html",
+            "https://medlineplus.gov/nutrition.html",
+            "https://medlineplus.gov/osteoporosis.html",
+            "https://medlineplus.gov/vitamind.html",
+            "https://medlineplus.gov/vitamins.html",
+            "https://www.fda.gov/food/buy-store-serve-safe-food/dangers-raw-milk-unpasteurized-milk-can-pose-serious-health-risk",
+            "https://www.fda.gov/food/buy-store-serve-safe-food/raw-milk-misconceptions-and-danger-raw-milk-consumption",
+            "https://www.fda.gov/food/nutrition-facts-label/added-sugars-nutrition-facts-label",
+            "https://www.fda.gov/food/nutrition-facts-label/daily-value-nutrition-and-supplement-facts-labels",
+            "https://www.fda.gov/food/nutrition-facts-label/how-understand-and-use-nutrition-facts-label",
         ],
     },
     "epidemiology": {
@@ -2385,6 +2562,10 @@ EVENT_DOMAIN_BY_SEASON = {
     # which grounded 350 claims across a thirty-two lesson blueprint — a course written from
     # that would be thin everywhere and say so nowhere.
     ("heredity", 2027): "genetics_2027",
+    # 2027 Division B: Food Science is a DAIRY event this season and the manual scopes its
+    # written exam to dairy topics only. There was no `food-science` domain at all, so
+    # `domain_for_event` returned None and grounding would have skipped the event entirely.
+    ("food-science", 2027): "dairy_food_science",
 }
 
 # Rotations confirmed against the 2027 Division B rules manual that still have no source set,

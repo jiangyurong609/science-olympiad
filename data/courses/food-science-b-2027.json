@@ -1,0 +1,915 @@
+{
+  "event_slug": "food-science-b-2027",
+  "season": 2027,
+  "title": "Food Science B 2027: the Science of Dairy",
+  "summary": "Food Science 2027 is a dairy event. Teams make ice cream, separate curds and churn butter, keep a notebook of nine experiments, and sit a written exam the manual scopes to dairy topics only. This course covers that exam topic by topic, and the chemistry behind each of the three lab tasks.",
+  "objectives": [
+    "Explain milk as an emulsion of fat in a protein and sugar solution, and predict what acid, heat and agitation each do to it",
+    "Identify the structures and bonds of the sugars, fats and proteins of dairy foods, and the reactions that build and break them",
+    "Compute a freezing point depression and explain why the ice cream task needs salt",
+    "Read a Nutrition Facts label, apply RDA and Daily Value correctly, and name the deficiency each dairy nutrient prevents",
+    "Distinguish lactose intolerance from milk allergy by mechanism, and compare non-dairy alternatives honestly",
+    "Design a dairy experiment with one independent variable and report its result with units and an error statement"
+  ],
+  "units": [
+    {
+      "slug": "milk-as-a-system",
+      "title": "What Milk Is",
+      "summary": "Milk is an emulsion of fat in an aqueous solution of protein, sugar and minerals. Every task and every exam topic in this event follows from that sentence.",
+      "objectives": [
+        "Name the components of milk and the phase each one occupies",
+        "Explain why milk is opaque and why cream rises"
+      ],
+      "lessons": [
+        {
+          "slug": "composition-of-milk",
+          "title": "The Four Fractions of Milk",
+          "objective": "List the fat, protein, carbohydrate, mineral and water fractions of whole milk with approximate percentages, and state which are dissolved, which are suspended and which are emulsified.",
+          "keywords": [
+            "milk",
+            "composition",
+            "water",
+            "milk fat",
+            "protein",
+            "lactose",
+            "minerals",
+            "emulsion",
+            "suspension",
+            "solution",
+            "whole milk"
+          ],
+          "high_weight": true,
+          "video": false
+        },
+        {
+          "slug": "fat-globule-and-why-cream-rises",
+          "title": "The Fat Globule and Why Cream Rises",
+          "objective": "Describe the milk fat globule and its membrane, and explain in terms of density why cream separates from unhomogenized milk and what homogenization does to stop it.",
+          "keywords": [
+            "milk fat globule membrane",
+            "butterfat",
+            "cream",
+            "density",
+            "homogenization",
+            "emulsion",
+            "creaming",
+            "phospholipid",
+            "globule",
+            "separation"
+          ],
+          "high_weight": false,
+          "video": false
+        },
+        {
+          "slug": "casein-micelle",
+          "title": "Casein: the Micelle That Holds Milk Together",
+          "objective": "Describe the casein micelle, name the caseins it contains, and explain what holds it dispersed at milk's natural pH.",
+          "keywords": [
+            "casein",
+            "micelle",
+            "kappa-casein",
+            "colloid",
+            "suspension",
+            "calcium phosphate",
+            "isoelectric point",
+            "pH",
+            "dispersion",
+            "protein"
+          ],
+          "high_weight": true,
+          "video": false
+        },
+        {
+          "slug": "whey-proteins",
+          "title": "Whey: the Protein That Stays Behind",
+          "objective": "Distinguish whey proteins from caseins by how each responds to acid and to heat, and say which fraction drains through the cheesecloth.",
+          "keywords": [
+            "whey",
+            "whey protein",
+            "beta-lactoglobulin",
+            "alpha-lactalbumin",
+            "denaturation",
+            "heat",
+            "acid",
+            "soluble",
+            "curd",
+            "serum"
+          ],
+          "high_weight": false,
+          "video": false
+        }
+      ]
+    },
+    {
+      "slug": "molecules-of-dairy-foods",
+      "title": "The Molecules: Sugars, Fats and Proteins",
+      "summary": "The manual asks for the chemical structure of sugars, starches, fats and proteins, and for the organic reactions that build and break fats.",
+      "objectives": [
+        "Draw or describe the bonds that build each macromolecule class",
+        "Classify a fat as saturated or unsaturated from its structure"
+      ],
+      "lessons": [
+        {
+          "slug": "lactose-structure",
+          "title": "Lactose: a Disaccharide of Glucose and Galactose",
+          "objective": "Identify lactose as a disaccharide, name its two monosaccharides and the glycosidic bond joining them, and explain why it must be split before absorption.",
+          "keywords": [
+            "lactose",
+            "disaccharide",
+            "monosaccharide",
+            "glucose",
+            "galactose",
+            "glycosidic bond",
+            "hydrolysis",
+            "reducing sugar",
+            "carbohydrate",
+            "sugar"
+          ],
+          "high_weight": true,
+          "video": false
+        },
+        {
+          "slug": "starches-and-polysaccharides",
+          "title": "From Sugars to Starches",
+          "objective": "Compare monosaccharides, disaccharides and polysaccharides, and explain why starch is a storage molecule while lactose is a transport sugar.",
+          "keywords": [
+            "starch",
+            "polysaccharide",
+            "amylose",
+            "amylopectin",
+            "glycosidic bond",
+            "glucose",
+            "carbohydrate",
+            "monosaccharide",
+            "disaccharide",
+            "hydrolysis"
+          ],
+          "high_weight": false,
+          "video": false
+        },
+        {
+          "slug": "triglycerides-and-fatty-acids",
+          "title": "Triglycerides: Three Fatty Acids on a Glycerol",
+          "objective": "Describe a triglyceride as three fatty acids esterified to glycerol, and identify the ester linkage in a structure.",
+          "keywords": [
+            "triglyceride",
+            "fatty acid",
+            "glycerol",
+            "ester",
+            "esterification",
+            "lipid",
+            "carboxyl",
+            "hydroxyl",
+            "bond",
+            "fat"
+          ],
+          "high_weight": true,
+          "video": false
+        },
+        {
+          "slug": "saturated-versus-unsaturated",
+          "title": "Saturated, Unsaturated and Trans",
+          "objective": "Decide from a structure or description whether a fatty acid is saturated, unsaturated or trans, and predict its melting behaviour and packing.",
+          "keywords": [
+            "saturated fat",
+            "unsaturated fat",
+            "monounsaturated",
+            "polyunsaturated",
+            "double bond",
+            "cis",
+            "trans fat",
+            "melting point",
+            "hydrogenation",
+            "fatty acid"
+          ],
+          "high_weight": true,
+          "video": false
+        },
+        {
+          "slug": "esterification-and-hydrolysis",
+          "title": "Making and Breaking a Fat",
+          "objective": "Write what esterification joins and what hydrolysis and saponification break, and say which of these happens when a fat goes rancid.",
+          "keywords": [
+            "esterification",
+            "ester",
+            "hydrolysis",
+            "saponification",
+            "rancidification",
+            "free fatty acid",
+            "lipase",
+            "oxidation",
+            "condensation",
+            "water"
+          ],
+          "high_weight": false,
+          "video": false
+        },
+        {
+          "slug": "proteins-and-peptide-bonds",
+          "title": "Proteins: Amino Acids and the Peptide Bond",
+          "objective": "Describe how amino acids join through peptide bonds, name the four levels of protein structure, and identify which levels denaturation destroys.",
+          "keywords": [
+            "protein",
+            "amino acid",
+            "peptide bond",
+            "primary structure",
+            "secondary structure",
+            "tertiary structure",
+            "quaternary structure",
+            "denaturation",
+            "side chain",
+            "polypeptide"
+          ],
+          "high_weight": true,
+          "video": false
+        },
+        {
+          "slug": "essential-nutrients",
+          "title": "Essential Fats, Amino Acids and Why 'Essential' Means One Thing",
+          "objective": "Explain what makes a fatty acid, an amino acid or a vitamin 'essential', and name the essential nutrients dairy foods supply.",
+          "keywords": [
+            "essential fatty acid",
+            "essential amino acid",
+            "omega-3",
+            "linoleic",
+            "complete protein",
+            "vitamin",
+            "biosynthesis",
+            "diet",
+            "nutrient",
+            "requirement"
+          ],
+          "high_weight": false,
+          "video": false
+        }
+      ]
+    },
+    {
+      "slug": "emulsions-and-colloids",
+      "title": "Emulsification",
+      "summary": "Milk is an emulsion, butter is an inverted one, and ice cream is a foam sitting on top of both.",
+      "objectives": [
+        "Explain how an emulsifier stabilises two phases that do not mix",
+        "Say what churning does to an emulsion"
+      ],
+      "lessons": [
+        {
+          "slug": "emulsions-and-emulsifiers",
+          "title": "Oil, Water and the Molecule That Joins Them",
+          "objective": "Define an emulsion and explain how an amphipathic emulsifier stabilises it, using the hydrophilic and hydrophobic ends explicitly.",
+          "keywords": [
+            "emulsion",
+            "emulsifier",
+            "surfactant",
+            "hydrophilic",
+            "hydrophobic",
+            "amphipathic",
+            "interface",
+            "surface tension",
+            "colloid",
+            "dispersion"
+          ],
+          "high_weight": true,
+          "video": false
+        },
+        {
+          "slug": "churning-and-phase-inversion",
+          "title": "Churning Cream Into Butter",
+          "objective": "Explain what shaking cream does to the fat globule membranes, and describe the phase inversion from fat-in-water to water-in-fat that produces butter and buttermilk.",
+          "keywords": [
+            "churning",
+            "butter",
+            "phase inversion",
+            "fat globule membrane",
+            "coalescence",
+            "buttermilk",
+            "cream",
+            "agitation",
+            "milk fat",
+            "separation"
+          ],
+          "high_weight": true,
+          "video": false
+        },
+        {
+          "slug": "colloids-and-suspensions",
+          "title": "Colloids, Suspensions and Solutions",
+          "objective": "Classify each component of milk as a solution, a colloid or a suspension, and explain why milk scatters light.",
+          "keywords": [
+            "colloid",
+            "suspension",
+            "solution",
+            "Tyndall effect",
+            "light scattering",
+            "particle size",
+            "dispersed phase",
+            "continuous phase",
+            "opaque",
+            "micelle"
+          ],
+          "high_weight": false,
+          "video": false
+        }
+      ]
+    },
+    {
+      "slug": "curds-acid-and-heat",
+      "title": "Coagulation: Curds, Cheese and Cooking",
+      "summary": "The curd mass task is an acid coagulation, and the manual also asks how cooking changes dairy foods chemically.",
+      "objectives": [
+        "Predict what acid does to casein and what heat does to whey",
+        "Explain the chemistry behind the curd mass lab task"
+      ],
+      "lessons": [
+        {
+          "slug": "acid-coagulation",
+          "title": "Why Vinegar Makes Curds",
+          "objective": "Explain how adding acid lowers pH toward casein's isoelectric point, and why the micelle then aggregates into curd.",
+          "keywords": [
+            "acid",
+            "vinegar",
+            "acetic acid",
+            "lemon juice",
+            "citric acid",
+            "pH",
+            "isoelectric point",
+            "casein",
+            "coagulation",
+            "curd",
+            "precipitation"
+          ],
+          "high_weight": true,
+          "video": false
+        },
+        {
+          "slug": "rennet-coagulation",
+          "title": "The Other Way: Rennet and Chymosin",
+          "objective": "Contrast enzymatic coagulation by chymosin with acid coagulation, and say which one cheesemaking usually uses.",
+          "keywords": [
+            "rennet",
+            "chymosin",
+            "enzyme",
+            "kappa-casein",
+            "coagulation",
+            "cheese",
+            "curd",
+            "whey",
+            "cleavage",
+            "acid coagulation"
+          ],
+          "high_weight": false,
+          "video": false
+        },
+        {
+          "slug": "heat-and-denaturation",
+          "title": "What Cooking Does to Milk",
+          "objective": "Describe what heating does to whey proteins, to lactose and to milk's surface, and name the skin, the scald and the browning by their chemistry.",
+          "keywords": [
+            "denaturation",
+            "heat",
+            "scalded milk",
+            "skin",
+            "Maillard reaction",
+            "caramelization",
+            "browning",
+            "whey protein",
+            "lactose",
+            "amino acid"
+          ],
+          "high_weight": true,
+          "video": false
+        },
+        {
+          "slug": "fermentation-and-cultured-dairy",
+          "title": "Cultured Dairy: Bacteria That Make Acid",
+          "objective": "Explain how lactic acid fermentation converts lactose to lactic acid, and how that produces yogurt, buttermilk and kefir.",
+          "keywords": [
+            "lactic acid fermentation",
+            "lactic acid",
+            "lactose",
+            "Lactobacillus",
+            "Streptococcus thermophilus",
+            "yogurt",
+            "kefir",
+            "buttermilk",
+            "culture",
+            "pH"
+          ],
+          "high_weight": false,
+          "video": false
+        },
+        {
+          "slug": "probiotics",
+          "title": "Probiotics: Live Cultures and What They Claim",
+          "objective": "State what makes an organism a probiotic, name the genera used in dairy foods, and distinguish a live culture from a pasteurized product.",
+          "keywords": [
+            "probiotic",
+            "Lactobacillus",
+            "Bifidobacterium",
+            "live culture",
+            "gut microbiota",
+            "yogurt",
+            "kefir",
+            "fermentation",
+            "viability",
+            "pasteurization"
+          ],
+          "high_weight": false,
+          "video": false
+        }
+      ]
+    },
+    {
+      "slug": "freezing-point-depression",
+      "title": "Freezing Point Depression and the Ice Cream Task",
+      "summary": "The ice cream task works because salt on ice makes a bath colder than pure ice can be. This unit is the physical chemistry the manual names.",
+      "objectives": [
+        "Compute a freezing point depression from molality",
+        "Explain why the salt goes in the OUTER bag"
+      ],
+      "lessons": [
+        {
+          "slug": "colligative-properties",
+          "title": "Properties That Count Particles, Not Kinds",
+          "objective": "Define a colligative property and explain why freezing point depression depends on the number of dissolved particles rather than what they are.",
+          "keywords": [
+            "colligative properties",
+            "freezing point depression",
+            "boiling point elevation",
+            "osmotic pressure",
+            "solute",
+            "solvent",
+            "particle",
+            "concentration",
+            "molality",
+            "dissociation"
+          ],
+          "high_weight": true,
+          "video": false
+        },
+        {
+          "slug": "calculating-depression",
+          "title": "Working Out How Cold the Bath Gets",
+          "objective": "Use the freezing point depression relationship with molality and the van 't Hoff factor to compute the depression for a salt-ice bath, showing units.",
+          "keywords": [
+            "freezing point depression",
+            "molality",
+            "van 't Hoff factor",
+            "cryoscopic constant",
+            "sodium chloride",
+            "dissociation",
+            "moles",
+            "kilogram",
+            "calculation",
+            "solution"
+          ],
+          "high_weight": true,
+          "video": false
+        },
+        {
+          "slug": "why-salt-on-ice-gets-cold",
+          "title": "Why Salt and Ice Get Colder Than Ice",
+          "objective": "Explain, using enthalpy of fusion and the energy the melting ice takes from its surroundings, why an ice-salt bath falls below zero degrees Celsius.",
+          "keywords": [
+            "enthalpy of fusion",
+            "endothermic",
+            "melting",
+            "ice",
+            "salt",
+            "brine",
+            "eutectic",
+            "heat transfer",
+            "temperature",
+            "equilibrium"
+          ],
+          "high_weight": true,
+          "video": false
+        },
+        {
+          "slug": "ice-cream-structure",
+          "title": "Ice Cream Is a Foam, an Emulsion and a Suspension at Once",
+          "objective": "Describe ice cream as ice crystals, fat globules and air cells in a freeze-concentrated solution, and explain what agitation during freezing controls.",
+          "keywords": [
+            "ice cream",
+            "ice crystal",
+            "air cell",
+            "overrun",
+            "fat globule",
+            "freeze concentration",
+            "agitation",
+            "texture",
+            "supercooling",
+            "nucleation"
+          ],
+          "high_weight": false,
+          "video": false
+        }
+      ]
+    },
+    {
+      "slug": "pasteurization-and-preservation",
+      "title": "Pasteurization and Preservation",
+      "summary": "How dairy foods are made safe and made to last, and what each process costs in nutrition and flavour.",
+      "objectives": [
+        "Compare the pasteurization schedules by time and temperature",
+        "Explain why raw milk is a public health concern"
+      ],
+      "lessons": [
+        {
+          "slug": "pasteurization",
+          "title": "Time, Temperature and What Survives",
+          "objective": "State the HTST and UHT time-temperature schedules, explain what each is designed to kill, and say why pasteurization is not sterilization.",
+          "keywords": [
+            "pasteurization",
+            "HTST",
+            "UHT",
+            "time",
+            "temperature",
+            "pathogen",
+            "sterilization",
+            "shelf life",
+            "vat pasteurization",
+            "heat treatment"
+          ],
+          "high_weight": true,
+          "video": false
+        },
+        {
+          "slug": "raw-milk-risk",
+          "title": "Raw Milk and Why Regulators Object",
+          "objective": "Name the pathogens associated with unpasteurized milk and state what the evidence says about the claimed benefits of raw milk.",
+          "keywords": [
+            "raw milk",
+            "unpasteurized",
+            "pathogen",
+            "Salmonella",
+            "Listeria",
+            "E. coli",
+            "Campylobacter",
+            "foodborne illness",
+            "risk",
+            "regulation"
+          ],
+          "high_weight": false,
+          "video": false
+        },
+        {
+          "slug": "preservation-methods",
+          "title": "Drying, Concentrating, Chilling, Freezing",
+          "objective": "Compare refrigeration, freezing, evaporation, condensing and drying as preservation methods, and say what each does to water availability.",
+          "keywords": [
+            "food preservation",
+            "refrigeration",
+            "freezing",
+            "evaporated milk",
+            "condensed milk",
+            "powdered milk",
+            "water activity",
+            "shelf life",
+            "spoilage",
+            "dehydration"
+          ],
+          "high_weight": false,
+          "video": false
+        },
+        {
+          "slug": "spoilage",
+          "title": "How Milk Goes Off",
+          "objective": "Describe microbial and chemical spoilage of dairy foods, and distinguish souring from rancidity by their chemistry.",
+          "keywords": [
+            "spoilage",
+            "rancidification",
+            "oxidation",
+            "lipase",
+            "souring",
+            "bacteria",
+            "off-flavour",
+            "shelf life",
+            "free fatty acid",
+            "hydrolysis"
+          ],
+          "high_weight": false,
+          "video": false
+        }
+      ]
+    },
+    {
+      "slug": "nutrition-and-labeling",
+      "title": "Nutrition, Labels and Regulation",
+      "summary": "The manual asks for labeling regulations, RDA of the minerals and vitamins dairy supplies, and the consequences of going without them.",
+      "objectives": [
+        "Read a Nutrition Facts label and compute a percent Daily Value",
+        "Name the deficiency disease for each nutrient dairy supplies"
+      ],
+      "lessons": [
+        {
+          "slug": "nutrition-facts-label",
+          "title": "Reading the Nutrition Facts Label",
+          "objective": "Identify each element of a Nutrition Facts label, compute a percent Daily Value from a serving, and explain what serving size changes.",
+          "keywords": [
+            "Nutrition Facts label",
+            "serving size",
+            "Daily Value",
+            "percent Daily Value",
+            "calories",
+            "added sugars",
+            "saturated fat",
+            "sodium",
+            "labeling",
+            "regulation"
+          ],
+          "high_weight": true,
+          "video": false
+        },
+        {
+          "slug": "dietary-reference-intakes",
+          "title": "RDA, DV and What the Numbers Mean",
+          "objective": "Distinguish the Recommended Dietary Allowance from the Daily Value used on labels, and say who each is defined for.",
+          "keywords": [
+            "Recommended Dietary Allowance",
+            "Dietary Reference Intake",
+            "Daily Value",
+            "Reference Daily Intake",
+            "requirement",
+            "population",
+            "nutrient",
+            "intake",
+            "adequate intake",
+            "upper limit"
+          ],
+          "high_weight": false,
+          "video": false
+        },
+        {
+          "slug": "calcium-and-vitamin-d",
+          "title": "Calcium, Vitamin D and Bone",
+          "objective": "Explain why calcium and vitamin D are given together, state what dairy contributes, and name what deficiency of each causes.",
+          "keywords": [
+            "calcium",
+            "vitamin D",
+            "bone",
+            "absorption",
+            "osteoporosis",
+            "rickets",
+            "fortification",
+            "phosphorus",
+            "deficiency",
+            "dairy"
+          ],
+          "high_weight": true,
+          "video": false
+        },
+        {
+          "slug": "other-dairy-nutrients",
+          "title": "Riboflavin, B12, Potassium and Phosphorus",
+          "objective": "Name the other nutrients dairy foods supply in quantity and state a consequence of deficiency for each.",
+          "keywords": [
+            "riboflavin",
+            "vitamin B12",
+            "potassium",
+            "phosphorus",
+            "vitamin A",
+            "deficiency",
+            "nutrient",
+            "fortification",
+            "dairy",
+            "intake"
+          ],
+          "high_weight": false,
+          "video": false
+        },
+        {
+          "slug": "low-fat-and-fat-free",
+          "title": "Whole, Low Fat, Fat Free",
+          "objective": "Compare whole, reduced fat, low fat and fat free milk by fat content and by what is lost or added, including fat-soluble vitamins.",
+          "keywords": [
+            "whole milk",
+            "skimmed milk",
+            "low fat",
+            "fat free",
+            "reduced fat",
+            "milk fat",
+            "fortification",
+            "vitamin A",
+            "vitamin D",
+            "calories"
+          ],
+          "high_weight": false,
+          "video": false
+        },
+        {
+          "slug": "organic-dairy",
+          "title": "What 'Organic' Certifies",
+          "objective": "State what organic certification requires of a dairy and what it does not claim about the resulting milk.",
+          "keywords": [
+            "organic food",
+            "organic certification",
+            "standard",
+            "label",
+            "dairy",
+            "regulation",
+            "verification",
+            "claim",
+            "production",
+            "requirement"
+          ],
+          "high_weight": false,
+          "video": false
+        }
+      ]
+    },
+    {
+      "slug": "intolerance-allergy-alternatives",
+      "title": "Lactose Intolerance, Allergy and Non-Dairy Milks",
+      "summary": "Two different things are often confused here, and the manual names both. So do the alternatives people move to.",
+      "objectives": [
+        "Distinguish an intolerance from an allergy by mechanism",
+        "Compare a plant 'milk' with dairy milk nutritionally"
+      ],
+      "lessons": [
+        {
+          "slug": "lactose-intolerance",
+          "title": "Lactose Intolerance: an Enzyme, Not an Immune Response",
+          "objective": "Explain lactose intolerance as declining lactase activity, describe the symptoms and their cause, and state why it is not an allergy.",
+          "keywords": [
+            "lactose intolerance",
+            "lactase",
+            "lactose",
+            "malabsorption",
+            "fermentation",
+            "gut",
+            "symptom",
+            "enzyme",
+            "hydrolysis",
+            "persistence"
+          ],
+          "high_weight": true,
+          "video": false
+        },
+        {
+          "slug": "lactose-free-milk",
+          "title": "How Lactose Free Milk Is Made",
+          "objective": "Explain how lactose free milk is produced and why it tastes sweeter than ordinary milk despite having the same total sugar mass.",
+          "keywords": [
+            "lactose free",
+            "lactase",
+            "hydrolysis",
+            "glucose",
+            "galactose",
+            "sweetness",
+            "enzyme",
+            "treatment",
+            "lactose",
+            "milk"
+          ],
+          "high_weight": false,
+          "video": false
+        },
+        {
+          "slug": "milk-allergy",
+          "title": "Milk Allergy: an Immune Response to Protein",
+          "objective": "Describe milk allergy as an immune reaction to casein or whey protein, name its major allergens, and state how labeling law treats milk.",
+          "keywords": [
+            "milk allergy",
+            "food allergy",
+            "immune",
+            "antibody",
+            "casein",
+            "whey protein",
+            "allergen",
+            "anaphylaxis",
+            "labeling",
+            "declaration"
+          ],
+          "high_weight": true,
+          "video": false
+        },
+        {
+          "slug": "plant-milks",
+          "title": "Non-Dairy 'Milks' and What They Are Not",
+          "objective": "Compare soy, almond and oat beverages with dairy milk on protein, calcium and fortification, and say which claims are equivalent.",
+          "keywords": [
+            "plant milk",
+            "soy milk",
+            "almond milk",
+            "oat milk",
+            "protein",
+            "calcium",
+            "fortification",
+            "beverage",
+            "nutrition",
+            "substitute"
+          ],
+          "high_weight": false,
+          "video": false
+        },
+        {
+          "slug": "health-benefits",
+          "title": "What Dairy Foods Are Good For",
+          "objective": "State the health contributions the evidence supports for dairy foods, and distinguish a supported claim from a marketing one.",
+          "keywords": [
+            "health benefit",
+            "nutrient density",
+            "calcium",
+            "protein",
+            "bone health",
+            "dietary guidelines",
+            "evidence",
+            "claim",
+            "intake",
+            "dairy"
+          ],
+          "high_weight": false,
+          "video": false
+        }
+      ]
+    },
+    {
+      "slug": "measurement-and-the-notebook",
+      "title": "The Lab Tasks and the Notebook",
+      "summary": "Nine experiments are graded before the tournament starts. This unit is the measurement and experiment design they require.",
+      "objectives": [
+        "Design a dairy experiment with exactly one independent variable",
+        "Compute a percentage yield against a supervisor's value"
+      ],
+      "lessons": [
+        {
+          "slug": "one-independent-variable",
+          "title": "One Independent Variable, and Why the Rule Exists",
+          "objective": "Design a dairy experiment with a single independent variable, identify the dependent and controlled variables, and explain what a second independent variable would destroy.",
+          "keywords": [
+            "independent variable",
+            "dependent variable",
+            "controlled variable",
+            "experiment",
+            "hypothesis",
+            "control",
+            "confounding",
+            "design",
+            "measurement",
+            "replication"
+          ],
+          "high_weight": true,
+          "video": false
+        },
+        {
+          "slug": "mass-percent-and-yield",
+          "title": "Measuring Curd Mass and Milk Fat Mass",
+          "objective": "Compute a curd or butter mass as a percentage of the starting milk mass, and score it against a supervisor value the way the rules specify.",
+          "keywords": [
+            "mass",
+            "percentage",
+            "yield",
+            "balance",
+            "tare",
+            "curd",
+            "butter",
+            "milk fat",
+            "calculation",
+            "significant figures"
+          ],
+          "high_weight": true,
+          "video": false
+        },
+        {
+          "slug": "controlling-temperature",
+          "title": "Temperature as a Variable You Must Hold Still",
+          "objective": "Explain why the curd task specifies room temperature and the butter task about 13 degrees Celsius, and what happens to each if temperature drifts.",
+          "keywords": [
+            "temperature",
+            "room temperature",
+            "thermometer",
+            "control",
+            "coagulation",
+            "churning",
+            "viscosity",
+            "milk fat",
+            "crystallization",
+            "variable"
+          ],
+          "high_weight": false,
+          "video": false
+        },
+        {
+          "slug": "recording-and-error",
+          "title": "Recording Results and Naming Your Error",
+          "objective": "Record an experiment so another team could repeat it, and distinguish random from systematic error in a dairy measurement.",
+          "keywords": [
+            "record",
+            "data table",
+            "random error",
+            "systematic error",
+            "precision",
+            "accuracy",
+            "replication",
+            "observation",
+            "units",
+            "uncertainty"
+          ],
+          "high_weight": false,
+          "video": false
+        }
+      ]
+    }
+  ]
+}
