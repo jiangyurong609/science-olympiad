@@ -1130,14 +1130,34 @@ function resolveEvent(slug) {
 function renderEventSelectors() {
   const event = activeEvent();
   // One list, ordered by name. Grouping by season split the picker into "2027 Season" and
-  // "2026 Season" headings over what is, to a student, one set of events — and duplicates
-  // across the two are merged in the database now, so the grouping only ever separated an
-  // event from itself.
-  const options = studentEvents()
+  // "2026 Season" headings over what is, to a student, one set of events.
+  //
+  // That grouping was removed on the reasoning that duplicates were merged in the database, so
+  // it only ever separated an event from itself. True until a season's course is published
+  // beside the one it replaces: Dynamic Planet then appeared twice as "Dynamic Planet · Div B",
+  // the 2027 freshwater course and the 2026 oceanography one, with nothing to tell them apart —
+  // and a student picking the wrong one studies the wrong subject for a year. So a label is
+  // qualified only when it would otherwise collide, which needs no upkeep as the catalog moves.
+  const events = studentEvents()
     .slice()
-    .sort((a, b) => a.name.localeCompare(b.name) || (a.division || '').localeCompare(b.division || ''))
-    .map(item => `<option value="${escapeHtml(item.slug)}"${item.id === event?.id ? ' selected' : ''}>${escapeHtml(item.name)} · Div ${escapeHtml(item.division)}${item.season_status === 'trial' ? ' · Trial' : ''}</option>`)
-    .join('');
+    .sort((a, b) => a.name.localeCompare(b.name) || (a.division || '').localeCompare(b.division || ''));
+  const labelCounts = new Map();
+  for (const item of events) {
+    const key = `${item.name}·${item.division}`;
+    labelCounts.set(key, (labelCounts.get(key) || 0) + 1);
+  }
+  const options = events.map(item => {
+    const parts = [`${item.name} · Div ${item.division}`];
+    if (item.season_status === 'trial') parts.push('Trial');
+    if ((labelCounts.get(`${item.name}·${item.division}`) || 0) > 1) {
+      // Same wording as the badge on the subject card, so the two surfaces agree.
+      parts.push(item.season_status === 'prior_season_practice'
+        ? 'Prior season'
+        : String(item.season));
+    }
+    return `<option value="${escapeHtml(item.slug)}"${item.id === event?.id ? ' selected' : ''}>`
+      + `${escapeHtml(parts.join(' · '))}</option>`;
+  }).join('');
   for (const id of ['overview-event-select', 'learn-event-select', 'practice-event-select']) $(id).innerHTML = options;
 }
 
