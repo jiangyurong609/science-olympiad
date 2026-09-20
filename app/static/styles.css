@@ -483,7 +483,9 @@ textarea { resize: vertical; }
 .answerkey-fields input { padding: 9px 11px; border: 1px solid var(--line); border-radius: 8px; font: inherit; }
 .answerkey-item .button { justify-self: start; }
 @media (max-width: 700px) { .answerkey-fields { grid-template-columns: 1fr; } }
-.choices { display: grid; gap: 10px; margin-top: 26px; }
+/* A <fieldset> carries a browser default border, and nothing reset it for this one: the
+   "unnecessary box around the choices" was that default, not the per-choice borders. */
+.choices { display: grid; gap: 10px; margin-top: 26px; border: 0; padding: 0; min-inline-size: 0; }
 .choice { position: relative; margin: 0; display: grid; grid-template-columns: auto 1fr; gap: 12px; align-items: start; padding: 10px 13px; border: 1px solid transparent; border-radius: 10px; font-weight: 500; }
 .choice:hover { border-color: #91a69a; background: #f7f8f3; }
 .choice:has(input:checked) { border-color: var(--forest); background: #edf3ec; box-shadow: inset 3px 0 var(--forest); }

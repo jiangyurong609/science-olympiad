@@ -1492,7 +1492,7 @@ function renderPracticeLab() {
       ? 'Resume Sprint' : `Station · ${stationSeconds}s`;
     return `<article class="practice-set-card surface event-accent-${experience.accent}">
       <div class="practice-set-number" aria-hidden="true">${String(index + 1).padStart(2, '0')}</div>
-      <div class="practice-set-copy"><span>${escapeHtml(practiceSet.practice_type.replaceAll('_', ' '))} · ${practiceSet.estimated_minutes} min</span><h3>${escapeHtml(practiceSet.title)}</h3><p>${escapeHtml(practiceSet.summary)}</p></div>
+      <div class="practice-set-copy"><span>${escapeHtml(practiceSet.practice_type.replaceAll('_', ' '))}</span><h3>${escapeHtml(practiceSet.title)}</h3><p>${escapeHtml(practiceSet.summary)}</p></div>
       <div class="practice-set-actions"><button class="button button-primary" type="button" data-start-practice-set="${practiceSet.id}" data-practice-mode="study">${studyLabel}</button><button class="button button-secondary" type="button" data-start-practice-set="${practiceSet.id}" data-practice-mode="station">${sprintLabel}</button></div>
     </article>`;
   }).join('');
@@ -1545,7 +1545,9 @@ function updateDashboard() {
   $('nav-error-count').textContent = openCases.length;
   $('mastery-count').textContent = mastery.filter(item => item.evidence_count > 0).length;
   $('assignment-count').textContent = dailyPlan.items.length;
-  $('mission-minutes').textContent = dailyPlan.total_estimated_minutes;
+  // The per-lesson minute estimate is a generation-time guess and was reported as wrong, so
+  // it is gone from the student's views. The plan advertises how many steps it holds.
+  $('mission-minutes').textContent = dailyPlan.items.length;
   $('mission-active-days').textContent = dailyPlan.signals.active_days_last_7 || 0;
   $('mission-due-reviews').textContent = dailyPlan.signals.due_reviews || 0;
   $('mission-pending-assignments').textContent = dailyPlan.signals.pending_assignments || 0;
@@ -1558,7 +1560,7 @@ function updateDashboard() {
     const action = item.exam_id
       ? `<button class="button button-dark" type="button" data-start-exam="${item.exam_id}">${escapeHtml(item.action_label)}</button>`
       : `<a class="button button-dark" href="${escapeHtml(item.route)}" data-mission-action="${index}">${escapeHtml(item.action_label)}</a>`;
-    return `<li class="mission-item urgency-${escapeHtml(item.urgency)}"><span class="mission-item-icon" aria-hidden="true">${missionIcons[item.type] || '◇'}</span><div><span class="mission-order">Step ${index + 1} · ${escapeHtml(item.type.replaceAll('_', ' '))}</span><h3>${escapeHtml(item.title)}</h3><p>${escapeHtml(item.summary)}</p><small><strong>Why now:</strong> ${escapeHtml(item.why)}</small></div><div class="mission-item-action"><span>${item.estimated_minutes} min</span>${action}</div></li>`;
+    return `<li class="mission-item urgency-${escapeHtml(item.urgency)}"><span class="mission-item-icon" aria-hidden="true">${missionIcons[item.type] || '◇'}</span><div><span class="mission-order">Step ${index + 1} · ${escapeHtml(item.type.replaceAll('_', ' '))}</span><h3>${escapeHtml(item.title)}</h3><p>${escapeHtml(item.summary)}</p><small><strong>Why now:</strong> ${escapeHtml(item.why)}</small></div><div class="mission-item-action">${action}</div></li>`;
   }).join('');
   const primary = dailyPlan.items[0];
   $('continue-button').hidden = !hasEvent;

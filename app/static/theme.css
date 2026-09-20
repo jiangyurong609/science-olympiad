@@ -141,13 +141,16 @@ p, li, label, input, select, textarea, button, td, th { letter-spacing: .004em; 
   transition: background-color .2s ease, color .2s ease, border-color .2s ease,
               transform .18s var(--ease-spring), box-shadow .25s var(--ease-spring);
 }
+/* This file loads after styles.css, so its gradient was quietly winning: the primary button
+   was recoloured to forest there and still rendered amber in production. Both places now
+   agree, and the amber gradient is gone rather than merely outranked. */
 .button-primary {
-  background: linear-gradient(180deg, #e2a854, var(--amber));
-  box-shadow: 0 1px 0 rgba(255, 255, 255, .35) inset, 0 6px 16px rgba(181, 122, 36, .25);
+  background: linear-gradient(180deg, #2a6b53, var(--forest));
+  box-shadow: 0 1px 0 rgba(255, 255, 255, .12) inset, 0 6px 16px rgba(20, 59, 46, .22);
 }
 .button-primary:hover {
-  background: linear-gradient(180deg, #e8b264, #dea54c);
-  box-shadow: 0 1px 0 rgba(255, 255, 255, .4) inset, 0 9px 22px rgba(181, 122, 36, .32);
+  background: linear-gradient(180deg, #2f7a5e, var(--forest-dark));
+  box-shadow: 0 1px 0 rgba(255, 255, 255, .16) inset, 0 9px 22px rgba(20, 59, 46, .3);
 }
 .button-dark {
   background: linear-gradient(180deg, #276650, var(--forest));

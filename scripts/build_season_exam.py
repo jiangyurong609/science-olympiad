@@ -543,7 +543,14 @@ def build(event_slug: str, format_key: str, apply: bool) -> dict:
         duration_minutes=spec["duration_minutes"],
         question_ids=[q.id for q in questions],
         published=not event_hidden,
-        disposition="machine_practice",
+        # NOT `machine_practice`. That class means every item cleared the deterministic
+        # validator, an independent blind solver, an independent verifier and grounding in
+        # approved claims — and `student_visibility` is explicit that it "is earned by
+        # measurement here, never by setting a field". These items cleared the structural
+        # validator only. Setting the class directly would bypass `classify_exam` and make the
+        # paper startable on a claim nothing checked, so the disposition is left undecided and
+        # the platform's own classifier decides what this may be served as.
+        disposition="pending_disposition",
         release_class="machine_practice",
         blueprint={
             "import_kind": "authored_season_exam",
@@ -552,6 +559,10 @@ def build(event_slug: str, format_key: str, apply: bool) -> dict:
             "feedback_mode": "after_submit",
             "question_count": len(questions),
             "source_points_total": points,
+            "gates_cleared": ["structural_validator", "verbatim_evidence_excerpt",
+                              "auto_gradeable", "no_source_reference"],
+            "gates_outstanding": ["independent_blind_solver", "independent_verifier",
+                                  "grounding_in_approved_claims", "human_review"],
             "sections": [{"title": b["section"]["title"], "items": len(b["items"]),
                           "points_each": b["section"]["points"]} for b in built],
             "snapshot_schema": 1,
