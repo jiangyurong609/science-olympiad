@@ -270,6 +270,16 @@ def harvest_claims(db: Session, event: Event, sources: list[Source], apply: bool
         if snapshot is None:
             continue
         text = snapshot.extracted_text or ""
+        # One query for this source's existing claims, not one per candidate sentence. The
+        # per-sentence lookup cost 120 round trips per source over a Cloud SQL proxy, which is
+        # most of why a re-run of a 141-source event took as long as the first run did — and
+        # re-runs are the normal case, because the scaffold has to change before grounding can
+        # attach claims to the right concepts.
+        existing_claims = {
+            claim.evidence_excerpt: claim
+            for claim in db.scalars(select(ScientificClaim).where(
+                ScientificClaim.source_id == source.id))
+        }
         for sentence in _sentences(text)[:120]:
             if sentence not in text:            # the audit's exact check
                 continue
@@ -287,10 +297,7 @@ def harvest_claims(db: Session, event: Event, sources: list[Source], apply: bool
                 # not evidence for an arbitrary one.
                 rejected["no_matching_concept"] += 1
                 continue
-            duplicate = db.scalar(select(ScientificClaim).where(
-                ScientificClaim.source_id == source.id,
-                ScientificClaim.evidence_excerpt == sentence,
-            ))
+            duplicate = existing_claims.get(sentence)
             if duplicate is not None:
                 # A re-run must be able to change a claim's disposition. This used to `continue`
                 # before the approval below, so `--approve` silently did nothing for any claim
@@ -315,6 +322,7 @@ def harvest_claims(db: Session, event: Event, sources: list[Source], apply: bool
                 approved=approve,
             )
             db.add(claim); db.flush()
+            existing_claims[sentence] = claim
             made.append(claim)
         if apply:
             # Per source, not per run. A snapshot plus its claims is a complete unit of work:
