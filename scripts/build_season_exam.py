@@ -478,6 +478,60 @@ def manual_constraints(event_slug: str) -> list[str]:
     return list(data.get("events", {}).get(base, []))
 
 
+
+def derive_format(db, event, target: int = 34) -> dict:
+    """A section spec proportioned like THIS subject's own past tests.
+
+    Both entries in `FORMATS` were derived from Dynamic Planet papers, and reused unchanged for
+    every other subject they produced papers that are 94-100% multiple choice. Measured against
+    the imported past tests these same events hold, that is not what a real paper looks like:
+    Crime Busters runs 88% short answer, Codebusters 74%, Remote Sensing 54%, Disease Detectives
+    50%, and even Dynamic Planet's own papers are 26%. The event's own docstring says why this
+    matters — a student drilled only on four-option recall meets the real shape for the first
+    time at the tournament.
+
+    So the split comes from the papers rather than from a template. Where no past test is held
+    the caller falls back to a named format, because a measured shape is the whole point and an
+    invented one would be the same mistake with more steps.
+    """
+    from scripts.profile_past_exams import profile
+
+    base = re.sub(r"-(19|20)\d{2}$", "", event.slug)
+    measured = profile(db, base)
+    if not measured.get("past_tests"):
+        return {}
+    share = int(str(measured["short_answer_share"]).rstrip("%"))
+    # Cap the short-answer share: every short answer must be markable from a reference string,
+    # and a paper that is nearly all free text cannot be auto-scored honestly.
+    share = min(share, 55)
+    short = max(2, round(target * share / 100))
+    data = max(3, round(target * 0.15))
+    choice = max(4, target - short - data)
+    return {
+        "reference": (f"proportioned from this event's own past tests: "
+                      f"{measured['past_tests']} papers, median {measured['items_per_paper']['median']} "
+                      f"items, {measured['short_answer_share']} short answer"),
+        "duration_minutes": 50,
+        "measured_from": measured["papers"][:4],
+        "sections": [
+            {"key": "multiple_choice", "title": "I. Multiple Choice", "kind": "single_choice",
+             "count": choice, "points": 1,
+             "guidance": "Walk the event's topics in teaching order. Mix recall, application "
+                         "and at least three transfer items that require combining two ideas."},
+            {"key": "data", "title": "II. Data Interpretation", "kind": "data",
+             "count": data, "points": 2,
+             "guidance": "Each stem must EMBED a small data display as aligned plain text — a "
+                         "short table, a series of readings, a labelled profile — and ask a "
+                         "question that cannot be answered without reading it."},
+            {"key": "short_answer", "title": "III. Short Answer", "kind": "short_answer",
+             "count": short, "points": 3,
+             "guidance": "One or two words, or a single number with its unit. The reference "
+                         "answer must be short enough to mark objectively, with every "
+                         "acceptable synonym listed in `accepted`."},
+        ],
+    }
+
+
 def format_reference(db, event, spec: dict) -> str:
     """Name the paper this exam's SHAPE is modelled on, for this event.
 
@@ -511,11 +565,20 @@ def format_reference(db, event, spec: dict) -> str:
 
 
 def build(event_slug: str, format_key: str, apply: bool) -> dict:
-    spec = FORMATS[format_key]
     db = SessionLocal()
     event = db.scalar(select(Event).where(Event.slug == event_slug))
     if not event:
         raise SystemExit(f"unknown event {event_slug!r}")
+    if format_key == "from-past-tests":
+        spec = derive_format(db, event)
+        if not spec:
+            print("  no past test held for this event; falling back to the invitational shape")
+            spec = FORMATS["invitational"]
+        else:
+            print(f"  shape measured from {len(spec.get('measured_from', []))} of this "
+                  f"event's own past tests")
+    else:
+        spec = FORMATS[format_key]
     reference = format_reference(db, event, spec)
     constraints = manual_constraints(event.slug)
     if constraints:
@@ -687,7 +750,8 @@ def build(event_slug: str, format_key: str, apply: bool) -> dict:
 def main() -> None:
     ap = argparse.ArgumentParser()
     ap.add_argument("--event", required=True)
-    ap.add_argument("--format", default="invitational", choices=sorted(FORMATS))
+    ap.add_argument("--format", default="invitational",
+                    choices=sorted(FORMATS) + ["from-past-tests"])
     ap.add_argument("--apply", action="store_true")
     args = ap.parse_args()
     print(json.dumps(build(args.event, args.format, args.apply), indent=2))

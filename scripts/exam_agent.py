@@ -89,7 +89,8 @@ def _verify_rounds(provider, snapshots: dict[int, dict], rounds: int,
 def main() -> None:
     ap = argparse.ArgumentParser()
     ap.add_argument("--event", required=True)
-    ap.add_argument("--format", default="invitational", choices=sorted(FORMATS))
+    ap.add_argument("--format", default="invitational",
+                    choices=sorted(FORMATS) + ["from-past-tests"])
     ap.add_argument("--target", type=int, default=30,
                     help="how many fully verified items the paper should end with")
     ap.add_argument("--rounds", type=int, default=3,
