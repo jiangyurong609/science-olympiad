@@ -145,6 +145,11 @@ you may compose a statement or a dataset that applies the principle, but the sen
 must be one that actually appears in the passage and must establish the mechanism the item turns
 on. Copy it by exact substring, changing nothing — not punctuation, not capitalisation.
 `explanation` must teach the reasoning, not restate the key.
+
+The student sits this exam with no reading in front of them. NEVER write "the passage", "the
+text", "according to the passage", "as described above", or any reference to the source. Ask what
+is true about rivers, aquifers and landscapes, not what a document says about them. An item that
+depends on a source's wording or its headings is discarded.
 Output strict JSON {"items": [...]} and nothing else."""
 
 KIND_RULES = {
@@ -175,6 +180,44 @@ and why it is wrong.""",
 }
 
 
+# A student at a tournament has no passage in front of them, so a stem may not refer to one.
+# Two different faults hide behind the same words. Most are a trailing tic — "which response is
+# most consistent with the passage?" — where the science is entirely self-contained and only the
+# closing phrase leaks the authoring context; those are repaired. A few are structural: "terms
+# the passage explicitly places under the heading Bedforms" tests a Wikipedia heading rather than
+# hydrology and cannot be salvaged, so it is refused. Discarding both kinds would throw away
+# sound items; shipping either kind hands a student an unanswerable question.
+SOURCE_REFERENCE = re.compile(
+    r"\b(the passage|the text|the article|the source material|the reading|the author|"
+    r"this document|the excerpt)\b", re.I)
+
+_SRC = r"(?:the passage|the text|the article|the reading|the excerpt)"
+# Each repair leaves the surrounding grammar intact: the first attempt consumed the verb and
+# produced "Which stream response most likely?".
+_TAIL_REPAIRS = [
+    (rf"most consistent with {_SRC}", "most likely"),
+    (rf"best supported by {_SRC}", "best supported by the evidence"),
+    (rf"(?:best\s+)?(?:fits|follows from|matches)\s+{_SRC}", "is most likely"),
+    (rf"\baccording to {_SRC},?\s*", ""),
+    (rf"\bbased on {_SRC},?\s*", ""),
+    (rf"\busing {_SRC}(?:'s|\u2019s)\s+", "using the "),
+    (rf",?\s*as described in {_SRC}", ""),
+    (rf",?\s*described in {_SRC}", ""),
+    (rf"\bin {_SRC}\b", ""),
+]
+
+
+def _strip_source_reference(stem: str) -> str:
+    out = stem
+    for pattern, replacement in _TAIL_REPAIRS:
+        out = re.sub(pattern, replacement, out, flags=re.I)
+    out = re.sub(r"\s{2,}", " ", out).strip()
+    out = re.sub(r"\s+([?.,;:])", r"\1", out)
+    if out and out[0].islower():
+        out = out[0].upper() + out[1:]
+    return out
+
+
 def _normalize(text: str) -> str:
     return re.sub(r"\s+", " ", (text or "")).strip().casefold()
 
@@ -195,9 +238,13 @@ def _validate(raw: dict, kind: str, passages: dict[int, SourcePassage]) -> dict:
     """
     if not isinstance(raw, dict):
         raise ValueError("item is not an object")
-    stem = str(raw.get("stem") or "").strip()
+    stem = _strip_source_reference(str(raw.get("stem") or "").strip())
     if len(stem) < 15:
         raise ValueError("stem is too short")
+    if SOURCE_REFERENCE.search(stem):
+        # Survived repair, so the reference is load-bearing: the item asks what a source says
+        # rather than what is true, and a competitor has no source to consult.
+        raise ValueError("stem depends on a source the student cannot see")
     passage_id = raw.get("passage_id")
     if not isinstance(passage_id, int) or passage_id not in passages:
         raise ValueError("item cites an unavailable passage")
