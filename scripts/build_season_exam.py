@@ -150,8 +150,10 @@ Output strict JSON {"items": [...]} and nothing else."""
 KIND_RULES = {
     "true_false": """This section is True/False. Each item has exactly two choices,
 ["True", "False"], with correct_index 0 or 1, plus misconception_by_choice for the wrong
-choice explaining the specific reasoning error. Do NOT prefix the stem with "True or False:" —
-the choices already say so, and the real papers do not.""",
+choice explaining the specific reasoning error. `misconception_by_choice` is an OBJECT keyed by
+the choice INDEX as a string — {"1": "..."} when the answer is True, {"0": "..."} when it is
+False — not by the words "True"/"False". Do NOT prefix the stem with "True or False:" — the
+choices already say so, and the real papers do not.""",
     "matching": """Each item has exactly four distinct choices and correct_index, plus
 rationale_by_choice for all four and misconception_by_choice keyed by choice index for the three
 wrong ones. Every wrong index needs an entry or the item is discarded.""",
@@ -245,6 +247,13 @@ def _validate(raw: dict, kind: str, passages: dict[int, SourcePassage]) -> dict:
     if not isinstance(correct, int) or not 0 <= correct < expected:
         raise ValueError("invalid correct_index")
     misconceptions = _feedback_map(raw.get("misconception_by_choice"))
+    if kind == "true_false" and misconceptions:
+        # The model keys a two-choice item by the choice text as often as by its index —
+        # {"False": "..."} rather than {"1": "..."} — and three consecutive batches of four were
+        # discarded over it. The label and the index mean the same thing here.
+        by_label = {"true": "0", "false": "1"}
+        misconceptions = {by_label.get(k.strip().casefold(), k): v
+                          for k, v in misconceptions.items()}
     if kind == "true_false" and not misconceptions:
         # With two choices there is exactly one wrong answer, so a single `misconception`
         # string is the natural shape and the model reaches for it; accept it rather than
