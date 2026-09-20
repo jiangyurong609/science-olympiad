@@ -1,0 +1,815 @@
+{
+  "event_slug": "circuit-lab-b-2027",
+  "season": 2027,
+  "title": "Circuit Lab B 2027",
+  "summary": "Half to three quarters of the score is a written test on DC circuits and digital logic; the rest is hands-on with breadboards and multimeters. The manual is unusually explicit about what is OUT of scope, and this course stays inside that line.",
+  "objectives": [
+    "Compute current, voltage, resistance, power and energy with correct units in series, parallel and combination DC circuits",
+    "Read a schematic, build it on a breadboard, and measure it with an ammeter, voltmeter and ohmmeter",
+    "Explain switches, relays, fuses, breakers and GFCIs, and wire a three-way switch",
+    "Predict conduction across a PN junction and size a series resistor for an LED",
+    "Produce a truth table, a boolean expression and a gate circuit for one another, using De Morgan and universal gates",
+    "Work the station tasks: an unknown resistor from voltages, a charger label, a faulty circuit"
+  ],
+  "units": [
+    {
+      "slug": "charge-and-static",
+      "title": "Charge, Fields and Static Electricity",
+      "summary": "Where current comes from, and the one law the manual names for charges.",
+      "objectives": [
+        "Apply Coulomb's law qualitatively and by ratio",
+        "Name the hazards of static discharge"
+      ],
+      "lessons": [
+        {
+          "slug": "electric-charge",
+          "title": "Charge, Conductors and Insulators",
+          "objective": "State the two kinds of charge and the rules of attraction and repulsion, and classify materials as conductors or insulators.",
+          "keywords": [
+            "electric charge",
+            "positive",
+            "negative",
+            "electron",
+            "proton",
+            "conductor",
+            "insulator",
+            "attraction",
+            "repulsion",
+            "neutral"
+          ],
+          "high_weight": true,
+          "video": false
+        },
+        {
+          "slug": "coulombs-law",
+          "title": "Coulomb's Law",
+          "objective": "Use Coulomb's law to compare forces between charges by ratio when charge or separation changes, without a calculator-heavy computation.",
+          "keywords": [
+            "Coulomb's law",
+            "force",
+            "charge",
+            "distance",
+            "inverse square",
+            "proportional",
+            "ratio",
+            "newton",
+            "constant",
+            "separation"
+          ],
+          "high_weight": true,
+          "video": false
+        },
+        {
+          "slug": "electric-field",
+          "title": "The Electric Field",
+          "objective": "Describe the electric field around a point charge, read a field line diagram, and give the direction of force on a test charge.",
+          "keywords": [
+            "electric field",
+            "field line",
+            "test charge",
+            "direction",
+            "vector",
+            "point charge",
+            "strength",
+            "diagram",
+            "uniform",
+            "potential"
+          ],
+          "high_weight": false,
+          "video": false
+        },
+        {
+          "slug": "static-electricity",
+          "title": "Static: Sources and Hazards",
+          "objective": "Explain charging by friction, conduction and induction, and name the hazards of electrostatic discharge and how grounding prevents them.",
+          "keywords": [
+            "static electricity",
+            "triboelectric",
+            "friction",
+            "induction",
+            "conduction",
+            "electrostatic discharge",
+            "grounding",
+            "spark",
+            "hazard",
+            "lightning"
+          ],
+          "high_weight": true,
+          "video": false
+        }
+      ]
+    },
+    {
+      "slug": "the-four-quantities",
+      "title": "Current, Voltage, Resistance and Power",
+      "summary": "Four quantities, their units, and the two equations that connect them. Everything on the written test uses these.",
+      "objectives": [
+        "Give each quantity's unit and symbol",
+        "Compute any one of V, I, R, P from two others"
+      ],
+      "lessons": [
+        {
+          "slug": "current-and-charge",
+          "title": "Current: Charge per Second",
+          "objective": "Define current as charge per unit time, give its unit, and state the conventional current direction against electron flow.",
+          "keywords": [
+            "electric current",
+            "ampere",
+            "charge",
+            "coulomb",
+            "per second",
+            "conventional current",
+            "electron flow",
+            "direction",
+            "magnitude",
+            "drift"
+          ],
+          "high_weight": true,
+          "video": false
+        },
+        {
+          "slug": "voltage-and-emf",
+          "title": "Voltage, Potential Difference and EMF",
+          "objective": "Define potential difference and electromotive force, give the unit, and distinguish a source's EMF from its terminal voltage.",
+          "keywords": [
+            "voltage",
+            "volt",
+            "potential difference",
+            "electromotive force",
+            "EMF",
+            "terminal voltage",
+            "internal resistance",
+            "source",
+            "energy per charge",
+            "battery"
+          ],
+          "high_weight": true,
+          "video": false
+        },
+        {
+          "slug": "resistance-and-resistivity",
+          "title": "Resistance, Resistivity and the Colour Code",
+          "objective": "Give the unit of resistance, explain how length, area and material set it, and read a resistor's value from its colour bands.",
+          "keywords": [
+            "resistance",
+            "ohm",
+            "resistivity",
+            "length",
+            "cross-sectional area",
+            "material",
+            "colour code",
+            "tolerance",
+            "band",
+            "resistor"
+          ],
+          "high_weight": true,
+          "video": false
+        },
+        {
+          "slug": "ohms-law",
+          "title": "Ohm's Law",
+          "objective": "Apply V = IR to find any one quantity from the other two, and identify from a V-I graph whether a component is ohmic.",
+          "keywords": [
+            "Ohm's law",
+            "voltage",
+            "current",
+            "resistance",
+            "linear",
+            "ohmic",
+            "graph",
+            "slope",
+            "proportional",
+            "calculation"
+          ],
+          "high_weight": true,
+          "video": false
+        },
+        {
+          "slug": "power-and-energy",
+          "title": "Power, Energy and the Kilowatt-hour",
+          "objective": "Compute electrical power three ways, and convert between power, time and energy in joules and kilowatt-hours.",
+          "keywords": [
+            "electric power",
+            "watt",
+            "P=IV",
+            "joule",
+            "energy",
+            "kilowatt-hour",
+            "time",
+            "efficiency",
+            "dissipation",
+            "Joule heating"
+          ],
+          "high_weight": true,
+          "video": false
+        },
+        {
+          "slug": "dc-and-ac",
+          "title": "DC and AC: Sources, Uses and Hazards",
+          "objective": "Contrast direct and alternating current by source, waveform and typical use, and state why the hands-on tasks never use mains AC.",
+          "keywords": [
+            "direct current",
+            "alternating current",
+            "DC",
+            "AC",
+            "source",
+            "battery",
+            "mains",
+            "frequency",
+            "hazard",
+            "safety"
+          ],
+          "high_weight": false,
+          "video": false
+        }
+      ]
+    },
+    {
+      "slug": "dc-circuits",
+      "title": "Series, Parallel and Circuit Analysis",
+      "summary": "Reading a schematic and computing what flows where. Kirchhoff's laws are State and Nationals only.",
+      "objectives": [
+        "Reduce a network to one equivalent resistance",
+        "Find the current and voltage at any component"
+      ],
+      "lessons": [
+        {
+          "slug": "schematics",
+          "title": "Reading a Circuit Schematic",
+          "objective": "Identify the standard symbols for a cell, battery, resistor, lamp, switch, ammeter, voltmeter, diode and LED, and trace a path through a drawing.",
+          "keywords": [
+            "circuit diagram",
+            "schematic",
+            "symbol",
+            "cell",
+            "battery",
+            "resistor",
+            "lamp",
+            "switch",
+            "ammeter",
+            "voltmeter"
+          ],
+          "high_weight": true,
+          "video": false
+        },
+        {
+          "slug": "series-circuits",
+          "title": "Series: One Path",
+          "objective": "Compute total resistance, current and the voltage across each component in a series circuit, and say what breaking it anywhere does.",
+          "keywords": [
+            "series circuit",
+            "equivalent resistance",
+            "sum",
+            "same current",
+            "voltage division",
+            "path",
+            "break",
+            "total",
+            "component",
+            "calculation"
+          ],
+          "high_weight": true,
+          "video": false
+        },
+        {
+          "slug": "parallel-circuits",
+          "title": "Parallel: More Than One Path",
+          "objective": "Compute equivalent resistance and branch currents in a parallel circuit, and explain why total resistance falls below the smallest branch.",
+          "keywords": [
+            "parallel circuit",
+            "equivalent resistance",
+            "reciprocal",
+            "branch",
+            "same voltage",
+            "current division",
+            "junction",
+            "total",
+            "calculation",
+            "path"
+          ],
+          "high_weight": true,
+          "video": false
+        },
+        {
+          "slug": "combination-networks",
+          "title": "Networks That Are Both",
+          "objective": "Reduce a mixed series-parallel network to a single equivalent resistance step by step, and build a required equivalent from given resistors.",
+          "keywords": [
+            "combination circuit",
+            "series",
+            "parallel",
+            "reduction",
+            "equivalent resistance",
+            "step",
+            "network",
+            "node",
+            "simplify",
+            "construction"
+          ],
+          "high_weight": true,
+          "video": false
+        },
+        {
+          "slug": "open-and-short",
+          "title": "Open Circuits and Short Circuits",
+          "objective": "Predict what happens to current and to each component when a circuit is opened or shorted, and identify both on a schematic.",
+          "keywords": [
+            "open circuit",
+            "short circuit",
+            "break",
+            "bypass",
+            "zero resistance",
+            "infinite resistance",
+            "current",
+            "fault",
+            "troubleshooting",
+            "diagnosis"
+          ],
+          "high_weight": true,
+          "video": false
+        },
+        {
+          "slug": "kirchhoff",
+          "title": "Kirchhoff's Voltage and Current Laws",
+          "objective": "State both of Kirchhoff's laws and use them on a two-loop circuit, solving no more than two simultaneous equations. State and Nationals only.",
+          "keywords": [
+            "Kirchhoff's circuit laws",
+            "junction rule",
+            "loop rule",
+            "current law",
+            "voltage law",
+            "conservation",
+            "simultaneous equations",
+            "loop",
+            "node",
+            "sign"
+          ],
+          "high_weight": true,
+          "video": false
+        },
+        {
+          "slug": "measuring-a-circuit",
+          "title": "Multimeters, and Where Each Meter Goes",
+          "objective": "Connect an ammeter in series and a voltmeter in parallel, use an ohmmeter on an isolated component, and find an unknown resistance from voltage measurements alone.",
+          "keywords": [
+            "multimeter",
+            "ammeter",
+            "voltmeter",
+            "ohmmeter",
+            "series",
+            "parallel",
+            "measurement",
+            "probe",
+            "unknown resistor",
+            "technique"
+          ],
+          "high_weight": true,
+          "video": false
+        },
+        {
+          "slug": "breadboards",
+          "title": "Breadboards and How the Rows Connect",
+          "objective": "Explain a breadboard's internal connections and build a given schematic on one without shorting a rail.",
+          "keywords": [
+            "breadboard",
+            "row",
+            "rail",
+            "bus strip",
+            "internal wiring",
+            "connection",
+            "node",
+            "jumper",
+            "layout",
+            "construction"
+          ],
+          "high_weight": true,
+          "video": false
+        }
+      ]
+    },
+    {
+      "slug": "control-and-safety",
+      "title": "Switches, Fuses, Breakers and GFCIs",
+      "summary": "The devices that turn a circuit on, off, or off in a hurry.",
+      "objectives": [
+        "Wire a three-way switch with SPDT switches",
+        "Say what each protective device senses"
+      ],
+      "lessons": [
+        {
+          "slug": "switches",
+          "title": "Switches: SPST, SPDT and the Three-Way",
+          "objective": "Describe SPST and SPDT switches and wire a three-way circuit so either switch toggles the lamp.",
+          "keywords": [
+            "switch",
+            "SPST",
+            "SPDT",
+            "pole",
+            "throw",
+            "three-way",
+            "multiway switching",
+            "toggle",
+            "traveller",
+            "wiring"
+          ],
+          "high_weight": true,
+          "video": false
+        },
+        {
+          "slug": "relays",
+          "title": "Relays: A Switch a Circuit Operates",
+          "objective": "Explain how a relay lets a small current control a large one, and identify the coil and contact sides on a schematic.",
+          "keywords": [
+            "relay",
+            "coil",
+            "contact",
+            "electromagnet",
+            "control circuit",
+            "load circuit",
+            "isolation",
+            "normally open",
+            "normally closed",
+            "switching"
+          ],
+          "high_weight": false,
+          "video": false
+        },
+        {
+          "slug": "fuses-and-breakers",
+          "title": "Fuses and Circuit Breakers",
+          "objective": "Explain what a fuse and a breaker each sense and do, and say why a fuse is replaced while a breaker is reset.",
+          "keywords": [
+            "fuse",
+            "circuit breaker",
+            "overcurrent",
+            "rating",
+            "melt",
+            "trip",
+            "reset",
+            "protection",
+            "ampere",
+            "overload"
+          ],
+          "high_weight": true,
+          "video": false
+        },
+        {
+          "slug": "gfci",
+          "title": "Ground Fault Circuit Interrupters",
+          "objective": "Explain what a GFCI compares and why it protects a person where an ordinary breaker does not.",
+          "keywords": [
+            "GFCI",
+            "residual-current device",
+            "ground fault",
+            "leakage",
+            "imbalance",
+            "live",
+            "neutral",
+            "trip",
+            "shock",
+            "protection"
+          ],
+          "high_weight": true,
+          "video": false
+        },
+        {
+          "slug": "electrical-safety",
+          "title": "Why Current, Not Voltage, Is What Hurts",
+          "objective": "State the effect of current magnitude on the body, and name the safety rules the event enforces.",
+          "keywords": [
+            "electrical safety",
+            "shock",
+            "current",
+            "resistance",
+            "path",
+            "grounding",
+            "hazard",
+            "soldering",
+            "high power",
+            "rule"
+          ],
+          "high_weight": false,
+          "video": false
+        }
+      ]
+    },
+    {
+      "slug": "semiconductors",
+      "title": "PN Junctions, Diodes and LEDs",
+      "summary": "One junction only. Everything past a single-junction device is out of scope.",
+      "objectives": [
+        "Predict conduction from a diode's orientation",
+        "Wire two LEDs so they are equally bright"
+      ],
+      "lessons": [
+        {
+          "slug": "semiconductors-and-doping",
+          "title": "Silicon, Doping and Why It Half-Conducts",
+          "objective": "Explain what makes silicon a semiconductor and how n-type and p-type doping change it.",
+          "keywords": [
+            "semiconductor",
+            "silicon",
+            "doping",
+            "n-type",
+            "p-type",
+            "carrier",
+            "electron",
+            "hole",
+            "valence",
+            "conductivity"
+          ],
+          "high_weight": false,
+          "video": false
+        },
+        {
+          "slug": "pn-junction",
+          "title": "The PN Junction",
+          "objective": "Describe the depletion region at a PN junction and explain why current passes one way and not the other.",
+          "keywords": [
+            "PN junction",
+            "depletion region",
+            "forward bias",
+            "reverse bias",
+            "barrier",
+            "diffusion",
+            "rectification",
+            "carrier",
+            "threshold",
+            "junction"
+          ],
+          "high_weight": true,
+          "video": false
+        },
+        {
+          "slug": "diodes",
+          "title": "Diodes in a Circuit",
+          "objective": "Determine from a diode's orientation whether a circuit conducts, and read the anode and cathode on a symbol and a package.",
+          "keywords": [
+            "diode",
+            "anode",
+            "cathode",
+            "forward bias",
+            "reverse bias",
+            "rectifier",
+            "symbol",
+            "orientation",
+            "conduct",
+            "voltage drop"
+          ],
+          "high_weight": true,
+          "video": false
+        },
+        {
+          "slug": "leds",
+          "title": "LEDs and Making Two Equally Bright",
+          "objective": "Explain why an LED needs a series resistor, compute that resistor from the supply and forward voltage, and wire two LEDs to equal brightness.",
+          "keywords": [
+            "LED",
+            "light-emitting diode",
+            "forward voltage",
+            "series resistor",
+            "current limiting",
+            "brightness",
+            "parallel",
+            "supply",
+            "calculation",
+            "wiring"
+          ],
+          "high_weight": true,
+          "video": false
+        }
+      ]
+    },
+    {
+      "slug": "digital-logic",
+      "title": "Logic Gates, Boolean Algebra and Combinational Circuits",
+      "summary": "Truth tables, De Morgan, universal gates and adders. No sequential logic and no clocks.",
+      "objectives": [
+        "Build a circuit that matches a given truth table",
+        "Apply De Morgan's law to simplify an expression"
+      ],
+      "lessons": [
+        {
+          "slug": "binary-numbers",
+          "title": "Binary, and Adding in It",
+          "objective": "Convert whole numbers between binary and decimal and add two binary numbers with carries. No negatives and no fractions.",
+          "keywords": [
+            "binary number",
+            "bit",
+            "place value",
+            "decimal",
+            "conversion",
+            "addition",
+            "carry",
+            "whole number",
+            "base two",
+            "representation"
+          ],
+          "high_weight": true,
+          "video": false
+        },
+        {
+          "slug": "logic-gates",
+          "title": "AND, OR, NOT, NAND, NOR, XOR",
+          "objective": "Give the symbol and truth table for each of the six gates, and state each gate's output for any input combination.",
+          "keywords": [
+            "logic gate",
+            "AND gate",
+            "OR gate",
+            "NOT gate",
+            "NAND",
+            "NOR",
+            "XOR",
+            "truth table",
+            "symbol",
+            "output"
+          ],
+          "high_weight": true,
+          "video": false
+        },
+        {
+          "slug": "truth-tables",
+          "title": "Building and Reading a Truth Table",
+          "objective": "Construct the complete truth table for a two or three input circuit, and design a gate circuit that matches a given table.",
+          "keywords": [
+            "truth table",
+            "input",
+            "output",
+            "combination",
+            "rows",
+            "enumeration",
+            "circuit",
+            "design",
+            "verification",
+            "logic"
+          ],
+          "high_weight": true,
+          "video": false
+        },
+        {
+          "slug": "boolean-algebra",
+          "title": "Boolean Expressions",
+          "objective": "Write a boolean expression for a gate circuit and simplify it using the basic identities.",
+          "keywords": [
+            "Boolean algebra",
+            "expression",
+            "AND",
+            "OR",
+            "NOT",
+            "identity",
+            "simplification",
+            "complement",
+            "distributive",
+            "George Boole"
+          ],
+          "high_weight": true,
+          "video": false
+        },
+        {
+          "slug": "de-morgan",
+          "title": "De Morgan's Law",
+          "objective": "Apply De Morgan's laws to convert between AND and OR forms, and use them to rebuild a circuit from a different gate type.",
+          "keywords": [
+            "De Morgan's laws",
+            "complement",
+            "NAND",
+            "NOR",
+            "equivalence",
+            "conversion",
+            "bubble",
+            "negation",
+            "transformation",
+            "expression"
+          ],
+          "high_weight": true,
+          "video": false
+        },
+        {
+          "slug": "universal-gates",
+          "title": "Why NAND Alone Is Enough",
+          "objective": "Build NOT, AND and OR from NAND gates only, and state what functional completeness means.",
+          "keywords": [
+            "universal gate",
+            "NAND",
+            "NOR",
+            "functional completeness",
+            "construction",
+            "equivalent",
+            "minimal",
+            "gate count",
+            "substitution",
+            "logic"
+          ],
+          "high_weight": true,
+          "video": false
+        },
+        {
+          "slug": "combinational-circuits",
+          "title": "Multiplexers and Adders",
+          "objective": "Explain what a multiplexer selects and how a half adder and full adder produce sum and carry.",
+          "keywords": [
+            "combinational logic",
+            "multiplexer",
+            "select line",
+            "adder",
+            "half adder",
+            "full adder",
+            "sum",
+            "carry",
+            "truth table",
+            "circuit"
+          ],
+          "high_weight": true,
+          "video": false
+        }
+      ]
+    },
+    {
+      "slug": "history-and-tasks",
+      "title": "The Named Scientists and the Hands-On Tasks",
+      "summary": "Seven people the manual asks for by name, and the station tasks that make up a quarter to a half of the score.",
+      "objectives": [
+        "Attribute each discovery to the right person",
+        "Work a station task end to end"
+      ],
+      "lessons": [
+        {
+          "slug": "seven-scientists",
+          "title": "Ampere, Coulomb, Kirchhoff, Volta, Ohm, Hertz, Boole",
+          "objective": "State what each of the seven named figures contributed, and which unit or law carries their name.",
+          "keywords": [
+            "Ampere",
+            "Coulomb",
+            "Kirchhoff",
+            "Volta",
+            "Ohm",
+            "Hertz",
+            "Boole",
+            "unit",
+            "law",
+            "discovery"
+          ],
+          "high_weight": true,
+          "video": false
+        },
+        {
+          "slug": "mystery-resistor-task",
+          "title": "Finding a Mystery Resistor From Voltages Alone",
+          "objective": "Determine an unknown resistance in a series circuit using only voltage measurements and a known resistor.",
+          "keywords": [
+            "unknown resistor",
+            "voltage measurement",
+            "series",
+            "known resistor",
+            "ratio",
+            "Ohm's law",
+            "voltage divider",
+            "calculation",
+            "technique",
+            "station"
+          ],
+          "high_weight": true,
+          "video": false
+        },
+        {
+          "slug": "usb-charger-task",
+          "title": "Reading a USB Charger Label",
+          "objective": "Read output voltage and current from a charger label, compute the power available, and estimate charging time for a stated battery capacity.",
+          "keywords": [
+            "USB",
+            "charger",
+            "label",
+            "output",
+            "voltage",
+            "current",
+            "power",
+            "ampere-hour",
+            "capacity",
+            "charging time"
+          ],
+          "high_weight": true,
+          "video": false
+        },
+        {
+          "slug": "troubleshooting-task",
+          "title": "Troubleshooting a Faulty Circuit",
+          "objective": "Locate an open, a short or a wrong component in a built circuit using systematic measurement rather than guessing.",
+          "keywords": [
+            "troubleshooting",
+            "fault",
+            "open circuit",
+            "short circuit",
+            "measurement",
+            "systematic",
+            "isolation",
+            "continuity",
+            "diagnosis",
+            "repair"
+          ],
+          "high_weight": true,
+          "video": false
+        }
+      ]
+    }
+  ]
+}

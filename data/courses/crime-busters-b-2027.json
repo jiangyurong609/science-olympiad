@@ -1,0 +1,568 @@
+{
+  "event_slug": "crime-busters-b-2027",
+  "season": 2027,
+  "title": "Crime Busters B 2027",
+  "summary": "Crime Busters is a lab event: identify unknowns, analyse physical evidence, and write an analysis that names the culprit AND says why each other suspect was excluded. Half the score is the qualitative analysis, and the rules name every substance that can appear.",
+  "objectives": [
+    "Identify any of the thirteen named solids, six metals and six liquids from solubility, acidity, magnetism, density, odour and the iodine and HCl tests",
+    "Work out the components of a two or three material mixture from test results",
+    "Identify the seven named recyclable plastics, and classify hair and fibres to the level the rules ask for",
+    "Run a paper chromatogram and compute an Rf that identifies a component",
+    "Read fingerprints, DNA electropherograms, prints, soil and spatter as evidence",
+    "Write an analysis that implicates one suspect with named evidence and excludes the rest with reasons"
+  ],
+  "units": [
+    {
+      "slug": "working-a-scene",
+      "title": "How a Scene Is Worked",
+      "summary": "Twenty-five percent of the score is the written analysis, and it must say why each suspect was excluded as well as who did it.",
+      "objectives": [
+        "State what evidence can and cannot establish",
+        "Write an analysis that excludes suspects with reasons"
+      ],
+      "lessons": [
+        {
+          "slug": "locard-and-transfer",
+          "title": "Every Contact Leaves a Trace",
+          "objective": "State Locard's exchange principle and give an example of transfer evidence for each of hair, fibre and soil.",
+          "keywords": [
+            "Locard's exchange principle",
+            "transfer",
+            "trace evidence",
+            "contact",
+            "scene",
+            "suspect",
+            "evidence",
+            "deposit",
+            "exchange",
+            "forensic science"
+          ],
+          "high_weight": true,
+          "video": false
+        },
+        {
+          "slug": "class-versus-individual",
+          "title": "Class Evidence and Individual Evidence",
+          "objective": "Classify a piece of evidence as class or individual characteristic evidence, and say what conclusion each will and will not support.",
+          "keywords": [
+            "class characteristic",
+            "individual characteristic",
+            "identification",
+            "comparison",
+            "exclusion",
+            "probability",
+            "evidence",
+            "match",
+            "conclusion",
+            "forensic science"
+          ],
+          "high_weight": true,
+          "video": false
+        },
+        {
+          "slug": "chain-of-custody",
+          "title": "Chain of Custody and Contamination",
+          "objective": "Describe what a chain of custody records and name three ways evidence is contaminated in collection or handling.",
+          "keywords": [
+            "chain of custody",
+            "contamination",
+            "collection",
+            "packaging",
+            "documentation",
+            "integrity",
+            "handling",
+            "crime scene",
+            "control sample",
+            "evidence"
+          ],
+          "high_weight": false,
+          "video": false
+        },
+        {
+          "slug": "writing-the-analysis",
+          "title": "Writing the Analysis: Who, and Why Not the Others",
+          "objective": "Write a crime scene analysis that links named evidence to a named suspect and states, for each other suspect, the evidence that excludes them.",
+          "keywords": [
+            "analysis",
+            "conclusion",
+            "evidence",
+            "suspect",
+            "exclusion",
+            "reasoning",
+            "inference",
+            "justification",
+            "scene",
+            "claim"
+          ],
+          "high_weight": true,
+          "video": false
+        },
+        {
+          "slug": "lab-safety-crime-busters",
+          "title": "Goggles, Waste and the Equipment List",
+          "objective": "State the safety clothing the rules require, and explain what happens to a team that brings equipment not on the list.",
+          "keywords": [
+            "goggles",
+            "apron",
+            "lab coat",
+            "safety",
+            "waste",
+            "disposal",
+            "equipment list",
+            "penalty",
+            "hazard",
+            "personal protective equipment"
+          ],
+          "high_weight": false,
+          "video": false
+        }
+      ]
+    },
+    {
+      "slug": "qualitative-tests",
+      "title": "The Tests You Run on an Unknown",
+      "summary": "Half the score. Solubility, acidity, magnetism, colour, density and odour, plus the two reagents the supervisor always provides.",
+      "objectives": [
+        "Choose a test that distinguishes two candidate solids",
+        "Read a test result correctly, including a negative"
+      ],
+      "lessons": [
+        {
+          "slug": "solubility-test",
+          "title": "Solubility: Dissolves, Partly, or Not at All",
+          "objective": "Run and read a solubility test in water, and use solubility alone to split the solids list into groups.",
+          "keywords": [
+            "solubility",
+            "soluble",
+            "insoluble",
+            "dissolve",
+            "water",
+            "suspension",
+            "solution",
+            "test",
+            "observation",
+            "precipitate"
+          ],
+          "high_weight": true,
+          "video": false
+        },
+        {
+          "slug": "acidity-and-indicators",
+          "title": "Acid, Base or Neutral",
+          "objective": "Determine whether an unknown is acidic, basic or neutral using an indicator, and interpret the result for each named liquid.",
+          "keywords": [
+            "pH",
+            "acid",
+            "base",
+            "alkaline",
+            "indicator",
+            "litmus",
+            "neutral",
+            "vinegar",
+            "ammonia",
+            "hydrogen ion"
+          ],
+          "high_weight": true,
+          "video": false
+        },
+        {
+          "slug": "iodine-test",
+          "title": "The Iodine Test and What Turns Blue-Black",
+          "objective": "Predict and explain the iodine result for each solid on the list, and name exactly which ones contain starch.",
+          "keywords": [
+            "iodine",
+            "Lugol's iodine",
+            "tincture",
+            "starch",
+            "amylose",
+            "blue-black",
+            "cornstarch",
+            "flour",
+            "test",
+            "negative result"
+          ],
+          "high_weight": true,
+          "video": false
+        },
+        {
+          "slug": "acid-reaction-test",
+          "title": "Adding HCl: Fizzing, Dissolving, Nothing",
+          "objective": "Predict the result of adding 1M HCl to each named solid and metal, and name the gas produced in each case.",
+          "keywords": [
+            "hydrochloric acid",
+            "HCl",
+            "effervescence",
+            "carbon dioxide",
+            "hydrogen",
+            "carbonate",
+            "bicarbonate",
+            "metal",
+            "reaction",
+            "gas"
+          ],
+          "high_weight": true,
+          "video": false
+        },
+        {
+          "slug": "magnetism-and-metals",
+          "title": "Magnetism, Lustre and Telling Six Metals Apart",
+          "objective": "Distinguish aluminium, iron, zinc, magnesium, copper and tin using magnetism, colour, density and reaction with acid.",
+          "keywords": [
+            "magnetic",
+            "ferromagnetic",
+            "iron",
+            "aluminium",
+            "zinc",
+            "magnesium",
+            "copper",
+            "tin",
+            "density",
+            "reactivity series"
+          ],
+          "high_weight": true,
+          "video": false
+        },
+        {
+          "slug": "density-and-physical-observation",
+          "title": "Density, Colour, Texture and Odour",
+          "objective": "Estimate density from mass and volume, and record colour, crystal form, texture and odour as evidence rather than impression.",
+          "keywords": [
+            "density",
+            "mass",
+            "volume",
+            "displacement",
+            "colour",
+            "crystal",
+            "texture",
+            "odour",
+            "physical property",
+            "observation"
+          ],
+          "high_weight": false,
+          "video": false
+        },
+        {
+          "slug": "the-thirteen-solids",
+          "title": "The Named Solids and How Each One Behaves",
+          "objective": "For each of the thirteen solids the rules list, state its appearance and its result on the solubility, iodine and acid tests.",
+          "keywords": [
+            "sodium acetate",
+            "yeast",
+            "ascorbic acid",
+            "calcium carbonate",
+            "sodium chloride",
+            "sucrose",
+            "flour",
+            "gypsum",
+            "cornstarch",
+            "baking soda",
+            "gelatin",
+            "Alka-Seltzer",
+            "sand"
+          ],
+          "high_weight": true,
+          "video": false
+        },
+        {
+          "slug": "the-named-liquids",
+          "title": "The Six Liquids",
+          "objective": "Identify lemon juice, isopropyl alcohol, household ammonia, water, vinegar and hydrogen peroxide by odour, pH and reaction.",
+          "keywords": [
+            "lemon juice",
+            "isopropyl alcohol",
+            "ammonia",
+            "water",
+            "vinegar",
+            "acetic acid",
+            "hydrogen peroxide",
+            "catalase",
+            "odour",
+            "pH"
+          ],
+          "high_weight": true,
+          "video": false
+        },
+        {
+          "slug": "mixtures",
+          "title": "When the Container Holds Two or Three Things",
+          "objective": "Work out which materials are present in a mixture from a set of test results, and explain why one positive result does not exclude the others.",
+          "keywords": [
+            "mixture",
+            "component",
+            "separation",
+            "positive result",
+            "negative result",
+            "masking",
+            "combination",
+            "test",
+            "deduction",
+            "evidence"
+          ],
+          "high_weight": true,
+          "video": false
+        }
+      ]
+    },
+    {
+      "slug": "polymers-hair-fibres",
+      "title": "Polymers, Hair and Fibres",
+      "summary": "Ten percent of the score. The rules stop at animal/vegetable/synthetic for fibres and human/dog/cat for hair, and at seven named plastics.",
+      "objectives": [
+        "Identify the seven recyclable plastics from density and burn data",
+        "Tell human from dog and cat hair under a microscope"
+      ],
+      "lessons": [
+        {
+          "slug": "what-a-polymer-is",
+          "title": "Monomers, Polymers and Why Plastics Differ",
+          "objective": "Define a polymer and explain how chain structure produces the density and melting differences that identify a plastic.",
+          "keywords": [
+            "polymer",
+            "monomer",
+            "plastic",
+            "thermoplastic",
+            "chain",
+            "density",
+            "melting point",
+            "structure",
+            "resin",
+            "identification"
+          ],
+          "high_weight": false,
+          "video": false
+        },
+        {
+          "slug": "seven-plastics",
+          "title": "PETE, HDPE, PS, LDPE, PP, PVC and PMMA",
+          "objective": "Identify each of the seven plastics named in the rules using a differential density test and a provided burn result.",
+          "keywords": [
+            "PETE",
+            "HDPE",
+            "LDPE",
+            "polystyrene",
+            "polypropylene",
+            "PVC",
+            "PMMA",
+            "resin identification code",
+            "density",
+            "burn test"
+          ],
+          "high_weight": true,
+          "video": false
+        },
+        {
+          "slug": "hair-identification",
+          "title": "Human, Dog or Cat",
+          "objective": "Distinguish human, dog and cat hair by the cuticle, cortex and medulla features visible under a microscope.",
+          "keywords": [
+            "hair",
+            "cuticle",
+            "cortex",
+            "medulla",
+            "scale pattern",
+            "pigment",
+            "human",
+            "dog",
+            "cat",
+            "microscope"
+          ],
+          "high_weight": true,
+          "video": false
+        },
+        {
+          "slug": "fibre-identification",
+          "title": "Animal, Vegetable or Synthetic",
+          "objective": "Classify a fibre as animal, vegetable or synthetic from its appearance and its burn behaviour, without naming the specific fibre.",
+          "keywords": [
+            "fibre",
+            "natural fibre",
+            "synthetic fibre",
+            "wool",
+            "cotton",
+            "cellulose",
+            "keratin",
+            "nylon",
+            "polyester",
+            "burn test"
+          ],
+          "high_weight": true,
+          "video": false
+        }
+      ]
+    },
+    {
+      "slug": "chromatography",
+      "title": "Paper Chromatography and Rf",
+      "summary": "Five percent of the score, and the chromatogram is collected with the score sheet.",
+      "objectives": [
+        "Run a paper chromatogram correctly",
+        "Compute and use an Rf value"
+      ],
+      "lessons": [
+        {
+          "slug": "how-chromatography-separates",
+          "title": "Why the Spots Move Different Distances",
+          "objective": "Explain separation in terms of the mobile and stationary phases and the differing affinity of each component.",
+          "keywords": [
+            "chromatography",
+            "paper chromatography",
+            "mobile phase",
+            "stationary phase",
+            "solvent",
+            "capillary action",
+            "polarity",
+            "adsorption",
+            "separation",
+            "component"
+          ],
+          "high_weight": true,
+          "video": false
+        },
+        {
+          "slug": "running-a-chromatogram",
+          "title": "Running It Without Ruining It",
+          "objective": "Set up a paper chromatogram with the origin above the solvent, and name the three mistakes that make a chromatogram unreadable.",
+          "keywords": [
+            "origin",
+            "solvent front",
+            "baseline",
+            "spot",
+            "immersion",
+            "development",
+            "paper",
+            "chamber",
+            "technique",
+            "error"
+          ],
+          "high_weight": false,
+          "video": false
+        },
+        {
+          "slug": "computing-rf",
+          "title": "Computing and Comparing Rf",
+          "objective": "Compute an Rf from measured distances and explain why Rf identifies a component while raw distance does not.",
+          "keywords": [
+            "retardation factor",
+            "Rf",
+            "solvent front",
+            "origin",
+            "distance",
+            "ratio",
+            "comparison",
+            "identification",
+            "standard",
+            "measurement"
+          ],
+          "high_weight": true,
+          "video": false
+        }
+      ]
+    },
+    {
+      "slug": "physical-evidence",
+      "title": "Fingerprints, DNA, Prints, Soil and Spatter",
+      "summary": "Ten percent of the score, across five kinds of evidence the rules name. No calculations are expected for prints or spatter.",
+      "objectives": [
+        "Classify a fingerprint pattern",
+        "Read an electropherogram comparison"
+      ],
+      "lessons": [
+        {
+          "slug": "fingerprint-patterns",
+          "title": "Whorls, Loops and Arches",
+          "objective": "Classify a fingerprint as a whorl, a loop or an arch, and state why fingerprints are individual rather than class evidence.",
+          "keywords": [
+            "fingerprint",
+            "whorl",
+            "loop",
+            "arch",
+            "ridge",
+            "pattern",
+            "minutiae",
+            "latent print",
+            "individual characteristic",
+            "dermatoglyphics"
+          ],
+          "high_weight": true,
+          "video": false
+        },
+        {
+          "slug": "dna-comparison",
+          "title": "Comparing DNA Profiles",
+          "objective": "Compare electropherograms from a scene and from suspects, and state what a shared peak and a missing peak each mean.",
+          "keywords": [
+            "DNA profiling",
+            "short tandem repeat",
+            "electropherogram",
+            "peak",
+            "allele",
+            "comparison",
+            "exclusion",
+            "match",
+            "CODIS",
+            "electrophoresis"
+          ],
+          "high_weight": true,
+          "video": false
+        },
+        {
+          "slug": "shoeprints-and-treads",
+          "title": "Prints, Treads, Direction and Speed",
+          "objective": "Read direction and relative speed of travel from a print pattern, and compare a questioned print with a known one.",
+          "keywords": [
+            "shoeprint",
+            "footwear",
+            "tread",
+            "impression",
+            "direction",
+            "speed",
+            "stride",
+            "gait",
+            "comparison",
+            "wear pattern"
+          ],
+          "high_weight": false,
+          "video": false
+        },
+        {
+          "slug": "soil-comparison",
+          "title": "Soil as Evidence",
+          "objective": "Compare scene soil with soil from a suspect using texture, colour and mineral composition, and say what a match does and does not establish.",
+          "keywords": [
+            "soil",
+            "texture",
+            "clay",
+            "silt",
+            "sand",
+            "loam",
+            "horizon",
+            "mineral",
+            "comparison",
+            "class characteristic"
+          ],
+          "high_weight": false,
+          "video": false
+        },
+        {
+          "slug": "spatter-patterns",
+          "title": "Reading a Spatter Pattern",
+          "objective": "Determine direction and relative impact speed from spatter shape and distribution, without calculation.",
+          "keywords": [
+            "spatter",
+            "bloodstain pattern",
+            "droplet",
+            "direction",
+            "impact",
+            "velocity",
+            "shape",
+            "tail",
+            "surface tension",
+            "distribution"
+          ],
+          "high_weight": true,
+          "video": false
+        }
+      ]
+    }
+  ]
+}

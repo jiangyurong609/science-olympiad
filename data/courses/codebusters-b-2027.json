@@ -1,0 +1,556 @@
+{
+  "event_slug": "codebusters-b-2027",
+  "season": 2027,
+  "title": "Codebusters B 2027",
+  "summary": "Fifty minutes, three team members, and a packet of ciphertext to break. The rules name every cipher type that can appear at Division B, and the first question is timed. This course takes them one at a time, with the cryptanalysis that opens each.",
+  "objectives": [
+    "Open a monoalphabetic substitution with frequency, pattern and contact analysis in English and in Spanish",
+    "Decrypt with a given key for Caesar, Atbash, Porta, Baconian, Nihilist and the checkerboard without slips",
+    "Cryptanalyse Porta, Nihilist, checkerboard, homophonic, Fractionated Morse and complete columnar transposition from a crib",
+    "Solve a base-10 cryptarithm and read the message off its mapping",
+    "Split a packet across three people and decide when a question is not worth the time"
+  ],
+  "units": [
+    {
+      "slug": "how-a-cipher-is-broken",
+      "title": "What Cryptanalysis Actually Is",
+      "summary": "Every question on this exam is a decryption, and most give you less than a key. The tools are frequency, pattern and the crib.",
+      "objectives": [
+        "Use English and Spanish letter frequencies to open a substitution",
+        "Use a crib to anchor a cipher you cannot brute force"
+      ],
+      "lessons": [
+        {
+          "slug": "plaintext-ciphertext-key",
+          "title": "Plaintext, Ciphertext, Key",
+          "objective": "Define plaintext, ciphertext and key, and state what an attacker knows under Kerckhoffs's principle.",
+          "keywords": [
+            "plaintext",
+            "ciphertext",
+            "key",
+            "cipher",
+            "encryption",
+            "decryption",
+            "Kerckhoffs's principle",
+            "cryptanalysis",
+            "algorithm",
+            "secrecy"
+          ],
+          "high_weight": false,
+          "video": false
+        },
+        {
+          "slug": "substitution-vs-transposition",
+          "title": "Substitution Changes Letters, Transposition Moves Them",
+          "objective": "Decide from a ciphertext's letter frequencies alone whether it is a substitution or a transposition, and explain why the test works.",
+          "keywords": [
+            "substitution cipher",
+            "transposition cipher",
+            "letter frequency",
+            "frequency analysis",
+            "anagram",
+            "permutation",
+            "ciphertext",
+            "distribution",
+            "diagnosis",
+            "cryptanalysis"
+          ],
+          "high_weight": true,
+          "video": false
+        },
+        {
+          "slug": "frequency-analysis",
+          "title": "Frequency Analysis in English",
+          "objective": "Use single letter, bigram and trigram frequencies to make first guesses at a monoalphabetic substitution.",
+          "keywords": [
+            "frequency analysis",
+            "letter frequency",
+            "bigram",
+            "trigram",
+            "ETAOIN",
+            "digraph",
+            "doubled letter",
+            "pattern",
+            "English",
+            "guess"
+          ],
+          "high_weight": true,
+          "video": false
+        },
+        {
+          "slug": "word-patterns-and-cribs",
+          "title": "Patterns, Short Words and the Crib",
+          "objective": "Use word length, repeated letter patterns and a supplied crib to place letters in a partly solved cryptogram.",
+          "keywords": [
+            "crib",
+            "known-plaintext attack",
+            "pattern",
+            "word length",
+            "repeated letter",
+            "anchor",
+            "placement",
+            "deduction",
+            "contact",
+            "cryptogram"
+          ],
+          "high_weight": true,
+          "video": false
+        },
+        {
+          "slug": "k1-and-random-alphabets",
+          "title": "K1 Alphabets and Random Alphabets",
+          "objective": "Explain what an ACA K1 alphabet is, how a keyword builds it, and how that constrains the solution compared with a random alphabet.",
+          "keywords": [
+            "K1 alphabet",
+            "keyword",
+            "American Cryptogram Association",
+            "mixed alphabet",
+            "random alphabet",
+            "construction",
+            "constraint",
+            "substitution",
+            "ordering",
+            "key"
+          ],
+          "high_weight": true,
+          "video": false
+        }
+      ]
+    },
+    {
+      "slug": "monoalphabetic",
+      "title": "Aristocrats, Patristocrats and Xenocrypts",
+      "summary": "The timed question is an Aristocrat. No letter ever decrypts to itself in any of these three.",
+      "objectives": [
+        "Solve an Aristocrat under time",
+        "Work a Patristocrat without word boundaries"
+      ],
+      "lessons": [
+        {
+          "slug": "aristocrats",
+          "title": "Aristocrats: Spaces Included",
+          "objective": "Solve an Aristocrat by combining frequency, short words and pattern words, and use the no-letter-maps-to-itself rule to eliminate candidates.",
+          "keywords": [
+            "Aristocrat",
+            "monoalphabetic",
+            "substitution",
+            "spaces",
+            "word boundary",
+            "frequency",
+            "pattern word",
+            "hint",
+            "cryptogram",
+            "elimination"
+          ],
+          "high_weight": true,
+          "video": false
+        },
+        {
+          "slug": "the-timed-question",
+          "title": "Solving the Timed Aristocrat Fast",
+          "objective": "Work an Aristocrat in a fixed order that gets to a readable fragment quickly, and know when to signal.",
+          "keywords": [
+            "timed question",
+            "bonus",
+            "speed",
+            "strategy",
+            "order",
+            "fragment",
+            "signal",
+            "error",
+            "scoring",
+            "Aristocrat"
+          ],
+          "high_weight": true,
+          "video": false
+        },
+        {
+          "slug": "patristocrats",
+          "title": "Patristocrats: Spaces Removed, Grouped in Fives",
+          "objective": "Solve a Patristocrat encoded on a K1 alphabet without word boundaries, relying on frequency and contact rather than word shape.",
+          "keywords": [
+            "Patristocrat",
+            "grouping",
+            "five",
+            "no spaces",
+            "K1 alphabet",
+            "contact",
+            "frequency",
+            "substitution",
+            "cryptanalysis",
+            "boundary"
+          ],
+          "high_weight": true,
+          "video": false
+        },
+        {
+          "slug": "xenocrypts",
+          "title": "Xenocrypts: Spanish on an English Keyword Alphabet",
+          "objective": "Solve a Spanish cryptogram using Spanish letter frequencies, common Spanish short words, and the accented and \u00f1 conventions.",
+          "keywords": [
+            "Xenocrypt",
+            "Spanish",
+            "letter frequency",
+            "accent",
+            "\u00f1",
+            "article",
+            "preposition",
+            "K1 alphabet",
+            "substitution",
+            "vocabulary"
+          ],
+          "high_weight": true,
+          "video": false
+        },
+        {
+          "slug": "homophonic",
+          "title": "Homophonic Substitution",
+          "objective": "Decrypt a homophonic cipher given a crib naming at least three letters of a four-unique-letter keyword, and explain why homophones flatten frequency.",
+          "keywords": [
+            "homophonic substitution",
+            "homophone",
+            "keyword",
+            "crib",
+            "frequency flattening",
+            "multiple symbols",
+            "substitution",
+            "cryptanalysis",
+            "numeral",
+            "mapping"
+          ],
+          "high_weight": true,
+          "video": false
+        }
+      ]
+    },
+    {
+      "slug": "shift-and-table-ciphers",
+      "title": "Caesar, Atbash, Porta and Baconian",
+      "summary": "Four ciphers whose mechanism is a table or a rule you are given, and whose difficulty is entirely in applying it without slipping.",
+      "objectives": [
+        "Decrypt with a given key quickly and without arithmetic slips",
+        "Read a Baconian encoding hidden in typography"
+      ],
+      "lessons": [
+        {
+          "slug": "caesar-shift",
+          "title": "The Caesar Shift",
+          "objective": "Decrypt a Caesar cipher by trying shifts systematically, and express the shift as modular arithmetic on letter positions.",
+          "keywords": [
+            "Caesar cipher",
+            "shift cipher",
+            "ROT13",
+            "modular arithmetic",
+            "alphabet position",
+            "brute force",
+            "key",
+            "decryption",
+            "offset",
+            "substitution"
+          ],
+          "high_weight": true,
+          "video": false
+        },
+        {
+          "slug": "atbash",
+          "title": "Atbash: the Alphabet Reversed",
+          "objective": "Decrypt an Atbash cipher in English and explain why Atbash needs no key and is its own inverse.",
+          "keywords": [
+            "Atbash",
+            "reversed alphabet",
+            "involution",
+            "self-inverse",
+            "substitution",
+            "table",
+            "Hebrew",
+            "English",
+            "mapping",
+            "key"
+          ],
+          "high_weight": false,
+          "video": false
+        },
+        {
+          "slug": "porta",
+          "title": "The Porta Cipher and the Tabula Recta",
+          "objective": "Decrypt a Porta cipher using the Porta table and a given key, and cryptanalyse one from a crib of at least three characters.",
+          "keywords": [
+            "Porta cipher",
+            "Porta table",
+            "tabula recta",
+            "polyalphabetic",
+            "key",
+            "period",
+            "reciprocal",
+            "della Porta",
+            "crib",
+            "decryption"
+          ],
+          "high_weight": true,
+          "video": false
+        },
+        {
+          "slug": "baconian",
+          "title": "Baconian: Two Symbols Hiding in Plain Sight",
+          "objective": "Decode a Baconian cipher whose a and b values are carried by letters, glyphs, or bold and italic rendering, using the supplied mapping.",
+          "keywords": [
+            "Baconian cipher",
+            "Francis Bacon",
+            "binary",
+            "a and b",
+            "five",
+            "steganography",
+            "typeface",
+            "bold",
+            "italic",
+            "crib"
+          ],
+          "high_weight": true,
+          "video": false
+        }
+      ]
+    },
+    {
+      "slug": "grid-and-fractionating",
+      "title": "Polybius, Checkerboard, Nihilist and Fractionated Morse",
+      "summary": "Four ciphers that turn letters into coordinates or symbols before doing anything else.",
+      "objectives": [
+        "Build and read a Polybius square from a keyword",
+        "Reassemble a fractionated message"
+      ],
+      "lessons": [
+        {
+          "slug": "polybius-square",
+          "title": "The Polybius Square",
+          "objective": "Build a 5x5 Polybius square from a key, encode and decode with it, and state what happens to I and J.",
+          "keywords": [
+            "Polybius square",
+            "5x5",
+            "coordinate",
+            "row",
+            "column",
+            "keyword",
+            "I/J",
+            "grid",
+            "encoding",
+            "decoding"
+          ],
+          "high_weight": true,
+          "video": false
+        },
+        {
+          "slug": "checkerboard",
+          "title": "The 5x5 Checkerboard",
+          "objective": "Decrypt a checkerboard cipher given the Polybius key, and cryptanalyse one built from two five-letter keywords given a crib.",
+          "keywords": [
+            "checkerboard",
+            "5x5",
+            "Polybius key",
+            "row keyword",
+            "column keyword",
+            "crib",
+            "coordinate",
+            "straddling",
+            "cryptanalysis",
+            "decryption"
+          ],
+          "high_weight": true,
+          "video": false
+        },
+        {
+          "slug": "nihilist",
+          "title": "The Nihilist Cipher",
+          "objective": "Decrypt a Nihilist cipher given its keys, by subtracting the repeating key from the additive ciphertext numbers.",
+          "keywords": [
+            "Nihilist cipher",
+            "Polybius square",
+            "additive",
+            "key",
+            "subtraction",
+            "two-digit",
+            "repeating key",
+            "numeral",
+            "decryption",
+            "cryptanalysis"
+          ],
+          "high_weight": true,
+          "video": false
+        },
+        {
+          "slug": "fractionated-morse",
+          "title": "Fractionated Morse",
+          "objective": "Decrypt a Fractionated Morse ciphertext by expanding to Morse, regrouping in threes and reading against the table, using a crib.",
+          "keywords": [
+            "Fractionated Morse",
+            "Morse code",
+            "dot",
+            "dash",
+            "separator",
+            "fractionation",
+            "triplet",
+            "table",
+            "crib",
+            "regrouping"
+          ],
+          "high_weight": true,
+          "video": false
+        },
+        {
+          "slug": "morse-code",
+          "title": "Morse Code Itself",
+          "objective": "Read and write Morse for the letters and the separator conventions the resource sheet gives.",
+          "keywords": [
+            "Morse code",
+            "dot",
+            "dash",
+            "separator",
+            "letter space",
+            "word space",
+            "table",
+            "telegraphy",
+            "encoding",
+            "resource sheet"
+          ],
+          "high_weight": false,
+          "video": false
+        }
+      ]
+    },
+    {
+      "slug": "transposition-and-arithmetic",
+      "title": "Columnar Transposition and Cryptarithms",
+      "summary": "One cipher that moves letters and one puzzle that is not a cipher at all.",
+      "objectives": [
+        "Break a complete columnar transposition of nine columns or fewer",
+        "Solve a base-10 cryptarithm and read the message off the mapping"
+      ],
+      "lessons": [
+        {
+          "slug": "columnar-transposition",
+          "title": "Complete Columnar Transposition",
+          "objective": "Decrypt a complete columnar transposition in nine columns or fewer, using a crib at least one shorter than the column count.",
+          "keywords": [
+            "columnar transposition",
+            "column",
+            "row",
+            "key order",
+            "complete",
+            "crib",
+            "anagram",
+            "rearrangement",
+            "block",
+            "cryptanalysis"
+          ],
+          "high_weight": true,
+          "video": false
+        },
+        {
+          "slug": "finding-the-column-count",
+          "title": "Working Out the Columns and the Order",
+          "objective": "Use message length and the crib to determine column count and column order before attempting to read the plaintext.",
+          "keywords": [
+            "column count",
+            "divisor",
+            "message length",
+            "key order",
+            "permutation",
+            "crib",
+            "placement",
+            "deduction",
+            "transposition",
+            "grid"
+          ],
+          "high_weight": true,
+          "video": false
+        },
+        {
+          "slug": "cryptarithms",
+          "title": "Cryptarithms: Letters That Are Digits",
+          "objective": "Solve a base-10 cryptarithm using carry reasoning and the leading-digit rule, then decode the word from the resulting mapping.",
+          "keywords": [
+            "cryptarithm",
+            "verbal arithmetic",
+            "base 10",
+            "decimal",
+            "carry",
+            "leading digit",
+            "unique digit",
+            "constraint",
+            "mapping",
+            "deduction"
+          ],
+          "high_weight": true,
+          "video": false
+        }
+      ]
+    },
+    {
+      "slug": "exam-strategy",
+      "title": "Working the Exam",
+      "summary": "Fifty minutes, three people, a packet you may split, and bonus questions worth chasing.",
+      "objectives": [
+        "Allocate three people across a splittable packet",
+        "Decide when to abandon a question"
+      ],
+      "lessons": [
+        {
+          "slug": "splitting-the-packet",
+          "title": "Three People, One Packet",
+          "objective": "Split a Codebusters packet across three team members by cipher type and difficulty, and say who takes the timed question.",
+          "keywords": [
+            "packet",
+            "team",
+            "split",
+            "division of labour",
+            "cipher type",
+            "difficulty",
+            "timed question",
+            "strategy",
+            "single-sided",
+            "allocation"
+          ],
+          "high_weight": false,
+          "video": false
+        },
+        {
+          "slug": "bonus-questions",
+          "title": "The Special Bonus Questions",
+          "objective": "Identify which questions are marked as special bonus, and decide whether to attempt one given time remaining.",
+          "keywords": [
+            "bonus question",
+            "homophonic",
+            "scoring",
+            "time",
+            "decision",
+            "partial credit",
+            "risk",
+            "strategy",
+            "marking",
+            "attempt"
+          ],
+          "high_weight": false,
+          "video": false
+        },
+        {
+          "slug": "accuracy-under-time",
+          "title": "Two Errors Are Allowed, Three Are Not",
+          "objective": "Check a decryption for the errors that cost a question, and know the accuracy threshold the timed bonus requires.",
+          "keywords": [
+            "accuracy",
+            "error",
+            "threshold",
+            "checking",
+            "proofreading",
+            "timed bonus",
+            "scoring",
+            "tie",
+            "correction",
+            "verification"
+          ],
+          "high_weight": false,
+          "video": false
+        }
+      ]
+    }
+  ]
+}
