@@ -155,6 +155,40 @@ DOMAIN_TERM_PATTERNS = {
                            r"maillard|caramel|scald|raw milk|skim|buttermilk|kefir|"
                            r"titrat|specific heat|solub|solution|hydrogen bond|hydrophob|"
                            r"hydrophil|viscos|densit|mass|temperature"),
+    "forensics_2027": (r"forensic|evidence|crime|scene|suspect|locard|custody|"
+                       r"solubilit|dissolv|soluble|insoluble|precipitat|"
+                       r"\bph\b|acid|base|alkal|indicator|litmus|neutraliz|"
+                       r"densit|magnet|ferromagnet|attract|"
+                       r"iodine|starch|amylose|tincture|lugol|blue.black|"
+                       r"hydrochloric|hcl|effervesc|fizz|bubble|carbon dioxide|gas|"
+                       r"sodium acetate|yeast|ascorbic|vitamin c|calcium carbonate|"
+                       r"limestone|sodium chloride|table salt|sucrose|sugar|flour|"
+                       r"gypsum|calcium sulfate|cornstarch|corn starch|baking soda|"
+                       r"bicarbonate|gelatin|alka.seltzer|sand|silica|silicon dioxide|"
+                       r"aluminium|aluminum|iron|zinc|magnesium|copper|\btin\b|metal|"
+                       r"reactivity|displacement|corro|oxid|tarnish|"
+                       r"lemon|isopropyl|rubbing alcohol|ammonia|water|vinegar|acetic|"
+                       r"hydrogen peroxide|catalase|decompos|"
+                       r"mixture|separat|filtrat|residue|"
+                       r"polymer|plastic|resin|pete|hdpe|ldpe|polystyrene|polypropylene|"
+                       r"polyvinyl|pvc|pmma|acrylic|thermoplast|monomer|burn test|"
+                       r"hair|cuticle|medulla|cortex|keratin|follicle|"
+                       r"fib(er|re)|natural fib|synthetic fib|wool|cotton|nylon|polyester|"
+                       r"cellulose|weave|"
+                       r"chromatograph|chromatogram|\brf\b|retardation factor|"
+                       r"capillary|solvent|mobile phase|stationary phase|polarit|adsorp|"
+                       r"\bink\b|\bdye\b|pigment|"
+                       r"fingerprint|whorl|loop|arch|ridge|minutiae|latent|dermatoglyph|"
+                       r"dna|profil|short tandem|electropherogram|electrophoresis|allele|"
+                       r"pcr|codis|marker|peak|"
+                       r"shoeprint|footwear|footprint|tread|tyre|tire|impression|"
+                       r"gait|stride|direction|"
+                       r"soil|texture|horizon|clay|silt|loam|sediment|mineral|grain|"
+                       r"spatter|bloodstain|droplet|impact|velocity|viscos|surface tension|"
+                       r"microscope|magnif|objective|comparison|"
+                       r"physical propert|chemical propert|melting|boiling|crystal|"
+                       r"hygroscop|deliquesc|odor|odour|colou?r|texture|"
+                       r"goggles|apron|safety|hazard|waste"),
     "genetics_2027": (r"gene|allele|genotype|phenotype|dominan|recessiv|codominan|"
                       r"heterozyg|homozyg|zygot|mendel|punnett|hybrid|cross|pedigree|"
                       r"inherit|trait|autosom|sex.link|x.link|carrier|penetran|epistas|"
@@ -680,6 +714,155 @@ DOMAIN_SOURCES = {
     #
     # One scope item has no source in either pool and no lesson rests on it: Evan's
     # postulates. Zero matches across all 140 documents.
+    "forensics_2027": {
+        "publisher": "NIST / NIH / Wikipedia contributors",
+        "license": "public_domain (federal) and CC-BY-SA 4.0 (Wikipedia, facts with attribution)",
+        # Crime Busters 2027 names its evidence exhaustively, and half the score is the
+        # qualitative analysis of it: thirteen named solids, six metals, six liquids, the
+        # seven recyclable plastics, hair and fibre to the animal/vegetable/synthetic level,
+        # paper chromatography with Rf, fingerprint patterns, DNA electropherograms,
+        # shoeprints and tyre treads, soil, and spatter. Every named substance has a page
+        # here, because an identification item is about THAT substance's properties.
+        "urls": [
+            "https://en.wikipedia.org/wiki/Acetic_acid",
+            "https://en.wikipedia.org/wiki/Acid%E2%80%93base_reaction",
+            "https://en.wikipedia.org/wiki/Adsorption",
+            "https://en.wikipedia.org/wiki/Alka-Seltzer",
+            "https://en.wikipedia.org/wiki/Aluminium",
+            "https://en.wikipedia.org/wiki/Ammonia_solution",
+            "https://en.wikipedia.org/wiki/Ascorbic_acid",
+            "https://en.wikipedia.org/wiki/Automated_fingerprint_identification",
+            "https://en.wikipedia.org/wiki/Blood_residue",
+            "https://en.wikipedia.org/wiki/Bloodstain_pattern_analysis",
+            "https://en.wikipedia.org/wiki/Boiling_point",
+            "https://en.wikipedia.org/wiki/Calcium_carbonate",
+            "https://en.wikipedia.org/wiki/Calcium_sulfate",
+            "https://en.wikipedia.org/wiki/Capillary_action",
+            "https://en.wikipedia.org/wiki/Carbon_dioxide",
+            "https://en.wikipedia.org/wiki/Catalase",
+            "https://en.wikipedia.org/wiki/Cellulose",
+            "https://en.wikipedia.org/wiki/Chain_of_custody",
+            "https://en.wikipedia.org/wiki/Chemical_property",
+            "https://en.wikipedia.org/wiki/Chemical_test",
+            "https://en.wikipedia.org/wiki/Chromatography",
+            "https://en.wikipedia.org/wiki/Clay",
+            "https://en.wikipedia.org/wiki/Combined_DNA_Index_System",
+            "https://en.wikipedia.org/wiki/Comparison_microscope",
+            "https://en.wikipedia.org/wiki/Copper",
+            "https://en.wikipedia.org/wiki/Corn_starch",
+            "https://en.wikipedia.org/wiki/Cotton",
+            "https://en.wikipedia.org/wiki/Crime_scene",
+            "https://en.wikipedia.org/wiki/Crystal",
+            "https://en.wikipedia.org/wiki/Cuticle",
+            "https://en.wikipedia.org/wiki/Deliquescence",
+            "https://en.wikipedia.org/wiki/Density",
+            "https://en.wikipedia.org/wiki/Dermatoglyphics",
+            "https://en.wikipedia.org/wiki/DNA_profiling",
+            "https://en.wikipedia.org/wiki/Dye",
+            "https://en.wikipedia.org/wiki/Effervescence",
+            "https://en.wikipedia.org/wiki/Electropherogram",
+            "https://en.wikipedia.org/wiki/Ferromagnetism",
+            "https://en.wikipedia.org/wiki/Fiber",
+            "https://en.wikipedia.org/wiki/Filtration",
+            "https://en.wikipedia.org/wiki/Fingerprint",
+            "https://en.wikipedia.org/wiki/Flame_test",
+            "https://en.wikipedia.org/wiki/Flour",
+            "https://en.wikipedia.org/wiki/Footprint",
+            "https://en.wikipedia.org/wiki/Forensic_footwear_evidence",
+            "https://en.wikipedia.org/wiki/Forensic_geology",
+            "https://en.wikipedia.org/wiki/Forensic_science",
+            "https://en.wikipedia.org/wiki/Fur",
+            "https://en.wikipedia.org/wiki/Gait",
+            "https://en.wikipedia.org/wiki/Gel_electrophoresis",
+            "https://en.wikipedia.org/wiki/Gelatin",
+            "https://en.wikipedia.org/wiki/Gypsum",
+            "https://en.wikipedia.org/wiki/Hair",
+            "https://en.wikipedia.org/wiki/High-density_polyethylene",
+            "https://en.wikipedia.org/wiki/Human_hair_color",
+            "https://en.wikipedia.org/wiki/Hydrochloric_acid",
+            "https://en.wikipedia.org/wiki/Hydrogen_peroxide",
+            "https://en.wikipedia.org/wiki/Hygroscopy",
+            "https://en.wikipedia.org/wiki/Ink",
+            "https://en.wikipedia.org/wiki/Iodine",
+            "https://en.wikipedia.org/wiki/Iodine_test",
+            "https://en.wikipedia.org/wiki/Iron",
+            "https://en.wikipedia.org/wiki/Isopropyl_alcohol",
+            "https://en.wikipedia.org/wiki/Keratin",
+            "https://en.wikipedia.org/wiki/Laboratory_safety",
+            "https://en.wikipedia.org/wiki/Lemon_juice",
+            "https://en.wikipedia.org/wiki/Limestone",
+            "https://en.wikipedia.org/wiki/Litmus",
+            "https://en.wikipedia.org/wiki/Live_scan",
+            "https://en.wikipedia.org/wiki/Loam",
+            "https://en.wikipedia.org/wiki/Locard%27s_exchange_principle",
+            "https://en.wikipedia.org/wiki/Low-density_polyethylene",
+            "https://en.wikipedia.org/wiki/Lugol%27s_iodine",
+            "https://en.wikipedia.org/wiki/Magnesium",
+            "https://en.wikipedia.org/wiki/Magnetism",
+            "https://en.wikipedia.org/wiki/Melting_point",
+            "https://en.wikipedia.org/wiki/Microscope",
+            "https://en.wikipedia.org/wiki/Mixture",
+            "https://en.wikipedia.org/wiki/Natural_fiber",
+            "https://en.wikipedia.org/wiki/Neutralization_(chemistry)",
+            "https://en.wikipedia.org/wiki/Nylon",
+            "https://en.wikipedia.org/wiki/Optical_microscope",
+            "https://en.wikipedia.org/wiki/Paper_chromatography",
+            "https://en.wikipedia.org/wiki/Personal_protective_equipment",
+            "https://en.wikipedia.org/wiki/PH",
+            "https://en.wikipedia.org/wiki/PH_indicator",
+            "https://en.wikipedia.org/wiki/Physical_property",
+            "https://en.wikipedia.org/wiki/Plastic",
+            "https://en.wikipedia.org/wiki/Polarity_(chemistry)",
+            "https://en.wikipedia.org/wiki/Poly(methyl_methacrylate)",
+            "https://en.wikipedia.org/wiki/Polyester",
+            "https://en.wikipedia.org/wiki/Polyethylene_terephthalate",
+            "https://en.wikipedia.org/wiki/Polymer",
+            "https://en.wikipedia.org/wiki/Polymerase_chain_reaction",
+            "https://en.wikipedia.org/wiki/Polypropylene",
+            "https://en.wikipedia.org/wiki/Polystyrene",
+            "https://en.wikipedia.org/wiki/Polyvinyl_chloride",
+            "https://en.wikipedia.org/wiki/Qualitative_inorganic_analysis",
+            "https://en.wikipedia.org/wiki/Reactivity_series",
+            "https://en.wikipedia.org/wiki/Resin_identification_code",
+            "https://en.wikipedia.org/wiki/Retardation_factor",
+            "https://en.wikipedia.org/wiki/Safety_data_sheet",
+            "https://en.wikipedia.org/wiki/Sand",
+            "https://en.wikipedia.org/wiki/Separation_process",
+            "https://en.wikipedia.org/wiki/Short_tandem_repeat",
+            "https://en.wikipedia.org/wiki/Silicon_dioxide",
+            "https://en.wikipedia.org/wiki/Silt",
+            "https://en.wikipedia.org/wiki/Single_displacement_reaction",
+            "https://en.wikipedia.org/wiki/Sodium_acetate",
+            "https://en.wikipedia.org/wiki/Sodium_bicarbonate",
+            "https://en.wikipedia.org/wiki/Sodium_chloride",
+            "https://en.wikipedia.org/wiki/Soil",
+            "https://en.wikipedia.org/wiki/Soil_horizon",
+            "https://en.wikipedia.org/wiki/Soil_texture",
+            "https://en.wikipedia.org/wiki/Solubility",
+            "https://en.wikipedia.org/wiki/Solubility_chart",
+            "https://en.wikipedia.org/wiki/Solvent",
+            "https://en.wikipedia.org/wiki/Starch",
+            "https://en.wikipedia.org/wiki/Sucrose",
+            "https://en.wikipedia.org/wiki/Surface_tension",
+            "https://en.wikipedia.org/wiki/Synthetic_fiber",
+            "https://en.wikipedia.org/wiki/Thermoplastic",
+            "https://en.wikipedia.org/wiki/Thin-layer_chromatography",
+            "https://en.wikipedia.org/wiki/Tin",
+            "https://en.wikipedia.org/wiki/Tire",
+            "https://en.wikipedia.org/wiki/Trace_evidence",
+            "https://en.wikipedia.org/wiki/Tread",
+            "https://en.wikipedia.org/wiki/Vinegar",
+            "https://en.wikipedia.org/wiki/Viscosity",
+            "https://en.wikipedia.org/wiki/Vitamin_C",
+            "https://en.wikipedia.org/wiki/Water",
+            "https://en.wikipedia.org/wiki/Wool",
+            "https://en.wikipedia.org/wiki/Yeast",
+            "https://en.wikipedia.org/wiki/Zinc",
+            "https://www.genome.gov/genetics-glossary/Polymerase-Chain-Reaction",
+            "https://www.nist.gov/forensic-science",
+            "https://www.nist.gov/forensic-science/dna-and-biological-evidence",
+        ],
+    },
     "genetics_2027": {
         "publisher": "NIH NHGRI / MedlinePlus / Wikipedia contributors",
         "license": "public_domain (federal) and CC-BY-SA 4.0 (Wikipedia, facts with attribution)",
@@ -2566,6 +2749,10 @@ EVENT_DOMAIN_BY_SEASON = {
     # written exam to dairy topics only. There was no `food-science` domain at all, so
     # `domain_for_event` returned None and grounding would have skipped the event entirely.
     ("food-science", 2027): "dairy_food_science",
+    # 2027 Division B: the manual lists Crime Busters' unknowns by name and half the score is
+    # identifying them. `forensics` holds thirteen general pages and not one of the named
+    # substances, so an identification lesson had nothing about the thing being identified.
+    ("crime-busters", 2027): "forensics_2027",
 }
 
 # Rotations confirmed against the 2027 Division B rules manual that still have no source set,
