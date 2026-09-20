@@ -590,6 +590,17 @@ def author(*, apply: bool, generate: bool, regenerate: bool = False,
             if corrections_file:
                 for slug, note in json.loads(Path(corrections_file).read_text()).items():
                     corrections[slug] = (corrections.get(slug, "") + "\n\n" + note).strip()
+            # A faulted lesson this blueprint does not contain cannot be repaired here at all.
+            # The video "event strategy" lessons come from the video pipeline, not from a
+            # blueprint, so `--repair` skips them in silence — and a repair loop then spends
+            # every remaining round re-reviewing a lesson nothing it runs can touch, and
+            # reports STILL FAULTED without ever saying why. Name them instead.
+            authorable = {l["slug"] for unit in blueprint["units"] for l in unit["lessons"]}
+            unrepairable = sorted(set(corrections) - authorable)
+            if unrepairable:
+                report["unrepairable"] = unrepairable
+                for slug in unrepairable:
+                    corrections.pop(slug, None)
             report["repairing"] = sorted(corrections)
             # Repair means repair: lessons nobody faulted are left exactly as they are.
             only = set(corrections) if only is None else (only & set(corrections))
