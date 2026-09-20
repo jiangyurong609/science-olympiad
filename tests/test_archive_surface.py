@@ -21,20 +21,30 @@ def _seed(db):
     return live.id, prior.id, twin.id
 
 
-def test_catalog_keeps_prior_season_events_and_drops_only_retired_twins(client):
-    """Prior-season events rotated out of the slate but still hold real lessons and exams —
-    hiding them made content-rich events look deleted. Only retired duplicates are dropped."""
+def test_catalog_offers_only_events_a_student_can_compete_in(client):
+    """The catalog is what a student can enter this season, not everything that exists.
+
+    Prior-season events were listed here, labelled, so that content-rich events would not look
+    deleted. In practice the picker filled with subjects absent from the current roster, and
+    once a season's course was published beside the one it replaces it showed two entries with
+    the same name where choosing wrong means studying the wrong topic for a year. Reachability
+    is preserved by the archive surface, which the tests below cover — not by listing retired
+    subjects next to live ones.
+    """
     with SessionLocal() as db:
         _seed(db)
     rows = client.get("/api/events").json()
     slugs = {r["slug"] for r in rows}
-    assert slugs == {"astronomy-c", "entomology-c"}, "prior-season practice must stay visible"
-    prior = next(r for r in rows if r["slug"] == "entomology-c")
-    assert prior["season_status"] == "prior_season_practice", "and be labelled as such"
+    assert slugs == {"astronomy-c"}, "only current-season events belong in the catalog"
+    assert "entomology-c" not in slugs, "prior-season practice is offered via the archive"
 
 
-def test_content_bearing_prior_event_is_not_lost_from_the_catalog(client):
-    """Regression: a prior-season event holding lessons/questions must remain reachable."""
+def test_content_bearing_prior_event_stays_reachable_on_the_archive(client, admin_token):
+    """Regression: a prior-season event holding content must not become unreachable.
+
+    This is the guarantee the old catalog listing was protecting. It still holds — the route
+    changed, the reachability did not.
+    """
     with SessionLocal() as db:
         live, prior, twin = _seed(db)
         from app.models.entities import Question
@@ -42,8 +52,10 @@ def test_content_bearing_prior_event_is_not_lost_from_the_catalog(client):
                         choices=["a", "b", "c", "d"], answer_spec={"correct_index": 0},
                         status="published"))
         db.commit()
-    slugs = {r["slug"] for r in client.get("/api/events").json()}
-    assert "entomology-c" in slugs
+    assert "entomology-c" not in {r["slug"] for r in client.get("/api/events").json()}
+    archive = client.get("/api/catalog/archive",
+                         headers={"Authorization": f"Bearer {admin_token}"}).json()
+    assert "entomology-c" in {row["slug"] for row in archive}, "archive keeps it reachable"
 
 
 def test_archive_requires_auth(client):

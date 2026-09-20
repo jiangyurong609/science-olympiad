@@ -496,9 +496,23 @@ def _canonical_event_for(db: Session, event: Event) -> Event | None:
 
 @router.get("/events")
 def list_events(db: Session = Depends(get_db)):
+    """Only events a student can actually compete in this season.
+
+    Prior-season events used to be listed here, labelled, on the reasoning that they still hold
+    real lessons. In practice the picker filled with subjects that are not on the 2027 roster at
+    all — Ecology, Entomology, Helicopter, Machines, Metric Mastery, Mission Possible, Potions
+    and Poisons — and, once a season's course was published beside the one it replaces, with two
+    entries reading "Dynamic Planet · Div B" where picking the wrong one means studying
+    oceanography for a freshwater year.
+
+    A catalog of what a student can enter is more useful than a catalog of everything that
+    exists. Prior-season content is not deleted and stays reachable on the archive surface
+    (`/catalog/archive`), which is what that surface is for.
+    """
     events = db.scalars(select(Event).where(
         Event.active.is_(True),
         Event.season_status.notin_(RETIRED_SEASON_STATUSES),
+        Event.season_status.notin_(ARCHIVE_SEASON_STATUSES),
     ).order_by(Event.name)).all()
     lesson_counts = dict(db.execute(
         select(Lesson.event_id, func.count(Lesson.id))
