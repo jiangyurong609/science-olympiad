@@ -148,6 +148,14 @@ SPECIMENS = {
         ("Almandine", "Almandine (Garnet)"), ("Chrysocolla", "Chrysocolla"),
         ("Microcline", "Microcline Feldspar"), ("Chert", "Chert (sedimentary)"),
         ("Breccia", "Breccia (sedimentary)"), ("Rock gypsum", "Rock Gypsum (sedimentary)"),
+        # Checked against the 2027 National Rocks and Minerals List in the Division B manual.
+        # These five are named there and were absent from this roster; identification is
+        # "limited to specimens appearing on" that list, so a gap here is a gap in the event.
+        ("Milky quartz", "Milky Quartz"),
+        ("Quartz", "Rock Crystal (quartz)"),
+        ("Selenite (mineral)", "Satin Spar (gypsum)"),
+        ("Halite", "Rock Salt (Halite)"),
+        ("Volcanic breccia", "Tuff Breccia"),
     ],
     "astronomy": [
         ("Mercury (planet)", "Mercury"), ("Venus", "Venus"), ("Mars", "Mars"),
