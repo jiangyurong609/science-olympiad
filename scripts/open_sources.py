@@ -25,12 +25,39 @@ HOST_RIGHTS = {
                      "publisher": "U.S. Geological Survey"},
     "www.nps.gov": {"rights_status": "public_domain", "license_name": "public_domain",
                     "publisher": "U.S. National Park Service"},
+    # Federal works, declared per host rather than inferred from ".gov" or from the domain's
+    # default. The domain default is a single string describing a MIXED source set ("NASA and
+    # Wikipedia"), so every NASA row would otherwise have carried a licence naming Wikipedia
+    # as well — a rights error, and the kind nobody notices until someone relies on it.
+    "science.nasa.gov": {"rights_status": "public_domain", "license_name": "public_domain",
+                         "publisher": "NASA"},
+    "astrobiology.nasa.gov": {"rights_status": "public_domain", "license_name": "public_domain",
+                              "publisher": "NASA Astrobiology Program"},
+    "nssdc.gsfc.nasa.gov": {"rights_status": "public_domain", "license_name": "public_domain",
+                            "publisher": "NASA Space Science Data Coordinated Archive"},
+    "imagine.gsfc.nasa.gov": {"rights_status": "public_domain", "license_name": "public_domain",
+                              "publisher": "NASA Goddard Space Flight Center"},
+    "www.nhc.noaa.gov": {"rights_status": "public_domain", "license_name": "public_domain",
+                         "publisher": "NOAA National Hurricane Center"},
+    "www.spc.noaa.gov": {"rights_status": "public_domain", "license_name": "public_domain",
+                         "publisher": "NOAA Storm Prediction Center"},
+    "www.epa.gov": {"rights_status": "public_domain", "license_name": "public_domain",
+                    "publisher": "U.S. Environmental Protection Agency"},
 }
 
 # Hosts that refuse our crawler, recorded so the same URLs are not tried again. opentextbc.ca
 # hosts an ideal CC-BY geology textbook and returns 403 to this user agent; using it would
 # need permission or a different access route, not a retry.
-BLOCKED_HOSTS = {"opentextbc.ca"}
+# Hosts measured to refuse this crawler outright. Each entry records a finding, so nobody adds
+# a fourteenth page from the same host expecting a different answer:
+#   ninds.nih.gov    403 on every path tried, though sibling NIH institutes answer fine
+#   organdonor.gov   403
+# scioly.org is deliberately NOT here. It was recorded as blocked by an Anubis challenge, and a
+# later fetch with this same client returned 48,515 characters of the page. It stays out of
+# DOMAIN_SOURCES because it is neither a federal work nor Wikipedia, which is a rights decision
+# and not a reachability one — the two are worth keeping distinct.
+BLOCKED_HOSTS = {"opentextbc.ca", "www.ninds.nih.gov", "ninds.nih.gov",
+                 "www.organdonor.gov", "organdonor.gov"}
 
 
 def rights_for(url: str, spec: dict) -> dict:
@@ -78,6 +105,33 @@ DOMAIN_TERM_PATTERNS = {
                        r"drought|heat wave|blizzard|nor'easter|ice storm|lake.effect|"
                        r"fujita|saffir|enso|el ni|warning|watch|metar|station model|asos|"
                        r"satellite|infrared|water vapor|pressure|temperature|dew point|humid"),
+    "astrobiology": (r"habitab|life|biosign|biolog|organic|amino|protein|nucleic|lipid|"
+                     r"carbohydrate|extremophile|microb|metabol|chemolithoauto|tardigrade|"
+                     r"ocean|water|ice|brine|clathrate|liquid|subsurface|plume|cryovolcan|"
+                     r"tidal|heating|moon|satellite|planet|dwarf|asteroid|comet|kuiper|"
+                     r"atmosphere|composition|spectr|albedo|flux|radiation|temperature|"
+                     r"equilibrium|blackbody|stefan|wien|greenhouse|escape velocity|gravit|"
+                     r"orbit|kepler|newton|eccentric|semi-major|energy|kinetic|potential|"
+                     r"exoplanet|transit|radial velocity|microlensing|direct imaging|"
+                     r"mission|spacecraft|instrument|telescope|orbiter|lander|rover|probe|"
+                     r"doppler|wavelength|magnitude|density|mass|pressure|arrhenius|ideal gas"),
+    "anatomy_2027": (r"respirat|lung|alveol|bronch|trache|pleura|diaphragm|airway|breath|"
+                     r"ventilat|spiromet|spirogram|tidal volume|vital capacity|residual|"
+                     r"gas exchange|oxygen|o2|carbon dioxide|hemoglobin|haemoglobin|"
+                     r"dissociation|bohr|partial pressure|altitude|exercise|copd|asthma|"
+                     r"emphysema|pneumonia|apnea|apnoea|cystic fibrosis|tuberculos|edema|"
+                     r"pleurisy|fibrosis|pneumoconios|asbestos|digest|aliment|esophag|"
+                     r"oesophag|stomach|gastric|intestin|duoden|jejun|ileum|colon|villi|"
+                     r"villus|microvill|mucosa|submucosa|muscularis|serosa|epitheli|enzyme|"
+                     r"pepsin|trypsin|amylase|lipase|bile|liver|hepat|pancrea|kupffer|"
+                     r"peristal|absorpt|ulcer|gerd|reflux|colitis|crohn|celiac|coeliac|"
+                     r"divertic|lactose|diarrh|appendic|obesity|immun|antigen|antibod|"
+                     r"lymph|thymus|spleen|marrow|complement|toll-like|inflamm|macrophage|"
+                     r"neutrophil|natural killer|dendritic|t cell|b cell|mhc|histocompat|"
+                     r"allerg|hypersensitiv|anaphyla|urticaria|myasthenia|serum sickness|"
+                     r"arthus|autoimmun|lupus|sclerod|psoria|multiple sclerosis|rheumatoid|"
+                     r"hashimoto|graves|transplant|allograft|autograft|reject|car-t|"
+                     r"immunotherap|vaccin|cytokine|interleukin|receptor|cell|tissue|organ"),
     "physics": (r"energy|force|motion|velocity|speed|accelerat|momentum|inertia|mass|weight|"
                 r"gravit|friction|roll|slide|torque|lever|pulley|wheel|axle|incline|machine|"
                 r"mechanical advantage|work|power|potential|kinetic|rotat|angular|circular|"
@@ -737,6 +791,416 @@ DOMAIN_SOURCES = {
             "https://www.spc.noaa.gov/misc/about.html",  # SPC mission and products
         ],
     },
+    # 2027 Solar System: habitability, within the Solar System and beyond. 131 pages measured
+    # with `ground_event._fetch`; 73 federal (science.nasa.gov, NSSDC, GSFC Imagine, NPS) and
+    # 58 Wikipedia, which is rights-cleared here for fact grounding with attribution.
+    #
+    # Two measurement traps found while assembling this, both of which would have inflated the
+    # count:
+    #
+    # 1. Every science.nasa.gov page carries ~5,750 characters of identical navigation and
+    #    footer chrome, interleaved with the article so a content hash never collides. A
+    #    7,600-character NASA page holds under 1,900 characters of actual content. Three
+    #    mission pages kept here are that thin and are marked; each is the ONLY federal page
+    #    for a named entity the manual lists, and each is paired with a Wikipedia article
+    #    rather than pretending the entity is covered.
+    # 2. The exoplanet catalog pages are a template: `trappist-1-e`, `kepler-452-b` and
+    #    `lhs-1140-b` return ~6,200 characters of which ~500 differ between them. They pass a
+    #    length threshold and teach nothing, and they are rejected.
+    #
+    # Honest gaps, recorded rather than papered over: Kepler-452 and LHS 1140 have no usable
+    # federal page at all, and every physical law the manual names — Stefan-Boltzmann, Wien,
+    # Kepler's laws, Newton's gravitation, escape velocity, the ideal gas law, Arrhenius —
+    # has zero federal coverage, because NASA no longer hosts the derivations and the GRC
+    # Beginner's Guide pages now 404. Those rest on Wikipedia. Reading and sketching data
+    # displays has no grounding source at all; it is a skill to be authored, not a fact to be
+    # cited.
+    "astrobiology": {
+        "publisher": "NASA / Wikipedia contributors",
+        "license": "public_domain (NASA) and CC-BY-SA 4.0 (Wikipedia, facts with attribution)",
+        "urls": [
+            "https://science.nasa.gov/astrobiology/program-overview/",  # habitability, life's requirements
+            "https://astrobiology.nasa.gov/about/",  # origin, evolution, distribution of life
+            "https://science.nasa.gov/astrobiology/strategy/",  # biosignatures, habitable environments
+            "https://science.nasa.gov/exoplanets/search-for-life/",  # searching for life beyond the Solar System
+            "https://science.nasa.gov/exoplanets/can-we-find-life/",  # atmospheric biosignatures, false positives
+            "https://science.nasa.gov/exoplanets/habitable-zone/",  # habitable zone, stellar-type dependence
+            "https://en.wikipedia.org/wiki/Planetary_habitability",  # temperature, atmosphere retention
+            "https://en.wikipedia.org/wiki/Astrobiology",  # discipline overview, habitability criteria
+            "https://en.wikipedia.org/wiki/Circumstellar_habitable_zone",  # HZ boundaries, equilibrium temperature
+            "https://en.wikipedia.org/wiki/Biosignature",  # biosignature types, chemical disequilibrium
+            "https://science.nasa.gov/solar-system/ocean-worlds/",  # ocean worlds survey
+            "https://en.wikipedia.org/wiki/Ocean_world",  # subsurface oceans, ice shells, evidence
+            "https://en.wikipedia.org/wiki/Subsurface_ocean",  # extraterrestrial ocean physics
+            "https://en.wikipedia.org/wiki/Tidal_heating",  # tidal dissipation as energy source
+            "https://en.wikipedia.org/wiki/Tidal_force",  # tidal force, differential gravity
+            "https://en.wikipedia.org/wiki/Cryovolcano",  # cryovolcanism
+            "https://science.nasa.gov/venus/",  # Venus overview
+            "https://science.nasa.gov/venus/venus-facts/",  # Venus atmosphere, surface, greenhouse
+            "https://nssdc.gsfc.nasa.gov/planetary/factsheet/venusfact.html",  # numeric fact sheet: albedo, T_eq
+            "https://en.wikipedia.org/wiki/Atmosphere_of_Venus",  # CO2 atmosphere, super-rotation, water loss
+            "https://en.wikipedia.org/wiki/Runaway_greenhouse_effect",  # runaway greenhouse, inner HZ edge
+            "https://science.nasa.gov/mars/",  # Mars overview
+            "https://science.nasa.gov/mars/facts/",  # Mars properties, atmosphere, water history
+            "https://nssdc.gsfc.nasa.gov/planetary/factsheet/marsfact.html",  # gravity, escape velocity, albedo, T_eq
+            "https://science.nasa.gov/planetary-science/programs/mars-exploration/science-goals/",  # follow the water, biosignatures
+            "https://en.wikipedia.org/wiki/Water_on_Mars",  # morphological evidence, brines, polar ice
+            "https://science.nasa.gov/mission/viking/",  # Viking biology experiments
+            "https://science.nasa.gov/mission/msl-curiosity/",  # Gale crater lakebed, organics
+            "https://science.nasa.gov/jupiter/jupiter-moons/ganymede/",  # magnetic field, subsurface ocean
+            "https://en.wikipedia.org/wiki/Ganymede_(moon)",  # interior structure, aurorae ocean evidence
+            "https://science.nasa.gov/jupiter/jupiter-moons/europa/",  # ice shell, chaos terrain, plumes
+            "https://en.wikipedia.org/wiki/Europa_(moon)",  # composition, tidal heating, habitability
+            "https://science.nasa.gov/saturn/moons/enceladus/",  # south-polar plumes, tiger stripes
+            "https://en.wikipedia.org/wiki/Enceladus",  # plume chemistry, silica, hydrothermal activity
+            "https://science.nasa.gov/saturn/moons/titan/",  # N2 atmosphere, methane lakes
+            "https://en.wikipedia.org/wiki/Titan_(moon)",  # surface, methane cycle, prebiotic chemistry
+            "https://en.wikipedia.org/wiki/Atmosphere_of_Titan",  # composition, haze, tholins
+            "https://science.nasa.gov/saturn/moons/",  # Saturn satellite system context
+            "https://science.nasa.gov/dwarf-planets/makemake/",  # KBO properties, methane ice
+            "https://en.wikipedia.org/wiki/Makemake",  # orbit, spectra, thermal properties
+            "https://science.nasa.gov/solar-system/asteroids/101955-bennu/",  # carbonaceous rubble pile, organics
+            "https://en.wikipedia.org/wiki/101955_Bennu",  # composition, sample analysis, Yarkovsky
+            "https://science.nasa.gov/solar-system/comets/67p-churyumov-gerasimenko/",  # nucleus, outgassing, Rosetta
+            "https://en.wikipedia.org/wiki/67P/Churyumov%E2%80%93Gerasimenko",  # D/H ratio, organics, coma chemistry
+            "https://science.nasa.gov/universe/exoplanets/hubble-probes-atmosphere-of-exoplanets-in-trappist-1-habitable-zone/",  # the only substantive federal TRAPPIST-1 page
+            "https://en.wikipedia.org/wiki/TRAPPIST-1",  # seven planets, resonances, HZ members
+            "https://en.wikipedia.org/wiki/Kepler-452b",  # Kepler-452; no usable federal page exists
+            "https://en.wikipedia.org/wiki/LHS_1140",  # LHS 1140; no usable federal page exists
+            "https://science.nasa.gov/mission/venus-express/",  # Venus Express science results
+            "https://science.nasa.gov/mission/davinci/",  # DAVINCI descent probe
+            "https://en.wikipedia.org/wiki/DAVINCI",  # instrument suite, descent profile
+            "https://science.nasa.gov/mission/veritas/",  # VERITAS radar and emissivity mapping
+            "https://science.nasa.gov/mission/mars-2020-perseverance/",  # Jezero delta, sample caching, SHERLOC
+            "https://science.nasa.gov/mission/mars-reconnaissance-orbiter/",  # HiRISE, CRISM, SHARAD
+            "https://science.nasa.gov/mission/maven/",  # atmospheric escape and volatile loss
+            "https://science.nasa.gov/mission/galileo/",  # Europa ocean evidence, Ganymede magnetosphere
+            "https://science.nasa.gov/mission/europa-clipper/",  # Europa Clipper overview
+            "https://science.nasa.gov/mission/europa-clipper/mission-science/",  # ice shell, ocean, chemistry objectives
+            "https://science.nasa.gov/mission/europa-clipper/spacecraft-instruments/",  # payload, radiation and power trade-offs
+            "https://science.nasa.gov/mission/europa-clipper/why-europa-evidence-for-an-ocean/",  # induced magnetic field evidence
+            "https://science.nasa.gov/mission/europa-clipper/why-europa-ingredients-for-life/",  # water, chemistry, energy
+            "https://science.nasa.gov/mission/juice/",  # JUICE overview (thin: ~1.8k net of chrome)
+            "https://en.wikipedia.org/wiki/Jupiter_Icy_Moons_Explorer",  # payload, Ganymede orbit phase
+            "https://science.nasa.gov/mission/cassini/",  # Cassini, Enceladus plume discovery
+            "https://en.wikipedia.org/wiki/Cassini%E2%80%93Huygens",  # orbiter and Huygens lander, instruments
+            "https://science.nasa.gov/mission/dragonfly/",  # Dragonfly rotorcraft to Titan
+            "https://science.nasa.gov/mission/dragonfly/science/",  # prebiotic chemistry objectives
+            "https://science.nasa.gov/mission/dragonfly/spacecraft-and-instruments/",  # DraMS, DraGNS, flight design
+            "https://en.wikipedia.org/wiki/Dragonfly_(Titan_space_probe)",  # design detail, landing sites, RTG power
+            "https://science.nasa.gov/mission/osiris-rex/",  # OSIRIS-REx overview (thin: ~1.8k net)
+            "https://en.wikipedia.org/wiki/OSIRIS-REx",  # TAGSAM, Bennu sample, amino acids
+            "https://science.nasa.gov/mission/rosetta-philae/",  # Rosetta/Philae overview (thin: ~1.8k net)
+            "https://en.wikipedia.org/wiki/Rosetta_(spacecraft)",  # instruments, 67P D/H ratio, glycine
+            "https://science.nasa.gov/mission/kepler/",  # transit photometry, planet statistics
+            "https://science.nasa.gov/mission/webb/",  # JWST overview
+            "https://science.nasa.gov/mission/webb/other-worlds/",  # exoplanet transmission spectroscopy
+            "https://science.nasa.gov/mission/webb/science-overview/",  # four science themes
+            "https://science.nasa.gov/mission/webb/fact-sheet/",  # mirror, sunshield, L2, cryogenics
+            "https://science.nasa.gov/mission/webb/nirspec/",  # NIRSpec design and modes
+            "https://science.nasa.gov/mission/roman-space-telescope/exoplanets/",  # microlensing survey, coronagraph
+            "https://en.wikipedia.org/wiki/Nancy_Grace_Roman_Space_Telescope",  # instruments, survey design
+            "https://science.nasa.gov/exoplanets/missions/",  # exoplanet mission roster
+            "https://science.nasa.gov/exoplanets/",  # exoplanet hub, five detection methods
+            "https://science.nasa.gov/exoplanets/how-we-find-and-characterize/",  # transit, RV, microlensing, imaging
+            "https://science.nasa.gov/exoplanets/planet-types/",  # planet classes
+            "https://science.nasa.gov/exoplanets/facts/",  # discovery statistics
+            "https://science.nasa.gov/exoplanets/stars/",  # host-star types and habitability
+            "https://science.nasa.gov/exoplanets/glossary/",  # transit depth, RV semi-amplitude
+            "https://en.wikipedia.org/wiki/Methods_of_detecting_exoplanets",  # all methods with governing equations
+            "https://en.wikipedia.org/wiki/Transit_(astronomy)",  # transit geometry, depth, duration
+            "https://en.wikipedia.org/wiki/Doppler_spectroscopy",  # radial velocity and its mass limits
+            "https://en.wikipedia.org/wiki/Gravitational_microlensing",  # light curves, planet signatures
+            "https://en.wikipedia.org/wiki/Radial_velocity",  # definition and measurement
+            "https://science.nasa.gov/ems/",  # electromagnetic spectrum hub
+            "https://science.nasa.gov/ems/01_intro/",  # wave and photon basics
+            "https://imagine.gsfc.nasa.gov/science/toolbox/emspectrum1.html",  # EM spectrum primer, plain HTML
+            "https://imagine.gsfc.nasa.gov/science/toolbox/spectra1.html",  # emission and absorption spectra
+            "https://en.wikipedia.org/wiki/Stefan%E2%80%93Boltzmann_law",  # Stefan-Boltzmann law
+            "https://en.wikipedia.org/wiki/Wien%27s_displacement_law",  # Wien's displacement law
+            "https://en.wikipedia.org/wiki/Black-body_radiation",  # blackbody spectrum, Planck function
+            "https://en.wikipedia.org/wiki/Planetary_equilibrium_temperature",  # T_eq from albedo and flux
+            "https://en.wikipedia.org/wiki/Albedo",  # Bond vs geometric albedo
+            "https://en.wikipedia.org/wiki/Inverse-square_law",  # inverse-square flux scaling
+            "https://en.wikipedia.org/wiki/Doppler_effect",  # Doppler shift including light
+            "https://en.wikipedia.org/wiki/Spectroscopy",  # spectral identification of composition
+            "https://en.wikipedia.org/wiki/Greenhouse_effect",  # greenhouse forcing, surface temperature
+            "https://en.wikipedia.org/wiki/Kepler%27s_laws_of_planetary_motion",  # Kepler's three laws
+            "https://en.wikipedia.org/wiki/Newton%27s_law_of_universal_gravitation",  # Newtonian gravitation
+            "https://en.wikipedia.org/wiki/Escape_velocity",  # escape velocity, atmospheric retention
+            "https://en.wikipedia.org/wiki/Atmospheric_escape",  # Jeans, hydrodynamic, sputtering escape
+            "https://en.wikipedia.org/wiki/Kinetic_energy",  # kinetic energy in orbital contexts
+            "https://en.wikipedia.org/wiki/Potential_energy",  # gravitational potential energy
+            "https://en.wikipedia.org/wiki/Ideal_gas_law",  # ideal gas law
+            "https://en.wikipedia.org/wiki/Arrhenius_equation",  # reaction-rate temperature dependence
+            "https://en.wikipedia.org/wiki/Chemical_equilibrium",  # equilibrium and disequilibrium
+            "https://en.wikipedia.org/wiki/Organic_compound",  # organics delivered and detected
+            "https://en.wikipedia.org/wiki/Properties_of_water",  # phase diagram, solvent properties
+            "https://en.wikipedia.org/wiki/Ice",  # crystalline ice phases
+            "https://en.wikipedia.org/wiki/Amorphous_ice",  # LDA/HDA ice, comets and icy moons
+            "https://en.wikipedia.org/wiki/Clathrate_hydrate",  # clathrates, methane hydrate
+            "https://en.wikipedia.org/wiki/Brine",  # brines, freezing-point depression
+            "https://en.wikipedia.org/wiki/Protein",  # proteins and amino acids
+            "https://en.wikipedia.org/wiki/Nucleic_acid",  # DNA and RNA structure
+            "https://en.wikipedia.org/wiki/Lipid",  # lipids and membranes
+            "https://en.wikipedia.org/wiki/Carbohydrate",  # carbohydrates
+            "https://en.wikipedia.org/wiki/Abiogenesis",  # prebiotic chemistry, origin of life
+            "https://en.wikipedia.org/wiki/Extremophile",  # categories and limits of life
+            "https://en.wikipedia.org/wiki/Chemolithotroph",  # chemolithoautotrophic metabolism
+            "https://en.wikipedia.org/wiki/Tardigrade",  # cryptobiosis and survival limits
+            "https://www.nps.gov/yell/learn/nature/life-in-extreme-heat.htm",  # Yellowstone thermophiles, federal
+            "https://science.nasa.gov/solar-system/planetary-analogs/",  # terrestrial analog environments
+            "https://science.nasa.gov/asteroids-comets-meteors/",  # small-body volatile inventory
+            "https://science.nasa.gov/solar-system/comets/",  # comet structure, coma, volatiles
+            "https://science.nasa.gov/solar-system/asteroids/",  # asteroid classes
+            "https://science.nasa.gov/solar-system/kuiper-belt/",  # Kuiper Belt reservoir
+            "https://en.wikipedia.org/wiki/Comet",  # composition, D/H ratios, organics
+            "https://en.wikipedia.org/wiki/Origin_of_water_on_Earth",  # cometary vs asteroidal delivery
+            "https://en.wikipedia.org/wiki/Late_Heavy_Bombardment",  # impact delivery epoch
+            "https://en.wikipedia.org/wiki/Dimensional_analysis",  # dimensional analysis
+            "https://en.wikipedia.org/wiki/Order_of_magnitude",  # order-of-magnitude estimation
+            "https://en.wikipedia.org/wiki/Scientific_notation",  # scientific notation arithmetic
+        ],
+    },
+    # 2027 Anatomy & Physiology: respiratory, digestive and immune. 207 pages measured with
+    # `ground_event._fetch`, all >= 2,000 characters with 207 distinct content hashes: 115
+    # federal (NHLBI, NIDDK, NIAID, NIAMS, MedlinePlus, CDC, NCI) and 92 Wikipedia.
+    #
+    # Three findings that shaped this list:
+    #
+    # 1. NIAID SERVES ITS 404 PAGE WITH HTTP 200 AND 8,807 CHARACTERS. Five candidate URLs
+    #    passed a length threshold while containing nothing but a navigation menu; only the
+    #    content hash, identical across all five, gave them away. Length is not a validity
+    #    test. `ensure_snapshot` now rejects a body whose hash it has already stored for a
+    #    different URL in the same run, which is what catches this class.
+    # 2. `/all-content` is the whole game on NIDDK. A tabbed topic page returns ~2,500
+    #    characters of teaser; the same URL plus `/all-content` returns the full article.
+    #    Crohn's disease goes from 2,511 to 20,429 characters. Twelve URLs here use it.
+    # 3. NCBI BOOKSHELF IS A .GOV HOST THAT SERVES COPYRIGHTED TEXTBOOKS. Janeway's
+    #    Immunobiology, Molecular Biology of the Cell and InformedHealth were all checked and
+    #    all rejected; StatPearls is CC BY-NC-ND, whose NoDerivatives term a generated course
+    #    would violate. That is exactly why complement, Toll-like receptors and the Gell and
+    #    Coombs typing fall back to Wikipedia: the ideal sources exist and we may not use them.
+    #
+    # One topic is genuinely uncovered and recorded rather than faked: "digestive effects of
+    # exercise". Obesity is covered well; exercise and digestion is taught by no page in
+    # either source pool.
+    "anatomy_2027": {
+        "publisher": "National Institutes of Health / CDC / Wikipedia contributors",
+        "license": "public_domain (federal) and CC-BY-SA 4.0 (Wikipedia, facts with attribution)",
+        "urls": [
+            # --- respiratory
+            "https://www.nhlbi.nih.gov/health/lung-tests",  # spirometry, lung volume tests, diffusion capacity
+            "https://www.nhlbi.nih.gov/health/blood-tests",  # blood chemistry panels including blood gases
+            "https://www.nhlbi.nih.gov/health/copd",  # COPD, airway and alveolar damage
+            "https://www.nhlbi.nih.gov/health/copd/causes",  # COPD causes, alpha-1 antitrypsin deficiency
+            "https://www.nhlbi.nih.gov/health/copd/diagnosis",  # COPD diagnosis, spirometry interpretation
+            "https://www.nhlbi.nih.gov/health/copd/treatment",  # COPD drugs, oxygen, surgery
+            "https://www.nhlbi.nih.gov/health/asthma",  # asthma basics
+            "https://www.nhlbi.nih.gov/health/asthma/causes",  # asthma triggers, airway inflammation
+            "https://www.nhlbi.nih.gov/health/asthma/diagnosis",  # asthma diagnosis, lung function testing
+            "https://www.nhlbi.nih.gov/health/sleep-apnea",  # obstructive and central sleep apnea
+            "https://www.nhlbi.nih.gov/health/cystic-fibrosis",  # CFTR, mucus, lung involvement
+            "https://www.nhlbi.nih.gov/health/idiopathic-pulmonary-fibrosis",  # pulmonary fibrosis
+            "https://medlineplus.gov/copd.html",  # COPD summary
+            "https://medlineplus.gov/asthma.html",  # asthma summary
+            "https://medlineplus.gov/genetics/condition/cystic-fibrosis/",  # CF genetics and pathophysiology
+            "https://medlineplus.gov/genetics/condition/alpha-1-antitrypsin-deficiency/",  # emphysema mechanism
+            "https://www.cdc.gov/copd/about/index.html",  # COPD epidemiology and risk
+            "https://www.cdc.gov/asthma/about/index.html",  # asthma attack mechanism, triggers
+            "https://www.cdc.gov/pneumonia/about/index.html",  # pneumonia causes and types
+            "https://www.cdc.gov/tb/about/index.html",  # TB infection vs disease
+            "https://www.cdc.gov/tb/signs-symptoms/index.html",  # TB clinical picture
+            "https://www.cdc.gov/cystic-fibrosis/about/index.html",  # cystic fibrosis
+            "https://www.cdc.gov/sleep/about/index.html",  # sleep and apnea context
+            "https://www.cdc.gov/lung-cancer/about/index.html",  # lung cancer basics
+            "https://www.cdc.gov/niosh/pneumoconioses/about/index.html",  # pneumoconioses
+            "https://www.niaid.nih.gov/diseases-conditions/tuberculosis",  # TB immunology
+            "https://www.cancer.gov/types/lung/patient/non-small-cell-lung-treatment-pdq",  # NSCLC, NCI public domain
+            "https://www.cancer.gov/types/lung/patient/lung-prevention-pdq",  # lung cancer prevention
+            "https://www.cancer.gov/about-cancer/causes-prevention/risk/tobacco/cessation-fact-sheet",  # smoking and prevention
+            "https://en.wikipedia.org/wiki/Respiratory_system",  # whole-system anatomy and function
+            "https://en.wikipedia.org/wiki/Respiratory_tract",  # conducting vs respiratory zone
+            "https://en.wikipedia.org/wiki/Lung",  # lobes and lung anatomy
+            "https://en.wikipedia.org/wiki/Pulmonary_alveolus",  # alveoli, surfactant, type I and II cells
+            "https://en.wikipedia.org/wiki/Bronchus",  # bronchial tree
+            "https://en.wikipedia.org/wiki/Trachea",  # airway histology
+            "https://en.wikipedia.org/wiki/Pleural_cavity",  # pleura and pleural pressure
+            "https://en.wikipedia.org/wiki/Thoracic_diaphragm",  # diaphragm mechanics
+            "https://en.wikipedia.org/wiki/Breathing",  # ventilation mechanics, breathing patterns
+            "https://en.wikipedia.org/wiki/Control_of_ventilation",  # regulation of breathing
+            "https://en.wikipedia.org/wiki/Respiratory_center",  # respiratory rhythm generation
+            "https://en.wikipedia.org/wiki/Chemoreceptor",  # central and peripheral chemoreceptors
+            "https://en.wikipedia.org/wiki/Spirometry",  # spirogram reading, FEV1/FVC
+            "https://en.wikipedia.org/wiki/Lung_volumes",  # TV, IRV, ERV, RV and capacities
+            "https://en.wikipedia.org/wiki/Vital_capacity",  # vital capacity
+            "https://en.wikipedia.org/wiki/Gas_exchange",  # diffusion and partial pressures
+            "https://en.wikipedia.org/wiki/Oxygen%E2%80%93hemoglobin_dissociation_curve",  # dissociation curve and shifts
+            "https://en.wikipedia.org/wiki/Hemoglobin",  # O2 transport, cooperativity
+            "https://en.wikipedia.org/wiki/Bohr_effect",  # curve right-shift
+            "https://en.wikipedia.org/wiki/Blood_gas_tension",  # PaO2 and PaCO2
+            "https://en.wikipedia.org/wiki/Arterial_blood_gas_test",  # ABG interpretation
+            "https://en.wikipedia.org/wiki/Acid%E2%80%93base_homeostasis",  # respiratory acidosis and alkalosis
+            "https://en.wikipedia.org/wiki/Effects_of_high_altitude_on_humans",  # altitude acclimatization
+            "https://en.wikipedia.org/wiki/Altitude_sickness",  # AMS, HAPE, HACE
+            "https://en.wikipedia.org/wiki/Exercise_physiology",  # respiratory response to exercise
+            "https://en.wikipedia.org/wiki/VO2_max",  # aerobic capacity
+            "https://en.wikipedia.org/wiki/Emphysema",  # emphysema
+            "https://en.wikipedia.org/wiki/Pulmonary_edema",  # pulmonary edema; no federal page
+            "https://en.wikipedia.org/wiki/Pleurisy",  # pleurisy; no federal page
+            "https://en.wikipedia.org/wiki/Pulmonary_fibrosis",  # pulmonary fibrosis
+            "https://en.wikipedia.org/wiki/Pneumoconiosis",  # pneumoconioses
+            "https://en.wikipedia.org/wiki/Asbestosis",  # a named pneumoconiosis
+            "https://en.wikipedia.org/wiki/Bronchodilator",  # treatment: drugs
+            "https://en.wikipedia.org/wiki/Mechanical_ventilation",  # treatment
+            "https://en.wikipedia.org/wiki/Oxygen_therapy",  # treatment
+            "https://en.wikipedia.org/wiki/Lung_transplantation",  # treatment: surgery
+            # --- digestive
+            "https://www.niddk.nih.gov/health-information/digestive-diseases/digestive-system-how-it-works",  # alimentary canal, accessory organs, enzymes
+            "https://www.niddk.nih.gov/health-information/digestive-diseases/peptic-ulcers-stomach-ulcers/all-content",  # peptic ulcer disease
+            "https://www.niddk.nih.gov/health-information/digestive-diseases/acid-reflux-ger-gerd-adults/all-content",  # GERD
+            "https://www.niddk.nih.gov/health-information/digestive-diseases/ulcerative-colitis/all-content",  # ulcerative colitis
+            "https://www.niddk.nih.gov/health-information/digestive-diseases/crohns-disease/all-content",  # Crohn's disease
+            "https://www.niddk.nih.gov/health-information/digestive-diseases/celiac-disease/all-content",  # celiac disease
+            "https://www.niddk.nih.gov/health-information/digestive-diseases/diverticulosis-diverticulitis/all-content",  # diverticular disease
+            "https://www.niddk.nih.gov/health-information/digestive-diseases/lactose-intolerance/all-content",  # lactose intolerance, lactase
+            "https://www.niddk.nih.gov/health-information/digestive-diseases/diarrhea/all-content",  # diarrhea
+            "https://www.niddk.nih.gov/health-information/digestive-diseases/appendicitis/all-content",  # appendicitis
+            "https://www.niddk.nih.gov/health-information/digestive-diseases/gastritis-gastropathy/all-content",  # gastric mucosal injury, H. pylori
+            "https://www.niddk.nih.gov/health-information/digestive-diseases/microscopic-colitis/all-content",  # colonic lining, IBD contrast
+            "https://www.niddk.nih.gov/health-information/liver-disease/cirrhosis/all-content",  # liver function and failure
+            "https://www.niddk.nih.gov/health-information/liver-disease/viral-hepatitis/hepatitis-a",  # hepatitis A
+            "https://www.niddk.nih.gov/health-information/liver-disease/viral-hepatitis/hepatitis-b",  # hepatitis B
+            "https://www.niddk.nih.gov/health-information/liver-disease/viral-hepatitis/hepatitis-c",  # hepatitis C
+            "https://www.niddk.nih.gov/health-information/weight-management/adult-overweight-obesity/all-content",  # obesity and digestive effects
+            "https://www.cdc.gov/hepatitis/about/index.html",  # viral hepatitis overview
+            "https://www.cdc.gov/hepatitis-a/about/index.html",  # hepatitis A transmission
+            "https://www.cdc.gov/hepatitis-b/about/index.html",  # hepatitis B
+            "https://www.cdc.gov/hepatitis-c/about/index.html",  # hepatitis C
+            "https://www.cancer.gov/types/colorectal/patient/colon-treatment-pdq",  # colon cancer
+            "https://www.cancer.gov/types/stomach/patient/stomach-treatment-pdq",  # gastric cancer
+            "https://www.cancer.gov/types/esophageal/patient/esophageal-treatment-pdq",  # esophageal cancer, Barrett link
+            "https://www.cancer.gov/types/liver/patient/adult-liver-treatment-pdq",  # liver cancer
+            "https://en.wikipedia.org/wiki/Human_digestive_system",  # full GI anatomy
+            "https://en.wikipedia.org/wiki/Gastrointestinal_tract",  # alimentary canal
+            "https://en.wikipedia.org/wiki/Gastrointestinal_wall",  # the four layers of the gut wall
+            "https://en.wikipedia.org/wiki/Mucosa",  # layer 1
+            "https://en.wikipedia.org/wiki/Submucosa",  # layer 2, Meissner plexus
+            "https://en.wikipedia.org/wiki/Muscular_layer",  # layer 3, muscularis externa, Auerbach plexus
+            "https://en.wikipedia.org/wiki/Serous_membrane",  # layer 4, serosa and adventitia
+            "https://en.wikipedia.org/wiki/Mucous_membrane",  # epithelial lining types
+            "https://en.wikipedia.org/wiki/Esophagus",  # stratified squamous lining
+            "https://en.wikipedia.org/wiki/Stomach",  # rugae and gastric glands
+            "https://en.wikipedia.org/wiki/Gastric_mucosa",  # parietal, chief and G cells
+            "https://en.wikipedia.org/wiki/Small_intestine",  # duodenum, jejunum, ileum
+            "https://en.wikipedia.org/wiki/Intestinal_villus",  # villi and microvilli
+            "https://en.wikipedia.org/wiki/Intestinal_epithelium",  # enterocytes, goblet, Paneth, crypts
+            "https://en.wikipedia.org/wiki/Large_intestine",  # colon, no villi
+            "https://en.wikipedia.org/wiki/Digestion",  # mechanical vs chemical digestion
+            "https://en.wikipedia.org/wiki/Digestive_enzyme",  # enzyme and substrate table
+            "https://en.wikipedia.org/wiki/Peristalsis",  # motility
+            "https://en.wikipedia.org/wiki/Pepsin",  # protein digestion
+            "https://en.wikipedia.org/wiki/Trypsin",  # pancreatic protein digestion
+            "https://en.wikipedia.org/wiki/Amylase",  # carbohydrate digestion
+            "https://en.wikipedia.org/wiki/Lipase",  # fat digestion
+            "https://en.wikipedia.org/wiki/Bile",  # emulsification, liver role
+            "https://en.wikipedia.org/wiki/Liver",  # liver role in digestion
+            "https://en.wikipedia.org/wiki/Pancreas",  # pancreas role in digestion
+            "https://en.wikipedia.org/wiki/Kupffer_cell",  # Kupffer cells; no federal page exists
+            "https://en.wikipedia.org/wiki/Gastrointestinal_physiology",  # secretion, motility, absorption
+            "https://en.wikipedia.org/wiki/Obesity",  # obesity effects
+            # --- immune
+            "https://www.niaid.nih.gov/research/immune-system-overview",  # immune anatomy: marrow, thymus, spleen, nodes, skin
+            "https://www.niaid.nih.gov/diseases-conditions/autoimmune-diseases",  # autoimmunity and tolerance
+            "https://www.niaid.nih.gov/diseases-conditions/primary-immune-deficiency-diseases-pidds",  # primary immunodeficiency, CVID
+            "https://www.niaid.nih.gov/diseases-conditions/severe-combined-immunodeficiency-scid",  # SCID
+            "https://www.niaid.nih.gov/diseases-conditions/hivaids",  # HIV/AIDS immunopathogenesis
+            "https://www.niaid.nih.gov/diseases-conditions/food-allergy",  # IgE allergic reaction
+            "https://www.niaid.nih.gov/research/vaccines",  # vaccines and prevention
+            "https://medlineplus.gov/immunesystemanddisorders.html",  # immune system summary
+            "https://medlineplus.gov/autoimmunediseases.html",  # autoimmunity summary
+            "https://medlineplus.gov/hiv.html",  # HIV/AIDS
+            "https://medlineplus.gov/multiplesclerosis.html",  # multiple sclerosis
+            "https://medlineplus.gov/myastheniagravis.html",  # myasthenia gravis
+            "https://medlineplus.gov/myositis.html",  # dermatomyositis and polymyositis
+            "https://medlineplus.gov/organtransplantation.html",  # transplantation
+            "https://medlineplus.gov/genetics/condition/common-variable-immune-deficiency/",  # CVID
+            "https://medlineplus.gov/genetics/condition/systemic-lupus-erythematosus/",  # lupus
+            "https://medlineplus.gov/genetics/condition/multiple-sclerosis/",  # MS mechanism
+            "https://medlineplus.gov/genetics/condition/rheumatoid-arthritis/",  # RA mechanism
+            "https://medlineplus.gov/genetics/condition/celiac-disease/",  # celiac as immune disease
+            "https://www.niams.nih.gov/health-topics/lupus",  # lupus
+            "https://www.niams.nih.gov/health-topics/rheumatoid-arthritis",  # rheumatoid arthritis
+            "https://www.niams.nih.gov/health-topics/psoriasis",  # psoriasis
+            "https://www.niams.nih.gov/health-topics/psoriatic-arthritis",  # psoriatic arthritis
+            "https://www.niams.nih.gov/health-topics/scleroderma",  # scleroderma
+            "https://www.niddk.nih.gov/health-information/endocrine-diseases/hashimotos-disease",  # Hashimoto thyroiditis
+            "https://www.niddk.nih.gov/health-information/endocrine-diseases/graves-disease",  # Graves' disease
+            "https://www.cdc.gov/hiv/about/index.html",  # HIV transmission and stages
+            "https://www.cdc.gov/vaccines/basics/index.html",  # how vaccines work
+            "https://www.cancer.gov/about-cancer/treatment/types/immunotherapy",  # cancer immunotherapies
+            "https://www.cancer.gov/about-cancer/treatment/types/immunotherapy/t-cell-transfer-therapy",  # T-cell transfer and TIL
+            "https://www.cancer.gov/about-cancer/treatment/research/car-t-cells",  # CAR-T cell therapy
+            "https://www.cancer.gov/about-cancer/treatment/types/immunotherapy/monoclonal-antibodies",  # antibody therapies
+            "https://en.wikipedia.org/wiki/Immune_system",  # whole-system overview
+            "https://en.wikipedia.org/wiki/Lymphatic_system",  # immune anatomy
+            "https://en.wikipedia.org/wiki/Lymph_node",  # immune anatomy
+            "https://en.wikipedia.org/wiki/Thymus",  # T-cell maturation
+            "https://en.wikipedia.org/wiki/Spleen",  # red and white pulp
+            "https://en.wikipedia.org/wiki/Bone_marrow",  # haematopoiesis
+            "https://en.wikipedia.org/wiki/Human_skin",  # barrier immunity
+            "https://en.wikipedia.org/wiki/Innate_immune_system",  # innate immunity
+            "https://en.wikipedia.org/wiki/Complement_system",  # complement; no federal page exists
+            "https://en.wikipedia.org/wiki/Toll-like_receptor",  # Toll-like receptors; no federal page
+            "https://en.wikipedia.org/wiki/Inflammation",  # inflammatory cascade
+            "https://en.wikipedia.org/wiki/Macrophage",  # innate cells
+            "https://en.wikipedia.org/wiki/Neutrophil",  # innate cells
+            "https://en.wikipedia.org/wiki/Natural_killer_cell",  # innate cells
+            "https://en.wikipedia.org/wiki/Dendritic_cell",  # innate to adaptive bridge
+            "https://en.wikipedia.org/wiki/Adaptive_immune_system",  # adaptive immunity
+            "https://en.wikipedia.org/wiki/T_cell",  # CD4 and CD8 subsets
+            "https://en.wikipedia.org/wiki/B_cell",  # humoral immunity
+            "https://en.wikipedia.org/wiki/Antibody",  # immunoglobulin classes and structure
+            "https://en.wikipedia.org/wiki/Major_histocompatibility_complex",  # MHC I and II, transplant matching
+            "https://en.wikipedia.org/wiki/Antigen-presenting_cell",  # antigen presentation
+            "https://en.wikipedia.org/wiki/Allergy",  # allergic reaction
+            "https://en.wikipedia.org/wiki/Hypersensitivity",  # Gell and Coombs types 1-4
+            "https://en.wikipedia.org/wiki/Type_I_hypersensitivity",  # type 1
+            "https://en.wikipedia.org/wiki/Type_II_hypersensitivity",  # type 2
+            "https://en.wikipedia.org/wiki/Type_III_hypersensitivity",  # type 3
+            "https://en.wikipedia.org/wiki/Type_IV_hypersensitivity",  # type 4
+            "https://en.wikipedia.org/wiki/Anaphylaxis",  # type 1 exemplar
+            "https://en.wikipedia.org/wiki/Hives",  # urticaria
+            "https://en.wikipedia.org/wiki/Myasthenia_gravis",  # type 2 exemplar
+            "https://en.wikipedia.org/wiki/Serum_sickness",  # type 3 exemplar
+            "https://en.wikipedia.org/wiki/Arthus_reaction",  # Arthus reaction; no federal page
+            "https://en.wikipedia.org/wiki/Immunodeficiency",  # immunodeficiency overview
+            "https://en.wikipedia.org/wiki/HIV/AIDS",  # HIV/AIDS
+            "https://en.wikipedia.org/wiki/Common_variable_immunodeficiency",  # CVID
+            "https://en.wikipedia.org/wiki/Severe_combined_immunodeficiency",  # SCID
+            "https://en.wikipedia.org/wiki/Autoimmune_disease",  # autoimmunity
+            "https://en.wikipedia.org/wiki/Multiple_sclerosis",  # multiple sclerosis
+            "https://en.wikipedia.org/wiki/Rheumatoid_arthritis",  # rheumatoid arthritis
+            "https://en.wikipedia.org/wiki/Hashimoto%27s_thyroiditis",  # Hashimoto thyroiditis
+            "https://en.wikipedia.org/wiki/Graves%27_disease",  # Graves' disease
+            "https://en.wikipedia.org/wiki/Organ_transplantation",  # transplant types
+            "https://en.wikipedia.org/wiki/Transplant_rejection",  # rejection prevention
+            "https://en.wikipedia.org/wiki/Allotransplantation",  # allograft
+            "https://en.wikipedia.org/wiki/Autotransplantation",  # autograft
+            "https://en.wikipedia.org/wiki/Chimeric_antigen_receptor_T_cell",  # CAR-T mechanism
+            "https://en.wikipedia.org/wiki/Cancer_immunotherapy",  # cancer immunotherapy
+            "https://en.wikipedia.org/wiki/Monoclonal_antibody_therapy",  # antibody therapies
+            "https://en.wikipedia.org/wiki/Systemic_lupus_erythematosus",  # lupus
+            "https://en.wikipedia.org/wiki/Dermatomyositis",  # dermatomyositis; NIAMS has no page
+            "https://en.wikipedia.org/wiki/Systemic_scleroderma",  # scleroderma
+            "https://en.wikipedia.org/wiki/Psoriasis",  # psoriasis
+            "https://en.wikipedia.org/wiki/Psoriatic_arthritis",  # psoriatic arthritis
+            "https://en.wikipedia.org/wiki/Immunosuppressive_drug",  # treatments for immune disorders
+            "https://en.wikipedia.org/wiki/Vaccine",  # prevention
+            "https://en.wikipedia.org/wiki/Corticosteroid",  # treatments, both systems
+            "https://en.wikipedia.org/wiki/Antihistamine",  # allergy treatment
+        ],
+    },
     "hydrology": {
         "publisher": "USGS Water Science School / National Park Service",
         "license": "public_domain",
@@ -868,6 +1332,12 @@ EVENT_DOMAIN_BY_SEASON = {
     # types, hazards and safety. 2026 was everyday weather and climate, which is what the
     # `meteorology` domain still holds.
     ("meteorology", 2027): "severe_weather",
+    # 2027 Division B: "Habitability within and beyond the Solar System". 2026 was an object
+    # survey, which is what the `astronomy` domain still holds.
+    ("solar-system", 2027): "astrobiology",
+    # 2027 Division B/C: respiratory, digestive and immune systems. 2026 was nervous and
+    # endocrine, which is what the `anatomy` domain still holds.
+    ("anatomy-and-physiology", 2027): "anatomy_2027",
 }
 
 # Rotations confirmed against the 2027 Division B rules manual that still have no source set,

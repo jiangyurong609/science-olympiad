@@ -1,0 +1,331 @@
+{
+  "event_slug": "solar-system-b-2027",
+  "season": 2027,
+  "title": "Solar System: Habitability Within and Beyond",
+  "summary": "What would it take for a place to be habitable, how would we know from here, and which worlds actually qualify? Work from the physics of light and gravity to the evidence returned by specific spacecraft.",
+  "objectives": [
+    "State the conditions a world must meet to be habitable, and apply them to a named object.",
+    "Compute equilibrium temperature, flux, escape velocity and orbital quantities without a calculator.",
+    "Read the evidence for subsurface oceans, past surface water and atmospheric composition, and say which instrument produced it.",
+    "Describe how each exoplanet detection method works and what it can and cannot measure.",
+    "Explain how water and organic material are delivered, and what the building blocks of life are.",
+    "Match a mission to its science objective, its instruments and the trade-offs behind its design."
+  ],
+  "units": [
+    {
+      "slug": "what-makes-a-world-habitable",
+      "title": "What Makes a World Habitable",
+      "summary": "Habitability is a set of conditions, not a verdict; naming them is what makes the rest of the event answerable.",
+      "objectives": [
+        "Name the conditions for habitability and the energy, solvent and chemistry each requires.",
+        "Define the habitable zone and say why its edges move with the star."
+      ],
+      "lessons": [
+        {
+          "slug": "conditions-for-habitability",
+          "title": "Energy, Solvent, Chemistry",
+          "objective": "State what a habitable environment requires — an energy source, a stable liquid solvent, and the elements life is built from — and apply the list to a named world.",
+          "keywords": ["habitability", "habitable", "astrobiology", "liquid water", "energy source", "chemical disequilibrium", "biosignature", "requirements for life", "habitable environment"],
+          "high_weight": true,
+          "video": true
+        },
+        {
+          "slug": "habitable-zone-and-equilibrium-temperature",
+          "title": "The Habitable Zone and Equilibrium Temperature",
+          "objective": "Define the circumstellar habitable zone, and compute an equilibrium temperature from stellar flux and albedo.",
+          "keywords": ["circumstellar habitable zone", "habitable zone", "equilibrium temperature", "albedo", "stellar flux", "inverse-square law", "greenhouse effect", "runaway greenhouse", "stellar type"],
+          "high_weight": true,
+          "video": true
+        },
+        {
+          "slug": "atmospheres-and-retention",
+          "title": "Keeping an Atmosphere",
+          "objective": "Explain how escape velocity, temperature and molecular mass decide which gases a world retains, and describe the escape processes that strip an atmosphere.",
+          "keywords": ["atmospheric escape", "escape velocity", "Jeans escape", "hydrodynamic escape", "sputtering", "solar wind", "atmospheric composition", "MAVEN", "atmospheric retention"],
+          "high_weight": true,
+          "video": false
+        }
+      ]
+    },
+    {
+      "slug": "light-and-temperature",
+      "title": "Reading Worlds by Their Light",
+      "summary": "Almost everything known about a distant world arrives as light; the laws that govern it are examinable arithmetic.",
+      "objectives": [
+        "Apply the Stefan-Boltzmann law, Wien's law and the inverse-square law to real quantities.",
+        "Explain how a spectrum identifies surface and atmospheric composition."
+      ],
+      "lessons": [
+        {
+          "slug": "flux-blackbody-and-wien",
+          "title": "Flux, Blackbodies, Stefan-Boltzmann and Wien",
+          "objective": "Use the Stefan-Boltzmann law and Wien's displacement law, and scale flux with the inverse-square law.",
+          "keywords": ["Stefan-Boltzmann law", "Wien's displacement law", "black-body radiation", "blackbody", "flux", "luminosity", "inverse-square law", "peak wavelength", "radiation", "Planck"],
+          "high_weight": true,
+          "video": true
+        },
+        {
+          "slug": "spectra-and-composition",
+          "title": "Spectra: What a World Is Made Of",
+          "objective": "Distinguish emission from absorption spectra and explain how transmission spectroscopy reads an exoplanet atmosphere.",
+          "keywords": ["spectroscopy", "spectrum", "emission line", "absorption line", "transmission spectroscopy", "electromagnetic spectrum", "infrared", "wavelength", "NIRSpec", "composition"],
+          "high_weight": true,
+          "video": false
+        },
+        {
+          "slug": "doppler-shift",
+          "title": "Doppler Shift and Motion",
+          "objective": "Relate a wavelength shift to motion along the line of sight, and say what that measures for a star with a planet.",
+          "keywords": ["Doppler effect", "Doppler shift", "redshift", "blueshift", "radial velocity", "line of sight", "wavelength shift", "spectral line"],
+          "high_weight": true,
+          "video": false
+        }
+      ]
+    },
+    {
+      "slug": "gravity-orbits-and-tides",
+      "title": "Gravity, Orbits and Tides",
+      "summary": "Orbits set the temperature, and tides supply the heat where sunlight cannot reach.",
+      "objectives": [
+        "Apply Newton's law of gravitation and Kepler's three laws.",
+        "Explain tidal forces and how tidal heating powers an ocean world."
+      ],
+      "lessons": [
+        {
+          "slug": "gravitation-and-keplers-laws",
+          "title": "Newton, Kepler and Orbital Arithmetic",
+          "objective": "Apply Newton's law of universal gravitation and Kepler's three laws, including the period-semimajor axis relation.",
+          "keywords": ["Newton's law of universal gravitation", "Kepler's laws", "orbital period", "semi-major axis", "eccentricity", "ellipse", "orbital speed", "gravitational constant", "escape velocity"],
+          "high_weight": true,
+          "video": true
+        },
+        {
+          "slug": "tidal-forces-and-tidal-heating",
+          "title": "Tidal Forces and Tidal Heating",
+          "objective": "Explain tidal force as differential gravity, and how orbital eccentricity and resonance convert it into internal heat.",
+          "keywords": ["tidal force", "tidal heating", "differential gravity", "orbital resonance", "eccentricity", "dissipation", "internal heat", "Europa", "Enceladus", "Io"],
+          "high_weight": true,
+          "video": true
+        },
+        {
+          "slug": "energy-in-orbital-and-tidal-contexts",
+          "title": "Kinetic and Potential Energy in Orbit",
+          "objective": "Track kinetic and gravitational potential energy around an eccentric orbit and in tidal flexing.",
+          "keywords": ["kinetic energy", "potential energy", "gravitational potential energy", "orbital energy", "conservation of energy", "perihelion", "aphelion", "work"],
+          "high_weight": false,
+          "video": false
+        }
+      ]
+    },
+    {
+      "slug": "water-ice-and-building-blocks",
+      "title": "Water, Ice and the Building Blocks",
+      "summary": "The solvent and the chemistry: what forms water takes off Earth, and what life is assembled from.",
+      "objectives": [
+        "Distinguish liquid water, crystalline and amorphous ice, brines and clathrates, and where each occurs.",
+        "Name the four classes of biological building block and the chemistry behind them."
+      ],
+      "lessons": [
+        {
+          "slug": "phases-and-forms-of-water",
+          "title": "Liquid, Ice, Brine and Clathrate",
+          "objective": "Describe the phases and forms water takes across the Solar System, including amorphous ice, brines and clathrate hydrates, and the conditions each requires.",
+          "keywords": ["properties of water", "phase diagram", "amorphous ice", "crystalline ice", "brine", "freezing-point depression", "clathrate hydrate", "methane hydrate", "supercooled", "solvent"],
+          "high_weight": true,
+          "video": false
+        },
+        {
+          "slug": "building-blocks-of-life",
+          "title": "Proteins, Nucleic Acids, Lipids, Carbohydrates",
+          "objective": "Name the four classes of biological macromolecule, what each does, and which elements they require.",
+          "keywords": ["protein", "amino acid", "nucleic acid", "DNA", "RNA", "lipid", "membrane", "carbohydrate", "organic compound", "macromolecule", "CHNOPS"],
+          "high_weight": true,
+          "video": false
+        },
+        {
+          "slug": "extremophiles-and-limits-of-life",
+          "title": "Extremophiles and the Limits of Life",
+          "objective": "Describe chemolithoautotrophic metabolism and tardigrade survival, and use terrestrial extremes as analogs for habitable environments off Earth.",
+          "keywords": ["extremophile", "chemolithoautotroph", "lithotroph", "thermophile", "halophile", "tardigrade", "cryptobiosis", "hydrothermal vent", "planetary analog", "limits of life"],
+          "high_weight": true,
+          "video": true
+        }
+      ]
+    },
+    {
+      "slug": "delivery-of-water-and-organics",
+      "title": "How Water and Organics Get Delivered",
+      "summary": "Small bodies carry the volatiles; their isotopes record where the water came from.",
+      "objectives": [
+        "Explain cometary and asteroidal delivery of water and organics and the isotopic evidence for each.",
+        "Describe what sample return from Bennu and Rosetta's visit to 67P actually found."
+      ],
+      "lessons": [
+        {
+          "slug": "small-bodies-as-carriers",
+          "title": "Comets, Asteroids and the Kuiper Belt",
+          "objective": "Describe comet and asteroid composition and structure, and where the Solar System stores its volatiles.",
+          "keywords": ["comet", "asteroid", "carbonaceous", "Kuiper Belt", "volatile", "coma", "nucleus", "outgassing", "rubble pile", "small body"],
+          "high_weight": false,
+          "video": false
+        },
+        {
+          "slug": "delivering-water-and-organics",
+          "title": "Where Earth's Water Came From",
+          "objective": "Use the D/H ratio to argue for cometary versus asteroidal delivery, and cite what Bennu and 67P samples contained.",
+          "keywords": ["origin of water on Earth", "deuterium", "D/H ratio", "isotopic", "Late Heavy Bombardment", "impact delivery", "organics", "amino acid", "101955 Bennu", "67P", "OSIRIS-REx", "Rosetta"],
+          "high_weight": true,
+          "video": true
+        }
+      ]
+    },
+    {
+      "slug": "inner-worlds",
+      "title": "Venus and Mars: Two Failed Experiments",
+      "summary": "Two neighbours that started habitable-looking and ended otherwise; the difference is the lesson.",
+      "objectives": [
+        "Explain the runaway greenhouse on Venus and the loss of the Martian atmosphere.",
+        "Read the morphological evidence for past liquid water on Mars."
+      ],
+      "lessons": [
+        {
+          "slug": "venus-runaway-greenhouse",
+          "title": "Venus: A Runaway Greenhouse",
+          "objective": "Describe Venus's atmosphere, surface conditions and water loss, and explain the runaway greenhouse that produced them.",
+          "keywords": ["Venus", "atmosphere of Venus", "carbon dioxide", "sulfuric acid", "runaway greenhouse", "super-rotation", "surface pressure", "water loss", "Venus Express", "DAVINCI", "VERITAS"],
+          "high_weight": true,
+          "video": true
+        },
+        {
+          "slug": "mars-water-past-and-present",
+          "title": "Mars: Reading a Wetter Past",
+          "objective": "Identify the morphological and mineralogical evidence for past liquid water on Mars, and describe present-day brines and ice.",
+          "keywords": ["Mars", "water on Mars", "delta", "outflow channel", "valley network", "hydrated mineral", "clay", "brine", "polar ice", "Jezero", "Perseverance", "Curiosity", "Mars Reconnaissance Orbiter"],
+          "high_weight": true,
+          "video": true
+        },
+        {
+          "slug": "mars-atmospheric-loss",
+          "title": "Where the Martian Atmosphere Went",
+          "objective": "Explain how the loss of a global magnetic field and low gravity allowed solar wind stripping, and what MAVEN measured.",
+          "keywords": ["MAVEN", "atmospheric escape", "solar wind", "magnetic field", "sputtering", "escape velocity", "atmospheric loss", "isotope fractionation"],
+          "high_weight": false,
+          "video": false
+        }
+      ]
+    },
+    {
+      "slug": "ocean-worlds",
+      "title": "Ocean Worlds",
+      "summary": "The best candidates for life today are moons with oceans under ice, and the evidence for those oceans is indirect and clever.",
+      "objectives": [
+        "Cite the evidence for a subsurface ocean at Europa, Enceladus, Ganymede and Titan.",
+        "Explain cryovolcanism and what plume chemistry reveals."
+      ],
+      "lessons": [
+        {
+          "slug": "europa-and-ganymede",
+          "title": "Europa and Ganymede",
+          "objective": "Describe Europa's ice shell and chaos terrain and Ganymede's interior, and explain how an induced magnetic field reveals a salty ocean.",
+          "keywords": ["Europa", "Ganymede", "ice shell", "chaos terrain", "induced magnetic field", "subsurface ocean", "Galileo", "Europa Clipper", "JUICE", "aurora", "salinity"],
+          "high_weight": true,
+          "video": true
+        },
+        {
+          "slug": "enceladus-and-plume-chemistry",
+          "title": "Enceladus: Sampling an Ocean From Space",
+          "objective": "Describe the south-polar plumes and tiger stripes, and what silica grains and organics in the plume imply about hydrothermal activity.",
+          "keywords": ["Enceladus", "plume", "tiger stripes", "cryovolcanism", "silica", "hydrothermal", "Cassini", "organic", "salt", "subsurface sea"],
+          "high_weight": true,
+          "video": true
+        },
+        {
+          "slug": "titan-methane-world",
+          "title": "Titan: A Methane Cycle and an Ocean Below",
+          "objective": "Describe Titan's atmosphere, methane lakes and haze chemistry, and what Dragonfly is designed to measure.",
+          "keywords": ["Titan", "atmosphere of Titan", "methane", "ethane", "lakes", "tholin", "haze", "prebiotic chemistry", "Cassini-Huygens", "Dragonfly", "subsurface ocean"],
+          "high_weight": true,
+          "video": false
+        },
+        {
+          "slug": "makemake-and-distant-ices",
+          "title": "Makemake and the Distant Ices",
+          "objective": "Describe Makemake's properties and surface ices, and why distant dwarf planets are poor habitability candidates.",
+          "keywords": ["Makemake", "dwarf planet", "Kuiper Belt object", "methane ice", "surface ice", "albedo", "thermal", "orbit", "atmosphere"],
+          "high_weight": false,
+          "video": false
+        }
+      ]
+    },
+    {
+      "slug": "exoplanets",
+      "title": "Habitability Beyond the Solar System",
+      "summary": "Four detection methods, each measuring something different, and three systems the manual names.",
+      "objectives": [
+        "Explain transit, radial velocity, microlensing and direct imaging, and what each measures.",
+        "Describe TRAPPIST-1, Kepler-452 and LHS 1140 and why each is interesting."
+      ],
+      "lessons": [
+        {
+          "slug": "transit-and-radial-velocity",
+          "title": "Transits and Radial Velocity",
+          "objective": "Relate transit depth to planet radius and radial-velocity amplitude to mass, and explain why the two methods together give density.",
+          "keywords": ["transit", "transit depth", "light curve", "radial velocity", "Doppler spectroscopy", "semi-amplitude", "minimum mass", "inclination", "density", "Kepler"],
+          "high_weight": true,
+          "video": true
+        },
+        {
+          "slug": "microlensing-and-direct-imaging",
+          "title": "Microlensing and Direct Imaging",
+          "objective": "Explain gravitational microlensing light curves and the contrast problem direct imaging must solve.",
+          "keywords": ["gravitational microlensing", "light curve", "direct imaging", "coronagraph", "contrast", "angular separation", "Roman Space Telescope", "detection method", "bias"],
+          "high_weight": true,
+          "video": false
+        },
+        {
+          "slug": "named-exoplanet-systems",
+          "title": "TRAPPIST-1, Kepler-452 and LHS 1140",
+          "objective": "Describe each named system's star, planets and habitable-zone members, and what JWST has measured there.",
+          "keywords": ["TRAPPIST-1", "Kepler-452b", "LHS 1140", "M dwarf", "red dwarf", "tidal locking", "resonance", "habitable zone", "JWST", "atmosphere", "stellar activity"],
+          "high_weight": true,
+          "video": true
+        }
+      ]
+    },
+    {
+      "slug": "missions-and-application",
+      "title": "Missions, Instruments and Competition Application",
+      "summary": "Every claim in this event traces to an instrument on a spacecraft; the last step is turning that into points.",
+      "objectives": [
+        "Match mission to objective, instrument and design trade-off.",
+        "Work calculator-free and read data displays under time."
+      ],
+      "lessons": [
+        {
+          "slug": "mission-design-and-instruments",
+          "title": "What a Mission Is Built To Answer",
+          "objective": "For each named mission, state its science objective, its key instruments, and one engineering trade-off its design reflects.",
+          "keywords": ["mission", "spacecraft", "instrument", "objective", "orbiter", "lander", "rover", "flyby", "sample return", "radiation", "power", "RTG", "payload", "trade-off", "JWST", "Europa Clipper", "Dragonfly"],
+          "high_weight": true,
+          "video": true
+        },
+        {
+          "slug": "calculator-free-estimation",
+          "title": "Arithmetic Without a Calculator",
+          "objective": "Rearrange a formula symbolically, carry scientific notation, use dimensional analysis as a check, and estimate to an order of magnitude.",
+          "keywords": ["dimensional analysis", "order of magnitude", "scientific notation", "estimation", "algebraic rearrangement", "units", "significant figures", "ratio", "proportionality"],
+          "high_weight": true,
+          "video": false
+        },
+        {
+          "slug": "reading-solar-system-data",
+          "title": "Reading Data Under Time",
+          "objective": "Given a spectrum, a light curve, an image and a table for one object, build one consistent account of what it says about habitability.",
+          "keywords": ["light curve", "spectrum", "image", "table", "graph", "data interpretation", "axis", "scale", "evidence", "inference", "partial credit"],
+          "high_weight": true,
+          "video": false
+        }
+      ]
+    }
+  ]
+}

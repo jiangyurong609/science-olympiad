@@ -27,6 +27,7 @@ from collections import Counter
 import httpx
 from bs4 import BeautifulSoup
 from sqlalchemy import select
+from sqlalchemy.exc import OperationalError
 from sqlalchemy.orm import Session
 from sqlalchemy.orm.attributes import flag_modified
 
@@ -227,6 +228,27 @@ def ensure_snapshot(db: Session, source: Source, apply: bool) -> SourceSnapshot 
         print(f"   too little text at {source.url} ({len(text)} chars)")
         return None
     digest = hashlib.sha256(text.encode()).hexdigest()
+    # A body we have already stored under a DIFFERENT url is not a second source. Two ways
+    # this happens, both measured rather than guessed at:
+    #
+    #   * a site serves the same page at several paths — `oceanservice.noaa.gov/facts/`
+    #     returns byte-identical bodies for coral-reef, coralbleaching and why-care-about-
+    #     corals, which counted one page three times;
+    #   * a site serves its 404 as HTTP 200 — five NIAID urls each returned the same 8,807
+    #     characters of navigation menu, which is long enough to pass every length threshold
+    #     here and contains no science at all.
+    #
+    # Length cannot tell these apart from a real page; an identical hash can. Counting them
+    # inflates a source set, and the second kind silently grounds a course in a nav bar.
+    duplicate = db.scalar(select(SourceSnapshot).where(
+        SourceSnapshot.content_hash == digest,
+        SourceSnapshot.source_id != source.id,
+    ))
+    if duplicate is not None:
+        other = db.get(Source, duplicate.source_id)
+        print(f"   duplicate body at {source.url} — identical to "
+              f"{other.url if other else duplicate.source_id}")
+        return None
     snapshot = SourceSnapshot(source_id=source.id, final_url=final_url,
                               content_hash=digest, extracted_text=text)
     db.add(snapshot); db.flush()
@@ -294,6 +316,12 @@ def harvest_claims(db: Session, event: Event, sources: list[Source], apply: bool
             )
             db.add(claim); db.flush()
             made.append(claim)
+        if apply:
+            # Per source, not per run. A snapshot plus its claims is a complete unit of work:
+            # committing it costs nothing if the next fetch dies, and NOT committing it meant
+            # three separate grounding runs lost 40+ minutes of fetching to one dropped
+            # connection, because the whole run sat in a single transaction until the end.
+            db.commit()
     if rejected:
         print(f"   rejected candidates: {dict(rejected.most_common())}")
     return made
