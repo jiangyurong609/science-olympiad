@@ -453,12 +453,46 @@ def _generate_section(provider, event, section, passages, sources,
     return collected[:wanted]
 
 
+
+def format_reference(db, event, spec: dict) -> str:
+    """Name the paper this exam's SHAPE is modelled on, for this event.
+
+    `spec["reference"]` names a real paper, and both entries in FORMATS happen to name a
+    Dynamic Planet one, because Dynamic Planet is the event the formats were derived from.
+    Copied verbatim onto every other subject, that produced a Division B Meteorology exam whose
+    blueprint cited a Division C Dynamic Planet paper as its model — a claim about provenance
+    that was simply false, and the same class of defect as a paper citing a 192-point Division
+    C exam as the model for a Division B one.
+
+    So: the shape is reported as the shape, and the paper named is one of THIS event's own
+    imported past tests when we hold one. When we do not, that is said rather than borrowed.
+    """
+    shape = spec["reference"].split("\u2014", 1)[-1].strip() or spec["reference"]
+    base = re.sub(r"-(19|20)\d{2}$", "", event.slug)
+    paper = db.scalar(
+        select(Exam)
+        .join(Event, Event.id == Exam.event_id)
+        .where(
+            Event.slug.like(f"{base}%"),
+            Exam.release_class == "imported_practice",
+        )
+        .order_by(func.json_array_length(Exam.question_ids).desc())
+        .limit(1)
+    )
+    if paper is None:
+        return (f"{shape} (shape only; no past test for this event is held, so no paper of "
+                f"its own was used as a model)")
+    title = paper.title.split("Past Test:", 1)[-1].strip() or paper.title
+    return f"{shape}; shape matched against this event's own past test: {title}"
+
+
 def build(event_slug: str, format_key: str, apply: bool) -> dict:
     spec = FORMATS[format_key]
     db = SessionLocal()
     event = db.scalar(select(Event).where(Event.slug == event_slug))
     if not event:
         raise SystemExit(f"unknown event {event_slug!r}")
+    reference = format_reference(db, event, spec)
     source_ids = db.scalars(select(EventSourceMap.source_id).where(
         EventSourceMap.event_id == event.id)).all()
     sources = {s.id: s for s in db.scalars(
@@ -537,7 +571,7 @@ def build(event_slug: str, format_key: str, apply: bool) -> dict:
                 "prompt_version": PROMPT_VERSION,
                 "section": item["section"],
                 "source_paper_points": item["source_points"],
-                "format_reference": spec["reference"],
+                "format_reference": reference,
                 "claim_text": item["claim_text"],
                 "evidence_excerpt": item["evidence_excerpt"],
                 "machine_authored": True,
@@ -576,7 +610,7 @@ def build(event_slug: str, format_key: str, apply: bool) -> dict:
         blueprint={
             "import_kind": "authored_season_exam",
             "exam_format": format_key,
-            "format_reference": spec["reference"],
+            "format_reference": reference,
             "feedback_mode": "after_submit",
             "question_count": len(questions),
             "source_points_total": points,
