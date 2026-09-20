@@ -15,6 +15,7 @@ Usage:
   python -m scripts.import_local_tests --scan
   python -m scripts.import_local_tests --scan --root docs/science_olympiad_tests/_extracted/public-rsoi-2026-B
   python -m scripts.import_local_tests --parse --limit 5
+  python -m scripts.import_local_tests --parse --event botany-b
 
 --root narrows a scan to one subtree. A scan registers each PDF once, keyed by URL, and never
 revisits it — so a file that is still being written when the scan reaches it is registered
@@ -31,7 +32,7 @@ from sqlalchemy import select
 
 from app.core.database import SessionLocal
 from app.models.entities import (
-    Event, EventSourceMap, Exam, Source, SourceSnapshot,
+    Event, EventSourceMap, Exam, Question, Source, SourceSnapshot,
 )
 from app.services.past_test_import import import_past_test
 
@@ -125,24 +126,42 @@ _DIVISION_IN_PATH = re.compile(
     r"division\s+([bc])\b|div\s+([bc])\b|\[div\s+([bc])\]|\b([bc])\b\s*$")
 # A filename states its own division in ways a folder name does not: `..._2019_c_umich_test`,
 # `Disease_Detectives_C_Test`, `2018-Thermodynamics-State-C`.
-_DIVISION_IN_NAME = re.compile(r"[_\- ]([bc])[_\- .]|[_\- ]([bc])\.[a-z]+$")
+_DIVISION_IN_NAME = re.compile(
+    r"[_\- ]([bc])[_\- .]"          # Disease_Detectives_C_Test, ..._2019_c_umich_...
+    r"|[_\- ]([bc])\.[a-z]+$",      # 2018-Thermodynamics-State-C.pdf
+    re.I)
+# `BotanyC_Exam` states its division with no separator at all. Matching that needs the
+# original case and a real CamelCase hump — a CAPITAL B or C after a lowercase letter. A
+# case-insensitive version of this reads the last letter of an ordinary word as a division
+# and is wrong constantly: "Dynami-c- Planet B", "La-b- C", "for-W-e-b-.pdf" — it re-filed
+# fifty-five papers under the wrong division before the case rule went in.
+_DIVISION_CAMEL = re.compile(r"(?<=[a-z])([BC])(?=[_\- .]|$)")
 
 
 def _detect_division(relpath: str) -> str | None:
-    """Which division this paper is for — the FILE's own answer beats its folder's.
+    """Which division this paper is for, reading the strongest evidence first.
 
-    Tournaments hand both divisions one folder, named for both: `Disease Detectives B C`
-    holds `Disease_Detectives_B_Test.pdf` and `Disease_Detectives_C_Test.pdf` side by side.
-    Reading the folder gives "B" for both, and the Division C paper is then filed under the
-    Division B event and offered to middle-school students as their own past test.
+    1. The IMMEDIATE folder, when it names exactly one division. `Rocks and Minerals B/`
+       holding `Stations Rocks and Minerals C.pdf` is a Division B folder reusing the Division
+       C station sheet — the folder the supervisor filed it in is the better witness.
+    2. The FILE's own name. Tournaments also hand both divisions one folder named for both:
+       `Disease Detectives B C/` holds `Disease_Detectives_B_Test.pdf` and
+       `Disease_Detectives_C_Test.pdf` side by side, and reading that folder gives "B" for
+       both — offering a high-school paper to middle-school students as their own past test.
+    3. Any ancestor folder, for a paper whose own name says nothing (`PUSO 2026 Circuit Lab
+       Test.pdf` under `Division C/`).
     """
-    low = relpath.lower()
-    name = low.rsplit("/", 1)[-1]
-    for pattern, text in ((_DIVISION_IN_NAME, name), (_DIVISION_IN_PATH, name),
-                          (_DIVISION_IN_PATH, low)):
-        m = pattern.search(text)
-        if m:
-            return next(g for g in m.groups() if g).upper()
+    parts = relpath.split("/")
+    name, raw_parent = parts[-1], (parts[-2] if len(parts) > 1 else "")
+    parent_hits = {m.group(0).strip("_- .").upper()[-1]
+                   for m in _DIVISION_IN_PATH.finditer(raw_parent.lower())}
+    if len(parent_hits) == 1:
+        return parent_hits.pop()
+    for pattern, text in ((_DIVISION_IN_NAME, name.lower()), (_DIVISION_CAMEL, name),
+                          (_DIVISION_IN_PATH, relpath.lower())):
+        match = pattern.search(text)
+        if match:
+            return next(g for g in match.groups() if g).upper()
     return None
 
 
@@ -282,17 +301,17 @@ def remap(db) -> None:
     print(f"\nRemapped {mapped} sources.")
 
 
-def rescope(db) -> None:
+def rescope(db, move_exams: bool = False) -> None:
     """Re-point already-registered local sources at the event the matcher picks TODAY.
 
     `--scan` maps a source once and `--remap` only visits sources with no mapping at all, so
     a fix to the matcher or a change in which twin is current leaves every existing mapping
     as it was. This recomputes them.
 
-    It refuses to touch a source whose test has already been PARSED: the resulting Exam and
-    its Questions point at the old event, and moving the mapping alone would leave a source
-    claiming one event and its paper sitting on another. Move those with
-    `scripts/port_past_tests_to_current`, which moves the paper and its questions together.
+    A source whose test has already been PARSED needs more than a mapping change: the Exam
+    and its Questions point at the old event too, and moving the mapping alone would leave a
+    source claiming one event and its paper sitting on another. Those are reported and left
+    alone unless `--move-exams` is given, which moves the paper and its questions with it.
     """
     index = _build_event_index(db)
     parsed = {(e.blueprint or {}).get("exam_source_id")
@@ -309,16 +328,29 @@ def rescope(db) -> None:
                 EventSourceMap.source_id == source.id)).all():
             if esm.event_id == event.id:
                 continue
-            if source.id in parsed:
-                skipped += 1
-                continue
             old = db.get(Event, esm.event_id)
+            if source.id in parsed and not move_exams:
+                skipped += 1
+                print(f"  HELD {old.slug if old else esm.event_id} -> {event.slug} "
+                      f"(already parsed): {relpath}")
+                continue
             print(f"  {old.slug if old else esm.event_id} -> {event.slug}: {relpath}")
             esm.event_id = event.id
             changed += 1
+            if source.id not in parsed:
+                continue
+            for exam in db.scalars(select(Exam)).all():
+                if (exam.blueprint or {}).get("exam_source_id") != source.id:
+                    continue
+                exam.event_id = event.id
+                for question in db.scalars(select(Question).where(
+                        Question.id.in_(exam.question_ids or []))).all():
+                    question.event_id = event.id
+                print(f"       moved exam {exam.id} and its "
+                      f"{len(exam.question_ids or [])} questions")
     db.commit()
-    print(f"\nRe-pointed {changed} mapping(s); left {skipped} alone because the test is "
-          f"already parsed into an exam.")
+    print(f"\nRe-pointed {changed} mapping(s); held {skipped} whose test is already parsed "
+          f"into an exam (pass --move-exams to move those too).")
 
 
 def _paired_key(db, test_source: Source):
@@ -339,7 +371,7 @@ def _paired_key(db, test_source: Source):
     return keys[0] if keys else None
 
 
-def parse(db, limit: int | None) -> None:
+def parse(db, limit: int | None, only_event: str | None = None) -> None:
     # Any exam that already names this source — published, held for review, or retired —
     # means the source has been parsed. Filtering on release_class == "past_test" missed the
     # 146 imports that carry "imported_practice", and a full run would have re-parsed and
@@ -353,8 +385,13 @@ def parse(db, limit: int | None) -> None:
         if meta.get("role") != "test" or source.id in already:
             continue
         esm = db.scalar(select(EventSourceMap).where(EventSourceMap.source_id == source.id))
-        if esm:
-            test_sources.append((source, esm.event_id))
+        if not esm:
+            continue
+        if only_event:
+            event = db.get(Event, esm.event_id)
+            if not event or not event.slug.startswith(only_event):
+                continue
+        test_sources.append((source, esm.event_id))
     if limit:
         test_sources = test_sources[:limit]
     print(f"Parsing {len(test_sources)} local test sources…\n")
@@ -389,9 +426,10 @@ def main() -> None:
         elif "--remap" in sys.argv:
             remap(db)
         elif "--rescope" in sys.argv:
-            rescope(db)
+            rescope(db, "--move-exams" in sys.argv)
         elif "--parse" in sys.argv:
-            parse(db, int(_arg("--limit")) if "--limit" in sys.argv else None)
+            parse(db, int(_arg("--limit")) if "--limit" in sys.argv else None,
+                  _arg("--event"))
         else:
             raise SystemExit(__doc__)
 
