@@ -32,11 +32,12 @@ from sqlalchemy.orm.attributes import flag_modified
 
 from app.core.database import SessionLocal
 from app.models.entities import (
-    Concept, ContentGap, Course, Event, Lesson, LessonSkill, LessonVersion, ScientificClaim,
-    Skill, Source, SourceSnapshot,
+    Concept, ContentGap, Course, Event, EventSourceMap, Lesson, LessonSkill, LessonVersion,
+    ScientificClaim, Skill, Source, SourceSnapshot,
 )
 from scripts.open_sources import (
-    BLOCKED_HOSTS, DOMAIN_SOURCES, domain_for_event, rights_for)
+    BLOCKED_HOSTS, DOMAIN_SOURCES, DOMAIN_TERM_PATTERNS, domain_for_event,
+    domain_terms_pattern, rights_for)
 
 # Imported, not redeclared. These two scripts drifted: the audit began counting `checkpoint`
 # as substantive while the grounder kept its own older set, so the grounder was not even
@@ -61,13 +62,20 @@ BOILERPLATE = re.compile(
     r"national park (service|system)|park service|newsroom|press release)",
     re.I,
 )
-# A claim asserts something about the subject matter, so it must use its vocabulary.
-DOMAIN_TERMS = re.compile(
-    r"(mineral|rock|crystal|igneous|sediment|metamorph|magma|lava|quartz|feldspar|mica|"
-    r"calcite|hardness|streak|luster|cleavage|fracture|silicate|carbonate|oxide|sulfide|"
-    r"tecton|volcan|erupt|weather|erosion|deposit|strata|foliat|grain|texture|density|"
-    r"element|chemical|formula|composition|pressure|temperature|melt|cool|form)", re.I,
-)
+# The subject vocabulary a claim must use. Set per run from the event's domain — this was one
+# hardcoded geology regex, so grounding a hydrology or physics event rejected nearly every
+# candidate as "off_topic" and reported it as "no verified claims".
+DOMAIN_TERMS = re.compile(DOMAIN_TERM_PATTERNS["geology"], re.I)
+
+
+def set_domain_terms(domain: str) -> None:
+    global DOMAIN_TERMS
+    DOMAIN_TERMS = re.compile(domain_terms_pattern(domain), re.I)
+    if domain not in DOMAIN_TERM_PATTERNS:
+        print(f"   WARNING: no claim vocabulary tuned for domain {domain!r}; using the geology "
+              f"pattern, which will reject most of this subject's sentences as off-topic")
+
+
 # A proposition needs a verb doing assertive work.
 PREDICATE = re.compile(r"\b(is|are|was|were|has|have|contains?|forms?|occurs?|consists?|"
                        r"produces?|causes?|results?|includes?|becomes?|creates?|"
@@ -151,7 +159,25 @@ def ensure_sources(db: Session, event: Event, apply: bool) -> list[Source]:
             source.rights_status = rights["rights_status"]
             source.license_name = rights["license_name"]
             source.approved = True
+        # Attach the source to the event. Grounding used to register sources and stop there,
+        # which silently broke the other half of the pipeline: the course author selects its
+        # passages with `EventSourceMap.event_id == event.id`, so a freshly grounded event had
+        # 58 registered sources, thousands of extracted passages, and nothing an authoring run
+        # could see. It looked identical to "no sources exist for this subject".
+        if apply and not db.scalar(select(EventSourceMap).where(
+            EventSourceMap.event_id == event.id,
+            EventSourceMap.source_id == source.id,
+            EventSourceMap.purpose == "fact_grounding",
+            EventSourceMap.source_universe_version == domain,
+        )):
+            db.add(EventSourceMap(
+                event_id=event.id, source_id=source.id, purpose="fact_grounding",
+                source_tier=0, required=False, required_artifact_types=["parsed_text"],
+                source_universe_version=domain, reviewed=True,
+                notes=f"open {domain} reference registered by ground_event"))
         sources.append(source)
+    if apply:
+        db.flush()
     return sources
 
 
@@ -450,6 +476,7 @@ def main() -> None:
         if not event:
             raise SystemExit(f"unknown event {args.event!r}")
         print(f"grounding {event.slug} ({'APPLY' if apply else 'dry-run'})")
+        set_domain_terms(domain_for_event(event.slug) or "")
         sources = ensure_sources(db, event, apply)
         print(f"  open sources: {len(sources)}")
         claims = harvest_claims(db, event, sources, apply, approve=args.approve)

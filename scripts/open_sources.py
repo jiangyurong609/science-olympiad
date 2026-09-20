@@ -43,6 +43,43 @@ def rights_for(url: str, spec: dict) -> dict:
             "publisher": spec["publisher"]}
 
 
+# A sentence is only a claim about a subject if it uses that subject's vocabulary, so the filter
+# has to know which subject it is filtering for. `ground_event` carried one hardcoded regex of
+# geology words, which meant grounding any other domain rejected nearly everything as "off_topic":
+# a hydrology page explaining an aquifer, a recharge rate or a drainage divide contains none of
+# `mineral|rock|crystal|igneous|...`. Rocks & Minerals is the only course this ever worked for, and
+# the failure reported itself as "no verified claims" — indistinguishable from a bad source set.
+DOMAIN_TERM_PATTERNS = {
+    "geology": (r"mineral|rock|crystal|igneous|sediment|metamorph|magma|lava|quartz|feldspar|"
+                r"mica|calcite|hardness|streak|luster|cleavage|fracture|silicate|carbonate|"
+                r"oxide|sulfide|tecton|volcan|erupt|weather|erosion|deposit|strata|foliat|"
+                r"grain|texture|density|element|chemical|formula|composition|pressure|"
+                r"temperature|melt|cool|form"),
+    "hydrology": (r"water|stream|river|channel|creek|flow|discharge|runoff|precipitat|rain|"
+                  r"snow|evaporat|transpir|infiltrat|percolat|aquifer|groundwater|water table|"
+                  r"well|spring|recharge|watershed|drainage|basin|divide|tributar|sediment|"
+                  r"erosion|deposit|meander|floodplain|flood|levee|delta|alluvial|karst|"
+                  r"sinkhole|cave|limestone|dissolv|lake|reservoir|wetland|marsh|swamp|bog|"
+                  r"porosity|permeab|hydraulic|gradient|velocity|storage|residence|budget|"
+                  r"gauge|stage|hydrograph|bank|bed|gravel|silt|clay|sand|valley|slope"),
+    "physics": (r"energy|force|motion|velocity|speed|accelerat|momentum|inertia|mass|weight|"
+                r"gravit|friction|roll|slide|torque|lever|pulley|wheel|axle|incline|machine|"
+                r"mechanical advantage|work|power|potential|kinetic|rotat|angular|circular|"
+                r"centripetal|loop|spring|pressure|current|voltage|resist|circuit|magnet|"
+                r"capacit|wave|heat|temperature|thermal"),
+}
+
+
+def domain_terms_pattern(domain: str) -> str:
+    """Subject vocabulary for a domain's claim filter.
+
+    Falls back to the geology pattern, which is what every domain silently used before, so a
+    domain without an entry behaves exactly as it did rather than changing meaning unnoticed —
+    but `ground_event` says out loud that the filter is not tuned for it.
+    """
+    return DOMAIN_TERM_PATTERNS.get(domain, DOMAIN_TERM_PATTERNS["geology"])
+
+
 # domain -> {publisher, license, urls[]}
 DOMAIN_SOURCES = {
     "geology": {
