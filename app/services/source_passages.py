@@ -180,7 +180,16 @@ def ensure_source_passages(db: Session, snapshot: SourceSnapshot, *, commit: boo
     if existing:
         return existing
     rows = []
+    # `uq_source_passage_locator` is on (source_snapshot_id, locator, content_hash), and a
+    # PDF can repeat a page verbatim — a scanned answer key whose pages carry the same block
+    # of "ANS: C PTS: 1" lines does. Inserting both violates the constraint and ends the
+    # whole extraction run, which stops a course build two steps before authoring.
+    seen: set[tuple[str, str]] = set()
     for sequence, payload in enumerate(extract_passage_payloads(snapshot), start=1):
+        fingerprint = (payload["locator"], _hash(payload["text"]))
+        if fingerprint in seen:
+            continue
+        seen.add(fingerprint)
         passage = SourcePassage(
             source_id=snapshot.source_id,
             source_snapshot_id=snapshot.id,

@@ -304,6 +304,19 @@ def _normalize_blocks(raw: dict, allowed_passage_ids: set[int], lesson_slug: str
     return normalized
 
 
+# An imported past test is registered as a Source and mapped to its event, exactly like a
+# teaching source. It is not one. `extract_source_passages` walks every snapshot in the
+# database, so those PDFs become SourcePassages too, and a course author reading every
+# passage mapped to its event will cite a rival tournament's question paper — or its ANSWER
+# KEY — as the evidence for a lesson. 639 citations in the 2026 courses point at one.
+PAST_TEST_URL_PREFIX = "local://"
+
+
+def is_past_test_source(source: Source) -> bool:
+    """True for an imported past test, which is never teaching evidence."""
+    return (source.url or "").startswith(PAST_TEST_URL_PREFIX)
+
+
 def _course_sources(db, event: Event):
     source_ids = db.scalars(select(EventSourceMap.source_id).where(
         EventSourceMap.event_id == event.id
@@ -312,7 +325,9 @@ def _course_sources(db, event: Event):
         source.id: source for source in db.scalars(select(Source).where(
             Source.id.in_(source_ids)
         )).all()
+        if not is_past_test_source(source)
     }
+    source_ids = list(sources)
     passages = db.scalars(select(SourcePassage).where(
         SourcePassage.source_id.in_(source_ids)
     ).order_by(SourcePassage.source_id, SourcePassage.sequence)).all()
