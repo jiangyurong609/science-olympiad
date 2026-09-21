@@ -1,0 +1,18 @@
+{
+  "_why": "Three Rocks lessons still faulted after the pack corrections; findings verified against the lesson text.",
+  "lessons": {
+    "other-diagnostic-properties": [
+      "Remove the claim that sulfur has a 'powerful unpleasant smell'. Solid native sulfur has at most a faint odor; the rotten-egg smell is hydrogen sulfide gas, and burning sulfur gives choking sulfur dioxide. For SMELL, teach that some minerals release a characteristic odor when powdered, scratched, struck or heated, and only name a specimen example if a cited passage supports it.",
+      "Remove sulfur-35 as the radioactivity example. An isotope used in labs is not how radioactivity is observed in a mineral specimen. Teach that radioactivity is detected with an instrument such as a Geiger counter and is a property of minerals containing uranium or thorium; do not claim any 2027 List specimen is radioactive unless a cited passage says so.",
+      "Taste is never tested at the competition (rule 3.g); halite's salty taste may only be given as a described property. Say so explicitly."
+    ],
+    "primary-sedimentary-structures": [
+      "A checkpoint describes a surface with 'pointed crests and rounded troughs' AND a steep east side and gentle west side. Pointed crests with rounded troughs describe SYMMETRICAL (wave) ripples; do not attach that wording to an asymmetrical ripple. Describe the asymmetrical case only by its slopes: gentle up-current (stoss) side, steep down-current (lee) side, so the current flowed toward the steep side.",
+      "Ripple CRESTS trend perpendicular to the flow direction; ripple cross-laminae DIP downstream (in the direction of flow). Do not say the laminae are 'oriented perpendicular to the paleoflow direction'.",
+      "For trough cross-bedding, the paleocurrent is along the axis of the troughs (the direction the troughs open/plunge), because individual curved foresets dip in a spread of directions. For planar (tabular) cross-beds, the foresets dip down-current. State the worked example's answer explicitly as a direction."
+    ],
+    "sedimentary-evidence": [
+      "Do not state that limestone is 'more than 95% biogenic'. Say most limestone is biochemical, built from carbonate shells and skeletons of marine organisms (e.g. fossil limestone, coquina, chalk), while some limestone forms by chemical precipitation (oolitic limestone, travertine). Use the List name DIATOMITE rather than 'diatomaceous earth'."
+    ]
+  }
+}

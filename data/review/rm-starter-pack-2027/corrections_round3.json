@@ -1,0 +1,14 @@
+{
+  "_why": "Pack additions the first correction pass omitted although the corpus supports them (passages 5354/5355, 5211, 53037 and the polymorphism page).",
+  "lessons": {
+    "gem-varieties": [
+      "Add the trace-element cause of emerald's color, which the rules use as their example of chemistry controlling color (3.h.vi): emerald is beryl colored green by trace amounts of chromium or sometimes vanadium (Wikipedia 'Emerald')."
+    ],
+    "quartz-varieties": [
+      "Add AVENTURINE, which is on the 2027 List under quartz varieties and is not yet taught: a form of quartz(ite) whose green, glittering look comes from platy inclusions, classically chrome-bearing fuchsite (a green variety of muscovite mica); it can also be orange, brown, yellow, blue or grey (Wikipedia 'Aventurine'). Also tell students the List files OPAL under quartz varieties even though it is a mineraloid."
+    ],
+    "native-elements-and-oxides": [
+      "Name diamond and graphite with the rules' term: they are POLYMORPHS (the rules' own example pair, 3.h.vii) — the same element, carbon, in different crystal structures (sources call them allotropes of carbon), which is why diamond is Mohs 10 and graphite is soft and greasy. Use the word 'polymorph' in the lesson."
+    ]
+  }
+}

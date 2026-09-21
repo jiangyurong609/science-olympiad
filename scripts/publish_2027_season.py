@@ -35,7 +35,7 @@ import argparse
 from sqlalchemy import select, text
 
 from app.core.database import SessionLocal
-from app.models.entities import AuditLog, Event, Lesson, LessonVersion
+from app.models.entities import AuditLog, Event, Lesson, LessonVersion, ReviewDecision
 from app.services import lesson_blocks
 from app.services.student_visibility import DISPOSITION_UNREVIEWED_PRACTICE
 
@@ -121,6 +121,12 @@ def main() -> None:
     # Run while another listed course is mid-review and that course goes live half-repaired.
     # `--event` publishes one course and leaves the rest of the list alone.
     ap.add_argument("--event", help="publish only this event slug from PUBLISH_EVENTS")
+    # A repair loop returns lessons to draft and writes a new version before reviewing it. A
+    # publish run in that window would serve a version no reviewer has read. With this flag a
+    # draft is published only when the automated reviewer approved THIS version, so a course
+    # can be put back in front of students while a few of its lessons are still being repaired.
+    ap.add_argument("--require-approval", action="store_true",
+                    help="publish only lessons whose current version has an automated approve")
     args = ap.parse_args()
     if args.event and args.event not in {slug for slug, _ in PUBLISH_EVENTS}:
         raise SystemExit(f"{args.event} is not in PUBLISH_EVENTS")
@@ -151,6 +157,14 @@ def main() -> None:
             # finished, so serving it promises work that cannot be completed.
             if lesson_blocks.ungradeable_checkpoints(version.content or []):
                 blocked.append((lesson, "has an ungradeable checkpoint"))
+                continue
+            if args.require_approval and db.scalar(select(ReviewDecision.decision).where(
+                    ReviewDecision.entity_type == "lesson",
+                    ReviewDecision.entity_id == lesson.id,
+                    ReviewDecision.entity_version == lesson.current_version,
+                    ReviewDecision.stage == "automated",
+            ).order_by(ReviewDecision.id.desc()).limit(1)) not in {"approve", "approved"}:
+                blocked.append((lesson, f"v{lesson.current_version} not approved by review yet"))
                 continue
             publishable.append(lesson)
         print(f"  {event.slug}: {len(publishable)} to publish, {len(blocked)} blocked, "
