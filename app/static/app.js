@@ -1448,7 +1448,10 @@ function renderExams() {
     ${exam.startable === false
       ? `<button class="button" type="button" disabled aria-disabled="true">Held For Review</button>
          <p class="exam-blocked-reason">${escapeHtml(exam.blocked_reason || 'This exam is not open for new attempts.')}</p>`
-      : `<button class="button button-dark" type="button" data-start-exam="${exam.id}">Start Exam</button>`}
+      : exam.open_attempt
+        ? `<button class="button button-dark" type="button" data-start-exam="${exam.id}">Resume Exam</button>
+           <p class="exam-open-attempt">${escapeHtml(openAttemptNote(exam.open_attempt))}</p>`
+        : `<button class="button button-dark" type="button" data-start-exam="${exam.id}">Start Exam</button>`}
   </article>`).join('');
   loadResultsHistory();
 }
@@ -3950,6 +3953,18 @@ $('continue-button').addEventListener('click', event => {
   if (event.currentTarget.dataset.missionIndex) runMissionAction(Number(event.currentTarget.dataset.missionIndex)).catch(error => toast(error.message));
   else showView('learn');
 });
+
+// An attempt left open by "Save & Exit" keeps running against its server deadline. The card
+// used to say "Start Exam" and show nothing, so a student resumed a half-spent clock without
+// being told — and the open attempt also disables the tutor, with no on-screen way to find
+// which exam was responsible.
+function openAttemptNote(attempt) {
+  if (!attempt?.deadline_at) return 'You have an attempt in progress on this exam.';
+  const remaining = Math.floor((new Date(attempt.deadline_at).getTime() - Date.now()) / 1000);
+  if (remaining <= 0) return 'Your attempt on this exam has run out of time — open it to submit.';
+  const minutes = Math.floor(remaining / 60);
+  return `Attempt in progress — ${minutes} min ${remaining % 60}s left on the clock.`;
+}
 
 async function startExam(id) {
   const button = document.querySelector(`[data-start-exam="${id}"]`);

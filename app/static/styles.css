@@ -1658,3 +1658,6 @@ h2[tabindex="-1"]:focus-visible { outline: 0; }
   background: var(--warn-soft, #fdf3e3);
   color: var(--warn-ink, #7a5320);
 }
+
+/* A resumable attempt must say so on the card: the clock is already running. */
+.exam-open-attempt { margin: 0.5rem 0 0; font-size: 0.85rem; line-height: 1.45; font-weight: 600; color: var(--warn-ink, #7a5320); }

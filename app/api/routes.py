@@ -3987,6 +3987,16 @@ def list_exams(db: Session = Depends(get_db), user: User = Depends(current_user)
     exams = db.scalars(query.order_by(Exam.created_at.desc())).all()
     accommodation = _effective_accommodation(db, user)
     multiplier = accommodation.time_multiplier if accommodation else 1.0
+    # An attempt left open by "Save & Exit" is resumable by design, but the card said
+    # "Start Exam" and gave no sign one was waiting — so a student unknowingly resumed a
+    # half-spent clock, and the open attempt silently disabled the tutor with nothing on
+    # screen naming the exam responsible.
+    open_attempts = {
+        row.exam_id: row for row in db.scalars(select(Attempt).where(
+            Attempt.user_id == user.id,
+            Attempt.status.in_([AttemptStatus.IN_PROGRESS.value, "content_hold"]),
+        )).all()
+    }
     return [{
         "id": e.id, "title": e.title, "duration_minutes": e.duration_minutes,
         "effective_duration_minutes": math.ceil(e.duration_minutes * multiplier),
@@ -4009,6 +4019,12 @@ def list_exams(db: Session = Depends(get_db), user: User = Depends(current_user)
                                             UNKNOWN_RELEASE_LABEL),
         "startable": _exam_startability(db, e)[0],
         "blocked_reason": _exam_startability(db, e)[1],
+        "open_attempt": (
+            {"attempt_id": open_attempts[e.id].id,
+             "deadline_at": open_attempts[e.id].deadline_at.isoformat()
+             if open_attempts[e.id].deadline_at else None,
+             "started_at": open_attempts[e.id].started_at.isoformat()}
+            if e.id in open_attempts else None),
     } for e in exams]
 
 
