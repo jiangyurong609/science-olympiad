@@ -35,6 +35,30 @@ BLUEPRINT="data/courses/${EVENT}.json"
 : "${DATABASE_URL:?set DATABASE_URL}"
 export PYTHONPATH=. PYTHONUNBUFFERED=1
 
+# Outside corrections are applied FIRST, unconditionally, to the lessons they name. They used
+# to be applied only inside the repair step, and repair only runs on lessons the automated
+# reviewer has faulted — so when that reviewer had already judged every lesson and skipped
+# them all, the loop saw zero faults, declared "clean after 1 round", and never read the
+# file. Three courses were "hardened" that way against an expert's findings that one lesson
+# teaches an equation missing its factor of 4, and none of the findings were applied. An
+# outside reviewer's finding is the reason for this run; it cannot be gated on an automated
+# reviewer happening to agree.
+if [[ -n "$CORRECTIONS" ]]; then
+  slugs="$(env -u OPENAI_API_KEY python3 -c 'import sys; sys.path.insert(0, "."); from pathlib import Path; from scripts.author_course_from_blueprint import load_corrections; print(",".join(sorted(load_corrections(Path(sys.argv[1])))))' "$CORRECTIONS")"
+  if [[ -z "$slugs" ]]; then
+    echo "!!!! $EVENT: $CORRECTIONS names no lessons — refusing to report clean against it" >&2
+    exit 2
+  fi
+  echo "=============== $EVENT — applying outside corrections to: $slugs"
+  env -u OPENAI_API_KEY python -m scripts.author_course_from_blueprint \
+      --blueprint "$BLUEPRINT" --apply --generate --allow-live --repair \
+      --corrections "$CORRECTIONS" --only "$slugs" \
+    | python3 -c 'import json, sys; d = json.load(sys.stdin); print("   corrected %d, failed %d" % (d["generated_lessons"], len(d["failed"]))); [print("   FAILED", f) for f in d["failed"]]'
+  # Consumed. The findings describe the version the expert read; re-applying them to the
+  # rewrite in a later round would ask the author to fix text that is already gone.
+  CORRECTIONS=""
+fi
+
 for (( round=1; round<=ROUNDS; round++ )); do
   echo "=============== $EVENT — review round $round of $ROUNDS"
   out="$(env -u OPENAI_API_KEY python -m scripts.agentic_course_review \

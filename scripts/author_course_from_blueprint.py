@@ -555,6 +555,29 @@ def _generate_one(provider, blueprint, unit_data, lesson_data, passages, sources
     }
 
 
+def load_corrections(path: Path) -> dict[str, str]:
+    """Read an outside reviewer's corrections as {lesson_slug: instruction}.
+
+    Accepts the flat form `{slug: note}` and the documented form
+    `{"_why": ..., "lessons": {slug: [note, ...]}}`. The loader used to call `.items()` on the
+    top level unconditionally, so a file in the second form handed back `_why` and `lessons`
+    AS LESSON SLUGS; neither is in any blueprint, both were dropped as unrepairable, and
+    every correction in the file was discarded without a word. Keys starting with an
+    underscore are metadata, never lessons.
+    """
+    data = json.loads(path.read_text())
+    if isinstance(data, dict) and isinstance(data.get("lessons"), dict):
+        data = data["lessons"]
+    out: dict[str, str] = {}
+    for slug, note in (data or {}).items():
+        if not isinstance(slug, str) or slug.startswith("_"):
+            continue
+        text = "\n\n".join(str(n) for n in note) if isinstance(note, list) else str(note)
+        if text.strip():
+            out[slug] = text.strip()
+    return out
+
+
 def author(*, apply: bool, generate: bool, regenerate: bool = False,
            blueprint_path: Path | None = None, allow_live: bool = False,
            only: set[str] | None = None, repair: bool = False,
@@ -603,7 +626,7 @@ def author(*, apply: bool, generate: bool, regenerate: bool = False,
             # effective Earth curvature rather than an effective radius, which inverts it), so
             # the repair set cannot be only what one reviewer flagged.
             if corrections_file:
-                for slug, note in json.loads(Path(corrections_file).read_text()).items():
+                for slug, note in load_corrections(Path(corrections_file)).items():
                     corrections[slug] = (corrections.get(slug, "") + "\n\n" + note).strip()
             # A faulted lesson this blueprint does not contain cannot be repaired here at all.
             # The video "event strategy" lessons come from the video pipeline, not from a
