@@ -1461,6 +1461,7 @@ function examBlurb(releaseClass) {
     competition_ready: 'Calibrated current-season simulation.',
     foundational_practice: 'Foundational practice with guided review.',
     imported_practice: 'Transcribed from a real past paper. Answer key not expert-reviewed.',
+    study_pack_practice: 'Sample paper from a 2027 study pack. Its key was checked against the rules, not by a subject expert.',
     machine_practice: 'Written and machine-checked, in the format of a real paper. No subject expert has read it.',
     past_test: 'Past test, transcribed and not yet reviewed.',
   }[releaseClass] || 'Competition-style practice. Not expert-reviewed.';
@@ -4020,6 +4021,10 @@ const EXAM_PROVENANCE_NOTICES = {
   imported_practice: '<strong>Transcribed from a real past paper.</strong> These questions and '
     + 'their answer key were taken from a tournament paper and converted automatically. '
     + 'Transcription can introduce errors and no subject expert has checked this copy. After '
+    + 'you submit you can report a problem on any question.',
+  study_pack_practice: '<strong>Sample paper from a 2027 study pack.</strong> These questions and '
+    + 'their answer key come from a study pack, not a tournament. The key was checked against '
+    + 'the 2027 rules and the official list, but no subject expert has reviewed this copy. After '
     + 'you submit you can report a problem on any question.',
 };
 

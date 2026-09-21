@@ -88,6 +88,7 @@ RELEASE_LABELS = {
     "mock_shuffled": "Mock Exam",
     "machine_practice": "AI Practice · Not Expert Reviewed",
     "imported_practice": "Past Test · Transcribed, Not Reviewed",
+    "study_pack_practice": "Study Pack Practice · Not Expert Reviewed",
     # An exam whose items have not been reviewed is not offered for new attempts. It stays
     # in the catalogue, labelled for what it is, rather than showing a Start button that the
     # server will refuse.
@@ -4049,7 +4050,7 @@ def _effective_release_class(db: Session, exam: Exam) -> str:
     disposition = sv.exam_disposition(exam)
     if disposition == sv.DISPOSITION_PENDING:
         disposition = sv.classify_exam(db, exam)
-    if exam.release_class in {"imported_practice", "machine_practice"} \
+    if exam.release_class in {"imported_practice", "machine_practice", "study_pack_practice"} \
             and disposition == sv.DISPOSITION_UNREVIEWED_PRACTICE:
         return sv.DISPOSITION_UNREVIEWED_PRACTICE
     return exam.release_class

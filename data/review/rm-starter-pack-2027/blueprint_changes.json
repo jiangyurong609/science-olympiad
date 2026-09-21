@@ -1,0 +1,262 @@
+{
+  "_why": "Proposed edits to data/courses/rocks-and-minerals-b-2027.json that close the Division B gaps found by comparing the 2027 Starter Pack with the live course. Lesson objects use the blueprint's own schema (slug, title, objective, keywords, high_weight, optional video). Every item names its authority in the 2027 Div B rules (rules_ref) and the pack slides and exam items that support it. No Division C topic is proposed: solid solution, phase diagrams, silicate-structure classes, crystal systems, metamorphic facies, magmatic differentiation and thin sections are listed under excluded. This is a proposal only. Nothing has been applied to the repo or the database.",
+  "_schema_note": "new_lessons[].lesson is a drop-in lesson object for units[slug=unit].lessons, inserted after the lesson named in 'after'. changed_lessons[] gives replacement objective text (null = unchanged) and keywords to add or remove for an existing lesson slug.",
+  "new_lessons": [
+    {
+      "unit": "mineral-properties",
+      "after": "breakage-density-and-special-properties",
+      "lesson": {
+        "slug": "diaphaneity-and-tenacity",
+        "title": "Diaphaneity and Tenacity",
+        "objective": "Classify a specimen as transparent, translucent or opaque, and describe its tenacity as brittle, malleable, sectile, flexible or elastic, using List examples: clear calcite (transparent), milky quartz (translucent), hematite (opaque); quartz (brittle), native copper (malleable), talc (sectile), mica (elastic).",
+        "keywords": ["diaphaneity", "transparent", "translucent", "opaque", "tenacity", "brittle", "malleable", "sectile", "flexible", "elastic", "native copper", "talc", "mica", "calcite", "milky quartz", "hematite"],
+        "high_weight": true
+      },
+      "why": "Rule 3.h.iii lists both as physical properties. The live course never teaches diaphaneity as a property and has no tenacity content. The pack tests both.",
+      "rules_ref": "3.h.iii",
+      "pack_slides": [7, 14, 15],
+      "exam_refs": ["b-national Q8", "b-national Q9", "b-national Q66"]
+    },
+    {
+      "unit": "mineral-properties",
+      "after": "diaphaneity-and-tenacity",
+      "lesson": {
+        "slug": "other-diagnostic-properties",
+        "title": "Acid, Fluorescence, Magnetism and the Other Listed Properties",
+        "objective": "Name the eight 'other properties' the rules allow (reaction with acid, fluorescence, magnetism, smell, taste, double refraction, piezoelectricity, radioactivity), give a List example for each where one exists (calcite vs dolomite in acid, fluorite and willemite under UV, magnetite, sulfur odor, halite taste, calcite double refraction, quartz piezoelectricity), and interpret a written description of an acid or taste result, since HCl is never provided and tasting is never allowed.",
+        "keywords": ["other properties", "reaction with acid", "effervescence", "dolomite powdered", "fluorescence", "ultraviolet", "fluorite", "willemite", "magnetism", "magnetite", "smell", "sulfur", "taste", "halite", "double refraction", "calcite rhomb", "piezoelectricity", "quartz", "radioactivity", "Geiger counter"],
+        "high_weight": true
+      },
+      "why": "Rule 3.h.iv lists exactly these eight properties. Smell, taste, double refraction, piezoelectricity and radioactivity have zero hits in the live course. The pack gives the examples. Do NOT carry over slide 20's 'sulfur smells like rotten eggs' (see pack_audit.md). The pack's radioactive examples (uraninite, autunite) are not on the List, so the lesson must say no List mineral is a standard radioactivity example rather than invent one.",
+      "rules_ref": "3.h.iv, 3.g",
+      "pack_slides": [16, 17, 18, 19, 20, 21, 4],
+      "exam_refs": ["b-state Q37", "b-national Q10", "b-national Q11", "b-national Q12", "b-national Q13", "b-national Q15", "b-national Q72"]
+    },
+    {
+      "unit": "mineral-properties",
+      "after": "other-diagnostic-properties",
+      "lesson": {
+        "slug": "mineral-habits",
+        "title": "Mineral Habits: The 21 Listed Forms",
+        "objective": "Recognize and name all 21 habits the rules list (acicular, bladed, botryoidal, cubic, dendritic, dodecahedral, doubly terminated, druzy, geodic, hexagonal, hopper, massive, micaceous, octahedral, pisolitic, prismatic, radiating, rosette, stalactitic, twinning, tabular) from a description or photo, and give a List mineral that shows each where one is standard, such as pyrite cubes, botryoidal malachite, dendritic silver, micaceous muscovite, tabular barite.",
+        "keywords": ["habit", "acicular", "bladed", "botryoidal", "cubic", "dendritic", "dodecahedral", "doubly terminated", "druzy", "geodic", "hexagonal", "hopper", "massive", "micaceous", "octahedral", "pisolitic", "prismatic", "radiating", "rosette", "stalactitic", "twinning", "tabular"],
+        "high_weight": true,
+        "video": true
+      },
+      "why": "Rule 3.h.v gives a closed list of 21 habits. Eight of them have zero hits in the live course. The pack's slide 22 is titled 'Full 2027 List' but omits twinning and tabular, so build from the rules, not the slide. Habit is tested 7 times across the three Div B pack exams.",
+      "rules_ref": "3.h.v",
+      "pack_slides": [22],
+      "exam_refs": ["b-regional Q3", "b-state Q3", "b-state Q6", "b-state Q7", "b-national Q16", "b-national Q17", "b-national Q18", "b-national Q19"]
+    },
+    {
+      "unit": "mineral-families",
+      "after": "isolated-silicates-and-garnets",
+      "lesson": {
+        "slug": "chemistry-color-and-polymorphs",
+        "title": "Formulas, Trace-Element Color and Polymorphs",
+        "objective": "Read a mineral formula, explain how a trace element changes color without changing the mineral (chromium in emerald, iron in amethyst), and identify the four polymorph sets the rules name — aragonite/calcite (CaCO3), diamond/graphite (C), orthoclase/microcline (KAlSi3O8), andalusite/kyanite/sillimanite (Al2SiO5) — stating why the same formula can give different properties.",
+        "keywords": ["chemical formula", "trace element", "chromium", "emerald", "iron", "amethyst", "polymorph", "aragonite", "calcite", "CaCO3", "diamond", "graphite", "orthoclase", "microcline", "KAlSi3O8", "andalusite", "kyanite", "sillimanite", "Al2SiO5", "crystal structure"],
+        "high_weight": true
+      },
+      "why": "Rules 3.h.vi and 3.h.vii. 'Polymorph' appears once in the live course and andalusite never appears. The pack tests polymorphs or trace-element color in 5 Div B items and 3 Div C items.",
+      "rules_ref": "3.h.vi, 3.h.vii",
+      "pack_slides": [23, 24],
+      "exam_refs": ["b-regional Q21", "b-state Q8", "b-state Q9", "b-national Q21", "b-national Q22", "c-state Q10", "c-state Q47", "c-regional Q9"]
+    },
+    {
+      "unit": "mineral-families",
+      "after": "chemistry-color-and-polymorphs",
+      "lesson": {
+        "slug": "how-minerals-form",
+        "title": "How and Where Minerals Form",
+        "objective": "Match each rules-listed formation process to a List example: crystallization from magma (olivine in basalt, feldspar in granite), hydrothermal (quartz veins, galena, fluorite), chemical weathering (feldspar to kaolinite), evaporites (halite, gypsum), chemical precipitation (travertine calcite), alteration under heat and pressure (garnet, kyanite, staurolite). Then link minerals to rock-forming settings: mafic olivine and pyroxene in oceanic crust, evaporite minerals in sedimentary basins, metamorphic minerals in regional belts.",
+        "keywords": ["formation", "crystallization from magma", "hydrothermal", "chemical weathering", "kaolinite", "evaporite", "halite", "gypsum", "chemical precipitation", "travertine", "heat and pressure", "garnet", "kyanite", "staurolite", "oceanic crust", "mafic minerals", "olivine", "pyroxene"],
+        "high_weight": false
+      },
+      "why": "Rules 3.h.x and 3.h.xi. 'Hydrothermal' and 'chemical weathering' have zero hits in the lessons. Nothing links minerals to settings.",
+      "rules_ref": "3.h.x, 3.h.xi",
+      "pack_slides": [30, 40],
+      "exam_refs": ["b-state Q11", "b-state Q12", "b-national Q25", "b-national Q26", "b-national Q27"]
+    },
+    {
+      "unit": "identification-and-competition",
+      "after": "identify-an-unknown-specimen",
+      "lesson": {
+        "slug": "uses-of-minerals-and-rocks",
+        "title": "Uses of Minerals and Rocks",
+        "objective": "State an accurate economic use for common List minerals and rocks: hematite and banded iron formation as iron ore, galena as lead ore, gypsum for drywall and plaster, fluorite as a steelmaking flux and fluorine source, corundum as an abrasive and gem, quartz for glass and piezoelectric timing, halite for salt and chemicals, zircon for geochronology, graphite for pencils and lubricants; granite, marble, slate and sandstone as building stone; limestone as agricultural lime; coal as fuel.",
+        "keywords": ["ore", "iron ore", "hematite", "banded iron formation", "lead", "galena", "drywall", "plaster", "gypsum", "flux", "fluorite", "abrasive", "corundum", "glass", "piezoelectric", "quartz", "geochronology", "zircon", "building stone", "ornamental", "agricultural lime", "fossil fuel", "coal", "graphite"],
+        "high_weight": true
+      },
+      "why": "Rules 3.h.xiii.1 and 3.i.viii. The live course has no uses content at all: 'ore of', geochronology, drywall and electronics each have zero hits. It is the most-tested missing topic in the pack, with 12+ items. Every listed use is stated in a pack slide or answer key.",
+      "rules_ref": "3.h.xiii.1, 3.i.viii",
+      "pack_slides": [33, 52],
+      "exam_refs": ["b-regional Q13", "b-regional Q20", "b-regional Q30", "b-state Q14", "b-state Q33", "b-state Q48", "b-national Q29", "b-national Q73", "c-state Q26", "c-state Q35", "c-state Q49"]
+    },
+    {
+      "unit": "igneous-rocks",
+      "after": "composition-and-bowen-series",
+      "lesson": {
+        "slug": "igneous-settings-and-plate-boundaries",
+        "title": "Batholiths, Lava Flows, Pyroclastic Deposits and Plate Boundaries",
+        "objective": "Describe the three igneous formations the rules allow (batholith, lava flow, pyroclastic deposit) and the textures they produce (phaneritic, aphanitic/glassy/vesicular, pyroclastic), explain pegmatitic texture, and predict the igneous rock typical of each plate setting: basalt at mid-ocean ridges, andesite and diorite at subduction zones, granite at continental convergent boundaries.",
+        "keywords": ["batholith", "lava flow", "pyroclastic", "pyroclastic deposit", "tuff", "pegmatitic", "pegmatite", "intrusive", "extrusive", "mid-ocean ridge", "divergent", "subduction zone", "convergent", "basalt", "andesite", "diorite", "granite", "oceanic crust"],
+        "high_weight": true
+      },
+      "why": "Rules 3.i.iv.1, 3.i.iv.3 and 3.i.iv.5. Batholith, lava flow, pyroclastic, mid-ocean ridge and subduction all have zero hits in the live course. Keep laccolith OUT: slide 39 teaches it and B-State Q21 tests it, but rule 3.i.iv.3 limits formations to the three named.",
+      "rules_ref": "3.i.iv.1, 3.i.iv.3, 3.i.iv.5",
+      "pack_slides": [37, 39, 40],
+      "exam_refs": ["b-regional Q17", "b-national Q35", "b-national Q36", "b-national Q39", "b-national Q40", "b-national Q43", "c-regional Q13", "c-regional Q14", "c-state Q19", "c-state Q20"]
+    },
+    {
+      "unit": "sedimentary-and-metamorphic-rocks",
+      "after": "sedimentary-evidence",
+      "lesson": {
+        "slug": "depositional-environments-and-energy",
+        "title": "Grain Size, Sorting, Rounding and Environments of Deposition",
+        "objective": "Order the grain sizes clay < silt < sand < pebble < cobble < boulder and relate size to the water or wind velocity needed to move them. Use sorting and rounding to infer transport distance and energy. Match the ten rules-named environments (alluvial fan, delta, fluvial, lacustrine, swamp, aeolian, floodplain, beach, shallow marine/shelf, deep marine) to their typical sediment, recognizing alluvial fans as high-energy, poorly sorted and angular.",
+        "keywords": ["grain size", "Wentworth", "clay", "silt", "sand", "pebble", "cobble", "boulder", "velocity", "energy", "sorting", "well-sorted", "poorly sorted", "rounded", "angular", "alluvial fan", "delta", "fluvial", "lacustrine", "swamp", "aeolian", "floodplain", "beach", "shallow marine", "deep marine"],
+        "high_weight": true
+      },
+      "why": "Rules 3.i.v.3–5. 'Energy' and 'velocity' have zero hits, and 3 of the 10 environments are never named. This is heavily tested in the pack. Build from slide 43 and the exam keys, NOT slide 60, which wrongly calls alluvial fans low-energy.",
+      "rules_ref": "3.i.v.3, 3.i.v.4, 3.i.v.5",
+      "pack_slides": [42, 43],
+      "exam_refs": ["b-regional Q9", "b-regional Q11", "b-regional Q24", "b-state Q24", "b-state Q25", "b-state Q49", "b-national Q46", "b-national Q47", "b-national Q48", "b-national Q49", "b-national Q50", "b-national Q65", "b-national Q70", "b-national Q75", "c-state Q45"]
+    },
+    {
+      "unit": "sedimentary-and-metamorphic-rocks",
+      "after": "depositional-environments-and-energy",
+      "lesson": {
+        "slug": "primary-sedimentary-structures",
+        "title": "Primary Sedimentary Structures",
+        "objective": "Identify plane bedding, cross-bedding, ripple marks, mud cracks, graded bedding, and fossil tracks and trails from a description or photo, and state what each implies about the depositional process: current or wind direction, drying and exposure, waning-energy events, or organisms active on soft sediment.",
+        "keywords": ["sedimentary structure", "plane bedding", "cross-bedding", "ripple marks", "mud cracks", "graded bedding", "fossil tracks", "trails", "current direction", "exposure", "turbidity current"],
+        "high_weight": true
+      },
+      "why": "Rule 3.i.v.6. The live course has zero content on primary sedimentary structures. The pack tests them 7 times, including with photos (cross-bedding).",
+      "rules_ref": "3.i.v.6",
+      "pack_slides": [44],
+      "exam_refs": ["b-regional Q16", "b-state Q26", "b-state Q39", "b-national Q47", "b-national Q52", "b-national Q53", "b-national Q54"]
+    }
+  ],
+  "changed_lessons": [
+    {
+      "slug": "rocks-minerals-and-evidence",
+      "objective": "Distinguish a mineral from a rock using the rules' definitions — a mineral is a naturally occurring, inorganic, solid substance with a definite composition and crystalline structure; a rock is a naturally occurring solid mass of one mineral (monomineralic, e.g. quartzite) or several (polymineralic, e.g. granite), or of mineraloid or organic matter (e.g. coal) — and justify the distinction with evidence.",
+      "keywords_add": ["solid", "monomineralic", "polymineralic", "mineraloid", "organic matter", "coal", "quartzite", "granite"],
+      "keywords_remove": [],
+      "why": "The rules' definitions (3.h.i, 3.i.i) include 'solid' and the mono/polymineralic distinction. The live lesson omits both. The expert review flagged the missing 'solid' and it is still unfixed live.",
+      "pack_slides": [6, 35],
+      "exam_refs": ["b-regional Q1", "b-regional Q6", "b-national Q1", "b-national Q31"]
+    },
+    {
+      "slug": "field-hardness-tools",
+      "objective": "Use the Mohs index minerals (gypsum 2, calcite 3, fluorite 4, apatite 5, orthoclase 6, quartz 7) and a glass plate (about 5.5) and streak plate (about 6.5–7) as comparison surfaces, and bracket an unknown's hardness between supported values.",
+      "keywords_add": ["glass plate", "5.5", "index mineral"],
+      "keywords_remove": [],
+      "why": "The live lesson uses dioptase and chalcopyrite as references and gives gypsum as 1.5–2. The Mohs index mineral defines 2 (slide 9). The pack's B-National Q30 relies on glass ≈5.5, and slide 11 gives the streak plate as ~6.5. The fingernail and copper values the title promises are not in the pack; source them separately.",
+      "pack_slides": [9, 11],
+      "exam_refs": ["b-state Q1", "b-national Q30"]
+    },
+    {
+      "slug": "composition-and-bowen-series",
+      "objective": "Classify igneous rocks as felsic, intermediate, mafic or ultramafic from silica content and minerals. Trace Bowen's Reaction Series: discontinuous olivine → pyroxene → amphibole → biotite and continuous Ca-rich → Na-rich plagioclase, converging to K-feldspar → muscovite → quartz. Explain why early, high-temperature minerals such as olivine weather fastest at Earth's surface and quartz resists weathering.",
+      "keywords_add": ["olivine", "pyroxene", "amphibole", "biotite", "plagioclase", "potassium feldspar", "muscovite", "quartz", "weathering", "stability", "ultramafic", "silica content"],
+      "keywords_remove": ["silicic"],
+      "why": "The rules say 'felsic' (3.i.iv.2). The live lesson teaches 'silicic', omits the full discontinuous sequence and K-feldspar → muscovite → quartz, and never states the weathering corollary, which the pack tests in three exams. Use the exam diagram (Image 5/8/10), not slide 31, which draws the final three minerals side by side.",
+      "pack_slides": [31, 38],
+      "exam_refs": ["b-regional Q14", "b-regional Q27", "b-state Q13", "b-state Q35", "b-state Q44", "b-national Q37", "b-national Q38", "b-national Q76"]
+    },
+    {
+      "slug": "cooling-history-and-texture",
+      "objective": null,
+      "keywords_add": ["pyroclastic", "pegmatitic"],
+      "keywords_remove": [],
+      "why": "Rule 3.i.iv.1 lists seven textures. The live lesson teaches five; pyroclastic and pegmatitic have zero hits.",
+      "pack_slides": [37],
+      "exam_refs": ["b-national Q33", "b-national Q34", "b-national Q35", "b-national Q36"]
+    },
+    {
+      "slug": "igneous-rocks-by-name",
+      "objective": null,
+      "keywords_add": ["pumice", "tuff breccia", "pyroclastic", "pegmatitic", "light-colored vesicular"],
+      "keywords_remove": [],
+      "why": "The objective already names pumice, syenite, pegmatite and tuff breccia, but the live text never teaches them. Tuff breccia is one of the 8 unnamed specimens. Adding the keywords steers passage selection toward texture evidence: pumice is light and vesicular, scoria dark and vesicular (slide 60); tuff and tuff breccia are pyroclastic (slide 37).",
+      "pack_slides": [37, 56, 60],
+      "exam_refs": ["b-national Q35", "b-national Q36", "b-national Q41"]
+    },
+    {
+      "slug": "framework-and-chain-silicates",
+      "objective": "Distinguish plagioclase from potassium feldspar by cleavage angle and striations, and identify albite, labradorite, amazonite and orthoclase/microcline (the pink/tan potassium feldspar). Separate pyroxenes (augite; two cleavages near 90°) from amphiboles (hornblende, actinolite, tremolite; cleavages near 60°/120°). Name the feldspar, pyroxene and amphibole groups as the List does, including rhodonite and spodumene in the Pyroxene Group, and sodalite.",
+      "keywords_add": ["augite", "pyroxene cleavage", "potassium feldspars", "rhodonite"],
+      "keywords_remove": [],
+      "why": "Augite has zero hits in the live course. The List places augite, rhodonite and spodumene in the Pyroxene Group; the pack's slide 29 omits rhodonite, so use the List. The pack gives augite's group, dark color and ~90° cleavage.",
+      "pack_slides": [29, 31, 58, 59],
+      "exam_refs": ["b-national Q23", "b-regional Q12", "c-state Q37"]
+    },
+    {
+      "slug": "sheet-and-ring-silicates",
+      "objective": null,
+      "keywords_add": ["tourmaline group", "cyclosilicate", "piezoelectric", "color-zoned", "emerald", "aquamarine"],
+      "keywords_remove": [],
+      "why": "The title promises beryl and tourmaline, but the live text names each only once. The pack gives: tourmaline is a complex boron silicate, piezoelectric and color-zoned, and 'Tourmaline' alone is accepted for ID (List note 3). Beryl is the mineral behind emerald, aquamarine and morganite. Chrysocolla is also named in the objective and is absent from the text.",
+      "pack_slides": [27, 29, 32, 59],
+      "exam_refs": ["c-regional Q21"]
+    },
+    {
+      "slug": "sulfides-sulfates-and-phosphates",
+      "objective": null,
+      "keywords_add": ["celestite", "celestine", "turquoise", "blue-green"],
+      "keywords_remove": [],
+      "why": "Celestite/Celestine and Turquoise are 2 of the 8 unnamed specimens. The pack confirms celestite is a sulfate (slide 57) and turquoise is a phosphate, blue-green and massive, used as a gemstone and ornamental material (slide 57; C-State Q25–26). The pack gives no identifying properties for celestite, so source those independently.",
+      "pack_slides": [57],
+      "exam_refs": ["c-state Q25", "c-state Q26"]
+    },
+    {
+      "slug": "quartz-varieties",
+      "objective": null,
+      "keywords_add": ["aventurine", "quartz varieties list", "opal"],
+      "keywords_remove": [],
+      "why": "Aventurine (one of the 8 unnamed) is on the List as a quartz variety (slide 58), but the pack gives no properties for it, so they must be sourced independently. The List files Opal under Quartz varieties; the pack moves it to 'Individual Silicates'. Teach that the List groups opal with the quartz varieties while it is an amorphous mineraloid.",
+      "pack_slides": [58],
+      "exam_refs": []
+    },
+    {
+      "slug": "metamorphic-evidence",
+      "objective": null,
+      "keywords_add": ["slaty cleavage", "schistose", "gneissic banding", "low grade", "medium grade", "high grade"],
+      "keywords_remove": [],
+      "why": "Rule 3.i.vi.1 names slaty cleavage, schistose and banding. 'Slaty cleavage' and 'gneissic banding' have zero hits live. Slide 45 ties them to low, medium and high grade. Note: gneissic banding is COARSE; slide 60's 'fine banding' is wrong.",
+      "pack_slides": [45],
+      "exam_refs": ["b-regional Q7", "b-state Q27", "b-national Q55", "b-national Q56", "b-national Q64"]
+    },
+    {
+      "slug": "metamorphic-grade-and-index-minerals",
+      "objective": "Order the seven index minerals the rules list — chlorite, muscovite, biotite (low grade); garnet, staurolite (medium); kyanite, sillimanite (high) — explain what an index mineral tells you about grade, and distinguish contact from regional metamorphism by scale and dominant agent.",
+      "keywords_add": ["index mineral order", "low grade", "medium grade", "high grade", "muscovite"],
+      "keywords_remove": [],
+      "why": "The live lesson says muscovite is 'not a single step' in the sequence. That is true of the Barrovian zones, but it contradicts the rules, which list muscovite among the 7 index minerals (3.i.vi.6), and the pack's order chlorite → muscovite → biotite (slide 46). Students must be able to answer a rules-framed question. The Barrovian nuance can stay as a note.",
+      "pack_slides": [46, 48],
+      "exam_refs": ["b-regional Q15", "b-regional Q25", "b-state Q30", "b-state Q40", "b-national Q60", "b-national Q79"]
+    },
+    {
+      "slug": "processes-that-change-rock",
+      "objective": null,
+      "keywords_add": ["uplift", "burial", "compaction", "cementation", "recrystallization", "deformation"],
+      "keywords_remove": [],
+      "why": "Rule 3.i.vii names 'melting & solidification; uplift, erosion & deposition; burial, compaction & cementation; heat & pressure resulting in recrystallization & deformation'. 'Uplift' has zero hits live.",
+      "pack_slides": [51],
+      "exam_refs": ["b-regional Q28", "b-state Q32", "b-state Q42", "b-national Q69", "b-national Q77", "b-national Q80"]
+    }
+  ],
+  "excluded_div_c": [
+    {"topic": "Solid solution series", "pack_slides": [25], "exam_refs": ["c-regional Q15", "c-regional Q16", "c-regional Q27", "c-state Q11"]},
+    {"topic": "Phase diagram interpretation (T/P, T/X, feldspar ternary)", "pack_slides": [26], "exam_refs": ["c-regional Q16", "c-state Q12"]},
+    {"topic": "Silicate tetrahedra structure classes", "pack_slides": [27], "exam_refs": ["c-regional Q4-7", "c-regional Q22", "c-regional Q29", "c-state Q3-7", "c-state Q37", "c-state Q42"]},
+    {"topic": "Crystal systems", "pack_slides": [28], "exam_refs": ["c-regional Q3", "c-regional Q8", "c-state Q8", "c-state Q9", "c-state Q28", "c-state Q36", "c-state Q43"]},
+    {"topic": "Magmatic differentiation (fractional crystallization, assimilation, magma mixing)", "pack_slides": [], "exam_refs": ["c-regional Q11", "c-regional Q12", "c-regional Q26", "c-state Q15-17", "c-state Q41"]},
+    {"topic": "Metamorphic facies", "pack_slides": [49, 50], "exam_refs": ["c-regional Q18-20", "c-regional Q25", "c-regional Q28", "c-state Q18", "c-state Q21-23", "c-state Q31", "c-state Q38", "c-state Q40", "c-state Q46", "c-state Q48"]},
+    {"topic": "Thin sections and photomicrographs (Div C, State/National)", "pack_slides": [53, 62], "exam_refs": ["c-state Q39"]},
+    {"topic": "Laccolith (outside the Div B list of igneous formations)", "pack_slides": [39], "exam_refs": ["b-state Q21"]}
+  ]
+}

@@ -56,12 +56,12 @@ def valid_lesson_payload():
 def test_rocks_blueprint_has_complete_unit_lesson_structure():
     blueprint = json.loads(Path(DEFAULT_BLUEPRINT).read_text())
     assert blueprint["event_slug"] == "rocks-and-minerals-b-2027"
-    # 10 units / 31 lessons since the rebuild that names the specimens on the official list;
-    # the specimen units run up to six lessons, the skills units two or three.
+    # 10 units / 40 lessons: the specimen rebuild plus the nine 2027 starter-pack lessons;
+    # the specimen and property units run up to eight lessons, the skills units two to four.
     assert len(blueprint["units"]) == 10
     lessons = [lesson for unit in blueprint["units"] for lesson in unit["lessons"]]
-    assert len(lessons) == 31
-    assert all(2 <= len(unit["lessons"]) <= 6 for unit in blueprint["units"])
+    assert len(lessons) == 40
+    assert all(2 <= len(unit["lessons"]) <= 8 for unit in blueprint["units"])
     assert len({lesson["slug"] for lesson in lessons}) == len(lessons)
     assert all(lesson["objective"] and lesson["keywords"] for lesson in lessons)
 

@@ -22,14 +22,22 @@
         {
           "slug": "rocks-minerals-and-evidence",
           "title": "Rocks, Minerals, and Evidence",
-          "objective": "Distinguish a mineral from a rock and justify the distinction with observable or structural evidence.",
+          "objective": "Distinguish a mineral from a rock using the rules' definitions — a mineral is a naturally occurring, inorganic, solid substance with a definite composition and crystalline structure; a rock is a naturally occurring solid mass of one mineral (monomineralic, e.g. quartzite) or several (polymineralic, e.g. granite), or of mineraloid or organic matter (e.g. coal) — and justify the distinction with evidence.",
           "keywords": [
             "mineral definition",
             "rock aggregate",
             "naturally occurring",
             "inorganic",
             "crystalline",
-            "chemical composition"
+            "chemical composition",
+            "solid",
+            "monomineralic",
+            "polymineralic",
+            "mineraloid",
+            "organic matter",
+            "coal",
+            "quartzite",
+            "granite"
           ],
           "high_weight": true
         },
@@ -89,7 +97,7 @@
         {
           "slug": "breakage-density-and-special-properties",
           "title": "Cleavage, Fracture, Density and Magnetism",
-          "objective": "Describe cleavage by the NUMBER of directions and the ANGLES between them \u2014 mica one, orthoclase two at 90 degrees, plagioclase two at about 86 degrees with striations, halite and galena three at 90 degrees, calcite three not at 90 degrees, fluorite four \u2014 distinguish it from conchoidal and uneven fracture, compare specific gravity by heft, and use magnetite as the strongly magnetic mineral. Never describe cleavage with Miller indices, which a student cannot observe.",
+          "objective": "Describe cleavage by the NUMBER of directions and the ANGLES between them — mica one, orthoclase two at 90 degrees, plagioclase two at about 86 degrees with striations, halite and galena three at 90 degrees, calcite three not at 90 degrees, fluorite four — distinguish it from conchoidal and uneven fracture, compare specific gravity by heft, and use magnetite as the strongly magnetic mineral. Never describe cleavage with Miller indices, which a student cannot observe.",
           "keywords": [
             "cleavage",
             "cleavage plane",
@@ -119,6 +127,89 @@
             "barite"
           ],
           "high_weight": true
+        },
+        {
+          "slug": "diaphaneity-and-tenacity",
+          "title": "Diaphaneity and Tenacity",
+          "objective": "Classify a specimen as transparent, translucent or opaque, and describe its tenacity as brittle, malleable, sectile, flexible or elastic, using List examples: clear calcite (transparent), milky quartz (translucent), hematite (opaque); quartz (brittle), native copper (malleable), talc (sectile), mica (elastic).",
+          "keywords": [
+            "diaphaneity",
+            "transparent",
+            "translucent",
+            "opaque",
+            "tenacity",
+            "brittle",
+            "malleable",
+            "sectile",
+            "flexible",
+            "elastic",
+            "native copper",
+            "talc",
+            "mica",
+            "calcite",
+            "milky quartz",
+            "hematite"
+          ],
+          "high_weight": true
+        },
+        {
+          "slug": "other-diagnostic-properties",
+          "title": "Acid, Fluorescence, Magnetism and the Other Listed Properties",
+          "objective": "Name the eight 'other properties' the rules allow (reaction with acid, fluorescence, magnetism, smell, taste, double refraction, piezoelectricity, radioactivity), give a List example for each where one exists (calcite vs dolomite in acid, fluorite and willemite under UV, magnetite, sulfur odor, halite taste, calcite double refraction, quartz piezoelectricity), and interpret a written description of an acid or taste result, since HCl is never provided and tasting is never allowed.",
+          "keywords": [
+            "other properties",
+            "reaction with acid",
+            "effervescence",
+            "dolomite powdered",
+            "fluorescence",
+            "ultraviolet",
+            "fluorite",
+            "willemite",
+            "magnetism",
+            "magnetite",
+            "smell",
+            "sulfur",
+            "taste",
+            "halite",
+            "double refraction",
+            "calcite rhomb",
+            "piezoelectricity",
+            "quartz",
+            "radioactivity",
+            "Geiger counter"
+          ],
+          "high_weight": true
+        },
+        {
+          "slug": "mineral-habits",
+          "title": "Mineral Habits: The 21 Listed Forms",
+          "objective": "Recognize and name all 21 habits the rules list (acicular, bladed, botryoidal, cubic, dendritic, dodecahedral, doubly terminated, druzy, geodic, hexagonal, hopper, massive, micaceous, octahedral, pisolitic, prismatic, radiating, rosette, stalactitic, twinning, tabular) from a description or photo, and give a List mineral that shows each where one is standard, such as pyrite cubes, botryoidal malachite, dendritic silver, micaceous muscovite, tabular barite.",
+          "keywords": [
+            "habit",
+            "acicular",
+            "bladed",
+            "botryoidal",
+            "cubic",
+            "dendritic",
+            "dodecahedral",
+            "doubly terminated",
+            "druzy",
+            "geodic",
+            "hexagonal",
+            "hopper",
+            "massive",
+            "micaceous",
+            "octahedral",
+            "pisolitic",
+            "prismatic",
+            "radiating",
+            "rosette",
+            "stalactitic",
+            "twinning",
+            "tabular"
+          ],
+          "high_weight": true,
+          "video": true
         }
       ]
     },
@@ -144,7 +235,13 @@
             "deposition",
             "lithification",
             "heat",
-            "pressure"
+            "pressure",
+            "uplift",
+            "burial",
+            "compaction",
+            "cementation",
+            "recrystallization",
+            "deformation"
           ],
           "high_weight": true
         },
@@ -188,14 +285,16 @@
             "aphanitic",
             "phaneritic",
             "vesicular",
-            "glassy"
+            "glassy",
+            "pyroclastic",
+            "pegmatitic"
           ],
           "high_weight": true
         },
         {
           "slug": "composition-and-bowen-series",
           "title": "Composition and Bowen's Reaction Series",
-          "objective": "Use mineral composition and Bowen's reaction series as supporting evidence in igneous classification.",
+          "objective": "Classify igneous rocks as felsic, intermediate, mafic or ultramafic from silica content and minerals. Trace Bowen's Reaction Series: discontinuous olivine → pyroxene → amphibole → biotite and continuous Ca-rich → Na-rich plagioclase, converging to K-feldspar → muscovite → quartz. Explain why early, high-temperature minerals such as olivine weather fastest at Earth's surface and quartz resists weathering.",
           "keywords": [
             "Bowen",
             "reaction series",
@@ -204,8 +303,45 @@
             "mafic",
             "ultramafic",
             "composition",
-            "silica"
+            "silica",
+            "olivine",
+            "pyroxene",
+            "amphibole",
+            "biotite",
+            "plagioclase",
+            "potassium feldspar",
+            "muscovite",
+            "quartz",
+            "weathering",
+            "stability",
+            "silica content"
           ]
+        },
+        {
+          "slug": "igneous-settings-and-plate-boundaries",
+          "title": "Batholiths, Lava Flows, Pyroclastic Deposits and Plate Boundaries",
+          "objective": "Describe the three igneous formations the rules allow (batholith, lava flow, pyroclastic deposit) and the textures they produce (phaneritic, aphanitic/glassy/vesicular, pyroclastic), explain pegmatitic texture, and predict the igneous rock typical of each plate setting: basalt at mid-ocean ridges, andesite and diorite at subduction zones, granite at continental convergent boundaries.",
+          "keywords": [
+            "batholith",
+            "lava flow",
+            "pyroclastic",
+            "pyroclastic deposit",
+            "tuff",
+            "pegmatitic",
+            "pegmatite",
+            "intrusive",
+            "extrusive",
+            "mid-ocean ridge",
+            "divergent",
+            "subduction zone",
+            "convergent",
+            "basalt",
+            "andesite",
+            "diorite",
+            "granite",
+            "oceanic crust"
+          ],
+          "high_weight": true
         }
       ]
     },
@@ -235,6 +371,58 @@
           "high_weight": true
         },
         {
+          "slug": "depositional-environments-and-energy",
+          "title": "Grain Size, Sorting, Rounding and Environments of Deposition",
+          "objective": "Order the grain sizes clay < silt < sand < pebble < cobble < boulder and relate size to the water or wind velocity needed to move them. Use sorting and rounding to infer transport distance and energy. Match the ten rules-named environments (alluvial fan, delta, fluvial, lacustrine, swamp, aeolian, floodplain, beach, shallow marine/shelf, deep marine) to their typical sediment, recognizing alluvial fans as high-energy, poorly sorted and angular.",
+          "keywords": [
+            "grain size",
+            "Wentworth",
+            "clay",
+            "silt",
+            "sand",
+            "pebble",
+            "cobble",
+            "boulder",
+            "velocity",
+            "energy",
+            "sorting",
+            "well-sorted",
+            "poorly sorted",
+            "rounded",
+            "angular",
+            "alluvial fan",
+            "delta",
+            "fluvial",
+            "lacustrine",
+            "swamp",
+            "aeolian",
+            "floodplain",
+            "beach",
+            "shallow marine",
+            "deep marine"
+          ],
+          "high_weight": true
+        },
+        {
+          "slug": "primary-sedimentary-structures",
+          "title": "Primary Sedimentary Structures",
+          "objective": "Identify plane bedding, cross-bedding, ripple marks, mud cracks, graded bedding, and fossil tracks and trails from a description or photo, and state what each implies about the depositional process: current or wind direction, drying and exposure, waning-energy events, or organisms active on soft sediment.",
+          "keywords": [
+            "sedimentary structure",
+            "plane bedding",
+            "cross-bedding",
+            "ripple marks",
+            "mud cracks",
+            "graded bedding",
+            "fossil tracks",
+            "trails",
+            "current direction",
+            "exposure",
+            "turbidity current"
+          ],
+          "high_weight": true
+        },
+        {
           "slug": "metamorphic-evidence",
           "title": "Metamorphic Evidence",
           "objective": "Distinguish foliated and nonfoliated metamorphic rocks and connect texture to heat, pressure, and parent material.",
@@ -246,7 +434,13 @@
             "pressure",
             "parent rock",
             "grade",
-            "banding"
+            "banding",
+            "slaty cleavage",
+            "schistose",
+            "gneissic banding",
+            "low grade",
+            "medium grade",
+            "high grade"
           ],
           "high_weight": true
         }
@@ -264,7 +458,7 @@
         {
           "slug": "the-mohs-scale-in-order",
           "title": "The Ten Index Minerals, in Order",
-          "objective": "State the Mohs scale in order \u2014 talc, gypsum, calcite, fluorite, apatite, orthoclase, quartz, topaz, corundum, diamond \u2014 and explain why it is ordinal rather than linear.",
+          "objective": "State the Mohs scale in order — talc, gypsum, calcite, fluorite, apatite, orthoclase, quartz, topaz, corundum, diamond — and explain why it is ordinal rather than linear.",
           "keywords": [
             "Mohs scale",
             "talc",
@@ -286,7 +480,7 @@
         {
           "slug": "field-hardness-tools",
           "title": "Fingernail, Copper, Glass and Streak Plate",
-          "objective": "Give the approximate hardness of a fingernail, a copper coin, a glass plate or steel nail and a streak plate, and use them to bracket an unknown's hardness.",
+          "objective": "Use the Mohs index minerals (gypsum 2, calcite 3, fluorite 4, apatite 5, orthoclase 6, quartz 7) and a glass plate (about 5.5) and streak plate (about 6.5–7) as comparison surfaces, and bracket an unknown's hardness between supported values.",
           "keywords": [
             "fingernail",
             "copper",
@@ -297,7 +491,10 @@
             "scratch test",
             "bracket",
             "porcelain",
-            "Mohs"
+            "Mohs",
+            "glass plate",
+            "5.5",
+            "index mineral"
           ],
           "high_weight": true,
           "video": false
@@ -388,7 +585,9 @@
             "selenite",
             "satin spar",
             "apatite group",
-            "fluorapatite"
+            "fluorapatite",
+            "celestine",
+            "blue-green"
           ],
           "high_weight": true,
           "video": false
@@ -396,7 +595,7 @@
         {
           "slug": "framework-and-chain-silicates",
           "title": "Feldspars, Pyroxenes and Amphiboles",
-          "objective": "Distinguish plagioclase from potassium feldspar by cleavage angle and striations, and identify albite, amazonite, orthoclase, microcline, augite, actinolite and tremolite. Name the feldspar, pyroxene and amphibole GROUPS as the List does, and include labradorite (with its play of colour), hornblende, and sodalite.",
+          "objective": "Distinguish plagioclase from potassium feldspar by cleavage angle and striations, and identify albite, labradorite, amazonite and orthoclase/microcline (the pink/tan potassium feldspar). Separate pyroxenes (augite; two cleavages near 90°) from amphiboles (hornblende, actinolite, tremolite; cleavages near 60°/120°). Name the feldspar, pyroxene and amphibole groups as the List does, including rhodonite and spodumene in the Pyroxene Group, and sodalite.",
           "keywords": [
             "silicate",
             "feldspar",
@@ -420,7 +619,9 @@
             "sodalite",
             "amphibole group",
             "hornblende",
-            "pyroxene group"
+            "pyroxene group",
+            "pyroxene cleavage",
+            "rhodonite"
           ],
           "high_weight": true,
           "video": false
@@ -447,7 +648,13 @@
             "basal cleavage",
             "mica group",
             "dioptase",
-            "rhodonite"
+            "rhodonite",
+            "tourmaline group",
+            "cyclosilicate",
+            "piezoelectric",
+            "color-zoned",
+            "emerald",
+            "aquamarine"
           ],
           "high_weight": true,
           "video": false
@@ -476,6 +683,60 @@
           ],
           "high_weight": true,
           "video": false
+        },
+        {
+          "slug": "chemistry-color-and-polymorphs",
+          "title": "Formulas, Trace-Element Color and Polymorphs",
+          "objective": "Read a mineral formula, explain how a trace element changes color without changing the mineral (chromium in emerald, iron in amethyst), and identify the four polymorph sets the rules name — aragonite/calcite (CaCO3), diamond/graphite (C), orthoclase/microcline (KAlSi3O8), andalusite/kyanite/sillimanite (Al2SiO5) — stating why the same formula can give different properties.",
+          "keywords": [
+            "chemical formula",
+            "trace element",
+            "chromium",
+            "emerald",
+            "iron",
+            "amethyst",
+            "polymorph",
+            "aragonite",
+            "calcite",
+            "CaCO3",
+            "diamond",
+            "graphite",
+            "orthoclase",
+            "microcline",
+            "KAlSi3O8",
+            "andalusite",
+            "kyanite",
+            "sillimanite",
+            "Al2SiO5",
+            "crystal structure"
+          ],
+          "high_weight": true
+        },
+        {
+          "slug": "how-minerals-form",
+          "title": "How and Where Minerals Form",
+          "objective": "Match each rules-listed formation process to a List example: crystallization from magma (olivine in basalt, feldspar in granite), hydrothermal (quartz veins, galena, fluorite), chemical weathering (feldspar to kaolinite), evaporites (halite, gypsum), chemical precipitation (travertine calcite), alteration under heat and pressure (garnet, kyanite, staurolite). Then link minerals to rock-forming settings: mafic olivine and pyroxene in oceanic crust, evaporite minerals in sedimentary basins, metamorphic minerals in regional belts.",
+          "keywords": [
+            "formation",
+            "crystallization from magma",
+            "hydrothermal",
+            "chemical weathering",
+            "kaolinite",
+            "evaporite",
+            "halite",
+            "gypsum",
+            "chemical precipitation",
+            "travertine",
+            "heat and pressure",
+            "garnet",
+            "kyanite",
+            "staurolite",
+            "oceanic crust",
+            "mafic minerals",
+            "olivine",
+            "pyroxene"
+          ],
+          "high_weight": false
         }
       ]
     },
@@ -507,7 +768,8 @@
             "tiger's eye",
             "opal",
             "microcrystalline",
-            "conchoidal"
+            "conchoidal",
+            "quartz varieties list"
           ],
           "high_weight": true,
           "video": false
@@ -595,7 +857,11 @@
             "phaneritic",
             "aphanitic",
             "vesicular",
-            "glassy"
+            "glassy",
+            "tuff breccia",
+            "pyroclastic",
+            "pegmatitic",
+            "light-colored vesicular"
           ],
           "high_weight": true,
           "video": false
@@ -646,7 +912,8 @@
             "banded iron formation",
             "fossil",
             "diatomite",
-            "oolitic limestone"
+            "oolitic limestone",
+            "fossil limestone"
           ],
           "high_weight": true,
           "video": false
@@ -701,7 +968,7 @@
         {
           "slug": "metamorphic-grade-and-index-minerals",
           "title": "Metamorphic Grade, Index Minerals, Contact and Regional",
-          "objective": "Order chlorite, muscovite, biotite, garnet, staurolite, kyanite and sillimanite by metamorphic grade, and distinguish contact from regional metamorphism.",
+          "objective": "Order the seven index minerals the rules list — chlorite, muscovite, biotite (low grade); garnet, staurolite (medium); kyanite, sillimanite (high) — explain what an index mineral tells you about grade, and distinguish contact from regional metamorphism by scale and dominant agent.",
           "keywords": [
             "metamorphic grade",
             "index mineral",
@@ -715,7 +982,9 @@
             "contact metamorphism",
             "regional metamorphism",
             "low grade",
-            "high grade"
+            "high grade",
+            "index mineral order",
+            "medium grade"
           ],
           "high_weight": true,
           "video": false
@@ -759,6 +1028,38 @@
             "eliminate",
             "list of specimens",
             "diagnostic"
+          ],
+          "high_weight": true
+        },
+        {
+          "slug": "uses-of-minerals-and-rocks",
+          "title": "Uses of Minerals and Rocks",
+          "objective": "State an accurate economic use for common List minerals and rocks: hematite and banded iron formation as iron ore, galena as lead ore, gypsum for drywall and plaster, fluorite as a steelmaking flux and fluorine source, corundum as an abrasive and gem, quartz for glass and piezoelectric timing, halite for salt and chemicals, zircon for geochronology, graphite for pencils and lubricants; granite, marble, slate and sandstone as building stone; limestone as agricultural lime; coal as fuel.",
+          "keywords": [
+            "ore",
+            "iron ore",
+            "hematite",
+            "banded iron formation",
+            "lead",
+            "galena",
+            "drywall",
+            "plaster",
+            "gypsum",
+            "flux",
+            "fluorite",
+            "abrasive",
+            "corundum",
+            "glass",
+            "piezoelectric",
+            "quartz",
+            "geochronology",
+            "zircon",
+            "building stone",
+            "ornamental",
+            "agricultural lime",
+            "fossil fuel",
+            "coal",
+            "graphite"
           ],
           "high_weight": true
         },

@@ -1,0 +1,84 @@
+{
+  "_why": "Factual corrections and additions to LIVE lessons of rocks-and-minerals-b-2027. Each is supported by the 2027 Starter Pack and consistent with the 2027 Div B rules. Every note was checked against the live text dumped read-only on 2026-09-20 with scripts/dump_course.py, so it describes something the published lesson says, or fails to say, today. Pack statements this review found to be wrong (pack_audit.md: slides 6, 20, 22, 25, 31, 32, 60, 62) are NOT used as sources. Facts the pack does not supply (e.g. identifying properties of celestite, aventurine, tuff breccia, garnet schist; fingernail and copper hardness) are flagged as needing an independent source rather than filled in.",
+  "lessons": {
+    "rocks-minerals-and-evidence": [
+      "The live definition ('a naturally occurring inorganic element or compound with an orderly internal structure and characteristic chemical composition…') still omits SOLID. Use the rules' wording (3.h.i; pack slide 6): a mineral is a naturally occurring, inorganic SOLID with a definite chemical composition and a crystalline structure. Update the property card, the 'Definition check' checkpoint and the summary. The expert review flagged this; it is still unfixed live.",
+      "Add the rock definition from rule 3.i.i (pack slide 35): a rock is a naturally occurring solid mass of one or more minerals or mineraloid matter. It may be MONOMINERALIC (one mineral, e.g. quartzite ≈ all quartz, marble ≈ all calcite) or POLYMINERALIC (several, e.g. granite = quartz + feldspar + mica). Unlike a mineral, a rock can be organic (coal). The words monomineralic and polymineralic appear nowhere in the course; the pack tests them (B-National Q31)."
+    ],
+    "field-hardness-tools": [
+      "Replace 'Gypsum has Mohs hardness 1.5–2' with 'Gypsum is the Mohs 2 index mineral'. The Mohs scale is defined by its ten reference minerals (pack slide 9: talc 1, gypsum 2, calcite 3, fluorite 4, apatite 5, orthoclase 6, quartz 7, topaz 8, corundum 9, diamond 10). The live bracketing checkpoint ('scratches gypsum, whose hardness is 1.5–2') should use gypsum = 2.",
+      "The reference-value card and the transfer checkpoint still use dioptase (5) and chalcopyrite (3.5–4) as comparison points. Use the index minerals apatite (5) and fluorite (4). Dioptase and chalcopyrite are List minerals to be tested, not scale references.",
+      "Add the glass plate as a comparison surface at about Mohs 5.5. The pack's B-National Q30 depends on it: a mineral harder than 5.5, such as quartz, scratches glass. The lesson title names glass, but the live text never gives its hardness.",
+      "The streak plate is given as 'around 7'. The pack (slide 11) gives 'about Mohs 6.5'. Both values appear in references, so state 'about 6.5–7' so students are not caught out by either key.",
+      "The title promises fingernail and copper values, but the live text never gives them. The pack does not supply them either, so source them independently before adding."
+    ],
+    "use-an-identification-flowchart": [
+      "The hardness card lists 'Gypsum has hardness 1.5–2 … dioptase 5'. Use the Mohs index values instead (gypsum 2, apatite 5; pack slide 9), and keep dioptase only as a mineral to identify, not as a reference."
+    ],
+    "composition-and-bowen-series": [
+      "The live lesson labels the high-silica class 'silicic'. The rules (3.i.iv.2) and the pack (slide 38) use FELSIC, INTERMEDIATE, MAFIC and ULTRAMAFIC. Use 'felsic' as the primary term, add ULTRAMAFIC (e.g. peridotite, lowest silica, <~45% SiO2), and give the pack's approximate silica ranges: felsic >65%, intermediate ~55–65%, mafic ~45–55%, ultramafic <45%. The live '52–66 wt%' for intermediate is a different convention; state the ranges as approximate.",
+      "Complete the discontinuous branch. The live steps mention only olivine → pyroxene, plus hornblende 'in cooler magma'. The full sequence (pack slide 31; exam Image 5/8/10) is olivine → pyroxene → amphibole (hornblende) → biotite. The two branches then converge, and potassium feldspar → muscovite → quartz crystallize last, in that order.",
+      "Add the weathering corollary, which the pack tests in three exams (B-Regional Q27, B-State Q44, B-National Q76). Minerals that crystallize at the highest temperatures (olivine) are least stable at Earth's surface and weather fastest. Quartz, crystallizing last and closest to surface conditions, is the most resistant. That is why quartz dominates sand and sandstone.",
+      "State explicitly that olivine and Ca-rich plagioclase begin crystallizing together at the top of their two branches. Neither is 'earlier' than the other. The pack's B-National Q28 gets this wrong."
+    ],
+    "cooling-history-and-texture": [
+      "Add the two rule-listed textures the lesson omits (rule 3.i.iv.1; pack slide 37). PYROCLASTIC: fragmented, explosively ejected volcanic material (ash, cinders, blocks), e.g. tuff. PEGMATITIC: extremely coarse crystals, often several centimetres or more, from slow cooling with abundant water or fluids, e.g. pegmatite. Both terms have zero hits in the course; the pack tests them (B-National Q35–36).",
+      "Name the igneous formations the rules allow (3.i.iv.3; pack slide 39): BATHOLITH (large deep intrusive body, phaneritic), LAVA FLOW (extrusive, aphanitic/glassy/vesicular) and PYROCLASTIC DEPOSITS. Do not add laccolith. The pack teaches it, but it is outside the Div B list."
+    ],
+    "igneous-rocks-by-name": [
+      "The objective names pumice, pegmatite, syenite, tuff and tuff breccia, but the live text teaches none of them. From the pack: pumice is light-colored and vesicular, scoria dark and vesicular (slide 60); tuff is pyroclastic, compacted volcanic ash and fragments (slide 37, B-National Q35); pegmatite has pegmatitic texture (B-National Q36). The pack says nothing specific about tuff breccia or syenite beyond List membership; both carry List footnote 1, so data will be supplied. Source anything further independently.",
+      "The live text says rhyolite is 'generally glassy or fine-grained'. Rhyolite is the fine-grained (aphanitic) extrusive equivalent of granite (pack slide 38). Glassy rock of that composition is identified as obsidian."
+    ],
+    "framework-and-chain-silicates": [
+      "Add AUGITE, which has zero hits in the course. From the pack it is a common dark rock-forming mineral in the PYROXENE GROUP (B-National Q23; slide 58), a single-chain silicate with two cleavages near 90° (slide 29), and the pyroxene on Bowen's discontinuous branch (slide 31). Contrast it with hornblende (amphibole, cleavages ≈56°/124°), which the lesson already teaches.",
+      "State that the List places augite, rhodonite and spodumene together in the Pyroxene Group (manual list; pack slide 58). The live lesson names the group but lists only spodumene."
+    ],
+    "sheet-and-ring-silicates": [
+      "The lesson title promises beryl and tourmaline, but the body teaches neither. Add from the pack: 'Tourmaline' alone is an accepted identification even though it is a group of species (List note 3; slide 59). Tourmaline is a complex boron silicate that is piezoelectric and often color-zoned (slide 29). Beryl is the mineral behind emerald, aquamarine and morganite (slide 32; rules 3.h.xiii.2).",
+      "Rhodonite is taught here without a group. The List places it in the PYROXENE GROUP (slide 58). Say so, or move it to framework-and-chain-silicates."
+    ],
+    "sulfides-sulfates-and-phosphates": [
+      "Add CELESTITE/CELESTINE (List spelling) to the sulfates. It is on the List as a sulfate beside barite and gypsum (slide 57) and has zero hits in the course. The pack gives no identifying properties, so source those independently.",
+      "Add TURQUOISE (* State/National) to the phosphates, which has zero hits. From the pack: it is a phosphate (C-State Q25 key), typically a distinctive blue-green massive material (C-State Q25 and its photo), and its main use is as a gemstone and ornamental stone (C-State Q26).",
+      "Add the uses the pack keys: gypsum for drywall (wallboard) and plaster (slide 33; B-Regional Q20, B-State Q33); fluorite as a flux in steelmaking and a source of fluorine (B-State Q14); galena as the principal ore of lead (slide 33; C-State Q49 key)."
+    ],
+    "quartz-varieties": [
+      "Add AVENTURINE, which has zero hits. It is on the List as a quartz variety (manual; pack slide 58). The pack gives no properties for it, so source its identifying features independently rather than inferring them.",
+      "The List files OPAL under 'Quartz varieties'. Keep the mineraloid explanation (taught in organic-gems-and-mineraloids), but tell students the List groups opal with the quartz varieties, so they can find it on their annotated List."
+    ],
+    "gem-varieties": [
+      "Add the trace-element cause of emerald's color: chromium (pack slide 23; the B-National Q21 stem also names vanadium). This is the rules' own example of chemistry controlling color (3.h.vi). The lesson currently says only that emerald is a variety of beryl."
+    ],
+    "carbonates-and-borates": [
+      "Name the relationship. Calcite and aragonite share the formula CaCO3 but differ in structure (trigonal vs orthorhombic), so they are POLYMORPHS (rules 3.h.vii; pack slide 24). The lesson teaches the facts but never uses the word, and the pack tests it (B-National Q22, C-State Q47)."
+    ],
+    "native-elements-and-oxides": [
+      "Name diamond and graphite as POLYMORPHS of carbon (rules 3.h.vii; pack slide 24): same composition, different structures, diamond Mohs 10 vs graphite 1–2 and used as a lubricant. The lesson calls them 'sp3/sp2 forms' but never uses the rules' term. Tested in B-Regional Q21 and B-State Q9.",
+      "Add the uses the pack keys: hematite is a major ore of iron (slide 33; B-Regional Q13); corundum is a natural abrasive because of its hardness (C-State Q35)."
+    ],
+    "chemical-and-biochemical-rocks": [
+      "Add FOSSIL LIMESTONE, which has zero hits. The pack classes it with coquina and coal as a BIOCHEMICAL sedimentary rock formed from accumulated shells or skeletal material (slide 41; B-Regional Q26 key; C-Regional Q23).",
+      "Travertine appears once, with no formation process. From the pack it forms by precipitation of calcium carbonate from mineral-rich water, e.g. at hot springs and in caves (slide 30; B-National Q26), so it is a chemical sedimentary rock."
+    ],
+    "sedimentary-evidence": [
+      "The biochemical examples (coquina, diatomaceous earth, coal) omit FOSSIL LIMESTONE, which the pack uses as a standard example (slide 41) and which is on the List. The course calls the diatom rock 'diatomaceous earth'; the List name is DIATOMITE. Use the List name."
+    ],
+    "metamorphic-evidence": [
+      "Add the three foliated textures the rules name (3.i.vi.1; pack slide 45): SLATY CLEAVAGE (very fine, flat, parallel planes, low grade), SCHISTOSE (visible aligned platy minerals, medium grade) and GNEISSIC BANDING (alternating light and dark mineral bands, high grade). 'Slaty cleavage' and 'gneissic banding' have zero hits in the course. Gneissic banding is coarse (B-National Q56), not 'fine' as the pack's slide 60 says."
+    ],
+    "metamorphic-rocks-by-name": [
+      "The objective names garnet schist, marble, quartzite, serpentinite and soapstone, but the live text covers only slate, phyllite, mica schist, gneiss and amphibolite. Add the protolith pairs the rules list (3.i.vi.4; pack slide 47): limestone → marble, sandstone → quartzite, peridotite → serpentinite, basalt or gabbro → amphibolite. The live text gives only basalt for amphibolite, so add gabbro. The pack's key treats serpentinite as non-foliated, massive and mottled (B-National Q67). Sheared serpentinite can be foliated, so teach the massive form as typical, not universal.",
+      "GARNET SCHIST (on the List; zero hits) is not described in the pack beyond its List entry. Combining the pack's own facts: it is a schist (schistose, medium grade; slide 45) containing garnet, a medium-grade index mineral (slide 46). Any further identifying detail needs an independent source."
+    ],
+    "metamorphic-grade-and-index-minerals": [
+      "The lesson says muscovite 'is not a single step in this ordered index-mineral sequence'. That is true of the Barrovian zones, but rule 3.i.vi.6 lists muscovite among the seven index minerals, and the pack orders them chlorite → muscovite → biotite (low), garnet → staurolite (medium), kyanite → sillimanite (high) (slide 46). A student taught only the current framing may reject muscovite on a rules-framed question such as B-Regional Q25 or B-State Q40. Teach the rules' seven-mineral order, with the Barrovian note as an aside."
+    ],
+    "processes-that-change-rock": [
+      "Add UPLIFT, which has zero hits. The rules' rock-cycle processes (3.i.vii) are 'melting & solidification; uplift, erosion & deposition; burial, compaction & cementation; heat & pressure resulting in recrystallization & deformation'. The pack's diagram labels 'Uplift, Erosion & Deposition' (slide 51), and its keys use uplift to bring deep rock to the surface (B-National Q69, Q80)."
+    ],
+    "clastic-rocks-by-grain-size": [
+      "Connect grain shape and sorting to transport and energy, not only to naming. Angular, poorly sorted clasts (breccia, alluvial-fan and talus debris) mean short transport and rapid, high-energy deposition. Rounded, well-sorted grains (beach and dune sand) mean long transport and reworking (pack slide 43; B-National Q48, Q65, Q75). Also give the size order clay < silt < sand < pebble < cobble < boulder, with sand = 1/16–2 mm (B-Regional Q9, B-National Q46). Do not use the pack's slide 60, which wrongly calls alluvial fans low-energy.",
+      "The lesson teaches siltstone. That is fine as vocabulary, but siltstone is not on the 2027 List, so it should not appear as an identification answer."
+    ]
+  }
+}
