@@ -60,9 +60,18 @@ python -m scripts.author_course_from_blueprint --blueprint "$BLUEPRINT" --apply 
 check "${PIPESTATUS[0]}" scaffold
 
 step "ground on the open sources"
-python -m scripts.ground_event --event "$EVENT" --apply \
-  | grep -E "open sources|verified claims|blocks supported|skills supported|committed|duplicate body|FETCH FAILED|connection dropped"
-check "${PIPESTATUS[0]}" ground
+# Grounding commits after every source, so a dropped database connection loses one source's
+# work, not the run's — and a re-run resumes. Remote Sensing's grounding died twice on
+# "server closed the connection unexpectedly" at different sources, even with keepalives and
+# pre-ping on; stopping the whole subject for that threw away an hour of queue each time.
+for attempt in 1 2 3; do
+  python -m scripts.ground_event --event "$EVENT" --apply \
+    | grep -E "open sources|verified claims|blocks supported|skills supported|committed|duplicate body|FETCH FAILED|connection dropped"
+  status="${PIPESTATUS[0]}"
+  [[ "$status" -eq 0 ]] && break
+  echo "   ground attempt $attempt exited $status — retrying (progress so far is committed)"
+done
+check "$status" ground
 
 step "extract passages (the step the author actually reads)"
 python -m scripts.extract_source_passages --apply | grep -E '"passages"|"snapshots_extracted"'
