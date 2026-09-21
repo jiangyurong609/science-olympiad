@@ -64,6 +64,10 @@ PUBLISH_EVENTS = [
     # because that twin was the current event when they were parsed. Publishing this event
     # is what lets `port_past_tests_to_current` bring them across.
     ("disease-detectives-b-2027", "current"),
+    # Heredity: 31 lessons, one advisory finding standing and no rejections. Its 204-page
+    # corpus was built for the 2027 topic list; the `genetics` domain it used to reach holds
+    # eighteen pages.
+    ("heredity-b-2027", "current"),
     # Rocks & Minerals keeps its name and its rotation, but the 2027 course is the one built
     # against the 2027 National Rocks and Minerals List, and the event was never grounded
     # until today. The 2026 twin is demoted below.
