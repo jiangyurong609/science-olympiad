@@ -1,0 +1,891 @@
+{
+  "event_slug": "remote-sensing-b-2027",
+  "season": 2027,
+  "title": "Remote Sensing B 2027: Observable Earth",
+  "summary": "Twenty-five to thirty-five percent of the score is remote sensing concepts; the rest is interpreting real imagery from a list of platforms the rules close. The manual permits five equations and allows only three of them to be tested with numbers.",
+  "objectives": [
+    "Apply the wave equation, Wien's law and the radar range equation quantitatively, and the others qualitatively",
+    "Choose between passive and active sensing for a stated observation, and interpret radar backscatter",
+    "Match an orbit class to a mission purpose and explain the four resolutions and their trade-offs",
+    "Name the sensor, bands and resolution of every platform on the permitted list",
+    "Read marginal information, then measure distance, area, elevation and slope from an image or map",
+    "Detect and explain vegetation change, surface temperature, elevation change, geohazards and land cover change"
+  ],
+  "units": [
+    {
+      "slug": "light-and-matter",
+      "title": "Properties of Light",
+      "summary": "Everything a passive sensor records is light that met something. Five equations are permitted; three may be tested with numbers.",
+      "objectives": [
+        "Use the wave equation and Wien's law quantitatively",
+        "Explain scattering, absorption and reflection qualitatively"
+      ],
+      "lessons": [
+        {
+          "slug": "electromagnetic-spectrum",
+          "title": "The Electromagnetic Spectrum",
+          "objective": "Order the spectral regions by wavelength and energy, and name the regions remote sensing uses: UV, visible, NIR, SWIR and thermal IR.",
+          "keywords": [
+            "electromagnetic spectrum",
+            "wavelength",
+            "frequency",
+            "energy",
+            "ultraviolet",
+            "visible",
+            "near-infrared",
+            "shortwave infrared",
+            "thermal infrared",
+            "region"
+          ],
+          "high_weight": true,
+          "video": false
+        },
+        {
+          "slug": "wave-equation",
+          "title": "c = \u03bb\u03bd",
+          "objective": "Compute wavelength from frequency or frequency from wavelength using the speed of light, with units.",
+          "keywords": [
+            "wave equation",
+            "speed of light",
+            "wavelength",
+            "frequency",
+            "hertz",
+            "metre",
+            "calculation",
+            "conversion",
+            "units",
+            "electromagnetic radiation"
+          ],
+          "high_weight": true,
+          "video": false
+        },
+        {
+          "slug": "wiens-law",
+          "title": "Wien's Displacement Law",
+          "objective": "Compute the wavelength of peak emission from an object's temperature, and use it to say which band senses a given surface.",
+          "keywords": [
+            "Wien's displacement law",
+            "peak wavelength",
+            "temperature",
+            "kelvin",
+            "blackbody",
+            "emission",
+            "thermal infrared",
+            "constant",
+            "calculation",
+            "surface"
+          ],
+          "high_weight": true,
+          "video": false
+        },
+        {
+          "slug": "stefan-boltzmann",
+          "title": "The Stefan-Boltzmann Law and Emissivity",
+          "objective": "State how emitted power depends on temperature and explain emissivity, qualitatively.",
+          "keywords": [
+            "Stefan-Boltzmann law",
+            "radiant exitance",
+            "temperature",
+            "fourth power",
+            "emissivity",
+            "blackbody",
+            "grey body",
+            "emission",
+            "qualitative",
+            "radiation"
+          ],
+          "high_weight": false,
+          "video": false
+        },
+        {
+          "slug": "reflection-refraction",
+          "title": "Reflection, Refraction and Snell's Law",
+          "objective": "Describe specular and diffuse reflection and state Snell's law qualitatively as light passes between media.",
+          "keywords": [
+            "reflection",
+            "specular",
+            "diffuse",
+            "refraction",
+            "Snell's law",
+            "refractive index",
+            "angle",
+            "incidence",
+            "medium",
+            "boundary"
+          ],
+          "high_weight": false,
+          "video": false
+        },
+        {
+          "slug": "scattering-and-absorption",
+          "title": "Scattering, Absorption and Why the Sky Limits the Sensor",
+          "objective": "Distinguish Rayleigh from Mie scattering by particle size and wavelength, and explain how aerosols degrade collected data.",
+          "keywords": [
+            "scattering",
+            "Rayleigh scattering",
+            "Mie scattering",
+            "aerosol",
+            "particle size",
+            "absorption",
+            "atmosphere",
+            "haze",
+            "attenuation",
+            "correction"
+          ],
+          "high_weight": true,
+          "video": false
+        },
+        {
+          "slug": "irradiance-and-radiance",
+          "title": "Irradiance, Radiance and the Inverse Square Law",
+          "objective": "Distinguish irradiance from radiance and apply the inverse square law qualitatively to a source at increasing distance.",
+          "keywords": [
+            "irradiance",
+            "radiance",
+            "inverse-square law",
+            "flux",
+            "per steradian",
+            "distance",
+            "source",
+            "intensity",
+            "qualitative",
+            "units"
+          ],
+          "high_weight": false,
+          "video": false
+        },
+        {
+          "slug": "polarization",
+          "title": "Polarization",
+          "objective": "Describe what polarized light is and give a remote sensing situation where polarization carries information.",
+          "keywords": [
+            "polarization",
+            "wave",
+            "orientation",
+            "filter",
+            "reflection",
+            "surface",
+            "radar",
+            "signal",
+            "information",
+            "qualitative"
+          ],
+          "high_weight": false,
+          "video": false
+        }
+      ]
+    },
+    {
+      "slug": "sensors",
+      "title": "Passive and Active Sensors",
+      "summary": "What the rules permit: optical and thermal passive sensing, and radar as backscatter, SAR, InSAR and altimetry.",
+      "objectives": [
+        "Choose a sensor type for a stated observation",
+        "Compute a radar altimetry range"
+      ],
+      "lessons": [
+        {
+          "slug": "passive-sensors",
+          "title": "Passive: Recording Light That Was Already There",
+          "objective": "Explain what a passive sensor measures in the UV, visible, NIR, SWIR and thermal IR, and state what it cannot do at night or through cloud.",
+          "keywords": [
+            "passive sensor",
+            "optical",
+            "thermal",
+            "reflected",
+            "emitted",
+            "solar illumination",
+            "night",
+            "cloud",
+            "band",
+            "limitation"
+          ],
+          "high_weight": true,
+          "video": false
+        },
+        {
+          "slug": "active-sensors",
+          "title": "Active: Sending the Signal Yourself",
+          "objective": "Explain what an active sensor transmits and measures, and why radar works at night and through cloud.",
+          "keywords": [
+            "active sensor",
+            "radar",
+            "transmit",
+            "return",
+            "backscatter",
+            "cloud penetration",
+            "night",
+            "microwave",
+            "illumination",
+            "signal"
+          ],
+          "high_weight": true,
+          "video": false
+        },
+        {
+          "slug": "radar-backscatter",
+          "title": "Backscatter and What Makes a Surface Bright",
+          "objective": "Explain how surface roughness, moisture and geometry set radar backscatter, and interpret a bright and a dark area on a radar image.",
+          "keywords": [
+            "backscatter",
+            "roughness",
+            "moisture",
+            "dielectric",
+            "geometry",
+            "specular",
+            "bright",
+            "dark",
+            "radar image",
+            "interpretation"
+          ],
+          "high_weight": true,
+          "video": false
+        },
+        {
+          "slug": "sar-and-insar",
+          "title": "SAR and InSAR",
+          "objective": "Explain what synthetic aperture achieves and what InSAR measures, at the interpretive level the rules allow.",
+          "keywords": [
+            "synthetic aperture radar",
+            "SAR",
+            "resolution",
+            "aperture",
+            "interferometric",
+            "InSAR",
+            "phase",
+            "deformation",
+            "elevation",
+            "interpretation"
+          ],
+          "high_weight": true,
+          "video": false
+        },
+        {
+          "slug": "radar-altimetry",
+          "title": "Radar Altimetry and the Range Equation",
+          "objective": "Compute range from a two-way travel time and the speed of light, and say what altimetry measures over ocean and ice.",
+          "keywords": [
+            "radar altimeter",
+            "range",
+            "two-way travel time",
+            "speed of light",
+            "calculation",
+            "sea surface height",
+            "ice",
+            "elevation",
+            "profile",
+            "measurement"
+          ],
+          "high_weight": true,
+          "video": false
+        },
+        {
+          "slug": "dems",
+          "title": "Digital Elevation Models",
+          "objective": "Explain how a DEM is produced from radar and what elevation, slope and contour products come from it.",
+          "keywords": [
+            "digital elevation model",
+            "DEM",
+            "SRTM",
+            "elevation",
+            "slope",
+            "contour",
+            "terrain",
+            "grid",
+            "product",
+            "derivation"
+          ],
+          "high_weight": true,
+          "video": false
+        },
+        {
+          "slug": "instruments",
+          "title": "The Instrument Types the Rules Name",
+          "objective": "Match scanning systems, multispectral imagers, radiometers, thermal imagers, radar altimeters and SAR instruments to what each produces.",
+          "keywords": [
+            "scanning system",
+            "multispectral",
+            "imager",
+            "radiometer",
+            "thermal infrared",
+            "radar altimeter",
+            "SAR",
+            "instrument",
+            "product",
+            "matching"
+          ],
+          "high_weight": false,
+          "video": false
+        }
+      ]
+    },
+    {
+      "slug": "orbits",
+      "title": "Orbits and Why a Satellite Is Where It Is",
+      "summary": "Six orbit classes, one equation. The orbit decides revisit time and coverage.",
+      "objectives": [
+        "Match an orbit class to a mission purpose",
+        "Apply Kepler's third law qualitatively"
+      ],
+      "lessons": [
+        {
+          "slug": "orbit-classes",
+          "title": "LEO, MEO, HEO and What Each Is For",
+          "objective": "Distinguish low, medium and high Earth orbit by altitude, and state what each is used for in Earth observation.",
+          "keywords": [
+            "low Earth orbit",
+            "medium Earth orbit",
+            "high Earth orbit",
+            "altitude",
+            "period",
+            "coverage",
+            "purpose",
+            "satellite",
+            "orbit",
+            "classification"
+          ],
+          "high_weight": true,
+          "video": false
+        },
+        {
+          "slug": "polar-and-sun-synchronous",
+          "title": "Polar and Non-Polar Orbits",
+          "objective": "Explain why a polar or sun-synchronous orbit gives global coverage at a consistent local time, and what that buys an imaging mission.",
+          "keywords": [
+            "polar orbit",
+            "non-polar",
+            "sun-synchronous",
+            "inclination",
+            "global coverage",
+            "local time",
+            "illumination",
+            "repeat",
+            "swath",
+            "imaging"
+          ],
+          "high_weight": true,
+          "video": false
+        },
+        {
+          "slug": "geostationary",
+          "title": "Geostationary and Geosynchronous",
+          "objective": "Distinguish geostationary from geosynchronous, state the altitude, and explain why GOES sits there.",
+          "keywords": [
+            "geostationary orbit",
+            "geosynchronous",
+            "altitude",
+            "period",
+            "equator",
+            "fixed",
+            "GOES",
+            "continuous",
+            "coverage",
+            "weather"
+          ],
+          "high_weight": true,
+          "video": false
+        },
+        {
+          "slug": "keplers-third-law",
+          "title": "Kepler's Third Law",
+          "objective": "Relate orbital period to orbital radius qualitatively, and predict how period changes when altitude does.",
+          "keywords": [
+            "Kepler's laws",
+            "third law",
+            "period",
+            "semi-major axis",
+            "radius",
+            "altitude",
+            "proportional",
+            "orbit",
+            "qualitative",
+            "relationship"
+          ],
+          "high_weight": false,
+          "video": false
+        }
+      ]
+    },
+    {
+      "slug": "resolution",
+      "title": "The Four Resolutions",
+      "summary": "Spatial, temporal, radiometric and spectral. Missions trade them against each other and the trade is examinable.",
+      "objectives": [
+        "Say which resolution a stated task needs",
+        "Explain a trade-off between two of them"
+      ],
+      "lessons": [
+        {
+          "slug": "spatial-resolution",
+          "title": "Spatial Resolution and Pixel Size",
+          "objective": "State what spatial resolution means, and decide whether a given feature can be resolved at a stated pixel size.",
+          "keywords": [
+            "spatial resolution",
+            "pixel",
+            "ground sample distance",
+            "metre",
+            "feature",
+            "resolve",
+            "detail",
+            "scale",
+            "image",
+            "limit"
+          ],
+          "high_weight": true,
+          "video": false
+        },
+        {
+          "slug": "temporal-resolution",
+          "title": "Temporal Resolution and Revisit Time",
+          "objective": "Explain revisit time and say what temporal resolution a change-detection task requires.",
+          "keywords": [
+            "temporal resolution",
+            "revisit time",
+            "repeat cycle",
+            "change detection",
+            "monitoring",
+            "frequency",
+            "orbit",
+            "coverage",
+            "time series",
+            "task"
+          ],
+          "high_weight": true,
+          "video": false
+        },
+        {
+          "slug": "spectral-resolution",
+          "title": "Spectral Resolution and Bands",
+          "objective": "Explain band width and count, and say why more, narrower bands distinguish materials a broad band cannot.",
+          "keywords": [
+            "spectral resolution",
+            "band",
+            "bandwidth",
+            "multispectral",
+            "hyperspectral",
+            "discrimination",
+            "material",
+            "signature",
+            "wavelength",
+            "count"
+          ],
+          "high_weight": true,
+          "video": false
+        },
+        {
+          "slug": "radiometric-resolution",
+          "title": "Radiometric Resolution and Signal-to-Noise",
+          "objective": "Explain radiometric resolution as sensitivity, and relate it to signal-to-noise ratio and the number of levels recorded.",
+          "keywords": [
+            "radiometric resolution",
+            "sensitivity",
+            "signal-to-noise ratio",
+            "bit depth",
+            "levels",
+            "noise",
+            "contrast",
+            "dynamic range",
+            "detection",
+            "quantization"
+          ],
+          "high_weight": true,
+          "video": false
+        },
+        {
+          "slug": "resolution-tradeoffs",
+          "title": "Why You Cannot Have All Four",
+          "objective": "Explain the trade-offs among the four resolutions and justify a mission's choices from its purpose.",
+          "keywords": [
+            "trade-off",
+            "spatial",
+            "temporal",
+            "spectral",
+            "radiometric",
+            "swath",
+            "orbit",
+            "design",
+            "purpose",
+            "compromise"
+          ],
+          "high_weight": true,
+          "video": false
+        }
+      ]
+    },
+    {
+      "slug": "platforms",
+      "title": "The Platforms You May Be Asked About",
+      "summary": "A closed list: Landsat 5-9, Sentinel-1 and 2, Terra's MODIS and ASTER, SRTM, ECOSTRESS and GOES.",
+      "objectives": [
+        "Name each platform's sensor, bands and resolution",
+        "Choose the right platform for a stated observation"
+      ],
+      "lessons": [
+        {
+          "slug": "landsat",
+          "title": "Landsat 5 to 9: TM, ETM+ and OLI",
+          "objective": "Describe the Landsat series, name the TM, ETM+ and OLI instruments, and give the band set and spatial resolution of each.",
+          "keywords": [
+            "Landsat",
+            "Landsat 5",
+            "Landsat 7",
+            "Landsat 8",
+            "Landsat 9",
+            "Thematic Mapper",
+            "ETM+",
+            "OLI",
+            "band",
+            "resolution"
+          ],
+          "high_weight": true,
+          "video": false
+        },
+        {
+          "slug": "band-combinations",
+          "title": "Band Combinations and What Each Shows",
+          "objective": "Choose a Landsat band combination for vegetation, water, urban or burn assessment, and say what colour each target takes.",
+          "keywords": [
+            "band combination",
+            "natural colour",
+            "false colour",
+            "vegetation",
+            "water",
+            "urban",
+            "burn",
+            "near-infrared",
+            "shortwave infrared",
+            "display"
+          ],
+          "high_weight": true,
+          "video": false
+        },
+        {
+          "slug": "sentinel",
+          "title": "Sentinel-1 and Sentinel-2",
+          "objective": "Distinguish Sentinel-1's radar from Sentinel-2's multispectral optical imaging, and state what each is used for.",
+          "keywords": [
+            "Sentinel-1",
+            "Sentinel-2",
+            "SAR",
+            "multispectral",
+            "C-band",
+            "resolution",
+            "revisit",
+            "Copernicus",
+            "mission",
+            "application"
+          ],
+          "high_weight": true,
+          "video": false
+        },
+        {
+          "slug": "terra-modis-aster",
+          "title": "Terra: MODIS and ASTER",
+          "objective": "Contrast MODIS's wide swath and coarse pixels with ASTER's narrow swath and finer thermal bands, and say which suits which task.",
+          "keywords": [
+            "Terra",
+            "MODIS",
+            "ASTER",
+            "swath",
+            "coarse",
+            "fine",
+            "thermal",
+            "daily",
+            "resolution",
+            "application"
+          ],
+          "high_weight": true,
+          "video": false
+        },
+        {
+          "slug": "srtm-ecostress-goes",
+          "title": "SRTM, ECOSTRESS and GOES",
+          "objective": "State what each of SRTM, ECOSTRESS and GOES measures and the product a question would hand you from each.",
+          "keywords": [
+            "Shuttle Radar Topography Mission",
+            "SRTM",
+            "elevation",
+            "ECOSTRESS",
+            "evapotranspiration",
+            "surface temperature",
+            "GOES",
+            "geostationary",
+            "weather",
+            "product"
+          ],
+          "high_weight": true,
+          "video": false
+        }
+      ]
+    },
+    {
+      "slug": "reading-an-image",
+      "title": "Reading Images, Maps and Marginal Information",
+      "summary": "Most of the points. Before interpreting anything, read the margin.",
+      "objectives": [
+        "Extract location, date, scale and orientation from marginal information",
+        "Measure distance, area, elevation and slope from an image or map"
+      ],
+      "lessons": [
+        {
+          "slug": "marginal-information",
+          "title": "What the Margin Tells You First",
+          "objective": "Read location, date, scale, orientation, legend and labels from an image or map, and say why each changes the interpretation.",
+          "keywords": [
+            "marginal information",
+            "location",
+            "date",
+            "scale",
+            "orientation",
+            "legend",
+            "label",
+            "north arrow",
+            "projection",
+            "metadata"
+          ],
+          "high_weight": true,
+          "video": false
+        },
+        {
+          "slug": "display-types",
+          "title": "Natural Colour, False Colour, Grayscale, Thermal, Radar",
+          "objective": "Identify which display type an image uses and state what bright and dark mean in each.",
+          "keywords": [
+            "natural colour",
+            "false colour",
+            "grayscale",
+            "thermal image",
+            "radar image",
+            "classified map",
+            "elevation",
+            "display",
+            "brightness",
+            "interpretation"
+          ],
+          "high_weight": true,
+          "video": false
+        },
+        {
+          "slug": "measuring-distance-and-area",
+          "title": "Distance, Perimeter and Area From Scale",
+          "objective": "Compute a real distance, perimeter or area from a measured length and a stated map scale, with units.",
+          "keywords": [
+            "scale",
+            "ratio",
+            "distance",
+            "perimeter",
+            "area",
+            "measurement",
+            "ruler",
+            "conversion",
+            "units",
+            "calculation"
+          ],
+          "high_weight": true,
+          "video": false
+        },
+        {
+          "slug": "contours-and-slope",
+          "title": "Contours, Elevation and Gradient",
+          "objective": "Read elevation from contours, compute a gradient from rise over run, and identify steep and gentle terrain on a map.",
+          "keywords": [
+            "contour line",
+            "contour interval",
+            "elevation",
+            "relief",
+            "slope",
+            "gradient",
+            "rise",
+            "run",
+            "terrain",
+            "topographic map"
+          ],
+          "high_weight": true,
+          "video": false
+        },
+        {
+          "slug": "topographic-maps",
+          "title": "Topographic Maps and Aerial Photographs",
+          "objective": "Read a topographic map's symbols and compare the same ground on a map, an aerial photograph and a satellite image.",
+          "keywords": [
+            "topographic map",
+            "symbol",
+            "aerial photography",
+            "orthophoto",
+            "satellite image",
+            "comparison",
+            "feature",
+            "ground",
+            "interpretation",
+            "mapping"
+          ],
+          "high_weight": false,
+          "video": false
+        }
+      ]
+    },
+    {
+      "slug": "earth-observation",
+      "title": "Observing and Monitoring the Earth",
+      "summary": "Sixty-five to seventy-five percent of the points is interpretation, and this is what it is interpretation OF.",
+      "objectives": [
+        "Read a change from a pair of dated images",
+        "Explain what a classification map does and does not show"
+      ],
+      "lessons": [
+        {
+          "slug": "albedo-and-reflectance",
+          "title": "Albedo, Reflectance and Classifying Land",
+          "objective": "Use reflectance and albedo differences to classify surfaces such as water, vegetation, bare soil, snow and built-up land.",
+          "keywords": [
+            "albedo",
+            "reflectance",
+            "spectral signature",
+            "water",
+            "vegetation",
+            "soil",
+            "snow",
+            "urban",
+            "classification",
+            "surface"
+          ],
+          "high_weight": true,
+          "video": false
+        },
+        {
+          "slug": "vegetation-indices",
+          "title": "Vegetation and NDVI",
+          "objective": "Explain why healthy vegetation is bright in the near-infrared, and interpret an NDVI image or time series.",
+          "keywords": [
+            "NDVI",
+            "vegetation index",
+            "near-infrared",
+            "red",
+            "chlorophyll",
+            "healthy",
+            "stressed",
+            "time series",
+            "agriculture",
+            "forest"
+          ],
+          "high_weight": true,
+          "video": false
+        },
+        {
+          "slug": "surface-temperature",
+          "title": "Thermal Imaging and Surface Temperature",
+          "objective": "Interpret a thermal image, explain the urban heat island, and say what ECOSTRESS adds.",
+          "keywords": [
+            "thermal infrared",
+            "surface temperature",
+            "emissivity",
+            "urban heat island",
+            "ECOSTRESS",
+            "evapotranspiration",
+            "brightness temperature",
+            "day",
+            "night",
+            "interpretation"
+          ],
+          "high_weight": true,
+          "video": false
+        },
+        {
+          "slug": "elevation-change",
+          "title": "Elevation Change and Subsidence",
+          "objective": "Detect uplift or subsidence from repeat elevation or InSAR products and name what causes each.",
+          "keywords": [
+            "elevation change",
+            "subsidence",
+            "uplift",
+            "InSAR",
+            "deformation",
+            "groundwater",
+            "mining",
+            "volcano",
+            "repeat",
+            "detection"
+          ],
+          "high_weight": true,
+          "video": false
+        },
+        {
+          "slug": "geohazards",
+          "title": "Volcanoes, Landslides, Floods and Wildfires",
+          "objective": "Identify each of these four hazards in imagery and say which sensor and band best reveals it.",
+          "keywords": [
+            "volcano",
+            "landslide",
+            "flood",
+            "wildfire",
+            "burn scar",
+            "plume",
+            "hazard",
+            "thermal",
+            "radar",
+            "detection"
+          ],
+          "high_weight": true,
+          "video": false
+        },
+        {
+          "slug": "earth-processes",
+          "title": "Glaciers, Rivers and Stream Patterns",
+          "objective": "Identify glacial movement and fluvial features from imagery, and read a drainage pattern.",
+          "keywords": [
+            "glacier",
+            "glacial motion",
+            "terminus",
+            "fluvial",
+            "stream",
+            "meander",
+            "drainage pattern",
+            "channel",
+            "erosion",
+            "deposition"
+          ],
+          "high_weight": false,
+          "video": false
+        },
+        {
+          "slug": "land-cover-classification",
+          "title": "Supervised and Unsupervised Classification",
+          "objective": "Distinguish supervised from unsupervised classification, read a classified map, and use the NLCD change index.",
+          "keywords": [
+            "land cover",
+            "classification",
+            "supervised",
+            "unsupervised",
+            "training data",
+            "class",
+            "NLCD",
+            "change index",
+            "map",
+            "accuracy"
+          ],
+          "high_weight": true,
+          "video": false
+        },
+        {
+          "slug": "human-implications",
+          "title": "Land Cover Change, Urbanisation and Deforestation",
+          "objective": "Read a land cover change from dated images and state the human or environmental implication the rules name.",
+          "keywords": [
+            "land cover change",
+            "urbanization",
+            "deforestation",
+            "habitat loss",
+            "damage assessment",
+            "monitoring",
+            "time series",
+            "implication",
+            "human",
+            "environment"
+          ],
+          "high_weight": true,
+          "video": false
+        }
+      ]
+    }
+  ]
+}

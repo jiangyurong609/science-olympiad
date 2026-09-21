@@ -1,0 +1,507 @@
+{
+  "event_slug": "experimental-design-b-2027",
+  "season": 2027,
+  "title": "Experimental Design B 2027",
+  "summary": "Experimental Design has no written exam. Three students get an assigned topic, a set of materials they have never seen, fifty minutes, and a two-part report form scored against the official checklist. This course is that checklist, section by section, with the tiebreak order the rules give: analysis first, then procedure, variables, table, graph.",
+  "objectives": [
+    "Turn an assigned topic and unknown materials into a testable problem statement and a reasoned hypothesis inside twenty minutes",
+    "Name the independent, dependent and controlled variables, and say what each uncontrolled variable would let in",
+    "Write a procedure and draw a set-up diagram another team could run from",
+    "Build a data table and a graph that score on format as well as content, and summarise trials with mean, median, mode and range",
+    "Write claim, evidence and reasoning, and state experimental error and limitations honestly"
+  ],
+  "units": [
+    {
+      "slug": "reading-the-prompt",
+      "title": "The First Twenty Minutes",
+      "summary": "Twenty minutes to read a topic, see materials for the first time, design an experiment and start running it. The clock is the hardest constraint in the event.",
+      "objectives": [
+        "Turn an assigned topic into a testable question",
+        "Get data collection started inside twenty minutes"
+      ],
+      "lessons": [
+        {
+          "slug": "turning-a-topic-into-a-question",
+          "title": "From Assigned Topic to Statement of the Problem",
+          "objective": "Write a statement of the problem that names both variables and is not answerable yes or no, from an assigned topic and an unknown materials set.",
+          "keywords": [
+            "statement of the problem",
+            "assigned topic",
+            "question",
+            "variables",
+            "testable",
+            "yes/no",
+            "scope",
+            "materials",
+            "design",
+            "checklist"
+          ],
+          "high_weight": true,
+          "video": false
+        },
+        {
+          "slug": "hypothesis",
+          "title": "Writing a Hypothesis That Scores",
+          "objective": "Write a hypothesis that predicts a direction of effect and gives a reason, rather than restating the question.",
+          "keywords": [
+            "hypothesis",
+            "prediction",
+            "direction",
+            "because",
+            "reasoning",
+            "testable",
+            "relationship",
+            "independent variable",
+            "dependent variable",
+            "null hypothesis"
+          ],
+          "high_weight": true,
+          "video": false
+        },
+        {
+          "slug": "using-unknown-materials",
+          "title": "Designing With Materials You Have Never Seen",
+          "objective": "Inventory an unknown materials set and choose from it an independent variable you can actually vary at three or more levels.",
+          "keywords": [
+            "materials",
+            "inventory",
+            "levels",
+            "vary",
+            "constraint",
+            "improvise",
+            "feasible",
+            "design",
+            "time",
+            "resource"
+          ],
+          "high_weight": true,
+          "video": false
+        },
+        {
+          "slug": "time-budget",
+          "title": "Budgeting Twenty and Thirty Minutes",
+          "objective": "Allocate the two event phases across design, trials and write-up so data collection starts early enough to repeat.",
+          "keywords": [
+            "time",
+            "phase",
+            "design",
+            "trial",
+            "repetition",
+            "write-up",
+            "allocation",
+            "deadline",
+            "priority",
+            "strategy"
+          ],
+          "high_weight": false,
+          "video": false
+        }
+      ]
+    },
+    {
+      "slug": "variables",
+      "title": "Variables",
+      "summary": "Variables are their own checklist section and the third tiebreaker.",
+      "objectives": [
+        "Name IV, DV and controlled variables for any experiment",
+        "Spot what a missing control lets in"
+      ],
+      "lessons": [
+        {
+          "slug": "independent-and-dependent",
+          "title": "The One You Change and the One You Measure",
+          "objective": "Identify the independent and dependent variable in an experiment and state which axis each belongs on.",
+          "keywords": [
+            "independent variable",
+            "dependent variable",
+            "change",
+            "measure",
+            "cause",
+            "effect",
+            "axis",
+            "relationship",
+            "identify",
+            "design"
+          ],
+          "high_weight": true,
+          "video": false
+        },
+        {
+          "slug": "controlled-variables",
+          "title": "Controlled Variables, and Naming Enough of Them",
+          "objective": "List the controlled variables for an experiment and explain what each one being uncontrolled would do to the result.",
+          "keywords": [
+            "controlled variable",
+            "constant",
+            "held",
+            "control",
+            "confound",
+            "affect",
+            "list",
+            "specific",
+            "justification",
+            "design"
+          ],
+          "high_weight": true,
+          "video": false
+        },
+        {
+          "slug": "confounding",
+          "title": "When Two Things Change at Once",
+          "objective": "Identify a confounded design and explain why its result cannot be attributed to the independent variable.",
+          "keywords": [
+            "confounding",
+            "confound",
+            "attribution",
+            "two variables",
+            "interpretation",
+            "invalid",
+            "design flaw",
+            "alternative explanation",
+            "isolate",
+            "control"
+          ],
+          "high_weight": true,
+          "video": false
+        },
+        {
+          "slug": "levels-and-trials",
+          "title": "Levels of the Independent Variable, and Repeats",
+          "objective": "Choose at least three levels of the independent variable and enough repeated trials to show variation, and justify both.",
+          "keywords": [
+            "levels",
+            "trials",
+            "repetition",
+            "replication",
+            "variation",
+            "range",
+            "interval",
+            "sample",
+            "justification",
+            "reliability"
+          ],
+          "high_weight": true,
+          "video": false
+        }
+      ]
+    },
+    {
+      "slug": "procedure-and-setup",
+      "title": "Procedure and Set-Up Diagrams",
+      "summary": "Second tiebreaker. The test is whether another team could run it from your words.",
+      "objectives": [
+        "Write a procedure another team could follow exactly",
+        "Draw a labelled set-up diagram"
+      ],
+      "lessons": [
+        {
+          "slug": "writing-a-procedure",
+          "title": "A Procedure Somebody Else Could Follow",
+          "objective": "Write a numbered procedure with quantities, distances and repetitions specified, and check it for steps only you would know.",
+          "keywords": [
+            "procedure",
+            "numbered step",
+            "quantity",
+            "specific",
+            "repeatable",
+            "ambiguity",
+            "sequence",
+            "instruction",
+            "detail",
+            "reproducibility"
+          ],
+          "high_weight": true,
+          "video": false
+        },
+        {
+          "slug": "setup-diagram",
+          "title": "The Set-Up Diagram",
+          "objective": "Draw and label a set-up diagram showing the apparatus, where the measurement is taken and what is held constant.",
+          "keywords": [
+            "diagram",
+            "label",
+            "apparatus",
+            "set-up",
+            "measurement point",
+            "scale",
+            "orientation",
+            "annotation",
+            "clarity",
+            "drawing"
+          ],
+          "high_weight": true,
+          "video": false
+        },
+        {
+          "slug": "materials-list",
+          "title": "Listing Materials Precisely",
+          "objective": "Write a materials list with counts and dimensions, distinguishing what was provided from what was used.",
+          "keywords": [
+            "materials list",
+            "count",
+            "dimension",
+            "provided",
+            "used",
+            "unused",
+            "specific",
+            "inventory",
+            "measurement device",
+            "record"
+          ],
+          "high_weight": false,
+          "video": false
+        },
+        {
+          "slug": "safety-in-the-design",
+          "title": "Designing Something Safe Enough to Run",
+          "objective": "Identify the safety considerations of a proposed design and state why a disqualifying design is not worth the points.",
+          "keywords": [
+            "safety",
+            "goggles",
+            "hazard",
+            "risk",
+            "procedure",
+            "disqualification",
+            "clean-up",
+            "rule",
+            "judgement",
+            "design"
+          ],
+          "high_weight": false,
+          "video": false
+        }
+      ]
+    },
+    {
+      "slug": "data-and-graphs",
+      "title": "Data Tables, Graphs and Statistics",
+      "summary": "Fourth and fifth tiebreakers, and the part most teams lose points on for formatting rather than for the science.",
+      "objectives": [
+        "Build a data table with units and trials",
+        "Choose and label the right graph"
+      ],
+      "lessons": [
+        {
+          "slug": "qualitative-and-quantitative",
+          "title": "Both Kinds of Observation",
+          "objective": "Record qualitative and quantitative observations separately and explain what each contributes to the analysis.",
+          "keywords": [
+            "qualitative",
+            "quantitative",
+            "observation",
+            "description",
+            "measurement",
+            "number",
+            "record",
+            "data",
+            "evidence",
+            "distinction"
+          ],
+          "high_weight": false,
+          "video": false
+        },
+        {
+          "slug": "data-table",
+          "title": "A Data Table That Scores Full Marks",
+          "objective": "Construct a data table with a title, labelled columns, units in the headers, every trial and a computed average.",
+          "keywords": [
+            "data table",
+            "title",
+            "column heading",
+            "units",
+            "trial",
+            "row",
+            "average",
+            "organisation",
+            "completeness",
+            "format"
+          ],
+          "high_weight": true,
+          "video": false
+        },
+        {
+          "slug": "choosing-a-graph",
+          "title": "Bar, Line or Scatter",
+          "objective": "Choose the graph type that matches the data, and justify the choice from whether the independent variable is categorical or continuous.",
+          "keywords": [
+            "bar chart",
+            "line graph",
+            "scatter plot",
+            "categorical",
+            "continuous",
+            "data type",
+            "choice",
+            "justification",
+            "axis",
+            "representation"
+          ],
+          "high_weight": true,
+          "video": false
+        },
+        {
+          "slug": "labelling-a-graph",
+          "title": "Titles, Axes, Units and Scale",
+          "objective": "Label a graph with a title, both axis names, units and an even scale, putting the independent variable on the x axis.",
+          "keywords": [
+            "graph",
+            "title",
+            "axis label",
+            "units",
+            "scale",
+            "interval",
+            "x axis",
+            "y axis",
+            "key",
+            "format"
+          ],
+          "high_weight": true,
+          "video": false
+        },
+        {
+          "slug": "mean-median-mode-range",
+          "title": "Mean, Median, Mode and Range",
+          "objective": "Compute the mean, median, mode and range of a trial set and say which is the better summary when an outlier is present.",
+          "keywords": [
+            "mean",
+            "median",
+            "mode",
+            "range",
+            "average",
+            "outlier",
+            "summary",
+            "calculation",
+            "central tendency",
+            "spread"
+          ],
+          "high_weight": true,
+          "video": false
+        },
+        {
+          "slug": "reading-a-trend",
+          "title": "Describing What the Graph Shows",
+          "objective": "Describe a trend in terms of direction and rate, and distinguish describing a trend from explaining it.",
+          "keywords": [
+            "trend",
+            "direction",
+            "increase",
+            "decrease",
+            "rate",
+            "slope",
+            "pattern",
+            "description",
+            "explanation",
+            "relationship"
+          ],
+          "high_weight": true,
+          "video": false
+        }
+      ]
+    },
+    {
+      "slug": "analysis",
+      "title": "Claim, Evidence and Reasoning",
+      "summary": "The first tiebreaker, and the section worth the most thought.",
+      "objectives": [
+        "Write a claim backed by evidence and reasoning",
+        "State an error and a limitation honestly"
+      ],
+      "lessons": [
+        {
+          "slug": "claim-evidence-reasoning",
+          "title": "Claim, Evidence, Reasoning",
+          "objective": "Write an analysis that states a claim, cites specific data as evidence, and gives scientific reasoning connecting the two.",
+          "keywords": [
+            "claim",
+            "evidence",
+            "reasoning",
+            "specific data",
+            "connection",
+            "scientific principle",
+            "justification",
+            "analysis",
+            "conclusion",
+            "structure"
+          ],
+          "high_weight": true,
+          "video": false
+        },
+        {
+          "slug": "hypothesis-supported-or-not",
+          "title": "Saying the Hypothesis Was Not Supported",
+          "objective": "State whether the data supported the hypothesis and explain why an unsupported hypothesis is not a failed experiment.",
+          "keywords": [
+            "hypothesis",
+            "supported",
+            "not supported",
+            "evidence",
+            "honest",
+            "revision",
+            "result",
+            "interpretation",
+            "conclusion",
+            "science"
+          ],
+          "high_weight": true,
+          "video": false
+        },
+        {
+          "slug": "experimental-error",
+          "title": "Naming Your Experimental Errors",
+          "objective": "Identify specific sources of random and systematic error in the experiment just run, and say which direction each would push the result.",
+          "keywords": [
+            "experimental error",
+            "random error",
+            "systematic error",
+            "source",
+            "specific",
+            "measurement",
+            "direction",
+            "bias",
+            "uncertainty",
+            "precision"
+          ],
+          "high_weight": true,
+          "video": false
+        },
+        {
+          "slug": "limitations-and-improvements",
+          "title": "Limitations and What You Would Change",
+          "objective": "State the limitations of the design and propose a specific improvement that would address a named limitation.",
+          "keywords": [
+            "limitation",
+            "improvement",
+            "design",
+            "specific",
+            "scope",
+            "generalisation",
+            "sample",
+            "control",
+            "revision",
+            "proposal"
+          ],
+          "high_weight": true,
+          "video": false
+        },
+        {
+          "slug": "application",
+          "title": "Application Beyond the Bench",
+          "objective": "State a real-world application of the finding that follows from what was actually measured.",
+          "keywords": [
+            "application",
+            "real world",
+            "relevance",
+            "extension",
+            "generalisation",
+            "use",
+            "implication",
+            "conclusion",
+            "scope",
+            "justification"
+          ],
+          "high_weight": false,
+          "video": false
+        }
+      ]
+    }
+  ]
+}

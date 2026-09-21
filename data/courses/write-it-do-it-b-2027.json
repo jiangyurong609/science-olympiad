@@ -1,0 +1,420 @@
+{
+  "event_slug": "write-it-do-it-b-2027",
+  "season": 2027,
+  "title": "Write It Do It B 2027",
+  "summary": "Write It Do It has no written exam and no past paper anywhere \u2014 what tournaments publish is a materials list and a scoring rubric. One student writes a description of an object in twenty-five minutes; the other builds it from those words in twenty. The rubric awards points per piece for presence, size, colour, location, orientation and connection, and this course is built from those six words.",
+  "objectives": [
+    "Write a description that fixes presence, size, colour, location, orientation and connection for every piece",
+    "Establish a reference frame and naming scheme before describing anything, and keep both consistent",
+    "Write unambiguous imperative steps in an order a builder can actually follow",
+    "Stay inside the no-drawings rule while using numerals, letters, abbreviations and symbols freely",
+    "Build from someone else's description, including deciding what to do with a step that is unclear"
+  ],
+  "units": [
+    {
+      "slug": "what-the-rubric-scores",
+      "title": "What the Rubric Actually Scores",
+      "summary": "Points are awarded per piece for presence, size, colour, location, orientation and connection. Everything in this course serves those six words.",
+      "objectives": [
+        "Name the six scored attributes and write for each",
+        "Know the two ways to be disqualified or tiered"
+      ],
+      "lessons": [
+        {
+          "slug": "the-six-attributes",
+          "title": "Presence, Size, Colour, Location, Orientation, Connection",
+          "objective": "List the six attributes a rubric scores per piece and write a sentence that fixes all six for one component.",
+          "keywords": [
+            "presence",
+            "size",
+            "colour",
+            "location",
+            "orientation",
+            "connection",
+            "rubric",
+            "piece",
+            "attribute",
+            "score"
+          ],
+          "high_weight": true,
+          "video": false
+        },
+        {
+          "slug": "no-drawings",
+          "title": "No Drawings, and What Counts as One",
+          "objective": "State what the rules forbid in a description, and what numerals, letters, abbreviations and symbols are still allowed.",
+          "keywords": [
+            "drawing",
+            "diagram",
+            "forbidden",
+            "numeral",
+            "letter",
+            "abbreviation",
+            "symbol",
+            "punctuation",
+            "tier",
+            "disqualification"
+          ],
+          "high_weight": true,
+          "video": false
+        },
+        {
+          "slug": "scoring-beyond-an-error",
+          "title": "Why One Wrong Connection Does Not End the Score",
+          "objective": "Explain how pieces connected correctly beyond an incorrect connection still score, and what that means for describing order.",
+          "keywords": [
+            "connection",
+            "error",
+            "beyond",
+            "score",
+            "partial credit",
+            "unused parts",
+            "penalty",
+            "recovery",
+            "sequence",
+            "rubric"
+          ],
+          "high_weight": false,
+          "video": false
+        },
+        {
+          "slug": "the-two-roles",
+          "title": "Writer and Doer",
+          "objective": "State what each role may and may not do, including the rule about touching the object and the time split.",
+          "keywords": [
+            "writer",
+            "doer",
+            "role",
+            "twenty-five minutes",
+            "twenty minutes",
+            "touch",
+            "pass",
+            "time",
+            "builder",
+            "constraint"
+          ],
+          "high_weight": false,
+          "video": false
+        }
+      ]
+    },
+    {
+      "slug": "describing-position",
+      "title": "Saying Where Something Is",
+      "summary": "Location and orientation are two of the six scored attributes, and they are where most points are lost.",
+      "objectives": [
+        "Establish a reference frame before describing anything",
+        "Describe orientation unambiguously"
+      ],
+      "lessons": [
+        {
+          "slug": "reference-frame",
+          "title": "Establishing a Frame Before You Start",
+          "objective": "Set up a reference frame and orientation convention in the first sentences, so every later position is unambiguous.",
+          "keywords": [
+            "frame of reference",
+            "convention",
+            "front",
+            "back",
+            "left",
+            "right",
+            "top",
+            "bottom",
+            "origin",
+            "orientation"
+          ],
+          "high_weight": true,
+          "video": false
+        },
+        {
+          "slug": "relative-position",
+          "title": "Above, Below, Beside, Between",
+          "objective": "Describe a piece's position relative to a previously described piece, using distances and directions rather than impressions.",
+          "keywords": [
+            "relative position",
+            "above",
+            "below",
+            "beside",
+            "between",
+            "adjacent",
+            "distance",
+            "direction",
+            "anchor",
+            "reference"
+          ],
+          "high_weight": true,
+          "video": false
+        },
+        {
+          "slug": "orientation-and-rotation",
+          "title": "Which Way It Points",
+          "objective": "Describe orientation using angles, axes and named faces, and distinguish rotation from translation.",
+          "keywords": [
+            "orientation",
+            "rotation",
+            "angle",
+            "degree",
+            "axis",
+            "vertical",
+            "horizontal",
+            "perpendicular",
+            "parallel",
+            "face"
+          ],
+          "high_weight": true,
+          "video": false
+        },
+        {
+          "slug": "measurement-in-words",
+          "title": "Sizes, Distances and Units",
+          "objective": "Give dimensions and distances with units and a stated measuring convention, including how to describe size without a ruler.",
+          "keywords": [
+            "size",
+            "length",
+            "width",
+            "height",
+            "diameter",
+            "radius",
+            "unit",
+            "centimetre",
+            "estimate",
+            "convention"
+          ],
+          "high_weight": true,
+          "video": false
+        },
+        {
+          "slug": "naming-parts",
+          "title": "Naming Pieces So They Stay Named",
+          "objective": "Establish a naming scheme for the pieces at the start and use it consistently, including colour and count.",
+          "keywords": [
+            "naming",
+            "label",
+            "identifier",
+            "consistent",
+            "colour",
+            "count",
+            "piece",
+            "scheme",
+            "reference",
+            "clarity"
+          ],
+          "high_weight": true,
+          "video": false
+        }
+      ]
+    },
+    {
+      "slug": "writing-well-under-time",
+      "title": "Writing It in Twenty-Five Minutes",
+      "summary": "Technical writing under a clock, for a reader who cannot ask questions.",
+      "objectives": [
+        "Write an unambiguous instruction",
+        "Order steps so the build can actually proceed"
+      ],
+      "lessons": [
+        {
+          "slug": "ambiguity",
+          "title": "The Sentences That Get Built Wrong",
+          "objective": "Identify ambiguous instructions and rewrite them, covering pronoun reference, 'it', 'the other one' and unstated assumptions.",
+          "keywords": [
+            "ambiguity",
+            "pronoun",
+            "reference",
+            "vague",
+            "assumption",
+            "interpretation",
+            "rewrite",
+            "precision",
+            "clarity",
+            "instruction"
+          ],
+          "high_weight": true,
+          "video": false
+        },
+        {
+          "slug": "imperative-instructions",
+          "title": "Writing in the Imperative",
+          "objective": "Write build steps as direct imperative instructions with one action per step.",
+          "keywords": [
+            "imperative",
+            "instruction",
+            "step",
+            "action",
+            "command",
+            "numbered",
+            "concise",
+            "direct",
+            "procedure",
+            "verb"
+          ],
+          "high_weight": true,
+          "video": false
+        },
+        {
+          "slug": "ordering-the-build",
+          "title": "An Order the Doer Can Follow",
+          "objective": "Order steps so that every piece is attached to something already placed, and describe the base before what sits on it.",
+          "keywords": [
+            "sequence",
+            "order",
+            "base",
+            "dependency",
+            "attach",
+            "already placed",
+            "build order",
+            "structure",
+            "logic",
+            "progression"
+          ],
+          "high_weight": true,
+          "video": false
+        },
+        {
+          "slug": "inventory-first",
+          "title": "Starting With an Inventory",
+          "objective": "Open the description with a full inventory of pieces by colour, count and size, and say why that costs less time than it saves.",
+          "keywords": [
+            "inventory",
+            "list",
+            "count",
+            "colour",
+            "size",
+            "opening",
+            "overview",
+            "reference",
+            "time",
+            "efficiency"
+          ],
+          "high_weight": true,
+          "video": false
+        },
+        {
+          "slug": "abbreviations",
+          "title": "Abbreviating Without Losing the Reader",
+          "objective": "Use abbreviations and short identifiers consistently, given that the rules do not require defining them.",
+          "keywords": [
+            "abbreviation",
+            "acronym",
+            "identifier",
+            "consistency",
+            "shorthand",
+            "time",
+            "convention",
+            "reader",
+            "clarity",
+            "rule"
+          ],
+          "high_weight": false,
+          "video": false
+        },
+        {
+          "slug": "checking-your-description",
+          "title": "Reading It Back As the Doer",
+          "objective": "Re-read a description from the builder's point of view and find the steps that cannot be executed as written.",
+          "keywords": [
+            "review",
+            "check",
+            "builder",
+            "perspective",
+            "executable",
+            "gap",
+            "missing",
+            "verification",
+            "proofread",
+            "revision"
+          ],
+          "high_weight": true,
+          "video": false
+        }
+      ]
+    },
+    {
+      "slug": "building-from-words",
+      "title": "Building From Someone Else's Words",
+      "summary": "Twenty minutes, one description, no questions allowed.",
+      "objectives": [
+        "Work a description efficiently",
+        "Decide what to do when a step is unclear"
+      ],
+      "lessons": [
+        {
+          "slug": "reading-before-building",
+          "title": "Read It All Before You Touch Anything",
+          "objective": "Read a whole description and lay out the inventory before building, and explain what that prevents.",
+          "keywords": [
+            "read",
+            "inventory",
+            "layout",
+            "plan",
+            "before",
+            "preview",
+            "structure",
+            "preparation",
+            "time",
+            "error"
+          ],
+          "high_weight": true,
+          "video": false
+        },
+        {
+          "slug": "ambiguous-steps",
+          "title": "When the Description Is Unclear",
+          "objective": "Decide what to build when a step is ambiguous, choosing the reading that preserves the most later steps.",
+          "keywords": [
+            "ambiguous",
+            "interpretation",
+            "decision",
+            "best guess",
+            "consistency",
+            "later steps",
+            "recovery",
+            "judgement",
+            "risk",
+            "build"
+          ],
+          "high_weight": true,
+          "video": false
+        },
+        {
+          "slug": "time-in-the-build",
+          "title": "Twenty Minutes, and What to Do Last",
+          "objective": "Order a build so the highest-scoring pieces are placed first and leave the details that score least for last.",
+          "keywords": [
+            "time",
+            "priority",
+            "score",
+            "placement",
+            "order",
+            "detail",
+            "finish",
+            "incomplete",
+            "strategy",
+            "points"
+          ],
+          "high_weight": false,
+          "video": false
+        },
+        {
+          "slug": "common-shapes",
+          "title": "The Shapes and Connections That Keep Appearing",
+          "objective": "Recognise the common geometric arrangements and connection types used in these objects and the words that describe them.",
+          "keywords": [
+            "shape",
+            "cylinder",
+            "cube",
+            "sphere",
+            "prism",
+            "triangle",
+            "rectangle",
+            "connection",
+            "joint",
+            "arrangement"
+          ],
+          "high_weight": false,
+          "video": false
+        }
+      ]
+    }
+  ]
+}
