@@ -1,0 +1,41 @@
+{
+  "_why": "Tier 1 findings from an independent geologist's review of the live course: statements that are false, self-contradictory, or that coach a move the rules forbid.",
+  "lessons": {
+    "hardness-and-mohs-scale": [
+      "State the Mohs scale in order, which the lesson never gives: 1 talc, 2 gypsum, 3 calcite, 4 fluorite, 5 apatite, 6 orthoclase, 7 quartz, 8 topaz, 9 corundum, 10 diamond. It is ordinal, not linear.",
+      "Replace dioptase with APATITE as the hardness-5 reference in the reference-value cards and in the bracketing checkpoint. Dioptase has hardness 5 but is not a Mohs index mineral; apatite is.",
+      "Remove chalcopyrite from the reference-value cards or label it as a test mineral, not an index mineral.",
+      "Fix 'Fluorite has a lower hardness of 4' \u2014 state simply that fluorite is Mohs 4."
+    ],
+    "rocks-minerals-and-evidence": [
+      "Every statement of the mineral definition omits INORGANIC and SOLID. The definition has five parts: naturally occurring, inorganic, solid, definite chemical composition, ordered crystalline structure. Update the card, the keyed checkpoint answer and the summary.",
+      "State that unlike minerals, rocks CAN contain organic matter \u2014 coal is the example \u2014 and define monomineralic and polymineralic."
+    ],
+    "use-an-identification-flowchart": [
+      "Fluorite fluoresces under ULTRAVIOLET light, typically blue-violet. It does not 'glow in fluorescent light'. Keep the four-directions octahedral cleavage clue, which is correct.",
+      "Graphite's hardness is 1 to 2, not 1; talc, not graphite, is the Mohs 1 index mineral.",
+      "The rules forbid taste tests at competition. State halite's saltiness only as a known property and lead its identification on cubic cleavage (three directions at 90 degrees) plus hardness 2.5."
+    ],
+    "color-streak-and-luster": [
+      "The rules forbid taste tests. Do not present 'tastes like salt' as the move to make when luster and streak fail; lead on cubic cleavage and hardness 2.5.",
+      "Add the streak-plate limit: a mineral harder than about 7 leaves no streak, which is itself diagnostic."
+    ],
+    "cooling-history-and-texture": [
+      "Delete every instance of 'this was the keyed characteristic' and 'the keyed evidence for Specimen A/B'. That is an appeal to a past test's answer key, not geology.",
+      "Teach the causal rule, absent from the course: magma cooling SLOWLY deep underground grows large intergrown crystals (phaneritic, intrusive); lava cooling RAPIDLY at the surface gives fine-grained (aphanitic) or glassy texture; escaping gases leave vesicles. Porphyritic texture records two-stage cooling."
+    ],
+    "breakage-density-and-special-properties": [
+      "Replace Miller-index cleavage notation ({001}, {210}, {110}) with number of directions and the angles between them, which is what a student can observe: barite three directions; orthoclase two at 90 degrees; plagioclase two at about 86 degrees with striations; calcite three not at 90 degrees; halite and galena three at 90 degrees; fluorite four; mica one.",
+      "Goethite is antiferromagnetic and is not attracted to a hand magnet. Remove 'weakly magnetic' as its identifying property and use MAGNETITE as the example of strong magnetism.",
+      "Spell barite as 'Barite', the name on the 2027 National List, not 'Baryte'."
+    ],
+    "metamorphic-evidence": [
+      "Replace the circular definition 'protoliths are parent rocks, a listed topic for Rocks and Minerals preparation'. A protolith is the pre-existing rock that was metamorphosed. Give the pairs: shale to slate, LIMESTONE TO MARBLE, sandstone to quartzite, peridotite to serpentinite, basalt or gabbro to amphibolite. Marble's protolith is currently never stated.",
+      "Rocks do not have Mohs values. Reword 'Marble has hardness of 3' to 'contains calcite, which has hardness 3'."
+    ],
+    "identify-an-unknown-specimen": [
+      "Finish the worked example: nonmetallic vitreous luster, hardness 3.5 to 5, white streak, purplish tinge and four perfect cleavages is FLUORITE. The example currently runs four elimination steps and never names the mineral.",
+      "Replace the checkpoint that tests only whether Specimen F is the same letter as Specimen C; it contains no geology."
+    ]
+  }
+}
