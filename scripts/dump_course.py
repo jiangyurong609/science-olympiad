@@ -21,15 +21,29 @@ from app.models.entities import (
     Concept, Course, CourseUnit, Event, Lesson, LessonVersion, Source,
 )
 
-PROSE_KEYS = ("text", "markdown", "body", "content", "summary")
+# Every block type stores its prose under a different key, and a renderer that only looks at
+# `text`/`markdown`/`body` prints "(no prose)" for property_cards, steps, worked_example and
+# summary — which is most of the teaching text. Two expert reviewers reading a course through
+# this tool had to write their own dumper to see what they were reviewing.
+PROSE_KEYS = ("text", "markdown", "body", "content", "summary", "prompt", "kicker")
+LIST_KEYS = ("cards", "steps", "points", "items", "bullets")
 
 
-def _prose(block: dict) -> str:
-    for key in PROSE_KEYS:
-        value = block.get(key)
-        if isinstance(value, str) and value.strip():
-            return value.strip()
-    return ""
+def _flatten(value) -> list[str]:
+    """A card or step may be a string, or a dict with its own heading and body."""
+    out: list[str] = []
+    for entry in value if isinstance(value, list) else [value]:
+        if isinstance(entry, str):
+            out.append(entry)
+        elif isinstance(entry, dict):
+            parts = [str(entry[k]) for k in ("label", "title", "heading", "term", "name")
+                     if entry.get(k)]
+            parts += [str(entry[k]) for k in ("text", "body", "detail", "description",
+                                              "value", "definition") if entry.get(k)]
+            out.append(" — ".join(parts) if parts else json.dumps(entry, ensure_ascii=False))
+        else:
+            out.append(str(entry))
+    return [o for o in out if o.strip()]
 
 
 def _render_block(block: dict) -> str:
@@ -46,16 +60,30 @@ def _render_block(block: dict) -> str:
             lines.append(f"    A: {block['answer']}")
         if block.get("explanation"):
             lines.append(f"    why: {block['explanation']}")
-        level = block.get("cognitive_level")
-        if level:
-            lines.append(f"    cognitive_level: {level}")
+        for index, note in sorted((block.get("misconception_by_choice") or {}).items()):
+            lines.append(f"    misconception[{index}]: {note}")
+        if block.get("cognitive_level"):
+            lines.append(f"    cognitive_level: {block['cognitive_level']}")
         return "\n".join(lines)
-    prose = _prose(block)
-    if not prose:
-        return f"  [{kind}] (no prose)"
-    heading = block.get("heading")
-    head = f"  [{kind}] {heading}".rstrip() if heading else f"  [{kind}]"
-    return f"{head}\n    " + prose.replace("\n", "\n    ")
+
+    heading = block.get("heading") or ""
+    lines = [f"  [{kind}] {heading}".rstrip()]
+    for key in PROSE_KEYS:
+        value = block.get(key)
+        if isinstance(value, str) and value.strip():
+            lines.append("    " + value.strip().replace("\n", "\n    "))
+    for key in LIST_KEYS:
+        if key not in block:
+            continue
+        for item in _flatten(block[key]):
+            lines.append(f"    - {item}")
+    if block.get("next_step"):
+        lines.append(f"    next: {block['next_step']}")
+    if len(lines) == 1:
+        # Never silently print nothing: an unknown shape is shown raw rather than dropped.
+        lines.append("    " + json.dumps(
+            {k: v for k, v in block.items() if k != "type"}, ensure_ascii=False)[:2000])
+    return "\n".join(lines)
 
 
 def dump(db, slug: str, *, outline: bool, only: str | None) -> None:
