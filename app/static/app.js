@@ -1234,6 +1234,8 @@ function renderSubjectShell() {
   const preview = $('course-preview-banner');
   const previewMode = state.courseMap?.status;
   preview.hidden = !state.courseMap || previewMode === 'published';
+  // A student has no content-operations page; the link is for staff previewing a draft.
+  $('course-preview-staff-link').hidden = !STAFF_ROLES.includes(state.user?.role);
   if (previewMode === 'unreviewed_practice') {
     $('course-preview-label').textContent = 'Practice course';
     $('course-preview-copy').textContent = 'These lessons were written from cited sources and checked by automated review, but no subject expert has signed them off yet. Use Give feedback in any lesson if something looks wrong.';
