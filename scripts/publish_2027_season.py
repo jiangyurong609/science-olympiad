@@ -97,6 +97,10 @@ PUBLISH_EVENTS = [
     # restoring grounded overstatements: clouds are bright in NIR (snow is not), geostationary
     # satellites cannot see the poles, altimeters do not measure wavelength or wind direction.
     ("remote-sensing-b-2027", "current"),
+    # Write It Do It: 19 lessons. Its scoring exists only in the rules, so the event's 2027
+    # rules section is a registered source (register_rules_sources); before that the author
+    # refused the scoring lesson outright and drifted into number sequences.
+    ("write-it-do-it-b-2027", "current"),
 ]
 
 # (event id, why this course is not 2027 coverage). Division B verified against the manual.

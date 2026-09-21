@@ -2,7 +2,7 @@
   "event_slug": "write-it-do-it-b-2027",
   "season": 2027,
   "title": "Write It Do It B 2027",
-  "summary": "Write It Do It has no written exam and no past paper anywhere \u2014 what tournaments publish is a materials list and a scoring rubric. One student writes a description of an object in twenty-five minutes; the other builds it from those words in twenty. The rubric awards points per piece for presence, size, colour, location, orientation and connection, and this course is built from those six words.",
+  "summary": "Write It Do It has no written exam and no past paper anywhere — what tournaments publish is a materials list and a scoring rubric. One student writes a description of an object in twenty-five minutes; the other builds it from those words in twenty. The rubric awards points per piece for presence, size, colour, location, orientation and connection, and this course is built from those six words.",
   "objectives": [
     "Write a description that fixes presence, size, colour, location, orientation and connection for every piece",
     "Establish a reference frame and naming scheme before describing anything, and keep both consistent",
@@ -22,8 +22,8 @@
       "lessons": [
         {
           "slug": "the-six-attributes",
-          "title": "Presence, Size, Colour, Location, Orientation, Connection",
-          "objective": "List the six attributes a rubric scores per piece and write a sentence that fixes all six for one component.",
+          "title": "Size, Colour, Location, Orientation, Connection",
+          "objective": "List the five properties the rules score for each piece (proper size, color, location, orientation and connection), note that a piece must be placed to earn any of them, and write a sentence that fixes all five for one component.",
           "keywords": [
             "presence",
             "size",
@@ -34,7 +34,8 @@
             "rubric",
             "piece",
             "attribute",
-            "score"
+            "score",
+            "proper size, color, location, orientation"
           ],
           "high_weight": true,
           "video": false
@@ -53,7 +54,8 @@
             "symbol",
             "punctuation",
             "tier",
-            "disqualification"
+            "disqualification",
+            "Tier 2"
           ],
           "high_weight": true,
           "video": false
@@ -72,7 +74,10 @@
             "penalty",
             "recovery",
             "sequence",
-            "rubric"
+            "rubric",
+            "incorrect connection",
+            "not used",
+            "individual piece"
           ],
           "high_weight": false,
           "video": false
@@ -91,7 +96,9 @@
             "pass",
             "time",
             "builder",
-            "constraint"
+            "constraint",
+            "twenty-five (25) minutes",
+            "Event Supervisor permits"
           ],
           "high_weight": false,
           "video": false
@@ -303,7 +310,8 @@
             "convention",
             "reader",
             "clarity",
-            "rule"
+            "rule",
+            "abbreviations"
           ],
           "high_weight": false,
           "video": false
@@ -371,15 +379,16 @@
             "recovery",
             "judgement",
             "risk",
-            "build"
+            "build",
+            "incorrect connection"
           ],
           "high_weight": true,
           "video": false
         },
         {
           "slug": "time-in-the-build",
-          "title": "Twenty Minutes, and What to Do Last",
-          "objective": "Order a build so the highest-scoring pieces are placed first and leave the details that score least for last.",
+          "title": "Twenty Minutes, and What Time Decides",
+          "objective": "Use the 20-minute build well: read first, build in the description's order, place every piece you can, and know that construction time is used only as a tiebreaker.",
           "keywords": [
             "time",
             "priority",
@@ -390,7 +399,10 @@
             "finish",
             "incomplete",
             "strategy",
-            "points"
+            "points",
+            "tiebreaker",
+            "construction phase",
+            "twenty (20) minutes"
           ],
           "high_weight": false,
           "video": false
