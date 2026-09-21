@@ -3958,6 +3958,35 @@ $('continue-button').addEventListener('click', event => {
 // used to say "Start Exam" and show nothing, so a student resumed a half-spent clock without
 // being told — and the open attempt also disables the tutor, with no on-screen way to find
 // which exam was responsible.
+// The banner asserted "AI-generated practice" for anything unreviewed, so a transcribed 2018
+// paper was told to the student as machine-written while the badge beside it said
+// "Transcribed from a real past paper". It now says which of the two this exam is, and it
+// no longer promises a "Report a problem" control that does not exist inside the runner —
+// reporting lives on the review screen after submission.
+const EXAM_PROVENANCE_NOTICES = {
+  machine_practice: '<strong>AI-generated practice.</strong> These questions were written and '
+    + 'checked by automated systems \u2014 a validator, an independent solver, and a verifier '
+    + '\u2014 but have not yet been read by a subject expert. Treat them as practice, not as an '
+    + 'answer key. After you submit you can report a problem on any question.',
+  imported_practice: '<strong>Transcribed from a real past paper.</strong> These questions and '
+    + 'their answer key were taken from a tournament paper and converted automatically. '
+    + 'Transcription can introduce errors and no subject expert has checked this copy. After '
+    + 'you submit you can report a problem on any question.',
+};
+
+function setExamProvenanceNotice() {
+  const notice = $('exam-ai-notice');
+  if (!notice) return;
+  const text = EXAM_PROVENANCE_NOTICES[state.exam?.release_class];
+  if (!text || !(state.exam.unreviewed || state.exam.release_class === 'machine_practice')) {
+    notice.hidden = true;
+    notice.innerHTML = '';
+    return;
+  }
+  notice.innerHTML = text;
+  notice.hidden = false;
+}
+
 function openAttemptNote(attempt) {
   if (!attempt?.deadline_at) return 'You have an attempt in progress on this exam.';
   const remaining = Math.floor((new Date(attempt.deadline_at).getTime() - Date.now()) / 1000);
@@ -4015,9 +4044,7 @@ async function startExam(id) {
     // Machine-gated content must say so where the student is working, not only on the card
     // they clicked. `unreviewed` is set by the same rule that governs whether the exam may be
     // served at all, so the banner cannot drift out of step with the gate.
-    const aiNotice = $('exam-ai-notice');
-    if (aiNotice) aiNotice.hidden = !(state.exam.unreviewed
-      || state.exam.release_class === 'machine_practice');
+    setExamProvenanceNotice();
     $('exam-accommodation').hidden = !state.exam.accommodation_applied;
     $('exam-accommodation').textContent = state.exam.accommodation_applied
       ? `${state.exam.time_multiplier}× Extended Time Applied`

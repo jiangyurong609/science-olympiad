@@ -4135,9 +4135,12 @@ def start_exam(
         # Tells the runner to say what just happened — the prior attempt was graded at its
         # deadline and this is a fresh one — instead of silently presenting an empty paper.
         "previous_attempt_auto_submitted": previous_attempt_auto_submitted,
-        "release_class": exam.release_class,
+        # The runner's provenance banner is chosen from this. It must be the class the exam
+        # actually behaves as, for the same reason the catalogue reports it that way.
+        "release_class": _effective_release_class(db, exam),
         "feedback_mode": (exam.blueprint or {}).get("feedback_mode", "after_submit"),
-        "release_label": RELEASE_LABELS.get(exam.release_class, UNKNOWN_RELEASE_LABEL),
+        "release_label": RELEASE_LABELS.get(_effective_release_class(db, exam),
+                                            UNKNOWN_RELEASE_LABEL),
         # the banner in the exam runner is driven by the same rule that decides whether the
         # exam may be served, so a labelling gap cannot open between them
         "unreviewed": sv.is_unreviewed_practice(exam),

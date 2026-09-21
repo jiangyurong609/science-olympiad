@@ -603,12 +603,10 @@
         <div><p class="kicker">Timed simulation · <span id="exam-release-label">Unreviewed</span></p><h1 id="exam-title">Mock Exam</h1></div>
         <div class="exam-status"><span id="exam-save-state" class="exam-save-state" role="status" aria-live="polite">All answers synced</span><span id="exam-accommodation" class="accommodation-badge" hidden>Extended Time</span><span id="answered-count">0 of 0 answered</span><div id="timer" class="timer" role="timer" aria-label="Time remaining">00:00</div><button id="exit-exam" class="button button-secondary exam-exit" type="button">Save &amp; Exit</button></div>
       </header>
-      <div id="exam-ai-notice" class="exam-ai-notice" role="note" hidden>
-        <strong>AI-generated practice.</strong> These questions were written and checked by
-        automated systems — a validator, an independent solver, and a verifier — but have not
-        yet been read by a subject expert. Treat them as practice, not as an answer key, and
-        use “Report a problem” if anything looks wrong.
-      </div>
+      <!-- Filled by `setExamProvenanceNotice`: this banner claimed every unreviewed exam was
+           AI-generated, including transcribed past papers, while the badge beside it said
+           "Transcribed from a real past paper". Both cannot be true. -->
+      <div id="exam-ai-notice" class="exam-ai-notice" role="note" hidden></div>
       <div class="exam-layout">
         <aside class="question-nav surface" aria-label="Question navigator"><p class="kicker">Question map</p><div id="question-map"></div><p><span class="map-key answered"></span>Answered <span class="map-key current"></span>Current</p></aside>
         <div><form id="exam-form"></form><div class="exam-actions"><button id="previous-question" class="button button-secondary" type="button">Previous</button><button id="next-question" class="button button-dark" type="button">Next Question</button><button id="submit-exam" class="button button-primary" type="button">Submit Exam</button></div></div>
