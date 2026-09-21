@@ -111,7 +111,11 @@ DOMAIN_TERM_PATTERNS = {
                 r"mica|calcite|hardness|streak|luster|cleavage|fracture|silicate|carbonate|"
                 r"oxide|sulfide|tecton|volcan|erupt|weather|erosion|deposit|strata|foliat|"
                 r"grain|texture|density|element|chemical|formula|composition|pressure|"
-                r"temperature|melt|cool|form"),
+                r"temperature|melt|cool|form"
+                # The 2027 List includes coal ranks, organic gems and gem varieties; without these
+                # terms "Lignite is the lowest rank of coal" was rejected as off-topic.
+                r"|coal|lignite|bituminous|anthracite|peat|rank|resin|organic|gem|"
+                r"gemstone|variety|chatoyan|pleochro|evaporite|ore|economic|jewel"),
     "hydrology": (r"water|stream|river|channel|creek|flow|discharge|runoff|precipitat|rain|"
                   r"snow|evaporat|transpir|infiltrat|percolat|aquifer|groundwater|water table|"
                   r"well|spring|recharge|watershed|drainage|basin|divide|tributar|sediment|"
@@ -653,6 +657,71 @@ DOMAIN_SOURCES = {
             "https://en.wikipedia.org/wiki/Wollastonite",
             "https://en.wikipedia.org/wiki/Zincite",
             "https://en.wikipedia.org/wiki/Zircon",
+            # The 2027 National Rocks and Minerals List names 152 specimens and 46 of the
+            # ones the course never mentioned had no page here at all — granite, basalt,
+            # gabbro, obsidian, talc, topaz, corundum, every quartz variety, every
+            # gemstone. A course cannot teach a specimen its corpus has no evidence about,
+            # so the lesson for it recorded a content gap instead. Identification is 30-50%
+            # of the event's points and is limited to that list.
+            "https://en.wikipedia.org/wiki/Agate",
+            "https://en.wikipedia.org/wiki/Alabaster",
+            "https://en.wikipedia.org/wiki/Albite",
+            "https://en.wikipedia.org/wiki/Amber",
+            "https://en.wikipedia.org/wiki/Andesite",
+            "https://en.wikipedia.org/wiki/Aquamarine_(gem)",
+            "https://en.wikipedia.org/wiki/Azurite",
+            "https://en.wikipedia.org/wiki/Basalt",
+            "https://en.wikipedia.org/wiki/Bauxite",
+            "https://en.wikipedia.org/wiki/Beryl",
+            "https://en.wikipedia.org/wiki/Biotite",
+            "https://en.wikipedia.org/wiki/Bituminous_coal",
+            "https://en.wikipedia.org/wiki/Breccia",
+            "https://en.wikipedia.org/wiki/Chert",
+            "https://en.wikipedia.org/wiki/Citrine_(quartz)",
+            "https://en.wikipedia.org/wiki/Corundum",
+            "https://en.wikipedia.org/wiki/Diorite",
+            "https://en.wikipedia.org/wiki/Dolomite_(rock)",
+            "https://en.wikipedia.org/wiki/Epidote",
+            "https://en.wikipedia.org/wiki/Evaporite",
+            "https://en.wikipedia.org/wiki/Feldspar",
+            "https://en.wikipedia.org/wiki/Flint",
+            "https://en.wikipedia.org/wiki/Fracture_(mineralogy)",
+            "https://en.wikipedia.org/wiki/Gabbro",
+            "https://en.wikipedia.org/wiki/Granite",
+            "https://en.wikipedia.org/wiki/Greywacke",
+            "https://en.wikipedia.org/wiki/Index_mineral",
+            "https://en.wikipedia.org/wiki/Kyanite",
+            "https://en.wikipedia.org/wiki/Lignite",
+            "https://en.wikipedia.org/wiki/Limestone",
+            "https://en.wikipedia.org/wiki/Malachite",
+            "https://en.wikipedia.org/wiki/Microcline",
+            "https://en.wikipedia.org/wiki/Milky_quartz",
+            "https://en.wikipedia.org/wiki/Mineral_group",
+            "https://en.wikipedia.org/wiki/Mineraloid",
+            "https://en.wikipedia.org/wiki/Muscovite",
+            "https://en.wikipedia.org/wiki/Native_metal",
+            "https://en.wikipedia.org/wiki/Obsidian",
+            "https://en.wikipedia.org/wiki/Opal",
+            "https://en.wikipedia.org/wiki/Ore",
+            "https://en.wikipedia.org/wiki/Pearl",
+            "https://en.wikipedia.org/wiki/Peridot",
+            "https://en.wikipedia.org/wiki/Peridotite",
+            "https://en.wikipedia.org/wiki/Plagioclase",
+            "https://en.wikipedia.org/wiki/Prehnite",
+            "https://en.wikipedia.org/wiki/Protolith",
+            "https://en.wikipedia.org/wiki/Pumice",
+            "https://en.wikipedia.org/wiki/Regional_metamorphism",
+            "https://en.wikipedia.org/wiki/Rhyolite",
+            "https://en.wikipedia.org/wiki/Rock_crystal",
+            "https://en.wikipedia.org/wiki/Rose_quartz",
+            "https://en.wikipedia.org/wiki/Schist",
+            "https://en.wikipedia.org/wiki/Scoria",
+            "https://en.wikipedia.org/wiki/Serpentinite",
+            "https://en.wikipedia.org/wiki/Silver",
+            "https://en.wikipedia.org/wiki/Smoky_quartz",
+            "https://en.wikipedia.org/wiki/Talc",
+            "https://en.wikipedia.org/wiki/Topaz",
+            "https://en.wikipedia.org/wiki/Tourmaline",
         ],
     },
     "meteorology": {

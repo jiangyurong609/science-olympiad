@@ -14,20 +14,37 @@
       "slug": "observe-like-a-geologist",
       "title": "Observe Like a Geologist",
       "summary": "Build the evidence habits that make every later identification more reliable.",
-      "objectives": ["Separate a rock, mineral, and manufactured material.", "Record observations before naming a specimen."],
+      "objectives": [
+        "Separate a rock, mineral, and manufactured material.",
+        "Record observations before naming a specimen."
+      ],
       "lessons": [
         {
           "slug": "rocks-minerals-and-evidence",
           "title": "Rocks, Minerals, and Evidence",
           "objective": "Distinguish a mineral from a rock and justify the distinction with observable or structural evidence.",
-          "keywords": ["mineral definition", "rock aggregate", "naturally occurring", "inorganic", "crystalline", "chemical composition"],
+          "keywords": [
+            "mineral definition",
+            "rock aggregate",
+            "naturally occurring",
+            "inorganic",
+            "crystalline",
+            "chemical composition"
+          ],
           "high_weight": true
         },
         {
           "slug": "observation-before-identification",
           "title": "Observe Before You Identify",
           "objective": "Separate observation from inference and record a repeatable evidence profile.",
-          "keywords": ["observation", "identification", "physical properties", "evidence", "test", "describe"],
+          "keywords": [
+            "observation",
+            "identification",
+            "physical properties",
+            "evidence",
+            "test",
+            "describe"
+          ],
           "video": true
         }
       ]
@@ -36,27 +53,53 @@
       "slug": "mineral-properties",
       "title": "Mineral Properties",
       "summary": "Use diagnostic physical properties instead of relying on color or first impressions.",
-      "objectives": ["Perform common property tests safely.", "Choose the next test that best separates remaining candidates."],
+      "objectives": [
+        "Perform common property tests safely.",
+        "Choose the next test that best separates remaining candidates."
+      ],
       "lessons": [
         {
           "slug": "color-streak-and-luster",
           "title": "Color, Streak, and Luster",
           "objective": "Compare surface color, powdered streak, and luster and explain which observations are most diagnostic.",
-          "keywords": ["color", "streak", "luster", "metallic", "nonmetallic", "powder"],
+          "keywords": [
+            "color",
+            "streak",
+            "luster",
+            "metallic",
+            "nonmetallic",
+            "powder"
+          ],
           "high_weight": true
         },
         {
           "slug": "hardness-and-mohs-scale",
           "title": "Hardness and the Mohs Scale",
           "objective": "Bracket an unknown mineral's hardness with scratch tests and state the result without overclaiming.",
-          "keywords": ["hardness", "Mohs", "scratch", "fingernail", "glass", "copper"],
+          "keywords": [
+            "hardness",
+            "Mohs",
+            "scratch",
+            "fingernail",
+            "glass",
+            "copper"
+          ],
           "high_weight": true
         },
         {
           "slug": "breakage-density-and-special-properties",
           "title": "Breakage, Density, and Special Properties",
           "objective": "Use cleavage, fracture, density, magnetism, and acid reaction to narrow an identification.",
-          "keywords": ["cleavage", "fracture", "density", "specific gravity", "magnetism", "acid", "reaction", "habit"],
+          "keywords": [
+            "cleavage",
+            "fracture",
+            "density",
+            "specific gravity",
+            "magnetism",
+            "acid",
+            "reaction",
+            "habit"
+          ],
           "high_weight": true
         }
       ]
@@ -65,20 +108,42 @@
       "slug": "rock-cycle",
       "title": "The Rock Cycle",
       "summary": "Explain rock change as a set of processes rather than a single circular path.",
-      "objectives": ["Connect processes to rock-type changes.", "Interpret more than one valid path through the rock cycle."],
+      "objectives": [
+        "Connect processes to rock-type changes.",
+        "Interpret more than one valid path through the rock cycle."
+      ],
       "lessons": [
         {
           "slug": "processes-that-change-rock",
           "title": "Processes That Change Rock",
           "objective": "Connect melting, cooling, weathering, erosion, deposition, lithification, heat, and pressure to rock change.",
-          "keywords": ["rock cycle", "melting", "cooling", "weathering", "erosion", "deposition", "lithification", "heat", "pressure"],
+          "keywords": [
+            "rock cycle",
+            "melting",
+            "cooling",
+            "weathering",
+            "erosion",
+            "deposition",
+            "lithification",
+            "heat",
+            "pressure"
+          ],
           "high_weight": true
         },
         {
           "slug": "reason-through-rock-cycle-paths",
           "title": "Reason Through Rock-Cycle Paths",
           "objective": "Trace and defend multiple possible transformations between rock types.",
-          "keywords": ["rock cycle", "path", "transform", "igneous", "sedimentary", "metamorphic", "magma", "sediment"]
+          "keywords": [
+            "rock cycle",
+            "path",
+            "transform",
+            "igneous",
+            "sedimentary",
+            "metamorphic",
+            "magma",
+            "sediment"
+          ]
         }
       ]
     },
@@ -86,20 +151,43 @@
       "slug": "igneous-rocks",
       "title": "Igneous Rocks",
       "summary": "Read cooling history from texture and connect mineral composition to classification.",
-      "objectives": ["Infer cooling conditions from texture.", "Classify common igneous specimens with texture and composition together."],
+      "objectives": [
+        "Infer cooling conditions from texture.",
+        "Classify common igneous specimens with texture and composition together."
+      ],
       "lessons": [
         {
           "slug": "cooling-history-and-texture",
           "title": "Cooling History and Igneous Texture",
           "objective": "Infer intrusive or extrusive cooling history from crystal size and texture.",
-          "keywords": ["igneous", "intrusive", "extrusive", "cooling", "crystal size", "texture", "aphanitic", "phaneritic", "vesicular", "glassy"],
+          "keywords": [
+            "igneous",
+            "intrusive",
+            "extrusive",
+            "cooling",
+            "crystal size",
+            "texture",
+            "aphanitic",
+            "phaneritic",
+            "vesicular",
+            "glassy"
+          ],
           "high_weight": true
         },
         {
           "slug": "composition-and-bowen-series",
           "title": "Composition and Bowen's Reaction Series",
           "objective": "Use mineral composition and Bowen's reaction series as supporting evidence in igneous classification.",
-          "keywords": ["Bowen", "reaction series", "felsic", "intermediate", "mafic", "ultramafic", "composition", "silica"]
+          "keywords": [
+            "Bowen",
+            "reaction series",
+            "felsic",
+            "intermediate",
+            "mafic",
+            "ultramafic",
+            "composition",
+            "silica"
+          ]
         }
       ]
     },
@@ -107,21 +195,512 @@
       "slug": "sedimentary-and-metamorphic-rocks",
       "title": "Sedimentary and Metamorphic Rocks",
       "summary": "Connect texture and structures to the processes that produced a rock.",
-      "objectives": ["Classify sedimentary rocks by material and texture.", "Use foliation, grain change, and composition to classify metamorphic rocks."],
+      "objectives": [
+        "Classify sedimentary rocks by material and texture.",
+        "Use foliation, grain change, and composition to classify metamorphic rocks."
+      ],
       "lessons": [
         {
           "slug": "sedimentary-evidence",
           "title": "Sedimentary Evidence",
           "objective": "Classify clastic, chemical, and biochemical sedimentary rocks from grains, structures, and composition.",
-          "keywords": ["sedimentary", "clastic", "chemical", "biochemical", "grain size", "bedding", "fossil", "cementation"],
+          "keywords": [
+            "sedimentary",
+            "clastic",
+            "chemical",
+            "biochemical",
+            "grain size",
+            "bedding",
+            "fossil",
+            "cementation"
+          ],
           "high_weight": true
         },
         {
           "slug": "metamorphic-evidence",
           "title": "Metamorphic Evidence",
           "objective": "Distinguish foliated and nonfoliated metamorphic rocks and connect texture to heat, pressure, and parent material.",
-          "keywords": ["metamorphic", "foliated", "nonfoliated", "heat", "pressure", "parent rock", "grade", "banding"],
+          "keywords": [
+            "metamorphic",
+            "foliated",
+            "nonfoliated",
+            "heat",
+            "pressure",
+            "parent rock",
+            "grade",
+            "banding"
+          ],
           "high_weight": true
+        }
+      ]
+    },
+    {
+      "slug": "hardness-scale-and-field-tests",
+      "title": "The Mohs Scale and the Tools You Are Handed",
+      "summary": "The ten index minerals in order, and the hardness of the copper cube, glass plate and streak plate a station gives you.",
+      "objectives": [
+        "Recite the Mohs scale in order",
+        "Convert a scratch result into a hardness number"
+      ],
+      "lessons": [
+        {
+          "slug": "the-mohs-scale-in-order",
+          "title": "The Ten Index Minerals, in Order",
+          "objective": "State the Mohs scale in order \u2014 talc, gypsum, calcite, fluorite, apatite, orthoclase, quartz, topaz, corundum, diamond \u2014 and explain why it is ordinal rather than linear.",
+          "keywords": [
+            "Mohs scale",
+            "talc",
+            "gypsum",
+            "calcite",
+            "fluorite",
+            "apatite",
+            "orthoclase",
+            "quartz",
+            "topaz",
+            "corundum",
+            "diamond",
+            "hardness",
+            "ordinal"
+          ],
+          "high_weight": true,
+          "video": false
+        },
+        {
+          "slug": "field-hardness-tools",
+          "title": "Fingernail, Copper, Glass and Streak Plate",
+          "objective": "Give the approximate hardness of a fingernail, a copper coin, a glass plate or steel nail and a streak plate, and use them to bracket an unknown's hardness.",
+          "keywords": [
+            "fingernail",
+            "copper",
+            "glass",
+            "streak plate",
+            "steel",
+            "hardness",
+            "scratch test",
+            "bracket",
+            "porcelain",
+            "Mohs"
+          ],
+          "high_weight": true,
+          "video": false
+        }
+      ]
+    },
+    {
+      "slug": "mineral-families",
+      "title": "Mineral Families: How the National List Is Organised",
+      "summary": "The List groups its minerals by chemical family. Knowing the family narrows an unknown before any test.",
+      "objectives": [
+        "Name the family of any mineral on the List",
+        "Recognise the diagnostic property of each family"
+      ],
+      "lessons": [
+        {
+          "slug": "carbonates-and-borates",
+          "title": "Carbonates and Borates",
+          "objective": "Identify calcite, dolomite, aragonite, azurite, malachite, magnesite, rhodochrosite, siderite and ulexite, and state the acid test that marks a carbonate.",
+          "keywords": [
+            "carbonate",
+            "calcite",
+            "dolomite",
+            "aragonite",
+            "azurite",
+            "malachite",
+            "magnesite",
+            "rhodochrosite",
+            "siderite",
+            "ulexite",
+            "borate",
+            "effervescence",
+            "acid"
+          ],
+          "high_weight": true,
+          "video": false
+        },
+        {
+          "slug": "native-elements-and-oxides",
+          "title": "Native Elements and Oxides",
+          "objective": "Identify silver, copper, sulfur, graphite, diamond, corundum, hematite, magnetite, goethite, rutile and zincite, and say what each family's members have in common. Also gold and pyrolusite.",
+          "keywords": [
+            "native element",
+            "silver",
+            "copper",
+            "sulfur",
+            "graphite",
+            "diamond",
+            "oxide",
+            "corundum",
+            "hematite",
+            "magnetite",
+            "goethite",
+            "limonite",
+            "rutile",
+            "zincite",
+            "gold",
+            "pyrolusite"
+          ],
+          "high_weight": true,
+          "video": false
+        },
+        {
+          "slug": "sulfides-sulfates-and-phosphates",
+          "title": "Sulfides, Sulfates and Phosphates",
+          "objective": "Identify galena, pyrite, chalcopyrite, bornite, sphalerite and stibnite; gypsum, alabaster, barite and celestite; and apatite, pyromorphite, vanadinite and turquoise. Also the halides halite and fluorite; the three gypsum varieties selenite (crystalline), satin spar (fibrous) and alabaster (massive); and fluorapatite within the apatite group.",
+          "keywords": [
+            "sulfide",
+            "galena",
+            "pyrite",
+            "chalcopyrite",
+            "bornite",
+            "sphalerite",
+            "stibnite",
+            "sulfate",
+            "gypsum",
+            "alabaster",
+            "barite",
+            "celestite",
+            "phosphate",
+            "apatite",
+            "turquoise",
+            "vanadinite",
+            "pyromorphite",
+            "halite",
+            "halide",
+            "fluorite",
+            "selenite",
+            "satin spar",
+            "apatite group",
+            "fluorapatite"
+          ],
+          "high_weight": true,
+          "video": false
+        },
+        {
+          "slug": "framework-and-chain-silicates",
+          "title": "Feldspars, Pyroxenes and Amphiboles",
+          "objective": "Distinguish plagioclase from potassium feldspar by cleavage angle and striations, and identify albite, amazonite, orthoclase, microcline, augite, actinolite and tremolite. Name the feldspar, pyroxene and amphibole GROUPS as the List does, and include labradorite (with its play of colour), hornblende, and sodalite.",
+          "keywords": [
+            "silicate",
+            "feldspar",
+            "plagioclase",
+            "albite",
+            "potassium feldspar",
+            "orthoclase",
+            "microcline",
+            "amazonite",
+            "striation",
+            "pyroxene",
+            "augite",
+            "amphibole",
+            "actinolite",
+            "tremolite",
+            "cleavage angle",
+            "feldspar group",
+            "plagioclase feldspars",
+            "potassium feldspars",
+            "labradorite",
+            "sodalite",
+            "amphibole group",
+            "hornblende",
+            "pyroxene group"
+          ],
+          "high_weight": true,
+          "video": false
+        },
+        {
+          "slug": "sheet-and-ring-silicates",
+          "title": "Micas, Clays, Talc, Beryl and Tourmaline",
+          "objective": "Identify muscovite, biotite, lepidolite, kaolinite, talc, beryl, tourmaline, chrysocolla, apophyllite, prehnite and stilbite by habit, cleavage and hardness. Name the mica group as the List does, and add dioptase and rhodonite.",
+          "keywords": [
+            "mica",
+            "muscovite",
+            "biotite",
+            "lepidolite",
+            "kaolinite",
+            "clay",
+            "talc",
+            "beryl",
+            "tourmaline",
+            "chrysocolla",
+            "apophyllite",
+            "prehnite",
+            "stilbite",
+            "sheet silicate",
+            "basal cleavage",
+            "mica group",
+            "dioptase",
+            "rhodonite"
+          ],
+          "high_weight": true,
+          "video": false
+        },
+        {
+          "slug": "isolated-silicates-and-garnets",
+          "title": "Garnets, Olivine, Topaz and the Metamorphic Silicates",
+          "objective": "Identify the garnet group (almandine, grossular), olivine, topaz, kyanite, staurolite, epidote, willemite, wollastonite and spodumene. Also zircon, and name the garnet GROUP as the List does.",
+          "keywords": [
+            "garnet",
+            "almandine",
+            "grossular",
+            "olivine",
+            "topaz",
+            "kyanite",
+            "staurolite",
+            "epidote",
+            "willemite",
+            "wollastonite",
+            "spodumene",
+            "silicate",
+            "crystal habit",
+            "twinning",
+            "zircon",
+            "garnet group"
+          ],
+          "high_weight": true,
+          "video": false
+        }
+      ]
+    },
+    {
+      "slug": "quartz-and-gemstones",
+      "title": "Quartz Varieties, Gemstones and Organic Gems",
+      "summary": "Competition directions require the complete name including variety. These are the specimens where the variety IS the answer.",
+      "objectives": [
+        "Name every quartz variety on the List from colour and habit",
+        "Explain why pearl and amber are not minerals"
+      ],
+      "lessons": [
+        {
+          "slug": "quartz-varieties",
+          "title": "Quartz and Its Varieties",
+          "objective": "Identify rock crystal, milky, rose, smoky, amethyst and citrine quartz, and the microcrystalline varieties agate, chalcedony, jasper, aventurine and tiger's eye, plus opal as a mineraloid.",
+          "keywords": [
+            "quartz",
+            "rock crystal",
+            "milky quartz",
+            "rose quartz",
+            "smoky quartz",
+            "amethyst",
+            "citrine",
+            "agate",
+            "chalcedony",
+            "jasper",
+            "aventurine",
+            "tiger's eye",
+            "opal",
+            "microcrystalline",
+            "conchoidal"
+          ],
+          "high_weight": true,
+          "video": false
+        },
+        {
+          "slug": "gem-varieties",
+          "title": "Gem Varieties: Emerald, Ruby, Sapphire and the Rest",
+          "objective": "Name the mineral behind each gem variety on the List: emerald, aquamarine and morganite (beryl); ruby and sapphire (corundum); kunzite and hiddenite (spodumene); peridot (olivine).",
+          "keywords": [
+            "gem",
+            "gemstone",
+            "variety",
+            "emerald",
+            "aquamarine",
+            "morganite",
+            "beryl",
+            "ruby",
+            "sapphire",
+            "corundum",
+            "kunzite",
+            "hiddenite",
+            "spodumene",
+            "peridot",
+            "olivine",
+            "trace element",
+            "colour"
+          ],
+          "high_weight": true,
+          "video": false
+        },
+        {
+          "slug": "organic-gems-and-mineraloids",
+          "title": "Pearl and Amber: Why They Are Not Minerals",
+          "objective": "Apply the five-part definition of a mineral to pearl and amber and explain which criterion each fails, and why opal is a mineraloid.",
+          "keywords": [
+            "pearl",
+            "amber",
+            "organic",
+            "mineraloid",
+            "opal",
+            "inorganic",
+            "naturally occurring",
+            "crystalline",
+            "resin",
+            "mollusc",
+            "definition of a mineral"
+          ],
+          "high_weight": true,
+          "video": false
+        }
+      ]
+    },
+    {
+      "slug": "rocks-by-name",
+      "title": "Naming the Rocks on the List",
+      "summary": "Identification is 30-50% of the score and the List names 47 rocks. Each one here is named, placed in its class, and tied to the evidence that identifies it.",
+      "objectives": [
+        "Name any igneous rock from composition and texture",
+        "Name any sedimentary rock from grain size or origin"
+      ],
+      "lessons": [
+        {
+          "slug": "igneous-rocks-by-name",
+          "title": "The Igneous Rocks: Composition by Texture",
+          "objective": "Place granite, rhyolite, diorite, andesite, gabbro, basalt, peridotite, syenite and pegmatite in the composition-by-texture grid, and identify obsidian, pumice, scoria and tuff breccia from texture alone.",
+          "keywords": [
+            "granite",
+            "rhyolite",
+            "diorite",
+            "andesite",
+            "gabbro",
+            "basalt",
+            "peridotite",
+            "syenite",
+            "pegmatite",
+            "obsidian",
+            "pumice",
+            "scoria",
+            "tuff",
+            "breccia",
+            "felsic",
+            "mafic",
+            "intrusive",
+            "extrusive",
+            "phaneritic",
+            "aphanitic",
+            "vesicular",
+            "glassy"
+          ],
+          "high_weight": true,
+          "video": false
+        },
+        {
+          "slug": "clastic-rocks-by-grain-size",
+          "title": "Clastic Rocks by Grain Size",
+          "objective": "Name shale, siltstone, sandstone, arkose, greywacke, conglomerate and breccia from grain size, sorting, roundness and composition. Distinguish quartz sandstone from arkose and greywacke by composition.",
+          "keywords": [
+            "clastic",
+            "grain size",
+            "shale",
+            "siltstone",
+            "sandstone",
+            "arkose",
+            "greywacke",
+            "conglomerate",
+            "breccia",
+            "sorting",
+            "roundness",
+            "clay",
+            "silt",
+            "sand",
+            "gravel",
+            "quartz sandstone"
+          ],
+          "high_weight": true,
+          "video": false
+        },
+        {
+          "slug": "chemical-and-biochemical-rocks",
+          "title": "Chemical and Biochemical Rocks",
+          "objective": "Identify rock salt, rock gypsum, travertine, chert and flint, dolostone, chalk, fossil limestone, coquina, bauxite and banded iron formation, and say which are chemical and which biochemical. Also diatomite and oolitic limestone.",
+          "keywords": [
+            "chemical sedimentary",
+            "biochemical",
+            "rock salt",
+            "rock gypsum",
+            "evaporite",
+            "travertine",
+            "chert",
+            "flint",
+            "dolostone",
+            "chalk",
+            "limestone",
+            "coquina",
+            "bauxite",
+            "banded iron formation",
+            "fossil",
+            "diatomite",
+            "oolitic limestone"
+          ],
+          "high_weight": true,
+          "video": false
+        },
+        {
+          "slug": "coal-ranks",
+          "title": "Coal: Lignite to Anthracite",
+          "objective": "Order peat, lignite, bituminous coal and anthracite by rank and carbon content, and explain what burial, heat and time do at each step.",
+          "keywords": [
+            "coal",
+            "peat",
+            "lignite",
+            "bituminous",
+            "anthracite",
+            "rank",
+            "carbon content",
+            "burial",
+            "organic",
+            "sedimentary",
+            "metamorphism"
+          ],
+          "high_weight": true,
+          "video": false
+        },
+        {
+          "slug": "metamorphic-rocks-by-name",
+          "title": "Metamorphic Rocks and Their Parent Rocks",
+          "objective": "Name slate, phyllite, schist, garnet schist, gneiss, marble, quartzite, serpentinite, soapstone and amphibolite, and give each one's protolith. Include mica schist alongside garnet schist.",
+          "keywords": [
+            "metamorphic",
+            "protolith",
+            "slate",
+            "phyllite",
+            "schist",
+            "garnet schist",
+            "gneiss",
+            "marble",
+            "quartzite",
+            "serpentinite",
+            "soapstone",
+            "talc schist",
+            "amphibolite",
+            "foliated",
+            "nonfoliated",
+            "limestone",
+            "shale",
+            "mica schist"
+          ],
+          "high_weight": true,
+          "video": false
+        },
+        {
+          "slug": "metamorphic-grade-and-index-minerals",
+          "title": "Metamorphic Grade, Index Minerals, Contact and Regional",
+          "objective": "Order chlorite, muscovite, biotite, garnet, staurolite, kyanite and sillimanite by metamorphic grade, and distinguish contact from regional metamorphism.",
+          "keywords": [
+            "metamorphic grade",
+            "index mineral",
+            "chlorite",
+            "muscovite",
+            "biotite",
+            "garnet",
+            "staurolite",
+            "kyanite",
+            "sillimanite",
+            "contact metamorphism",
+            "regional metamorphism",
+            "low grade",
+            "high grade"
+          ],
+          "high_weight": true,
+          "video": false
         }
       ]
     },
@@ -129,27 +708,55 @@
       "slug": "identification-and-competition",
       "title": "Identification and Competition",
       "summary": "Turn property knowledge into an efficient, documented station workflow.",
-      "objectives": ["Navigate a mineral flowchart without guessing.", "Use an elimination workflow under time pressure.", "Write evidence-based station answers."],
+      "objectives": [
+        "Navigate a mineral flowchart without guessing.",
+        "Use an elimination workflow under time pressure.",
+        "Write evidence-based station answers."
+      ],
       "lessons": [
         {
           "slug": "use-an-identification-flowchart",
           "title": "Use an Identification Flowchart",
           "objective": "Navigate a mineral flowchart by making and verifying one evidence-based split at a time.",
-          "keywords": ["flow chart", "identification", "metallic", "streak", "hardness", "cleavage", "decision"],
+          "keywords": [
+            "flow chart",
+            "identification",
+            "metallic",
+            "streak",
+            "hardness",
+            "cleavage",
+            "decision"
+          ],
           "high_weight": true
         },
         {
           "slug": "identify-an-unknown-specimen",
           "title": "Identify an Unknown Specimen",
           "objective": "Choose an efficient sequence of tests, eliminate alternatives, and state a defensible identification.",
-          "keywords": ["identify", "unknown", "specimen", "properties", "eliminate", "list of specimens", "diagnostic"],
+          "keywords": [
+            "identify",
+            "unknown",
+            "specimen",
+            "properties",
+            "eliminate",
+            "list of specimens",
+            "diagnostic"
+          ],
           "high_weight": true
         },
         {
           "slug": "station-strategy-and-documentation",
           "title": "Station Strategy and Documentation",
           "objective": "Allocate station time, record evidence compactly, and recover when an initial hypothesis fails.",
-          "keywords": ["station", "test", "time", "answer sheet", "specimen", "evidence", "competition"],
+          "keywords": [
+            "station",
+            "test",
+            "time",
+            "answer sheet",
+            "specimen",
+            "evidence",
+            "competition"
+          ],
           "video": true
         }
       ]
