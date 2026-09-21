@@ -98,6 +98,10 @@ def listing(folder_id: str) -> list[dict]:
     start = html.index("'", html.index("=", i)) + 1
     raw = html[start:html.index("';", start)]
     decoded = re.sub(r"\\x([0-9a-fA-F]{2})", lambda m: chr(int(m.group(1), 16)), raw)
+    # The listing also carries \\uNNNN escapes. Decoding only \\xNN left "&" as the literal
+    # text "u0026" once `_safe` had replaced the backslash, so "A&P Exam Packet" was saved as
+    # "A_u0026P Exam Packet" and became a student-facing exam title.
+    decoded = re.sub(r"\\u([0-9a-fA-F]{4})", lambda m: chr(int(m.group(1), 16)), decoded)
     try:
         data = json.loads(decoded.replace("\\/", "/"))
     except Exception:  # noqa: BLE001

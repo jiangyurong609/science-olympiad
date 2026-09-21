@@ -1,0 +1,30 @@
+{
+  "_why": "Independent electrical-engineering review before publication: wrong arithmetic in misconception notes, one garbled card, one out-of-scope keyed answer.",
+  "lessons": {
+    "leds": [
+      "In checkpoint 'Calculate the resistor', the misconception note on choice C (450 ohms) must say 450 ohms = 9.0 V / 0.020 A, which ignores the LED forward voltage. It is NOT (9.0 V + 1.6 V)/0.020 A, which would be 530 ohms.",
+      "State that LED brightness follows current, so two LEDs are equally bright when they carry equal current, and that the dependable build is two matched LEDs in series with one resistor, which forces the same current through both. Explain that a single resistor shared by LEDs in parallel lets one LED hog the current."
+    ],
+    "usb-charger-task": [
+      "In checkpoint 'Estimate charging time', the note on choice A (0.25 hours) must say it comes from dividing current by capacity (0.5 / 2 = 0.25), and the note on choice B (1 hour) must say it comes from multiplying 2 Ah x 0.5 A = 1 instead of dividing. Use one method consistently: do not claim roughly 15 hours for 10 Ah at 1 A in a card and then use the plain 10 h calculation elsewhere."
+    ],
+    "mystery-resistor-task": [
+      "In Checkpoint 3 (300 ohm known resistor, 12 V in, 8 V measured, keyed 600 ohms), fix the notes: 150 ohms = 300 x (4/8), the voltage ratio flipped; 450 ohms = 300 x (12/8), using V_in/V_out; 900 ohms = 300 x (12/4), putting V_in in the numerator. 900 is 1.5 times the correct 600 ohms, not double it."
+    ],
+    "universal-gates": [
+      "Replace the card 'NAND output rule \u2014 Only when both inputs are 1.' with 'NAND output rule \u2014 the output is 0 only when both inputs are 1; for every other input combination the output is 1.' As written it describes AND."
+    ],
+    "logic-gates": [
+      "In checkpoint 'Check the basic gates', the note on choice C (AND = 1, OR = 1, NOT A = 0) must say the only error is AND = 1; OR = 1 and NOT A = 0 are both correct. Delete 'but NOT A should be 0'."
+    ],
+    "seven-scientists": [
+      "The lesson title names seven scientists but the body covers six and never mentions George Boole. Add Boole, who developed Boolean algebra, the logic of true and false values that digital logic gates implement. Also add that Hertz demonstrated that electromagnetic (radio) waves exist, and that Volta built the voltaic pile, the first battery."
+    ],
+    "kirchhoff": [
+      "State at the top of the lesson that Kirchhoff's voltage and current laws are tested at State and Nationals only, not at Regionals."
+    ],
+    "diodes": [
+      "State that a silicon PN junction has a forward voltage drop of about 0.6 to 0.7 V when conducting, as distinct from the 1.6 to 4 V forward voltages of LEDs."
+    ]
+  }
+}

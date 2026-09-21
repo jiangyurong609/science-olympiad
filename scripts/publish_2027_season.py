@@ -73,6 +73,10 @@ PUBLISH_EVENTS = [
     # reviewer's finding was handed back as an explicit correction and a later round came
     # back clean. Published only after that, not after the loop merely stopped.
     ("food-science-b-2027", "current"),
+    # Circuit Lab: 38 lessons over a corpus built to the manual's in-scope AND out-of-scope
+    # lines, reviewed by an independent electrical engineer before publication, and cited
+    # against zero past-test PDFs.
+    ("circuit-lab-b-2027", "current"),
     # Rocks & Minerals keeps its name and its rotation, but the 2027 course is the one built
     # against the 2027 National Rocks and Minerals List, and the event was never grounded
     # until today. The 2026 twin is demoted below.

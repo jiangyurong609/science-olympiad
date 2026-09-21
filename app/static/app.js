@@ -3594,6 +3594,7 @@ function renderLessonBlock() {
 
   if (step.kind === 'video') {
     $('lesson-next').textContent = 'Continue to the reading';
+    refreshLessonNextButton();       // clear a disabled state left by a checkpoint step
     const node = $('lesson-block');
     node.className = 'lesson-block surface lesson-block-video';
     node.innerHTML = `
@@ -3610,6 +3611,7 @@ function renderLessonBlock() {
     return;
   }
   $('lesson-next').textContent = 'Continue';
+  refreshLessonNextButton();
 
   const block = lesson.content[step.blockIndex];
   const renderer = {
@@ -3853,6 +3855,7 @@ $('lesson-block').addEventListener('submit', async event => {
     };
     state.currentLesson.progress.status = result.lesson_status;
     refreshLessonFinishButton();     // the last resolved answer must unlock Finish immediately
+    refreshLessonNextButton();       // ...and Continue, which was gated on the same answer
     const feedback = form.querySelector('.checkpoint-feedback');
     feedback.hidden = false;
     feedback.classList.toggle('incorrect', !result.correct);
@@ -3896,6 +3899,22 @@ async function saveCurrentLessonProgress(markCurrentComplete = false) {
   });
   lesson.progress.completed_block_ids = result.completed_block_ids;
   $('lesson-save-state').textContent = 'Progress saved';
+}
+
+// The Continue button used to look fully enabled on an unanswered knowledge check and do
+// nothing but flash a 3.5-second toast at the foot of the page. A student walking the live
+// site clicked it seven times before working out that the step was gated. The button now
+// says what it needs and switches on the moment the check is resolved.
+function refreshLessonNextButton() {
+  const next = $('lesson-next');
+  if (!next || !state.currentLesson) return;
+  const step = lessonSteps()[state.lessonStepIndex];
+  const block = step && step.kind === 'block' ? state.currentLesson.content[step.blockIndex] : null;
+  const result = block ? state.currentLesson.progress.checkpoint_results[block.id] : null;
+  const gated = block?.type === 'checkpoint' && !(result?.correct || result?.exhausted);
+  next.disabled = gated;
+  next.setAttribute('aria-disabled', gated ? 'true' : 'false');
+  if (step?.kind !== 'video') next.textContent = gated ? 'Answer the check to continue' : 'Continue';
 }
 
 async function moveLesson(delta) {

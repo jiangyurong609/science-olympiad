@@ -106,8 +106,18 @@ ARCHIVE_C = ["Bungee Drop", "Entomology", "Helicopter", "Machines", "Materials S
              "Robot Tour"]
 
 
+# A "gap" note is a staff audit of what the COURSE is missing — "digital logic, Boolean
+# algebra, De Morgan's law and control devices are uncovered" — and it was being appended to
+# the catalog description a student reads, which then read like a to-do list. It stays in the
+# audit log. What the student needs from it is one honest sentence.
+GAP_NOTICE_FOR_STUDENTS = ("This is last season's course, so it does not yet cover "
+                           "everything 2027 tests.")
+
+
 def _focus_line(truth: dict) -> str:
     base = f"Covers {truth['teaches']}. 2027 tests {truth['tests_2027']}."
+    if truth.get("severity") == "gap":
+        return f"{base} {GAP_NOTICE_FOR_STUDENTS}"
     if note := truth.get("note"):
         # Only the first character: `capitalize()` would lowercase InSAR, SRTM and De Morgan.
         base += f" {note[0].upper()}{note[1:]}."

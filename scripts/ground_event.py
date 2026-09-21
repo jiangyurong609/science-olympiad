@@ -91,6 +91,52 @@ NOT_A_STATEMENT = re.compile(
 DOMAIN_TERMS = re.compile(DOMAIN_TERM_PATTERNS["geology"], re.I)
 
 
+_TITLE_CUTS = ("Skip to main content", "Skip directly", "Skip navigation", "Official websites",
+               "Scan to visit", "Search Suggested", "An official website", "Jump to content",
+               "Home Health", "Site Map", "Print Email", "Text Only Site", "This website is")
+# Site names that trail a page title after " | " and tell a student nothing about the page.
+_SITE_SUFFIX = re.compile(r"^(?:us epa|u\.s\. geological survey|fda|cdc|nasa(?: science| earthdata)?|"
+                          r"nhlbi, nih|niddk|niams|nci|niaid.*|medlineplus.*|department of energy|"
+                          r"us forest service|aphis|usda.*|noaa.*|nps|national park service.*|"
+                          r"astrobiology|wikipedia)$", re.I)
+_GENERIC = re.compile(r"^(?:index|home|about|default|discover|main|page|overview|"
+                      r"skip to main content|watch|\[page \d+\]|\[\d+(?:\.\d+)?s\].*)$", re.I)
+
+
+def derive_source_title(url: str, text: str = "") -> str:
+    """A human title for a source, taken from the page itself — never a placeholder.
+
+    Sources used to be registered as "<publisher> — <domain> reference", so the resource
+    library showed 102 Botany rows all titled "Wikipedia contributors — botany reference". The
+    first replacement split titles on every separator and threw away the part that tells pages
+    apart: every CDC epidemiology section became "Principles of Epidemiology" and two NHLBI
+    pages both became "COPD". So only a trailing SITE name is dropped; the rest is kept.
+    """
+    from urllib.parse import unquote, urlparse
+    parsed = urlparse(url)
+    if parsed.netloc.endswith("wikipedia.org") and "/wiki/" in parsed.path:
+        return unquote(parsed.path.split("/wiki/", 1)[1]).replace("_", " ")
+
+    first = (text or "").replace("\ufeff", "").strip()
+    first = first.splitlines()[0].strip() if first else ""
+    for cut in _TITLE_CUTS:
+        if cut in first:
+            first = first.split(cut)[0].strip()
+    parts = [p.strip() for p in first.split(" | ") if p.strip()]
+    parts = [p for p in parts if not _SITE_SUFFIX.match(p)] or parts
+    candidate = " \u2014 ".join(parts)
+    if 4 <= len(candidate) <= 140 and not _GENERIC.match(candidate):
+        return candidate
+
+    segments = [unquote(p) for p in parsed.path.split("/") if p]
+    for segment in reversed(segments):
+        stem = segment.rsplit(".", 1)[0] if "." in segment[-6:] else segment
+        words = stem.replace("-", " ").replace("_", " ").replace("+", " ").strip()
+        if words and not _GENERIC.match(words):
+            return words[:1].upper() + words[1:]
+    return parsed.netloc
+
+
 def set_domain_terms(domain: str) -> None:
     global DOMAIN_TERMS
     DOMAIN_TERMS = re.compile(domain_terms_pattern(domain), re.I)
@@ -219,7 +265,7 @@ def ensure_sources(db: Session, event: Event, apply: bool) -> list[Source]:
                 continue
             source = Source(
                 url=url,
-                title=f"{rights['publisher']} — {domain} reference",
+                title=derive_source_title(url),
                 rights_status=rights["rights_status"],
                 approved=True,
                 license_name=rights["license_name"],
