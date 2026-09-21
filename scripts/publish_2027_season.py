@@ -68,6 +68,11 @@ PUBLISH_EVENTS = [
     # corpus was built for the 2027 topic list; the `genetics` domain it used to reach holds
     # eighteen pages.
     ("heredity-b-2027", "current"),
+    # Food Science: the first build ran out of repair rounds with a rejection standing —
+    # the pasteurization lesson contradicted itself on whether 135C UHT sterilizes. The
+    # reviewer's finding was handed back as an explicit correction and a later round came
+    # back clean. Published only after that, not after the loop merely stopped.
+    ("food-science-b-2027", "current"),
     # Rocks & Minerals keeps its name and its rotation, but the 2027 course is the one built
     # against the 2027 National Rocks and Minerals List, and the event was never grounded
     # until today. The 2026 twin is demoted below.

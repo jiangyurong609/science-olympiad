@@ -1,0 +1,10 @@
+{
+  "_why": "The automated reviewer rejected this lesson twice and the repair loop ran out of rounds with the rejection standing. The finding is correct and specific, so it is handed back as an explicit correction rather than left to another blind re-author.",
+  "lessons": {
+    "pasteurization": [
+      "The lesson contradicts itself on UHT. Fix it by teaching COMMERCIAL STERILITY, not absolute sterility: UHT (roughly 135-150 degrees Celsius for 2-5 seconds) destroys all vegetative pathogens and enough spores that the product is shelf stable unopened at room temperature, but it is NOT the same as absolute sterilization and does not guarantee every endospore is destroyed. Do not state a single sterilizing temperature and then a different required temperature later in the same lesson.",
+      "State explicitly that pasteurization is not sterilization: HTST (72 degrees Celsius for 15 seconds) and vat/batch pasteurization (63 degrees Celsius for 30 minutes) reduce pathogens and spoilage organisms to a safe level, leaving surviving organisms that make refrigeration and a limited shelf life necessary.",
+      "If a checkpoint asks the student to identify batch (vat) pasteurization, teach its time and temperature in the body of the lesson first. The earlier revision asked for it without ever presenting it."
+    ]
+  }
+}
