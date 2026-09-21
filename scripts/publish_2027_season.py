@@ -81,6 +81,10 @@ PUBLISH_EVENTS = [
     # against the 2027 National Rocks and Minerals List, and the event was never grounded
     # until today. The 2026 twin is demoted below.
     ("rocks-and-minerals-b-2027", "current"),
+    # Crime Busters: 26 lessons on the 2027 evidence list. The plastics lesson was rejected
+    # three rounds running because its grounding passage gave polystyrene's range including
+    # foamed grades; the rules name non-expanded PS, and the correction says so.
+    ("crime-busters-b-2027", "current"),
 ]
 
 # (event id, why this course is not 2027 coverage). Division B verified against the manual.
@@ -110,12 +114,20 @@ DEMOTE = [
 def main() -> None:
     ap = argparse.ArgumentParser()
     ap.add_argument("--apply", action="store_true")
+    # Publishing is per-season by default, and it publishes every draft that passes the gate.
+    # Run while another listed course is mid-review and that course goes live half-repaired.
+    # `--event` publishes one course and leaves the rest of the list alone.
+    ap.add_argument("--event", help="publish only this event slug from PUBLISH_EVENTS")
     args = ap.parse_args()
+    if args.event and args.event not in {slug for slug, _ in PUBLISH_EVENTS}:
+        raise SystemExit(f"{args.event} is not in PUBLISH_EVENTS")
     db = SessionLocal()
     changed = 0
 
     print("== 1. publish authored 2027 lessons ==")
     for slug, end_status in PUBLISH_EVENTS:
+        if args.event and slug != args.event:
+            continue
         event = db.scalar(select(Event).where(Event.slug == slug))
         if not event:
             print(f"  !! no event {slug}")

@@ -1,0 +1,11 @@
+{
+  "_why": "Automated review rejected seven-plastics three times; the grounding passage (Polystyrene infobox, 0.96-1.05 g/cm3) includes foamed grades, but rule 3.d.iii limits the event to NON-EXPANDED PS.",
+  "lessons": {
+    "seven-plastics": [
+      "Rule 3.d.iii limits plastics to PETE, HDPE, NON-EXPANDED PS, LDPE, PP, PVC and PMMA. Do not use the 0.96-1.05 g/cm3 polystyrene range: it includes foamed grades and overlaps HDPE. Use the solid polystyrene value of about 1.05 g/cm3 (Wikipedia Polystyrene: '1.05 g/cm3 for polystyrene vs. 2.70 g/cm3 for aluminium'), which is denser than water, while HDPE (930-970 kg/m3) floats.",
+      "HDPE does not have 'no branching'. It has little branching (a mostly linear chain), while LDPE is highly branched; that difference is why HDPE is denser. State it that way.",
+      "Give sourced densities for all seven so a student can classify any sample: PP 0.895-0.93 g/cm3, LDPE about 0.92 g/cm3, HDPE 0.93-0.97 g/cm3, PS about 1.05 g/cm3, PMMA 1.17-1.20 g/cm3, PETE about 1.38 g/cm3, PVC about 1.4 g/cm3. Then show the density ordering and which float in water (PP, LDPE, HDPE) and which sink (PS, PMMA, PETE, PVC).",
+      "Burn tests are never conducted (rule 3.d.iii), but burn results may be provided. If no source supports specific burn descriptions, say only that and do not invent flame colours or odours."
+    ]
+  }
+}

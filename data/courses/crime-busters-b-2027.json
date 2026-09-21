@@ -334,7 +334,7 @@
         {
           "slug": "seven-plastics",
           "title": "PETE, HDPE, PS, LDPE, PP, PVC and PMMA",
-          "objective": "Identify each of the seven plastics named in the rules using a differential density test and a provided burn result.",
+          "objective": "Identify each of the seven plastics the rules name (PETE, HDPE, non-expanded PS, LDPE, PP, PVC, PMMA) from a measured density and a provided burn result, using sourced density values for all seven.",
           "keywords": [
             "PETE",
             "HDPE",
@@ -345,7 +345,13 @@
             "PMMA",
             "resin identification code",
             "density",
-            "burn test"
+            "burn test",
+            "polyethylene terephthalate",
+            "polyvinyl chloride",
+            "methyl methacrylate",
+            "non-expanded",
+            "branched",
+            "g/cm"
           ],
           "high_weight": true,
           "video": false
