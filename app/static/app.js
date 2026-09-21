@@ -247,8 +247,38 @@ function showSection(id) {
   window.scrollTo({ top: 0, behavior: 'instant' });
 }
 
+// Which views each role may open. The hashchange router used the role only to pick a
+// FALLBACK home, and mapped '#content' to the content view for anybody — so a signed-in
+// student navigating in-app to #content got the full Content Operations surface: the review
+// pipeline, the publish controls, the Content Studio upload form with its rights-declaration
+// field. No data leaked, because every staff endpoint answers a student with 403, but the
+// student got staff chrome and a raw role error where their app should be. A hard page load
+// of the same URL redirected correctly; only in-SPA navigation slipped through.
+const STUDENT_VIEWS = ['dashboard', 'learn', 'practice', 'errors'];
+const VIEWS_BY_ROLE = {
+  student: STUDENT_VIEWS,
+  coach: [...STUDENT_VIEWS, 'coach'],
+  parent: [...STUDENT_VIEWS, 'parent'],
+};
+
+function roleHomeView() {
+  if (isStudentPreview()) return 'dashboard';
+  if (STAFF_ROLES.includes(state.user?.role)) return 'content';
+  if (state.user?.role === 'coach') return 'coach';
+  if (state.user?.role === 'parent') return 'parent';
+  return 'dashboard';
+}
+
+function viewAllowed(id) {
+  // Staff may open anything, including the student views they preview with.
+  if (STAFF_ROLES.includes(state.user?.role)) return true;
+  const allowed = VIEWS_BY_ROLE[state.user?.role] || STUDENT_VIEWS;
+  return allowed.includes(id);
+}
+
 function showView(id, updateHash = true) {
   if (!appViews.includes(id)) id = 'dashboard';
+  if (!viewAllowed(id)) id = roleHomeView();
   showSection('app-shell');
   appViews.forEach(view => { $(view).hidden = view !== id; });
   document.querySelectorAll('[data-view-link]').forEach(link => {
@@ -4599,9 +4629,7 @@ window.addEventListener('hashchange', () => {
   }
   // Non-student roles have no student dashboard, so #overview (the brand logo)
   // must land them on their own home instead of an empty student view.
-  const roleHome = isStudentPreview() ? 'dashboard'
-    : STAFF_ROLES.includes(state.user.role)
-      ? 'content' : state.user.role === 'coach' ? 'coach' : state.user.role === 'parent' ? 'parent' : 'dashboard';
+  const roleHome = roleHomeView();
   let view = { '#learn': 'learn', '#practice': 'practice', '#errors': 'errors', '#coach': 'coach', '#content': 'content', '#insights': 'content', '#parent': 'parent' }[hashRoute] || roleHome;
   // A student who has not chosen a subject yet has nothing to see in Courses or
   // Practice — land them on the guided picker instead of an empty shell.
