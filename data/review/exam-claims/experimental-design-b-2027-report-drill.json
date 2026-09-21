@@ -1,0 +1,5 @@
+{
+  "_why": "Claim review for exam 422 (Experimental Design Report Drill), each claim read against its item; arithmetic keys recomputed. Rejected: fragments that state no fact on their own.",
+  "approve": [51011, 51012, 51020, 51021, 51014, 51015, 51017, 51022, 51018, 51023, 51024, 51019, 49214],
+  "reject": [51013, 51016, 51025]
+}

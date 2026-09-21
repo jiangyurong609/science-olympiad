@@ -1,0 +1,5 @@
+{
+  "_why": "Claim review for exam 423 (Write It Do It Description Drill), each claim read against its item; the builder-reading keys were worked through by hand (rotations and positions). Rejected: a sentence whose meaning depends on the one before it.",
+  "approve": [51026, 51027, 50965, 51028, 51029, 51030, 51031, 51032, 51033],
+  "reject": [49070]
+}

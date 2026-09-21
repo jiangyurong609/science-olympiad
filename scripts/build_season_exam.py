@@ -37,7 +37,7 @@ from app.models.entities import (
 from app.services.model_provider import ModelProviderError, OpenAICompatibleProvider
 from app.services.scoring import is_gradeable
 from app.services.season_status import HIDDEN_SEASON_STATUSES
-from scripts.author_course_from_blueprint import _select_passages
+from scripts.author_course_from_blueprint import _select_passages, is_past_test_source
 
 PROMPT_VERSION = "season-exam-sectioned-v2"
 REPO = Path(__file__).resolve().parent.parent
@@ -120,6 +120,88 @@ FORMATS = {
                          "acceptable spelling and synonym in `accepted`."},
         ],
     },
+    # The two events with no written test. Experimental Design is scored by a checklist against
+    # a report written on site; Write It Do It by how closely a partner's build matches an object
+    # from a written description. A timed drill cannot rehearse the hands-on part, so these
+    # rehearse the judgments each scoring instrument rewards, as items that can be marked
+    # objectively and pass the blind solver and verifier.
+    "report-drill": {
+        "title": "Report Drill",
+        "reference": ("Experimental Design report drill \u2014 checklist judgments, statistics "
+                      "from repeated trials, and claim/evidence/reasoning"),
+        "duration_minutes": 50,
+        "sections": [
+            {"key": "checklist", "title": "I. Report Elements", "kind": "single_choice",
+             "count": 12, "points": 2,
+             "guidance": "Each item gives a short assigned topic and material list, then asks "
+                         "which written response would earn full checklist credit for ONE report "
+                         "element: statement of the problem, hypothesis, independent or dependent "
+                         "variable with its operational definition, levels of the IV and standard "
+                         "of comparison, controlled variables, materials list, procedure, "
+                         "qualitative observations, graph, possible experimental errors, "
+                         "conclusion, or applications and recommendations. The three distractors "
+                         "must be realistic student responses that each miss one specific "
+                         "checklist requirement (a yes/no question, a hypothesis with no "
+                         "direction, a variable with no operational definition, a procedure with "
+                         "no repeated trials, an error with no effect on results). Cover each "
+                         "element at most twice."},
+            {"key": "statistics", "title": "II. Data and Statistics", "kind": "data",
+             "count": 6, "points": 2,
+             "topics": ["mean median and mode of repeated trials",
+                        "range and interquartile range of trials",
+                        "outlier by the 1.5 x IQR rule", "variation between levels"],
+             "guidance": "Each stem EMBEDS a small table of repeated trials across three or four "
+                         "levels of an independent variable, with units. Ask for a computed "
+                         "value (mean, median, mode, range, interquartile range), whether a "
+                         "value is an outlier by the 1.5 x IQR rule, or which level shows the "
+                         "most variation. The answer must require computing, not reading off."},
+            {"key": "cer", "title": "III. Claim, Evidence, Reasoning", "kind": "single_choice",
+             "count": 6, "points": 2,
+             "topics": ["claim evidence reasoning for a data trend",
+                        "claim evidence reasoning for outliers",
+                        "claim evidence reasoning for variation"],
+             "guidance": "Give a small data summary in the stem and ask which claim, which "
+                         "evidence statement, or which reasoning statement is complete and "
+                         "logical for a data trend, an outlier, or variation. Distractors: a "
+                         "claim with no data, evidence that does not support the claim, "
+                         "reasoning that restates the evidence."},
+        ],
+    },
+    "description-drill": {
+        "title": "Description Drill",
+        "reference": ("Write It Do It description drill \u2014 precise instructions, reading a "
+                      "description as the builder, and the scoring rules"),
+        "duration_minutes": 30,
+        "sections": [
+            {"key": "precision", "title": "I. Writing Precise Instructions",
+             "kind": "single_choice", "count": 10, "points": 2,
+             "topics": ["precise description of size colour location orientation connection",
+                        "ambiguity in written instructions", "technical writing clarity"],
+             "guidance": "Describe a simple object built from common pieces (straws, cups, "
+                         "blocks, pipe cleaners) in one or two sentences, then ask which "
+                         "instruction a builder could follow exactly. The correct instruction "
+                         "fixes the piece's size, colour, location, orientation and connection; "
+                         "each distractor leaves exactly one of those ambiguous (\"attach it on "
+                         "top\", \"a long straw\", \"turn it sideways\", pronouns like \"it\")."},
+            {"key": "builder", "title": "II. Reading as the Builder", "kind": "data",
+             "count": 6, "points": 2,
+             "topics": ["relative position and orientation reference frame",
+                        "following written construction steps"],
+             "guidance": "Put a short numbered written description (3-5 steps) inside the stem "
+                         "and ask what the finished build looks like at one point: which piece "
+                         "is where, which way it faces, what it touches. Use a stated reference "
+                         "frame (front, left, top as seen by the builder)."},
+            {"key": "rules", "title": "III. Rules and Scoring", "kind": "single_choice",
+             "count": 4, "points": 2,
+             "topics": ["write it do it rules drawings diagrams abbreviations",
+                        "write it do it scoring incorrect connection tiebreaker"],
+             "guidance": "Apply the event rules to a situation: what a description may contain "
+                         "(no drawings or diagrams; numerals, words, single letters, "
+                         "abbreviations and symbols allowed), how pieces are scored, what "
+                         "happens to correct pieces beyond a wrong connection, what breaks a "
+                         "tie."},
+        ],
+    },
     "state": {
         "reference": ("2025 USC Invitational, Dynamic Planet C — 192 points: a long "
                       "topic-ordered multiple-choice run at 2 points each"),
@@ -149,7 +231,7 @@ on. Copy it by exact substring, changing nothing — not punctuation, not capita
 
 The student sits this exam with no reading in front of them. NEVER write "the passage", "the
 text", "according to the passage", "as described above", or any reference to the source. Ask what
-is true about rivers, aquifers and landscapes, not what a document says about them. An item that
+is true about the subject itself, not what a document says about it. An item that
 depends on a source's wording or its headings is discarded.
 Output strict JSON {"items": [...]} and nothing else."""
 
@@ -393,6 +475,11 @@ def _generate_section(provider, event, section, passages, sources,
     request came back malformed, and no topic should get double coverage by arithmetic accident.
     """
     wanted = section["count"]
+    # A section may name its own topics. The course syllabus is the wrong steer for a section
+    # whose content is one skill: Experimental Design's statistics section was walked through
+    # "statement of the problem", "hypothesis" and so on, got passages about those, and came back
+    # empty on every run — the same prompt returns three valid items when fed statistics.
+    scope_topics = section.get("topics") or scope_topics
     steerable = section["kind"] in {"single_choice", "data", "true_false"}
     slices: list[list[str]] = []
     if scope_topics and steerable:
@@ -587,8 +674,15 @@ def build(event_slug: str, format_key: str, apply: bool) -> dict:
         print("  no rules-manual constraints recorded for this event")
     source_ids = db.scalars(select(EventSourceMap.source_id).where(
         EventSourceMap.event_id == event.id)).all()
+    # Past tests are never evidence for a new item — the same rule lesson authoring follows.
+    # Leaving them in the pool did worse than risk copying: Experimental Design's statistics
+    # passages were mostly imported past-test checklists, and a model told never to copy an
+    # existing test returned an empty batch for every one of them, so the section came back
+    # 0/6 on every run with no rejection to explain it.
     sources = {s.id: s for s in db.scalars(
-        select(Source).where(Source.id.in_(source_ids))).all()}
+        select(Source).where(Source.id.in_(source_ids))).all()
+        if not is_past_test_source(s)}
+    source_ids = list(sources)
     passages = db.scalars(select(SourcePassage).where(
         SourcePassage.source_id.in_(source_ids)
     ).order_by(SourcePassage.source_id, SourcePassage.sequence)).all()
@@ -685,7 +779,8 @@ def build(event_slug: str, format_key: str, apply: bool) -> dict:
     event_hidden = event.season_status in HIDDEN_SEASON_STATUSES or not event.active
     exam = Exam(
         event_id=event.id,
-        title=f"{event.name} — {format_key.title()} Mock Exam"
+        title=(f"{event.name} — {spec['title']}" if spec.get("title")
+               else f"{event.name} — {format_key.title()} Mock Exam")
               + (f" {existing + 1}" if existing else ""),
         duration_minutes=spec["duration_minutes"],
         question_ids=[q.id for q in questions],

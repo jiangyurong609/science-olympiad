@@ -34,7 +34,8 @@ from app.models.entities import Event, Exam, ExamItem, Question, ScientificClaim
 MACHINE = "machine_practice"
 
 
-def apply_verdicts(db, approve: set[int], reject: set[int], apply: bool) -> dict:
+def apply_verdicts(db, approve: set[int], reject: set[int], apply: bool,
+                   exam_ids: set[int] | None = None) -> dict:
     stats: Counter[str] = Counter()
     for claim_id in sorted(approve | reject):
         claim = db.get(ScientificClaim, claim_id)
@@ -52,7 +53,13 @@ def apply_verdicts(db, approve: set[int], reject: set[int], apply: bool) -> dict
         db.flush()
 
     dropped_by_exam: dict[int, list[int]] = {}
-    for exam in db.scalars(select(Exam).where(Exam.release_class == MACHINE)):
+    # Scoped to the exams this review covered. Run unscoped, a review of one new paper also
+    # swept every other machine paper and dropped each item whose claims nobody had approved
+    # yet — 44 items across 10 exams in a dry run for an 18-item review.
+    query = select(Exam).where(Exam.release_class == MACHINE)
+    if exam_ids:
+        query = query.where(Exam.id.in_(exam_ids))
+    for exam in db.scalars(query):
         items = db.scalars(select(ExamItem).where(ExamItem.exam_id == exam.id)
                            .order_by(ExamItem.position)).all()
         keep, drop = [], []
@@ -113,6 +120,8 @@ def main() -> None:
     parser.add_argument("--verdicts", required=True,
                         help='JSON: {"approve": [...], "reject": [...]}')
     parser.add_argument("--apply", action="store_true")
+    parser.add_argument("--exam", type=int, action="append",
+                        help="only drop/record items on this exam (repeatable)")
     args = parser.parse_args()
     data = json.loads(open(args.verdicts).read())
     approve, reject = set(data["approve"]), set(data["reject"])
@@ -121,7 +130,8 @@ def main() -> None:
         raise SystemExit(f"a claim cannot be both approved and rejected: {sorted(overlap)}")
     print(f"verdicts: {len(approve)} approve, {len(reject)} reject")
     with SessionLocal() as db:
-        print(json.dumps(apply_verdicts(db, approve, reject, args.apply), indent=2))
+        print(json.dumps(apply_verdicts(db, approve, reject, args.apply,
+                                        set(args.exam) if args.exam else None), indent=2))
 
 
 if __name__ == "__main__":

@@ -1466,7 +1466,12 @@ function renderCourseMap() {
 // "Reviewed competition-style practice" — which called AI-authored, unreviewed content
 // reviewed, directly contradicting the "Not Expert Reviewed" badge beside it. Each class now
 // says what it actually is.
-function examBlurb(releaseClass) {
+function examBlurb(releaseClass, exam) {
+  // Experimental Design and Write It Do It have no written test. Their practice is a drill of
+  // what the scoring instrument rewards, and must not be described as a real paper's format.
+  if (/\bDrill$/.test(exam?.title || '')) {
+    return 'A skills drill written and machine-checked from the official scoring materials. This event has no written test, and no subject expert has read these items.';
+  }
   return {
     competition_ready: 'Calibrated current-season simulation.',
     foundational_practice: 'Foundational practice with guided review.',
@@ -1484,7 +1489,7 @@ function renderExams() {
   $('practice-exam-count').textContent = exams.length;
   $('exam-list').innerHTML = exams.map(exam => `<article class="exam-card surface">
     <div class="exam-card-main"><header><span class="event-label">${escapeHtml(exam.event)} · Div ${escapeHtml(exam.event_division || event?.division || '')}</span><span class="exam-badge release-${escapeHtml(exam.release_class)}">${escapeHtml(exam.release_label)}</span></header>
-    <h3>${escapeHtml(exam.title)}</h3><p>${examBlurb(exam.release_class)}</p></div>
+    <h3>${escapeHtml(exam.title)}</h3><p>${examBlurb(exam.release_class, exam)}</p></div>
     <dl><div><dt>Questions</dt><dd>${exam.question_count}</dd></div><div><dt>Time</dt><dd>${exam.effective_duration_minutes || exam.duration_minutes} min</dd></div></dl>
     ${exam.startable === false
       ? `<button class="button" type="button" disabled aria-disabled="true">Held For Review</button>

@@ -43,6 +43,10 @@ from app.models.entities import (
 MACHINE = "machine_practice"
 
 
+def _squash(text: str) -> str:
+    return " ".join((text or "").split())
+
+
 def _snapshot_text(db, source_id: int, cache: dict[int, str]) -> str:
     if source_id not in cache:
         snapshot = db.scalar(select(SourceSnapshot)
@@ -88,7 +92,11 @@ def link_event(db, event: Event, apply: bool) -> dict:
             claim = existing.get(excerpt)
             if claim is None:
                 text = _snapshot_text(db, source_id, cache)
-                if excerpt not in text:
+                # Verbatim means the same words in the same order. A PDF's line breaks split
+                # sentences in the snapshot but not in the passage the item quoted, which
+                # refused every quote from the official CER guide; whitespace is normalised on
+                # both sides and nothing else is.
+                if _squash(excerpt) not in _squash(text):
                     # The excerpt cannot be found in the source it cites. That is exactly the
                     # case a grounding check exists to catch, and it is refused rather than
                     # linked to something approximate.
