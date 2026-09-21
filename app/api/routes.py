@@ -91,7 +91,7 @@ RELEASE_LABELS = {
     # An exam whose items have not been reviewed is not offered for new attempts. It stays
     # in the catalogue, labelled for what it is, rather than showing a Start button that the
     # server will refuse.
-    "unreviewed_practice": "Past Test · Held For Review",
+    "unreviewed_practice": "Practice · Held For Review",
 }
 # An unrecognised release class used to fall back to "Reviewed Practice" — the *strongest*
 # claim available, asserted about content nobody could classify. A default must be the weakest
@@ -2597,6 +2597,12 @@ def student_dashboard(
                 "source_type": case.source_type,
                 "diagnosis": case.diagnosis,
                 "plan": case.plan,
+                # A past test's key ships a grading note ("All three areas required."), not a
+                # worked explanation; the notebook labels it as the key's words, not a coach's.
+                "explanation_source": "answer_key"
+                if case.question_id in question_by_id
+                and (question_by_id[case.question_id].generation_provenance or {}).get("import_kind") == "past_test"
+                else "explanation",
                 "student_reflection": case.student_reflection,
                 "next_review_at": (case.plan or {}).get("next_review_at"),
             }
