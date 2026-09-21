@@ -135,7 +135,11 @@ DOMAIN_TERM_PATTERNS = {
                        r"drought|heat wave|blizzard|nor'easter|ice storm|lake.effect|"
                        r"fujita|saffir|enso|el ni|warning|watch|metar|station model|asos|"
                        r"satellite|infrared|water vapor|pressure|temperature|dew point|humid"),
-    "dairy_food_science": (r"milk|dairy|cream|butter|cheese|yogurt|yoghurt|curd|whey|"
+    "dairy_food_science": (r"independent variable|dependent variable|controlled variable|"
+                           r"confound|hypothes|experiment|design|control|replicat|trial|"
+                           r"significant figure|accuracy|precision|random error|"
+                           r"systematic error|uncertaint|data table|measurement|"
+                           r"milk|dairy|cream|butter|cheese|yogurt|yoghurt|curd|whey|"
                            r"casein|micelle|lactose|lactase|lactic|galactose|glucose|"
                            r"sugar|saccharid|carbohydrate|starch|glycosid|"
                            r"lipid|fat|triglycerid|fatty acid|saturated|unsaturated|trans|"
@@ -1817,6 +1821,23 @@ DOMAIN_SOURCES = {
             "https://www.fda.gov/food/nutrition-facts-label/added-sugars-nutrition-facts-label",
             "https://www.fda.gov/food/nutrition-facts-label/daily-value-nutrition-and-supplement-facts-labels",
             "https://www.fda.gov/food/nutrition-facts-label/how-understand-and-use-nutrition-facts-label",
+            # The notebook is nine experiments graded before the tournament starts and each
+            # must have exactly one independent variable, so the event examines experiment
+            # design as well as dairy chemistry. A keyword audit found the design lessons
+            # matching no passage at all: the dairy corpus has nothing about a controlled
+            # variable or a systematic error.
+            "https://en.wikipedia.org/wiki/Dependent_and_independent_variables",
+            "https://en.wikipedia.org/wiki/Controlling_for_a_variable",
+            "https://en.wikipedia.org/wiki/Scientific_control",
+            "https://en.wikipedia.org/wiki/Confounding",
+            "https://en.wikipedia.org/wiki/Design_of_experiments",
+            "https://en.wikipedia.org/wiki/Significant_figures",
+            "https://en.wikipedia.org/wiki/Observational_error",
+            "https://en.wikipedia.org/wiki/Accuracy_and_precision",
+            "https://en.wikipedia.org/wiki/Replication_(statistics)",
+            "https://en.wikipedia.org/wiki/Table_(information)",
+            "https://en.wikipedia.org/wiki/Hypothesis",
+            "https://en.wikipedia.org/wiki/Measurement",
         ],
     },
     "epidemiology": {
