@@ -34,7 +34,9 @@
             "scope",
             "materials",
             "design",
-            "checklist"
+            "checklist",
+            "Statement addresses the experiment",
+            "Statement of the Problem"
           ],
           "high_weight": true,
           "video": false
@@ -53,7 +55,10 @@
             "relationship",
             "independent variable",
             "dependent variable",
-            "null hypothesis"
+            "null hypothesis",
+            "predicts a relationship between the IV",
+            "specific direction to the prediction",
+            "rationale is given for the hypothesis"
           ],
           "high_weight": true,
           "video": false
@@ -121,7 +126,9 @@
             "axis",
             "relationship",
             "identify",
-            "design"
+            "design",
+            "operationally defined",
+            "IV correctly identified"
           ],
           "high_weight": true,
           "video": false
@@ -140,7 +147,9 @@
             "list",
             "specific",
             "justification",
-            "design"
+            "design",
+            "CV correctly identified and relevant",
+            "Controlled Variables (CV)"
           ],
           "high_weight": true,
           "video": false
@@ -178,7 +187,11 @@
             "interval",
             "sample",
             "justification",
-            "reliability"
+            "reliability",
+            "Levels of IV",
+            "repeated trials",
+            "paperclips",
+            "standard of comparison"
           ],
           "high_weight": true,
           "video": false
@@ -208,7 +221,10 @@
             "sequence",
             "instruction",
             "detail",
-            "reproducibility"
+            "reproducibility",
+            "presented in list form",
+            "logical sequence",
+            "detailed enough to repeat"
           ],
           "high_weight": true,
           "video": false
@@ -227,7 +243,9 @@
             "orientation",
             "annotation",
             "clarity",
-            "drawing"
+            "drawing",
+            "Multiple diagrams of setup",
+            "appropriately labeled"
           ],
           "high_weight": true,
           "video": false
@@ -246,7 +264,9 @@
             "specific",
             "inventory",
             "measurement device",
-            "record"
+            "record",
+            "listed and quantified",
+            "unused or extra materials"
           ],
           "high_weight": false,
           "video": false
@@ -265,7 +285,10 @@
             "clean-up",
             "rule",
             "judgement",
-            "design"
+            "design",
+            "disqualified",
+            "clean-up procedures",
+            "0.95"
           ],
           "high_weight": false,
           "video": false
@@ -295,7 +318,10 @@
             "record",
             "data",
             "evidence",
-            "distinction"
+            "distinction",
+            "Qualitative Observations",
+            "Observations about set-up",
+            "Observations about the procedure"
           ],
           "high_weight": false,
           "video": false
@@ -314,7 +340,9 @@
             "average",
             "organisation",
             "completeness",
-            "format"
+            "format",
+            "All raw data",
+            "Quantitative Data"
           ],
           "high_weight": true,
           "video": false
@@ -333,7 +361,8 @@
             "choice",
             "justification",
             "axis",
-            "representation"
+            "representation",
+            "Appropriate graph is provided"
           ],
           "high_weight": true,
           "video": false
@@ -352,7 +381,9 @@
             "x axis",
             "y axis",
             "key",
-            "format"
+            "format",
+            "properly titled and labeled",
+            "Appropriate scale and units"
           ],
           "high_weight": true,
           "video": false
@@ -371,7 +402,12 @@
             "summary",
             "calculation",
             "central tendency",
-            "spread"
+            "spread",
+            "Statistics of Central Tendency",
+            "Statistics of variation",
+            "example calculation",
+            "standard deviation",
+            "IQR"
           ],
           "high_weight": true,
           "video": false
@@ -390,7 +426,9 @@
             "pattern",
             "description",
             "explanation",
-            "relationship"
+            "relationship",
+            "Data trend claim",
+            "Data trend evidence"
           ],
           "high_weight": true,
           "video": false
@@ -420,7 +458,11 @@
             "justification",
             "analysis",
             "conclusion",
-            "structure"
+            "structure",
+            "Claim/Evidence/Reasoning",
+            "Outliers claim",
+            "Variation claim",
+            "Data trend reasoning"
           ],
           "high_weight": true,
           "video": false
@@ -439,7 +481,10 @@
             "result",
             "interpretation",
             "conclusion",
-            "science"
+            "science",
+            "Hypothesis is restated",
+            "Hypothesis claim",
+            "Hypothesis evidence"
           ],
           "high_weight": true,
           "video": false
@@ -458,7 +503,9 @@
             "direction",
             "bias",
             "uncertainty",
-            "precision"
+            "precision",
+            "specific error is identified",
+            "effect on results discussed"
           ],
           "high_weight": true,
           "video": false
@@ -477,7 +524,8 @@
             "sample",
             "control",
             "revision",
-            "proposal"
+            "proposal",
+            "Suggestions to improve experiment with rationale"
           ],
           "high_weight": true,
           "video": false
@@ -496,7 +544,8 @@
             "implication",
             "conclusion",
             "scope",
-            "justification"
+            "justification",
+            "Applications and Recommendations for Further Use"
           ],
           "high_weight": false,
           "video": false

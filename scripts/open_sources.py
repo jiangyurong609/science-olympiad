@@ -16,6 +16,14 @@ for that event's generated course and exam.
 # under that rule would have silently labelled it public domain — a rights error, and the kind
 # that stays invisible until someone relies on it.
 HOST_RIGHTS = {
+    # The event's own scoring documents. Experimental Design is graded line by line against
+    # this checklist, so a course that cannot cite it teaches to a rubric it has never read:
+    # the first 2027 build had no source for "levels of IV", repeated trials or the three CER
+    # sets, and reported each as a gap.
+    "www.soinc.org": {"rights_status": "fact_grounding_allowed",
+                      "license_name": "Publicly posted Science Olympiad event materials "
+                                      "(facts used with attribution)",
+                      "publisher": "Science Olympiad, Inc."},
     "en.wikipedia.org": {
         "rights_status": "fact_grounding_allowed",
         "license_name": "CC-BY-SA 4.0 (facts used with attribution)",
@@ -1307,6 +1315,8 @@ DOMAIN_SOURCES = {
         # description has to be precise in (orientation, relative position, reference frame,
         # shape, dimension, colour, sequence) and what makes technical prose unambiguous.
         "urls": [
+            "https://www.soinc.org/sites/default/files/uploaded_files/ExDesignChecklistB26v2.pdf",
+            "https://www.soinc.org/sites/default/files/uploaded_files/exp_des_ClaimEvidenceReason.pdf",
             "https://en.wikipedia.org/wiki/Abbreviation",
             "https://en.wikipedia.org/wiki/Accuracy_and_precision",
             "https://en.wikipedia.org/wiki/Acronym",
