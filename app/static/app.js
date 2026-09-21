@@ -4132,7 +4132,7 @@ function renderQuestionAssets(assets) {
   if (!Array.isArray(assets) || !assets.length) return '';
   return `<figure class="question-figure">${assets.map(asset => `
     <img src="${mediaUrl(asset.url)}" alt="${escapeHtml(asset.alt || 'Specimen image for identification')}" width="800" height="600" loading="lazy" decoding="async">
-    ${asset.attribution ? `<figcaption>${escapeHtml(asset.attribution)}${asset.license ? ` · ${escapeHtml(asset.license)}` : ''}</figcaption>` : ''}
+    ${asset.attribution ? `<figcaption>${escapeHtml(asset.attribution)}${asset.license ? ` · ${escapeHtml(asset.license)}` : ''}${asset.source_url ? ` · <a href="${safeUrl(asset.source_url)}" target="_blank" rel="noopener noreferrer">source</a>` : ''}</figcaption>` : ''}
   `).join('')}</figure>`;
 }
 

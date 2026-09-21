@@ -25,7 +25,8 @@ def test_multiple_choice_letter_maps_to_index():
     built = build_question("b-regional", item("b-regional", 3))
     assert built["question_type"] == "single_choice"
     assert built["choices"][built["answer_spec"]["correct_index"]] == "Cubic"
-    assert built["assets"][0]["url"].endswith("b-regional_q03.png")
+    assert built["assets"][0]["url"].startswith("/static/media/rocks-and-minerals-open/")
+    assert built["assets"][0]["license"] and "Starter Pack" not in built["assets"][0]["attribution"]
 
 
 def test_multi_select_is_all_or_nothing_short_answer_with_options_in_stem():
@@ -42,4 +43,6 @@ def test_no_division_c_only_item_is_served_and_every_figure_exists():
             assert q["scope"] == "div_b"
             built = build_question(pid, q)
             for asset in (built or {}).get("assets", []):
-                assert (Path(PACK_DIR) / "figures" / Path(asset["url"]).name).exists()
+                assert (Path("app/static/media/rocks-and-minerals-open") / Path(asset["url"]).name).exists()
+                assert asset["license"] in {"CC BY 2.0", "CC BY 4.0", "CC BY-SA 2.0", "CC BY-SA 3.0",
+                                            "CC BY-SA 4.0", "CC0", "Public domain"}

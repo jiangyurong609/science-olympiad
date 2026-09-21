@@ -34,7 +34,6 @@ from __future__ import annotations
 
 import argparse
 import json
-import shutil
 from pathlib import Path
 
 from sqlalchemy import select
@@ -43,8 +42,13 @@ from app.core.database import SessionLocal
 from app.models.entities import Event, Exam, ExamItem, Question
 
 PACK_DIR = Path("data/review/rm-starter-pack-2027")
-MEDIA_DIR = Path("app/static/media/rocks-and-minerals-pack")
-MEDIA_URL = "/static/media/rocks-and-minerals-pack"
+# The pack's own photographs carry no stated licence, so none of them is served. Each figure
+# is replaced by an openly licensed Wikimedia Commons photo or a diagram drawn for this
+# platform, chosen to show what its question needs; `figure_replacements.json` records the
+# file, author, licence and source page for every one.
+MEDIA_DIR = Path("app/static/media/rocks-and-minerals-open")
+MEDIA_URL = "/static/media/rocks-and-minerals-open"
+REPLACEMENTS = json.loads((PACK_DIR / "figure_replacements.json").read_text())
 EVENT_SLUG = "rocks-and-minerals-b-2027"
 RELEASE_CLASS = "study_pack_practice"
 IMPORT_KIND = "study_pack"
@@ -70,10 +74,12 @@ def build_question(paper_id: str, q: dict) -> dict | None:
     points = float(q.get("points") or 1)
     assets = []
     if q.get("figure"):
-        name = Path(q["figure"]).name
-        assets = [{"url": f"{MEDIA_URL}/{name}",
-                   "alt": f"Figure for question {q['number']} of the {PACK_NAME} sample paper",
-                   "attribution": PACK_NAME, "license": "supplied to the program"}]
+        replacement = REPLACEMENTS[Path(q["figure"]).stem]
+        assets = [{"url": f"{MEDIA_URL}/{replacement['file']}",
+                   "alt": f"Figure for question {q['number']}",
+                   "attribution": replacement["attribution"],
+                   "license": replacement["license"],
+                   "source_url": replacement["source_url"]}]
     if q["type"] == "multiple_choice":
         letter = str(q["answer"]).strip().upper()
         index = LETTERS.index(letter)
@@ -152,10 +158,6 @@ def run(apply: bool) -> dict:
                 continue
             questions = []
             for pid, source, fields in built:
-                for asset in fields["assets"]:
-                    MEDIA_DIR.mkdir(parents=True, exist_ok=True)
-                    name = Path(asset["url"]).name
-                    shutil.copyfile(PACK_DIR / "figures" / name, MEDIA_DIR / name)
                 question = Question(
                     event_id=event.id, status="draft", difficulty=0.5,   # not human-accepted, like past-test imports
                     cognitive_level="application",
@@ -202,10 +204,43 @@ def run(apply: bool) -> dict:
     return report
 
 
+def refresh_figures(apply: bool) -> dict:
+    """Re-point already-imported questions, and the exam snapshots students are served, at the
+    current figure for each item. Exam items serve their snapshot, not the Question row, so
+    changing only the Question would leave every started paper showing the old image."""
+    exams = {p["id"]: {q["number"]: q for q in p["questions"]}
+             for p in json.loads((PACK_DIR / "exams.json").read_text())}
+    stats = {"questions": 0, "snapshots": 0}
+    with SessionLocal() as db:
+        questions = [q for q in db.scalars(select(Question)).all()
+                     if (q.generation_provenance or {}).get("import_kind") == IMPORT_KIND]
+        for question in questions:
+            prov = question.generation_provenance
+            source = exams[prov["paper"]][prov["number"]]
+            built = build_question(prov["paper"], source)
+            if built is None or built["assets"] == (question.assets or []):
+                continue
+            stats["questions"] += 1
+            if apply:
+                question.assets = built["assets"]
+            for item in db.scalars(select(ExamItem).where(ExamItem.question_id == question.id)):
+                stats["snapshots"] += 1
+                if apply:
+                    item.snapshot = {**item.snapshot, "assets": built["assets"]}
+        if apply:
+            db.commit()
+    return stats
+
+
 def main() -> None:
     parser = argparse.ArgumentParser()
     parser.add_argument("--apply", action="store_true")
+    parser.add_argument("--refresh-figures", action="store_true",
+                        help="re-point imported items at the current figure files")
     args = parser.parse_args()
+    if args.refresh_figures:
+        print(json.dumps(refresh_figures(args.apply), indent=2))
+        return
     print(json.dumps(run(args.apply), indent=2))
 
 

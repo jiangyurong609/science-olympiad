@@ -63,4 +63,7 @@ list, and Division C-only material is excluded.
 - Specimen count: the repo says 150, 151 or 152 in different places; pick one definition.
 - Sulfur's smell: slide 20's "rotten eggs" describes hydrogen sulfide; a mineralogist should
   confirm the wording used.
-- The pack's figures are photographs of unknown licence; they ship as supplied by the program.
+- The pack's figures had no stated licence and are not served. Every figure was replaced by an
+  openly licensed Wikimedia Commons photo or a diagram drawn for the platform (Mohs chart, Bowen's
+  series, plate boundaries), each checked against its question: `figure_replacements.json`,
+  `commons_sources.json`.
