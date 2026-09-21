@@ -3,6 +3,82 @@
   "_notice": "Constraints an exam must satisfy, derived for internal authoring and audit. Not a reproduction of the rules manual; consult the official manual for authoritative rules.",
   "_why": "The exam builder knew the SHAPE of a paper, taken from real past tests, and nothing about what the manual forbids. These are the rules a supervisor would apply, written where the generator can read them. Every one is checkable against a finished item.",
   "events": {
+    "anatomy-and-physiology": [
+      "The systems examined are the RESPIRATORY, DIGESTIVE and IMMUNE systems. No other body system is in scope this year.",
+      "A Class II calculator is permitted."
+    ],
+    "botany": [
+      "May be run as a paper test or as a station test, and supervisors provide live or preserved specimens, pictures, tables, graphs, microscopes and slides. Items that read from a specimen or a data display are in the spirit of the event.",
+      "A Class II calculator is permitted."
+    ],
+    "circuit-lab": [
+      "The written portion is 50-75% of the score and the hands-on portion is the remaining 25-50%.",
+      "OUT OF SCOPE, explicitly: semiconductors beyond single-junction devices, AC circuit theory, frequency analysis, capacitance, inductance, non-linear devices beyond those listed, three phase power, Norton and Thevenin equivalents, oscilloscopes, sequential logic and digital clock signals. No item may require any of these.",
+      "Mathematics is limited to functions, algebraic manipulation, systems of no more than TWO equations, 2D geometry for vector direction (points, parallel and perpendicular lines, angles in degrees), whole numbers in binary and BINARY ADDITION ONLY (no negative numbers, no floating point, no other binary arithmetic), and boolean expressions with De Morgan's law and truth tables. NO TRIGONOMETRY, COMPLEX NUMBERS, MATRIX ALGEBRA OR CALCULUS.",
+      "In scope: the historical contributions of Ampere, Coulomb, Kirchhoff, Volta, Ohm, Hertz and Boole; charges and fields, static electricity sources and hazards, Coulomb's law; DC and AC characteristics, sources, uses and hazards; current, voltage, resistance, power and energy with units; DC circuit calculation and construction including series and parallel, open and short circuits, Ohm's law and schematics; switches, relays, fuses, GFCIs and breakers; silicon PN junctions and single-junction devices such as diodes and LEDs; digital logic gates, truth tables, universal gate sets, boolean expressions, De Morgan's law and combinational logic such as multiplexers and adders.",
+      "STATE AND NATIONALS ONLY: circuit analysis using Kirchhoff's voltage and current laws.",
+      "Participants must not be exposed to soldering, high power circuits or AC circuits."
+    ],
+    "codebusters": [
+      "Division B REGIONAL code types only: monoalphabetic substitution on K1 or random alphabets (Aristocrats with spaces, Patristocrats grouped in fives on a K1 alphabet), Baconian, one Xenocrypt at most (Spanish on a K1 English keyword alphabet), Fractionated Morse with a crib of at least 4 plaintext characters, cryptarithms in base 10, Porta given a key, complete columnar transposition of 9 columns or fewer with a crib no shorter than one less than the column count, Nihilist given the keys, Atbash in English, Caesar, the 5x5 checkerboard given the Polybius key, and homophonic with a crib naming at least 3 letters of a four-unique-letter keyword.",
+      "STATE AND NATIONALS add: cryptanalysis of Porta with a crib of at least 3 characters; cryptanalysis of Nihilist with a crib at least double the keyword length; cryptanalysis of the 5x5 checkerboard with two 5-letter keywords and a crib of at least 5 characters; homophonic given at least 3 letters of the keyword; and one to two Xenocrypts.",
+      "For Aristocrats, Patristocrats and Xenocrypts NO LETTER MAY EVER DECRYPT TO ITSELF. Check every generated cryptogram against this.",
+      "The FIRST question must be an Aristocrat and is the timed question.",
+      "Up to three questions that are NOT Aristocrats, Patristocrats or Xenocrypts are marked as special bonus questions, and at least one special bonus question must use the homophonic cipher.",
+      "The resource sheet supplies the Morse code table, English and Spanish letter frequencies, the Porta table, the Atbash table and Baconian mappings \u2014 items may assume these are in hand.",
+      "NO CALCULATOR and no resource materials beyond what the supervisor provides."
+    ],
+    "crime-busters": [
+      "Score weighting is fixed by the rules and a paper should match it: qualitative analysis 50%, polymer/hair/fibre testing 10%, paper chromatography 5%, crime scene physical evidence 10%, and the written analysis 25%.",
+      "Unknowns come ONLY from the manual's lists. Solids: anhydrous sodium acetate, yeast, vitamin C (ascorbic acid), calcium carbonate, table salt, sugar, flour, calcium sulfate dihydrate, cornstarch, baking soda, powdered gelatin, powdered Alka-Seltzer, white sand. Non-powdered metals: aluminum, iron, zinc, magnesium, copper, tin. Liquids: lemon juice, isopropyl rubbing alcohol, 3% household ammonia, water, vinegar, 3% hydrogen peroxide.",
+      "Identification is by tests such as solubility, acidity, magnetic property, color, density and odor. The supervisor provides iodine reagent and 1M HCl, so items may rely on those two.",
+      "Hair goes only to human/dog/cat. Fibres go only to animal/vegetable/synthetic. Do NOT ask for a specific hair type such as guard hair or a specific fibre such as silk.",
+      "Plastics are limited to PETE, HDPE, non-expanded PS, LDPE, PP, PVC and PMMA. BURN TESTS ARE NOT CONDUCTED, but burn results may be given in the item.",
+      "Chromatography items require Rf to be computed.",
+      "Shoeprint, tire tread and spatter items expect NO CALCULATIONS \u2014 direction and relative speed are read qualitatively.",
+      "The analysis item must require the student to say why the other suspects were NOT chosen, not only who the culprit is.",
+      "A Class II calculator is permitted."
+    ],
+    "dynamic-planet": [
+      "The rotating topic is EARTH'S FRESH WATERS. Oceanography belongs to a different year's paper."
+    ],
+    "experimental-design": [
+      "THIS EVENT HAS NO WRITTEN EXAM. Teams design, conduct and report an experiment on site and are scored with the official Experimental Design Checklist. Do not generate a question paper for it.",
+      "Practice material must drill what the checklist scores, in the rules' own tiebreak order: analysis of claim/evidence/reasoning, then procedure and set-up diagrams, then variables, then the data table, then the graph."
+    ],
+    "food-science": [
+      "The written exam covers DAIRY food science ONLY. In scope: the role of lipids, carbohydrates and proteins in dairy foods; standard labeling regulations; basic organic reactions including esterification and fat bonding; saturated and unsaturated fats; the chemical structure of sugars, starches, fats and proteins; essential fats, vitamins and proteins; how cooking changes dairy foods chemically; allergens in dairy foods; dairy food preservation; RDA of essential minerals and vitamins in dairy foods and the consequences of deficiency; freezing point depression; non-dairy 'milk' products; lactose free milk; health benefits of dairy foods; low fat and fat free milk; lactose intolerance; emulsification; pasteurization; organic dairy products; casein and whey proteins; probiotics. Food science outside dairy is out of scope.",
+      "The test is worth a maximum of 50 points, scored as percentage correct divided by two, so it is roughly a third of the total alongside the notebook and lab tasks.",
+      "A Class III calculator is permitted.",
+      "Tie breakers are preselected questions on the test."
+    ],
+    "heredity": [
+      "Questions must EMPHASISE PROCESS SKILLS: quantitative reasoning, making calculations, analysing and interpreting experimental results, and drawing evidence-based conclusions. Recall-only items are against the spirit of the event.",
+      "The manual's topic list is EXHAUSTIVE. In scope: Mendelian genetics (laws, Punnett squares for mono- and dihybrid crosses, probability rules, pedigrees for dominant/recessive and autosomal/sex-linked); mitosis and meiosis and karyotype analysis; molecular biology of DNA (nucleotide and backbone structure, 5' and 3' directionality, base pairing, replication and the replication fork including proofreading, plasmids, chromatin, euchromatin and heterochromatin, chromosomes, and the mutation classes with their protein consequences); the central dogma (transcription initiation/elongation/termination, RNA polymerase, activators and repressors, splicing, capping, polyadenylation; translation, the ribosome, mRNA and tRNA); population genetics (Hardy-Weinberg and its assumptions, genetic drift, founder effects, bottlenecks, migration, relative fitness); and PCR.",
+      "STATE AND NATIONALS ONLY: inheritance patterns violating Mendel's laws (linkage, incomplete and codominance, complementation); recessive epistasis; UVA and UVB damage and nucleotide excision repair; the lac operon; additive alleles and continuous variation; Sanger sequencing. Do not put these on a regional paper.",
+      "NATIONALS ONLY: the trp operon.",
+      "No overemphasis on any one topic \u2014 spread items across the six topic areas.",
+      "A Class II calculator is permitted."
+    ],
+    "meteorology": [
+      "The rotating topic is SEVERE WEATHER AND STORMS. Ordinary climate, seasons and general weather belong to a different year's paper.",
+      "A Class II calculator is permitted."
+    ],
+    "remote-sensing": [
+      "Remote sensing CONCEPTS are 25-35% of total points; INTERPRETATION AND ANALYSIS of images and data sets is 65-75%. Build to those proportions.",
+      "Questions must emphasise conceptual understanding and interpretation \u2014 qualitative patterns and trends, proportions, relative comparisons \u2014 rather than advanced mathematical or physical derivations.",
+      "EQUATIONS ARE LIMITED to: Wien's displacement law, the wave equation, Snell's law, the inverse square law for irradiance, the Stefan-Boltzmann law, radar altimetry range, and Kepler's third law. ONLY Wien's displacement law, the wave equation and radar altimetry range may be tested QUANTITATIVELY; every other equation must be assessed qualitatively.",
+      "Sensors are limited to: passive optical and thermal sensing in UV, visible, near-infrared, shortwave infrared and thermal infrared; and active radar backscatter, SAR, InSAR at a basic interpretive level, radar altimetry and radar-derived elevation products.",
+      "Orbits are limited to low, medium and high Earth, polar and non-polar, geostationary and geosynchronous.",
+      "Image characteristics are limited to spatial, temporal, radiometric (signal-to-noise ratio and sensitivity only) and spectral resolution.",
+      "Interpretation may use ONLY these platforms: Landsat 5-9 (TM, ETM, OLI) with different spectral combinations, Sentinel-1A/1B, Sentinel-2A/2B, Terra (MODIS and ASTER only), SRTM, ECOSTRESS and GOES.",
+      "Measurements and scaling are limited to distance between features, perimeter, area, altitude, elevation and slope or gradient.",
+      "A Class II calculator, two protractors and two rulers are permitted."
+    ],
+    "rocks-and-minerals": [
+      "Identification is limited to the specimens on the 2027 National Rocks and Minerals List.",
+      "A station item that names no specimen and shows no photograph cannot be answered at all; every identification item needs its image."
+    ],
     "solar-system": [
       "NO CALCULATOR is permitted. Every numeric item must be solvable by hand: algebraic rearrangement, order-of-magnitude estimation, dimensional analysis, ratios and proportions. Never require a value that needs long division, a logarithm evaluated numerically, or a fourth root taken exactly.",
       "MINIMIZE TRIVIA. The manual says so in those words. Prefer reasoning, conceptual understanding and reading a figure over recall of a date, a diameter or a mission launch year.",
@@ -23,24 +99,9 @@
       "Monitoring covers salinity, pH, phosphates, turbidity, dissolved oxygen, temperature, nitrates, fecal coliform, total solids, biochemical oxygen demand and aragonite saturation, AND THE RELATIONSHIPS BETWEEN THEM. No item may ask the student to perform a physical laboratory test.",
       "A Class II calculator is permitted."
     ],
-    "meteorology": [
-      "The rotating topic is SEVERE WEATHER AND STORMS. Ordinary climate, seasons and general weather belong to a different year's paper.",
-      "A Class II calculator is permitted."
-    ],
-    "botany": [
-      "May be run as a paper test or as a station test, and supervisors provide live or preserved specimens, pictures, tables, graphs, microscopes and slides. Items that read from a specimen or a data display are in the spirit of the event.",
-      "A Class II calculator is permitted."
-    ],
-    "anatomy-and-physiology": [
-      "The systems examined are the RESPIRATORY, DIGESTIVE and IMMUNE systems. No other body system is in scope this year.",
-      "A Class II calculator is permitted."
-    ],
-    "dynamic-planet": [
-      "The rotating topic is EARTH'S FRESH WATERS. Oceanography belongs to a different year's paper."
-    ],
-    "rocks-and-minerals": [
-      "Identification is limited to the specimens on the 2027 National Rocks and Minerals List.",
-      "A station item that names no specimen and shows no photograph cannot be answered at all; every identification item needs its image."
+    "write-it-do-it": [
+      "THIS EVENT HAS NO WRITTEN EXAM. One participant writes a description of an object in 25 minutes and the other builds it from that description in 20. Scoring is per piece for proper size, color, location, orientation and connection. Do not generate a question paper for it.",
+      "Drawings and diagrams are forbidden in the description; numerals, words, single letters, abbreviations, editing marks, punctuation and scientific symbols are allowed. Drawing a subsection tiers the team; drawing the model disqualifies it."
     ]
   }
 }
