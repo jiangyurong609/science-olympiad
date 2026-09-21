@@ -40,6 +40,13 @@ from app.services import lesson_blocks
 from app.services.student_visibility import DISPOSITION_UNREVIEWED_PRACTICE
 
 # Events whose newly authored 2027 course should go live, with the event status they end in.
+CURRENT = "current"
+PRIOR_SEASON = "prior_season_practice"
+# Statuses that put an event in the catalog beside a current one. `prior_season_practice` is
+# not here: it is badged and filed on the archive surface, which is where a demoted twin
+# belongs and why the six subjects already demoted show as one row each.
+CATALOG_VISIBLE_PEERS = {"current", "foundational"}
+
 PUBLISH_EVENTS = [
     ("dynamic-planet-b-2027", "current"),
     ("roller-coaster-b-2027", "current"),
@@ -147,6 +154,45 @@ def main() -> None:
                 event.season_status = end_status
                 event.active = True
         changed += len(publishable)
+
+    # Publishing a 2027 event makes it `current`. Its 2026 twin keeps whatever status it
+    # had, and if that status is catalog-visible the subject appears TWICE in the event
+    # picker — "Disease Detectives · Div B · 2027" directly above "Disease Detectives · Div
+    # B · 2026". The DEMOTE list below is hand-maintained and by event ID, so every newly
+    # published subject has to be remembered separately; Rocks and Minerals was missed, then
+    # Disease Detectives, and seven more subjects are queued behind them.
+    #
+    # This is structural instead: at most one catalog-visible event per (name, division),
+    # which is the same invariant `consolidate_seasons` asserts after a merge. The recorded
+    # reason says only what is actually known here — that a current event of this name exists
+    # — and never claims a topic rotation, which is what the DEMOTE entries below are for and
+    # which was verified against the manual one event at a time.
+    print("\n== 1b. demote a twin that shares a name with a newly current event ==")
+    published = {slug for slug, end_status in PUBLISH_EVENTS if end_status == CURRENT}
+    for slug in sorted(published):
+        current = db.scalar(select(Event).where(Event.slug == slug))
+        if current is None or current.season_status != CURRENT:
+            continue
+        twins = [e for e in db.scalars(select(Event).where(
+            Event.division == current.division)).all()
+            if e.id != current.id
+            and e.name.strip().lower() == current.name.strip().lower()
+            and e.season_status in CATALOG_VISIBLE_PEERS]
+        for twin in twins:
+            print(f"  demote [{twin.id}] {twin.name} {twin.division} season={twin.season} "
+                  f"({twin.season_status!r}) — {current.slug} is current under the same name")
+            if args.apply:
+                db.add(AuditLog(
+                    actor_user_id=None, action="event.demoted_duplicate_catalog_entry",
+                    entity_type="event", entity_id=str(twin.id),
+                    details={"event": twin.name, "division": twin.division,
+                             "previous_season_status": twin.season_status,
+                             "new_season_status": PRIOR_SEASON,
+                             "current_event": current.slug,
+                             "reason": "another event with the same name and division is "
+                                       "current, and the catalog shows both"}))
+                twin.season_status = PRIOR_SEASON
+                changed += 1
 
     print("\n== 2. demote courses whose subject is not what 2027 tests ==")
     for event_id, why in DEMOTE:
