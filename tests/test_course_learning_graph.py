@@ -580,3 +580,46 @@ def test_legacy_migration_preserves_exam_snapshot_and_student_history():
         assert ledger["release_gates"]["events_without_course"] == 0
         assert ledger["counts"]["lesson_skill_links"] == 1
         assert ledger["migration_state_counts"]["immutable_snapshot_preserve"] == 1
+
+
+def test_current_season_practice_course_shows_units_with_only_visible_lessons(client):
+    """An unreleased current-season course serving lessons as labelled unreviewed practice
+    shows its structure, but only the lessons a student may open, and says what it is."""
+    season, event_slug, course_id, unit_id, skill_id, lesson_id, token = seed_course()
+    with SessionLocal() as db:
+        course = db.get(Course, course_id)
+        course.status = "review_required"
+        db.get(CourseUnit, unit_id).status = "review_required"
+        db.get(Skill, skill_id).status = "review_required"
+        # a second unit whose only lesson is a draft must not appear at all
+        hidden_unit = CourseUnit(course_id=course_id, slug="drafts", title="Drafts Only",
+                                 summary="", sequence=2, status="review_required")
+        db.add(hidden_unit)
+        db.flush()
+        hidden_skill = Skill(course_id=course_id, unit_id=hidden_unit.id, slug="draft-skill",
+                             name="Draft", description="", sequence=2, status="review_required")
+        db.add(hidden_skill)
+        db.flush()
+        draft = Lesson(event_id=db.get(Lesson, lesson_id).event_id, slug="draft-lesson",
+                       title="Draft Lesson", summary="", status="draft", current_version=1,
+                       sequence=2, estimated_minutes=5)
+        db.add(draft)
+        db.flush()
+        db.add(LessonVersion(lesson_id=draft.id, version=1, review_status="ai_draft",
+                             content=[{"type": "opening", "heading": "Draft"}]))
+        db.add(LessonSkill(lesson_id=draft.id, skill_id=hidden_skill.id, is_primary=True))
+        db.commit()
+    body = client.get(f"/api/courses/{season}/{event_slug}", headers=auth(token)).json()
+    assert body["status"] == "unreviewed_practice"
+    assert [u["title"] for u in body["units"]] == ["Physical Properties"]
+    assert [l["id"] for l in body["units"][0]["skills"][0]["lessons"]] == [lesson_id]
+
+
+def test_practice_mode_does_not_apply_to_a_past_season(client):
+    season, event_slug, course_id, _, _, _, token = seed_course()
+    with SessionLocal() as db:
+        db.get(Course, course_id).status = "review_required"
+        event = db.scalar(select(Event).where(Event.slug == event_slug))
+        event.season_status = "prior_season_practice"
+        db.commit()
+    assert client.get(f"/api/courses/{season}/{event_slug}", headers=auth(token)).status_code == 404

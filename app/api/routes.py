@@ -856,6 +856,11 @@ def list_courses(
     )]
 
 
+def skill_payload_has_lessons(skill_payload: dict, skill) -> bool:
+    return any(entry["id"] == skill.id and entry["lessons"]
+               for entry in skill_payload.get(skill.unit_id, []))
+
+
 @router.get("/courses/{season}/{event_slug}")
 def get_course_map(
     season: int,
@@ -868,7 +873,16 @@ def get_course_map(
         raise HTTPException(status_code=404, detail="Course event not found")
     course = db.scalar(select(Course).where(Course.event_id == event.id))
     staff = user.role in {"admin", "editor", "sme", "calibrator"}
-    if not course or (course.status not in {"published", "student_preview"} and not staff):
+    # A current-season course whose lessons are served as labelled unreviewed practice has no
+    # editorial release yet, and the map used to 404 for every student — so each 2027 course
+    # rendered as a flat list and the page showed the lesson count as the unit count. The map
+    # is structure, not content: in practice mode it shows the units and skills, but only the
+    # lessons the student can already open, and it says what it is rather than "published".
+    practice = bool(course) and not staff \
+        and course.status not in {"published", "student_preview", "withdrawn"} \
+        and event.season_status == "current"
+    if not course or (course.status not in {"published", "student_preview"}
+                      and not staff and not practice):
         raise HTTPException(status_code=404, detail="Course map is not published")
     course_version = db.scalar(select(CourseVersion).where(
         CourseVersion.course_id == course.id,
@@ -879,14 +893,14 @@ def get_course_map(
         CourseUnit.status != "withdrawn",
     )
     preview = course.status == "student_preview" and not staff
-    if not staff and not preview:
+    if not staff and not preview and not practice:
         unit_query = unit_query.where(CourseUnit.status == "published")
     units = db.scalars(unit_query.order_by(CourseUnit.sequence, CourseUnit.id)).all()
     skills = db.scalars(select(Skill).where(
         Skill.course_id == course.id,
         Skill.unit_id.in_([unit.id for unit in units]),
         Skill.status != "withdrawn",
-        *(tuple() if staff else (Skill.status == "published",)),
+        *(tuple() if staff or practice else (Skill.status == "published",)),
     ).order_by(Skill.sequence, Skill.id)).all() if units else []
     skill_ids = [skill.id for skill in skills]
     lesson_links = db.scalars(select(LessonSkill).where(
@@ -971,6 +985,14 @@ def get_course_map(
             } for link in linked_lessons],
         }]
 
+    if practice:
+        # only structure that leads somewhere the student may go
+        skills = [skill for skill in skills if skill_payload_has_lessons(skill_payload, skill)]
+        for unit_id in list(skill_payload):
+            skill_payload[unit_id] = [s for s in skill_payload[unit_id] if s["lessons"]]
+        units = [unit for unit in units if skill_payload.get(unit.id)]
+        if not units:
+            raise HTTPException(status_code=404, detail="Course map is not published")
     total_skills = len(skills)
     mastered_skills = 0
     for skill in skills:
@@ -984,7 +1006,7 @@ def get_course_map(
         "slug": course.slug,
         "title": course.title,
         "summary": course.summary,
-        "status": course.status,
+        "status": "unreviewed_practice" if practice else course.status,
         "version": course.current_version,
         "objectives": course_version.objectives if course_version else [],
         "event": {

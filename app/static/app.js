@@ -1234,7 +1234,10 @@ function renderSubjectShell() {
   const preview = $('course-preview-banner');
   const previewMode = state.courseMap?.status;
   preview.hidden = !state.courseMap || previewMode === 'published';
-  if (previewMode === 'student_preview') {
+  if (previewMode === 'unreviewed_practice') {
+    $('course-preview-label').textContent = 'Practice course';
+    $('course-preview-copy').textContent = 'These lessons were written from cited sources and checked by automated review, but no subject expert has signed them off yet. Use Give feedback in any lesson if something looks wrong.';
+  } else if (previewMode === 'student_preview') {
     $('course-preview-label').textContent = 'Student preview';
     $('course-preview-copy').textContent = 'This early course preview is not graded and does not affect mastery. Use Give feedback in any lesson to help us improve it.';
   } else if (previewMode && previewMode !== 'published') {
