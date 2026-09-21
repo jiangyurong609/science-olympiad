@@ -1,0 +1,24 @@
+{
+  "_why": "Checklist lines the rebuilt lessons still omit (2026 Division B Experimental Design Checklist, soinc.org), plus event rules 3.b-3.c and 4.d-4.g.",
+  "lessons": {
+    "independent-and-dependent": [
+      "The checklist scores 'IV correctly identified and operationally defined' and 'DV correctly identified and operationally defined' (3 points each). Teach what an operational definition is \u2014 stating exactly how the variable is changed or measured, with units and instrument (e.g. 'flight time measured with a stopwatch to the nearest hundredth of a second', as in the official CER guide) \u2014 and show one for an IV and one for a DV."
+    ],
+    "experimental-error": [
+      "The checklist scores each of two errors as '1st/2nd specific error is identified & effect on results discussed' (3 points each). Teach that naming an error is not enough: state how that error would change the measured results (which direction, which levels of the IV)."
+    ],
+    "safety-in-the-design": [
+      "Rules 4.d-4.g: a participant not following proper safety procedures is asked to leave and the team is disqualified from the event; not following clean-up procedures multiplies the final score by 0.95; not addressing the assigned question multiplies it by up to 0.75; not collecting data on site or making up data multiplies it by 0.25. Goggles are required (rule 2.a). State these consequences explicitly."
+    ],
+    "time-budget": [
+      "Rules 3.b-3.c: in the first 20 minutes teams receive the question, materials and Part I of the report form and focus on designing and conducting the experiment; after 20 minutes they receive Part II and focus on analysis and reporting, and may keep experimenting for the whole ~50-minute event. Build the time budget on those two phases.",
+      "Do not claim that repeated trials automatically make an experiment valid: repetition reduces the effect of random error and shows variation, but it cannot fix a systematic error or a confounded design."
+    ],
+    "reading-a-trend": [
+      "The official CER guide states the line-of-best-fit slope as 0.80 s/paperclip, but a least-squares fit to the means it tabulates (0, 1, 2, 3 paperclips: 3.43, 5.17, 5.12, 6.63 s) gives about 0.96 s per paperclip. Do not state 0.80 next to those means. Either show the calculation from the data in the lesson (slope ~0.96 s per paperclip, positive) or say only that the slope is positive."
+    ],
+    "claim-evidence-reasoning": [
+      "The official CER guide states the line-of-best-fit slope as 0.80 s/paperclip, but a least-squares fit to the means it tabulates (0, 1, 2, 3 paperclips: 3.43, 5.17, 5.12, 6.63 s) gives about 0.96 s per paperclip. Do not state 0.80 next to those means. Either show the calculation from the data in the lesson (slope ~0.96 s per paperclip, positive) or say only that the slope is positive."
+    ]
+  }
+}

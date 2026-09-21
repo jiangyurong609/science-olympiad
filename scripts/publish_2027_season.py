@@ -88,6 +88,10 @@ PUBLISH_EVENTS = [
     # Codebusters: 26 lessons. Two worked examples were wrong and caught by review (the ZEBRAS
     # read-out order and a keyword-alphabet mapping); both verified by hand before publishing.
     ("codebusters-b-2027", "current"),
+    # Experimental Design: rebuilt on the official 2026 Division B checklist and CER guide,
+    # which the first build never had. The guide's own slope (0.80 s/paperclip) does not
+    # match its tabulated means (least squares gives ~0.96); the lessons use the data shown.
+    ("experimental-design-b-2027", "current"),
 ]
 
 # (event id, why this course is not 2027 coverage). Division B verified against the manual.
