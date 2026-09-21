@@ -1445,7 +1445,10 @@ function renderExams() {
     <div class="exam-card-main"><header><span class="event-label">${escapeHtml(exam.event)} · Div ${escapeHtml(exam.event_division || event?.division || '')}</span><span class="exam-badge release-${escapeHtml(exam.release_class)}">${escapeHtml(exam.release_label)}</span></header>
     <h3>${escapeHtml(exam.title)}</h3><p>${examBlurb(exam.release_class)}</p></div>
     <dl><div><dt>Questions</dt><dd>${exam.question_count}</dd></div><div><dt>Time</dt><dd>${exam.effective_duration_minutes || exam.duration_minutes} min</dd></div></dl>
-    <button class="button button-dark" type="button" data-start-exam="${exam.id}">Start Exam</button>
+    ${exam.startable === false
+      ? `<button class="button" type="button" disabled aria-disabled="true">Held For Review</button>
+         <p class="exam-blocked-reason">${escapeHtml(exam.blocked_reason || 'This exam is not open for new attempts.')}</p>`
+      : `<button class="button button-dark" type="button" data-start-exam="${exam.id}">Start Exam</button>`}
   </article>`).join('');
   loadResultsHistory();
 }
@@ -3952,6 +3955,9 @@ async function startExam(id) {
   const button = document.querySelector(`[data-start-exam="${id}"]`);
   setBusy(button, true, 'Preparing Exam…');
   try {
+    // A refusal from /start used to reject with nothing shown: the button returned to
+    // "Start Exam" and the student could click it forever. The server always sends a
+    // `detail` explaining itself; show it.
     state.exam = await api(`/exams/${id}/start`, {
       method: 'POST', headers: { 'X-Exam-Client-Session': state.examClientSession },
     });

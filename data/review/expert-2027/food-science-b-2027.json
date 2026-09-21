@@ -1,0 +1,26 @@
+{
+  "_why": "Tier 1 findings from an independent subject-matter review of the live course, restricted to statements that are FALSE or self-contradictory. Depth and coverage findings from the same review are held for a second pass so this one stays small enough to verify.",
+  "lessons": {
+    "whey-proteins": [
+      "Acid does not DENATURE casein. Acid coagulation is isoelectric precipitation: lowering milk toward pH 4.6 neutralises the negative charge on the kappa-casein surface and solubilises colloidal calcium phosphate, so the micelles lose their mutual repulsion and aggregate. Casein is largely unstructured and does not unfold.",
+      "State the two-way contrast the exam actually tests: casein is heat-stable but acid-precipitable; whey proteins (alpha-lactalbumin, beta-lactoglobulin) are acid-soluble but heat-denaturable."
+    ],
+    "acid-coagulation": [
+      "State the number: casein's isoelectric point is pH 4.6 and milk's normal pH is about 6.6. This is the lesson that explains the curd-mass lab task and it never gives the pH.",
+      "Remove 'casein denatures' from the steps, worked example, summary and checkpoint explanations; use 'precipitates' or 'aggregates and coagulates'."
+    ],
+    "ice-cream-structure": [
+      "The dominant freezing-point depressant in an ice-cream mix is the ADDED SUCROSE plus milk salts, with lactose a minor contributor. The lesson attributes the unfrozen phase to lactose alone."
+    ],
+    "calculating-depression": [
+      "Rebuild the worked example around NaCl with van 't Hoff factor i = 2, the salt the event actually uses. Every card and checkpoint currently uses MgCl2 (i = 3), which appears nowhere in the event, and the lesson titled 'Working Out How Cold the Bath Gets' never computes the bath.",
+      "Explain why the salt goes in the OUTER bag: salt depresses the melting point of the ice, the ice melts, and melting absorbs latent heat from its surroundings, which is the mix in the inner bag."
+    ],
+    "other-dairy-nutrients": [
+      "77 mg of potassium against a 4,700 mg Daily Value is about 2% DV, not 3%."
+    ],
+    "composition-of-milk": [
+      "Reconcile the whole-milk fat figure with low-fat-and-fat-free, which keys 3.5%. State one figure with a range (about 3.25-3.5% milkfat) and note the US standard-of-identity minimum of 3.25%. Both numbers are currently keyed in checkpoints."
+    ]
+  }
+}

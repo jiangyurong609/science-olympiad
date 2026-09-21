@@ -1,0 +1,23 @@
+{
+  "_why": "Tier 1 findings from an independent subject-matter review of the live course, restricted to statements that are FALSE or self-contradictory. Depth and coverage findings from the same review are held for a second pass so this one stays small enough to verify.",
+  "lessons": {
+    "writing-a-case-definition": [
+      "Checkpoint 3 is mis-keyed. The stem gives positive culture AND positive CSF antigen detection, which meet this lesson's own stated confirmation criteria, so the answer is CONFIRMED, not Probable. Either re-key to Confirmed, or change the stem so culture and antigen testing are negative or still pending, leaving turbid CSF as the only additional evidence."
+    ],
+    "cohort-studies": [
+      "Replace the 'distance from 1' rule for strength of association, which is wrong on a ratio scale. RR = 0.5 and RR = 2.0 are equally strong, and RR = 0.25 (a 4-fold effect) is stronger than RR = 3.0. State that a protective RR is compared by its reciprocal: RR = 0.7 is a 1.43-fold effect, which is why it is stronger than RR = 1.2. Fix both the checkpoint explanation and the 'Strength' property card."
+    ],
+    "incidence-and-prevalence": [
+      "72 deaths in 1,862 person-years is 0.03867, which rounds to 38.7 per 1,000 person-years, not 38.6. Correct the choice text and the explanation."
+    ],
+    "attack-rates-and-the-two-by-two-table": [
+      "The carrots card gives an unexposed attack rate of 43%, but 23/51 = 45%. 43% is the broccoli row's 22/51 copied down a row."
+    ],
+    "how-epidemiology-developed": [
+      "The Snow water-supply figures (5.0 and 0.9 per 1,000) do not match the cited sources, which give 315 versus 37 cholera deaths per 10,000 houses for Southwark and Vauxhall versus Lambeth. Use the sourced figures or state plainly that the numbers are hypothetical."
+    ],
+    "infectious-agents-by-class": [
+      "Do not tell students that 'parasite maps to protozoan'. Helminths are parasites but are not protists. Use the manual's term, protist, and note that a parasite may be a protist or a worm."
+    ]
+  }
+}

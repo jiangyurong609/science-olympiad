@@ -1,0 +1,27 @@
+{
+  "_why": "Tier 1 findings from an independent subject-matter review of the live course, restricted to statements that are FALSE or self-contradictory. Depth and coverage findings from the same review are held for a second pass so this one stays small enough to verify.",
+  "lessons": {
+    "cancer-immunotherapy-and-immune-treatment": [
+      "Antihistamines are keyed to the wrong hypersensitivity type. They block histamine H1 receptors and treat TYPE I, IgE- and histamine-mediated reactions such as allergic rhinitis and urticaria. The Arthus reaction is TYPE III, driven by immune-complex deposition, complement activation and neutrophil recruitment \u2014 histamine is not its effector. Re-key the checkpoint to a type I scenario and fix the property card cue.",
+      "Add epinephrine as first-line treatment for anaphylaxis: it causes vasoconstriction raising blood pressure, bronchodilation relieving airway obstruction, and reduced mast-cell mediator release. Epinephrine currently appears nowhere in the course."
+    ],
+    "oxygen-transport-and-the-dissociation-curve": [
+      "Resolve the self-contradiction on 2,3-BPG. The lesson teaches that acclimatised humans RAISE 2,3-BPG to unload more oxygen (a RIGHT shift, lower affinity), then states that high-altitude haemoglobin has less affinity for 2,3-BPG and shifts toward the R state (a LEFT shift). The second claim describes high-altitude-ADAPTED SPECIES such as the bar-headed goose and llama, not acclimatised humans. Label it as a species adaptation or remove it.",
+      "State explicitly that increased 2,3-BPG shifts the curve RIGHT and lowers oxygen affinity.",
+      "Add temperature as a shift factor; it is absent entirely. Increased temperature shifts the curve right and promotes unloading. Teach the full right-shift set: increased CO2, increased acidity (lower pH), increased 2,3-BPG, increased temperature, exercise."
+    ],
+    "gas-exchange-and-partial-pressures": [
+      "Correct the mixed-venous values. Blood arriving at the alveolar capillaries has PO2 about 5.3 kPa (40 mmHg) and PCO2 about 6.1 kPa (46 mmHg). The lesson gives both as about 6 kPa / 45 mmHg, which is wrong for oxygen and teaches a false symmetry between the two gases.",
+      "Rewrite or remove the garbled step 'In tissues, carbonic acid is present and oxygen is released from hemoglobin into plasma', which gestures at CO2 transport chemistry without explaining it."
+    ],
+    "mechanics-and-patterns-of-breathing": [
+      "Draw the hyperpnea/hyperventilation distinction, which the lesson blurs. Hyperpnea is increased ventilation MATCHING increased metabolic demand, as in exercise, and arterial CO2 stays normal. Hyperventilation EXCEEDS demand, so arterial CO2 falls and pH rises. Re-key the checkpoint: a person deliberately breathing deeper and faster at rest is hyperventilating, not exhibiting hyperpnea."
+    ],
+    "reading-a-spirogram": [
+      "Fix the internally inconsistent reference range. The lesson says healthy adults run 'approximately 70% to 80%' while using below 70% as the obstruction cutoff, making 70% both normal and abnormal. Healthy young adults are about 75-85%, declining with age; the obstruction cutoff is below 70%."
+    ],
+    "transplantation-and-rejection": [
+      "The isograft card reads 'A graft from a genetically identical recipient'. It should read DONOR."
+    ]
+  }
+}

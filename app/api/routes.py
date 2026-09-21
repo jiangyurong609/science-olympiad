@@ -88,6 +88,10 @@ RELEASE_LABELS = {
     "mock_shuffled": "Mock Exam",
     "machine_practice": "AI Practice · Not Expert Reviewed",
     "imported_practice": "Past Test · Transcribed, Not Reviewed",
+    # An exam whose items have not been reviewed is not offered for new attempts. It stays
+    # in the catalogue, labelled for what it is, rather than showing a Start button that the
+    # server will refuse.
+    "unreviewed_practice": "Past Test · Held For Review",
 }
 # An unrecognised release class used to fall back to "Reviewed Practice" — the *strongest*
 # claim available, asserted about content nobody could classify. A default must be the weakest
@@ -3994,9 +3998,39 @@ def list_exams(db: Session = Depends(get_db), user: User = Depends(current_user)
         "event_season": e.event.season, "season_status": e.event.season_status,
         "disposition": sv.exam_disposition(e),
         "unreviewed": sv.is_unreviewed_practice(e),
-        "release_class": e.release_class,
-        "release_label": RELEASE_LABELS.get(e.release_class, UNKNOWN_RELEASE_LABEL),
+        # `release_class` is a stored column; whether an attempt is allowed is decided by
+        # `can_start_exam` from the DISPOSITION. They disagreed for 136 published exams —
+        # every one advertised the startable `imported_practice` class and its badge, and
+        # then answered the Start button with a 409. The catalogue now reports what the
+        # start endpoint will actually do, and carries the refusal text with it so the card
+        # can explain itself instead of appearing to do nothing.
+        "release_class": _effective_release_class(db, e),
+        "release_label": RELEASE_LABELS.get(_effective_release_class(db, e),
+                                            UNKNOWN_RELEASE_LABEL),
+        "startable": _exam_startability(db, e)[0],
+        "blocked_reason": _exam_startability(db, e)[1],
     } for e in exams]
+
+
+def _exam_startability(db: Session, exam: Exam) -> tuple[bool, str]:
+    """Exactly what `start_exam` will do, computed for the catalogue."""
+    return sv.can_start_new_attempt(db, exam)
+
+
+def _effective_release_class(db: Session, exam: Exam) -> str:
+    """The release class the exam actually behaves as.
+
+    A stored `imported_practice` on an exam whose disposition is `unreviewed_practice` is a
+    promise the start endpoint will not keep. Report the disposition in that case, so the
+    badge and the button agree with the server.
+    """
+    disposition = sv.exam_disposition(exam)
+    if disposition == sv.DISPOSITION_PENDING:
+        disposition = sv.classify_exam(db, exam)
+    if exam.release_class in {"imported_practice", "machine_practice"} \
+            and disposition == sv.DISPOSITION_UNREVIEWED_PRACTICE:
+        return sv.DISPOSITION_UNREVIEWED_PRACTICE
+    return exam.release_class
 
 
 @router.post("/exams/{exam_id}/start")

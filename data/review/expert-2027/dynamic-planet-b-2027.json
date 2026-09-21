@@ -1,0 +1,22 @@
+{
+  "_why": "Tier 1 findings from an independent subject-matter review of the live course, restricted to statements that are FALSE or self-contradictory. Depth and coverage findings from the same review are held for a second pass so this one stays small enough to verify.",
+  "lessons": {
+    "stream-order-patterns-and-density": [
+      "The Strahler rule is never stated and what the lesson does say is wrong. 'Lower-order channels combine to form higher-order channels' licenses the classic error that a first-order plus a second-order makes a third-order. State the rule: a stream with no tributaries is first order; when TWO streams of the SAME order join, the result is one order higher; when streams of DIFFERENT orders join, the result keeps the HIGHER of the two. The correct rule currently appears only in a different lesson thirteen lessons later, so the course contradicts itself.",
+      "Correct the dendritic card. Dendritic patterns indicate a substrate of relatively UNIFORM resistance with no structural control, and are common on porous, permeable flat-lying sedimentary rock. Delete 'are associated with impervious, non-porous rock types' from the card, the keyed checkpoint answer and the summary."
+    ],
+    "karst-landscapes": [
+      "Correct the sinkhole definition, which contradicts the lesson's own keyed checkpoint. A sinkhole is a closed surface depression formed where soluble bedrock is removed in the subsurface, by DISSOLUTION, by cover-SUBSIDENCE as sediment settles into voids, or by cover-COLLAPSE. The card teaches only collapse and then tests a cover-subsidence example.",
+      "Remove the student-facing text 'The supplied evidence does not define solution valleys' and 'investigate a source that specifically defines solution valleys' from the summary and next_step. Define the term: a solution valley is an elongate closed depression formed by coalescing sinkholes or collapse along a subsurface conduit."
+    ],
+    "arid-to-humid-landscapes": [
+      "Fix the perennial-stream card, whose cue and detail contradict each other ('Flows continuously all year' against 'may have continuous flow only in segments of its bed'). Then separate intermittent from ephemeral: an intermittent stream flows during part of the year when the water table rises above the bed or during a wet season; an ephemeral stream flows only during and just after a precipitation event and its bed is always above the water table."
+    ],
+    "discharge-velocity-and-hydrographs": [
+      "Add downstream hydraulic geometry, which is absent and is the most-tested fluvial misconception: moving downstream, discharge, width, depth AND mean velocity all generally INCREASE while gradient and bed-particle size decrease. Velocity increases despite the gentler slope because the larger, deeper, smoother channel loses far less energy to friction. Add a checkpoint that makes the student reject 'velocity decreases downstream because the gradient decreases'."
+    ],
+    "reservoirs-residence-time-water-budgets": [
+      "Fix the typo 'a water-bearing foundation or rock' \u2014 it should read FORMATION."
+    ]
+  }
+}

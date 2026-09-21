@@ -1,0 +1,30 @@
+{
+  "_why": "Tier 1 findings from an independent subject-matter review of the live course, restricted to statements that are FALSE or self-contradictory. Depth and coverage findings from the same review are held for a second pass so this one stays small enough to verify.",
+  "lessons": {
+    "habitable-zone-and-equilibrium-temperature": [
+      "The equilibrium-temperature equation is missing the geometric factor of 4. It must be T_eq = [(1 - A)S / (4*sigma)]^(1/4), not [(1 - A)S / sigma]^(1/4). Correct it in the worked example, in the solution-routine steps block and in the summary. As written it overestimates every temperature by 4^(1/4) = 1.414 and gives Earth 360 K instead of 255 K, contradicting the 232 K figure this course's own Venus lesson uses.",
+      "Explain the factor of 4 at Division B level: the planet intercepts sunlight over its disc (pi*R^2) but radiates from its whole sphere (4*pi*R^2), so absorbed flux is spread over four times the area.",
+      "State explicitly that a planet inside the habitable zone is not necessarily habitable, and that Europa and Enceladus lie far outside it and hold liquid water by TIDAL HEATING, so the habitable zone constrains only SURFACE liquid water."
+    ],
+    "tidal-forces-and-tidal-heating": [
+      "Fix 'dissipates orbital and rotational energy as heat in the surface ocean or interior'. For every icy moon in this course the ocean is SUBSURFACE; 'surface ocean' is Earth-tide phrasing and contradicts the rest of the course."
+    ],
+    "venus-runaway-greenhouse": [
+      "Reconcile the two surface temperatures: one card says about 467 degrees C and another 462 degrees C. State the accepted range once (735-740 K, about 462-467 degrees C) and use one value.",
+      "Correct the distractor rationale claiming Venus receives 'only 25%' of Mercury's per-area flux; the ratio is closer to 29%."
+    ],
+    "named-exoplanet-systems": [
+      "Correct LHS 1140's stellar mass: about 18% of the Sun's mass, not 15%. Correct its outer planet: the radial-velocity candidate is roughly 5 Earth masses, a super-Earth or mini-Neptune, not 'Neptune-mass'.",
+      "Update the TRAPPIST-1 evidence: the lesson still says 'Hubble results and planned Webb searches'. JWST has published results since 2023 showing TRAPPIST-1 b and c have no thick atmospheres, which bears directly on the M-dwarf atmospheric-stripping point the same lesson raises."
+    ],
+    "delivering-water-and-organics": [
+      "Resolve the 67P contradiction: the property card says 67P measured three times Earth's D/H while the worked example and summary say a 2024 re-analysis found it similar to Earth's. Present the ~3x VSMOW Rosetta/ROSINA value as the established result and label the 2024 work as a recent, contested re-analysis that attributed the high value to icy dust grains in the coma biasing the sampling \u2014 not to a 'measurement error'."
+    ],
+    "doppler-shift": [
+      "Fix the garbled objective 'use a repeating pattern of shifts to describe what a planet measures about its star'. The planet measures nothing; it should read 'what the shifts reveal about a planet orbiting the star'."
+    ],
+    "extremophiles-and-limits-of-life": [
+      "Soften 'A tardigrade is an invertebrate animal, not a microorganism' to 'a micro-animal (a microscopic invertebrate), not a bacterium'. The flat denial is contestable and could cost a student a point."
+    ]
+  }
+}

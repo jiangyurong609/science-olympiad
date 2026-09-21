@@ -1,0 +1,24 @@
+{
+  "_why": "Tier 1 findings from an independent subject-matter review of the live course, restricted to statements that are FALSE or self-contradictory. Depth and coverage findings from the same review are held for a second pass so this one stays small enough to verify.",
+  "lessons": {
+    "adiabatic-isothermal-isochoric-isobaric": [
+      "Resolve the sign-convention clash. This lesson uses the IUPAC form dU = Q + W while heat-work-and-internal-energy and the-first-law both use dU = Q - W, so a student meets expansion as +W, then -W, then +W. Convert this lesson to dU = Q - W to match, or add an explicit bridging card showing both conventions and stating W_on = -W_by.",
+      "Define enthalpy before asserting 'Q = dH'. The symbol H is used three times and never defined anywhere in the course."
+    ],
+    "heat-work-and-internal-energy": [
+      "State that heat is energy IN TRANSIT across a boundary, not a quantity a body contains, and that a body stores internal energy rather than heat. The phrase does not occur anywhere in the course and two lessons call heat 'a form of energy'.",
+      "Add a checkpoint separating heat, temperature and internal energy \u2014 two samples at the same temperature but different mass, asking which has greater internal energy and whether either 'contains more heat'."
+    ],
+    "the-units-heat-is-measured-in": [
+      "Change 'Heat is a form of energy' to a statement that heat is energy transferred between systems because of a temperature difference.",
+      "Define the calorie per GRAM of water, not per millilitre."
+    ],
+    "heat-capacity-and-specific-heat": [
+      "Fix the dimensionally ambiguous card 'cp = cv + R'. In a lesson where c is in J/(kg*K) this holds only for the SPECIFIC gas constant; state it as the molar relation Cp - Cv = R, or say R here is R/M.",
+      "Correct the rationale for the 2,092 J distractor: it says the choice 'omits the factor of two', but 8368/2092 = 4 \u2014 that distractor comes from using dT = 1 K instead of 4 K."
+    ],
+    "calorimetry-and-heat-balance": [
+      "Replace the invented specific heats of 4 and 20 J/(kg*degC) with physically plausible values (lead 128, copper 385, aluminium 900, water 4184). The arithmetic is right but no real substance is within two orders of magnitude."
+    ]
+  }
+}

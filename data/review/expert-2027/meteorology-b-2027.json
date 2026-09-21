@@ -1,0 +1,19 @@
+{
+  "_why": "Tier 1 findings from an independent subject-matter review of the live course, restricted to statements that are FALSE or self-contradictory. Depth and coverage findings from the same review are held for a second pass so this one stays small enough to verify.",
+  "lessons": {
+    "storm-types-and-organisation": [
+      "The supercell is defined by its hazards rather than its structure, and the keyed discriminator is not a discriminator \u2014 squall lines and multicell clusters also produce large hail, damaging winds and tornadoes. A supercell is defined by a persistent, deep ROTATING updraft called a mesocyclone. Rewrite the property card and re-key the comparison checkpoint to the rotating updraft (seen on radar as a velocity couplet or hook echo).",
+      "Add the NWS definition of a severe thunderstorm, which the course never gives: hail 1 inch (25.4 mm) or larger, wind gusts 58 mph (50 kt) or greater, or a tornado. Any one is sufficient. The only hail threshold currently taught is the METAR 5 mm boundary, which will mislead."
+    ],
+    "station-models-and-metar": [
+      "Fix the wind-barb terminology. Standard usage is half barb = 5 knots, full barb = 10 knots, pennant (filled triangle) = 50 knots. The lesson calls the 10-knot symbol a 'full flag', but 'flag' conventionally means the 50-knot pennant, so a student will misread every standard reference."
+    ],
+    "drought-and-heat-waves": [
+      "Replace the 'Select the strongest explanation' checkpoint. As keyed it teaches that dry soil and high surface humidity go together, when they are physically anticorrelated, and its main distractor ('dry soil with INCREASED evaporative cooling') is self-contradictory, so the item is won by elimination. Teach the two regimes instead: dry heat, where parched soil eliminates evaporative cooling so nearly all radiation goes into sensible heating; and humid heat, where a lower air temperature is more dangerous because high dew points defeat sweat evaporation. Add heat index and wet-bulb temperature."
+    ],
+    "satellite-imagery-channels": [
+      "Correct the channel card so the 6.2-7.3 micron band is identified as the WATER-VAPOUR band rather than folded into a generic '3.9-7.3 micron infrared range'; 3.9 micron is the shortwave-IR fog-and-fire channel.",
+      "State the most exam-relevant contrast, currently absent: infrared imagery works 24 hours a day because it senses emitted thermal radiation, while visible imagery is useless at night. On IR, colder and higher cloud tops appear brighter."
+    ]
+  }
+}

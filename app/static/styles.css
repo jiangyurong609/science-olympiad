@@ -1644,3 +1644,17 @@ h2[tabindex="-1"]:focus-visible { outline: 0; }
 .insight-flags { display: flex; flex-wrap: wrap; gap: 5px; margin-top: 6px; }
 .insight-flag { display: inline-block; padding: 2px 9px; border-radius: 999px; background: rgba(27, 43, 36, .08); font-size: .68rem; font-weight: 700; }
 .insight-flag-warn { background: var(--amber-soft, #f7ecd8); color: #7a511d; }
+
+/* An exam held for review keeps its place in the catalogue but must not offer a Start
+   button the server will refuse — 136 published exams did exactly that, and the refusal
+   was a 3.5-second toast. The card now says why it cannot be started. */
+.exam-blocked-reason {
+  margin: 0.5rem 0 0;
+  font-size: 0.85rem;
+  line-height: 1.45;
+  color: var(--muted, #5b6472);
+}
+.exam-badge.release-unreviewed_practice {
+  background: var(--warn-soft, #fdf3e3);
+  color: var(--warn-ink, #7a5320);
+}

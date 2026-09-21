@@ -168,3 +168,45 @@ def test_unpublished_exam_cannot_be_started_or_assigned(client, student_token):
     })
     assert assigned.status_code == 409
     assert "Publish" in assigned.json()["detail"]
+
+
+def test_catalogue_never_offers_a_start_button_the_server_will_refuse():
+    """The catalogue's release_class must agree with what /start actually does.
+
+    `release_class` is a stored column; whether a new attempt is allowed is decided by
+    `can_start_new_attempt` from the DISPOSITION. They disagreed for 136 published exams:
+    each advertised the startable `imported_practice` class and its "Past Test ·
+    Transcribed, Not Reviewed" badge, rendered a Start Exam button byte-identical to a
+    working one, and then answered it with a 409. Half the exam catalogue was a dead end.
+    """
+    from app.api.routes import _effective_release_class
+    from app.core.database import SessionLocal
+    from app.models.entities import Exam
+    from app.services import student_visibility as sv
+
+    db = SessionLocal()
+
+    exam = Exam(
+        event_id=1, title="Held for review", duration_minutes=50, question_ids=[],
+        published=True, release_class="imported_practice",
+        disposition=sv.DISPOSITION_UNREVIEWED_PRACTICE,
+    )
+    assert _effective_release_class(db, exam) == sv.DISPOSITION_UNREVIEWED_PRACTICE
+
+    startable = Exam(
+        event_id=1, title="A real past paper", duration_minutes=50, question_ids=[],
+        published=True, release_class="imported_practice",
+        disposition=sv.DISPOSITION_IMPORTED_PRACTICE,
+    )
+    assert _effective_release_class(db, startable) == "imported_practice"
+    db.close()
+
+
+def test_every_release_class_the_catalogue_can_emit_has_a_label():
+    """An unlabelled class falls back to a generic string, which is how a held exam would
+    have kept looking like a startable one."""
+    from app.api.routes import RELEASE_LABELS
+    from app.services import student_visibility as sv
+
+    assert sv.DISPOSITION_UNREVIEWED_PRACTICE in RELEASE_LABELS
+    assert "Review" in RELEASE_LABELS[sv.DISPOSITION_UNREVIEWED_PRACTICE]

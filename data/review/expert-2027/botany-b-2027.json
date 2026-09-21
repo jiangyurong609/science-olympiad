@@ -1,0 +1,25 @@
+{
+  "_why": "Tier 1 findings from an independent subject-matter review of the live course, restricted to statements that are FALSE or self-contradictory. Depth and coverage findings from the same review are held for a second pass so this one stays small enough to verify.",
+  "lessons": {
+    "hormones-and-tropisms": [
+      "The gravitropism rule as taught predicts roots bend the WRONG WAY. Gravity redistributes auxin to the LOWER side of both organs, but they respond oppositely: in a shoot the high auxin concentration PROMOTES elongation so the shoot bends up; in a root that same high concentration INHIBITS elongation so the upper side elongates faster and the root bends DOWN. State this inversion explicitly and add a checkpoint asking the student to predict a horizontal root's bend.",
+      "Qualify the blanket rule 'auxin promotes cell elongation': it promotes elongation at the low concentrations found in shoots and inhibits it at the higher concentrations roots experience."
+    ],
+    "deficiency-or-infection": [
+      "Rebalance the purple-pigmentation card. PHOSPHORUS deficiency is the textbook cause of purple or reddish anthocyanin on stems, petioles and leaf undersides, with abnormally dark green foliage. NITROGEN deficiency's hallmark is uniform pale yellow-green chlorosis of the OLDEST leaves. The lesson leads with nitrogen for purple, which will lose a student the point at a station."
+    ],
+    "roots-absorption-and-anchorage": [
+      "State which route the Casparian strip blocks: it is a suberin band in the radial and transverse endodermal walls that seals the APOPLASTIC (cell-wall) pathway, forcing water and dissolved minerals to cross a plasma membrane into the symplast before reaching the stele. That membrane crossing is what makes uptake selective.",
+      "Define 'stele' before using it \u2014 it appears nine times including inside a keyed checkpoint stem, with no definition. Fix the layer list that presents 'epidermis, epiblem' as two layers: epiblem IS the root epidermis."
+    ],
+    "monocots-dicots-and-plant-names": [
+      "Replace 'Dicot vascular bundles are arranged in concentric circles' with 'arranged in a ring around the pith'. A dicot stem has ONE ring of bundles."
+    ],
+    "respiration-and-primary-production": [
+      "Fix the worked example: the prompt says oxygen is measured in 'three vessels' and then describes only two."
+    ],
+    "microscopes-slides-and-specimen-stations": [
+      "Fix the misconception text for the '5x' distractor: subtracting the objective from the eyepiece gives -5, not 5."
+    ]
+  }
+}

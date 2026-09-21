@@ -1,0 +1,27 @@
+{
+  "_why": "Tier 1 findings from an independent subject-matter review of the live course, restricted to statements that are FALSE or self-contradictory. Depth and coverage findings from the same review are held for a second pass so this one stays small enough to verify.",
+  "lessons": {
+    "global-indo-pacific-and-atlantic-distribution": [
+      "Delete the 'Caribbean reef shark' property card: it is not on the 2027 roster and must not be the Atlantic example. Replace with the manual's three Atlantic-only organisms by common name: flamingo tongue snail, Gorgonia (sea fan), Nassau grouper.",
+      "Rename the Indo-Pacific example from 'humpback grouper' to BARRAMUNDI COD, the common name the 2027 manual uses, in the card, both checkpoint stems, the misconception notes, the steps block and the summary. Part II is common-name-only, so the answer key will read Barramundi cod.",
+      "Use the manual's common name 'long-spined black sea urchin' rather than the genus Diadema."
+    ],
+    "hard-corals-sea-fans-and-sponges": [
+      "Remove the false claim that 'demosponges are also called coralline sponges'. Demospongiae is the largest sponge class, about 80% of all sponge species, with skeletons of silica spicules and/or spongin fibres. Coralline sponges (sclerosponges), which add a dense calcium-carbonate basal skeleton, are a small subset, not a synonym.",
+      "Rewrite the checkpoint so the demosponge is recognised by spicules/spongin and the sponge body plan, not by 'a dense layered skeleton'.",
+      "Name the sea fan by its roster name Gorgonia and state it is Atlantic only."
+    ],
+    "hydrometers-salinometers-and-percent-salinity": [
+      "Change the calibration quantity from mass fraction (mass/mass) to percent MASS/VOLUME, which is what the event specifies: grams of NaCl per 100 mL of solution. Note that % m/v and % m/m are not the same number and that the event scores % m/v; at the top of the 1-10% range the difference exceeds the State/Nationals tolerance."
+    ],
+    "ph-carbonate-chemistry-and-aragonite-saturation": [
+      "State that surface seawater pH is about 8.1 and is BASIC, and that ocean acidification means pH falling toward neutral while remaining above 7. The ocean is not becoming an acid. Add a checkpoint that rejects 'the ocean will become acidic, with pH below 7'."
+    ],
+    "marine-and-estuarine-ecology": [
+      "Fix 'burrowing oysters' in the checkpoint stem and its explanation. Oysters cement to hard substrate and do not burrow. Attribute burrowing to the clams and bloodworms and list oysters and mussels as attached bivalves."
+    ],
+    "core-water-quality-parameters": [
+      "Reconcile with nutrient-cycling-in-water: say 'nitrogen and phosphorus' rather than singling out phosphorus, and state that phosphorus is usually limiting in fresh water while nitrogen is usually limiting in marine and estuarine water."
+    ]
+  }
+}
