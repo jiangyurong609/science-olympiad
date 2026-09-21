@@ -1,0 +1,11 @@
+{
+  "_why": "Automated review rejected two Codebusters lessons for errors in their worked examples; both checked by hand.",
+  "lessons": {
+    "finding-the-column-count": [
+      "The ZEBRAS example conflates two different sequences. Ranking the letters alphabetically (A=1, B=2, E=3, R=4, S=5, Z=6) gives the LABELS written above the columns in keyword order: Z E B R A S -> 6 3 2 4 1 5. The READ-OUT order is different: columns are taken in label order 1, 2, 3, 4, 5, 6, which is the column under A (position 5), then B (position 3), E (position 2), R (position 4), S (position 6), Z (position 1): original positions 5 3 2 4 6 1. State both explicitly and never call 6 3 2 4 1 5 the read-out order. During decryption, the first block of ciphertext fills the column labelled 1 (the A column), the next block the column labelled 2, and so on. Rewrite the checkpoint so it asks for the column labels OR for the read-out order, with a key that matches."
+    ],
+    "xenocrypts": [
+      "The keyword alphabet for ZEBRAS is ZEBRASCDFGHIJKLMNOPQTUVWXY under plaintext A-Z, so plaintext F -> S, L -> I, E -> A (the 6th, 12th and 5th letters of the mixed alphabet). The worked example maps L to G, which is wrong. Recompute every mapping in the example from the aligned alphabets and show the position arithmetic."
+    ]
+  }
+}

@@ -85,6 +85,9 @@ PUBLISH_EVENTS = [
     # three rounds running because its grounding passage gave polystyrene's range including
     # foamed grades; the rules name non-expanded PS, and the correction says so.
     ("crime-busters-b-2027", "current"),
+    # Codebusters: 26 lessons. Two worked examples were wrong and caught by review (the ZEBRAS
+    # read-out order and a keyword-alphabet mapping); both verified by hand before publishing.
+    ("codebusters-b-2027", "current"),
 ]
 
 # (event id, why this course is not 2027 coverage). Division B verified against the manual.

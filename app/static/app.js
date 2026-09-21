@@ -1224,7 +1224,11 @@ function renderSubjectShell() {
   $('learn-title').textContent = event.name;
   $('learn-lede').textContent = state.courseMap?.summary || experience.focus;
   $('learning-path-title').textContent = 'Course content';
-  $('learn-module-count').textContent = state.courseMap?.units?.length ?? state.lessons.length;
+  // Without a released course map the unit count is unknown. Falling back to the lesson count
+  // printed "Units 27" beside "Lessons 27" on every 2027 course, which is simply false.
+  const unitCount = state.courseMap?.units?.length;
+  $('learn-module-count').textContent = unitCount ?? '';
+  $('learn-module-count').parentElement.hidden = unitCount == null;
   $('learn-duration').textContent = String(state.lessons.length);
   $('learn-progress-value').textContent = `${progress}%`;
   const preview = $('course-preview-banner');
@@ -1403,6 +1407,7 @@ function renderCourseMap() {
   $('learning-path-title').textContent = 'Course content';
   $('course-scope').textContent = `${course.progress.mastered_skills} of ${course.progress.total_skills} skills mastered`;
   $('learn-module-count').textContent = course.units.length;
+  $('learn-module-count').parentElement.hidden = false;
   $('learn-progress-value').textContent = `${course.progress.percent}%`;
 
   const activeUnitIndex = Math.max(0, course.units.findIndex(unit => (
