@@ -4462,18 +4462,46 @@ async function startTransfer(id, button) {
   try {
     const result = await api(`/remediation/${id}/transfer`, { method: 'POST' });
     const question = result.question;
-    elements.status.innerHTML = `<div class="question"><h3>${escapeHtml(question.stem)}</h3><fieldset class="choices"><legend>Select one answer</legend>${question.choices.map((choice, index) => `<label class="choice"><input type="radio" name="transfer-${result.transfer_id}" value="${index}"><span>${escapeHtml(choice)}</span></label>`).join('')}</fieldset><button class="button button-primary" type="button" data-submit-transfer="${result.transfer_id}" data-for-case="${id}">Submit Transfer Answer</button></div>`;
+    elements.status.innerHTML = remediationQuestionMarkup(
+      question, `transfer-${result.transfer_id}`, 'data-submit-transfer',
+      result.transfer_id, id, 'Submit Transfer Answer');
   } catch (error) { elements.status.textContent = error.message; }
   finally { setBusy(button, false); }
 }
 
+// A remediation check is rendered from a question snapshot, and that snapshot is not always
+// multiple choice — a short_answer transfer arrives with `choices: []`. Rendering it as a
+// fieldset produced an empty "Select one answer" box with no input at all, and the submit
+// button then found nothing checked and fired no request, so the Prove step of the error
+// loop was a dead end for every short-answer case.
+function remediationQuestionMarkup(question, name, submitAttr, transferId, caseId, label) {
+  const isChoice = Array.isArray(question.choices) && question.choices.length > 0;
+  const field = isChoice
+    ? `<fieldset class="choices"><legend>Select one answer</legend>${question.choices.map((choice, index) =>
+        `<label class="choice"><input type="radio" name="${name}" value="${index}"><span>${escapeHtml(choice)}</span></label>`).join('')}</fieldset>`
+    : `<label class="field"><span>Your answer</span>
+         <textarea name="${name}" rows="4" placeholder="Write your answer in your own words."></textarea>
+       </label>`;
+  return `<div class="question"><h3>${escapeHtml(question.stem)}</h3>${field}`
+    + `<button class="button button-primary" type="button" ${submitAttr}="${transferId}" data-for-case="${caseId}">${label}</button></div>`;
+}
+
+// Reads whichever input the snapshot produced, so one submit path serves both shapes.
+function remediationAnswer(name) {
+  const picked = document.querySelector(`input[name="${name}"]:checked`);
+  if (picked) return { selected_index: Number(picked.value) };
+  const text = document.querySelector(`textarea[name="${name}"]`);
+  const value = text ? text.value.trim() : '';
+  return value ? { text: value } : null;
+}
+
 async function submitTransfer(transferId, caseId, button) {
   const elements = caseElements(button);
-  const picked = document.querySelector(`input[name="transfer-${transferId}"]:checked`);
-  if (!picked) { toast('Choose an answer before submitting the transfer check.'); return; }
+  const answer = remediationAnswer(`transfer-${transferId}`);
+  if (!answer) { toast('Write or choose an answer before submitting the transfer check.'); return; }
   setBusy(button, true, 'Checking Answer…');
   try {
-    const result = await api(`/remediation/transfer/${transferId}/submit`, { method: 'POST', body: JSON.stringify({ answer: { selected_index: Number(picked.value) } }) });
+    const result = await api(`/remediation/transfer/${transferId}/submit`, { method: 'POST', body: JSON.stringify({ answer }) });
     elements.status.innerHTML = result.correct ? '<p>Transfer passed. Your retention check is scheduled for 3 days from now.</p>' : `<p>Not yet. Return to the explanation, strengthen your reflection, then try a new transfer check.</p><button class="button button-primary" type="button" data-start-transfer="${caseId}">Try Another Transfer Check</button>`;
   } catch (error) { toast(error.message); }
   finally { setBusy(button, false); }
@@ -4485,7 +4513,9 @@ async function startDelayedReview(id, button) {
   try {
     const result = await api(`/remediation/${id}/delayed-review`, { method: 'POST' });
     const question = result.question;
-    elements.status.innerHTML = `<div class="question"><h3>${escapeHtml(question.stem)}</h3><fieldset class="choices"><legend>Select one answer</legend>${question.choices.map((choice, index) => `<label class="choice"><input type="radio" name="delayed-${result.transfer_id}" value="${index}"><span>${escapeHtml(choice)}</span></label>`).join('')}</fieldset><button class="button button-primary" type="button" data-submit-delayed="${result.transfer_id}" data-for-case="${id}">Submit Retention Answer</button></div>`;
+    elements.status.innerHTML = remediationQuestionMarkup(
+      question, `delayed-${result.transfer_id}`, 'data-submit-delayed',
+      result.transfer_id, id, 'Submit Retention Answer');
     button.hidden = true;
   } catch (error) { elements.status.textContent = error.message; }
   finally { setBusy(button, false); }
@@ -4493,11 +4523,11 @@ async function startDelayedReview(id, button) {
 
 async function submitDelayedReview(transferId, caseId, button) {
   const elements = caseElements(button);
-  const picked = elements.card.querySelector(`input[name="delayed-${transferId}"]:checked`);
-  if (!picked) { elements.status.insertAdjacentHTML('afterbegin', '<p>Choose an answer before submitting the retention check.</p>'); return; }
+  const answer = remediationAnswer(`delayed-${transferId}`);
+  if (!answer) { elements.status.insertAdjacentHTML('afterbegin', '<p>Write or choose an answer before submitting the retention check.</p>'); return; }
   setBusy(button, true, 'Checking Retention…');
   try {
-    const result = await api(`/remediation/delayed-review/${transferId}/submit`, { method: 'POST', body: JSON.stringify({ answer: { selected_index: Number(picked.value) } }) });
+    const result = await api(`/remediation/delayed-review/${transferId}/submit`, { method: 'POST', body: JSON.stringify({ answer }) });
     elements.card.innerHTML = result.correct ? '<div class="repair-resolved"><span aria-hidden="true">✓</span><h2>Error Resolved</h2><p>You proved the correction after a delay. This case is now closed.</p></div>' : `<div class="repair-reopened"><h2>This Idea Needs One More Pass</h2><p>The case is reopened so the miss does not disappear before it is learned.</p><button class="button button-primary" type="button" data-start-transfer="${caseId}">Restart Transfer Practice</button><div data-case-status aria-live="polite"></div></div>`;
     state.dashboard = await api(`/student/dashboard?event_slug=${encodeURIComponent(state.activeEventSlug)}`);
     updateDashboard();
