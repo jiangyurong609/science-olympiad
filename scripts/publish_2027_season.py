@@ -92,6 +92,11 @@ PUBLISH_EVENTS = [
     # which the first build never had. The guide's own slope (0.80 s/paperclip) does not
     # match its tabulated means (least squares gives ~0.96); the lessons use the data shown.
     ("experimental-design-b-2027", "current"),
+    # Remote Sensing: 42 lessons on the 2027 Observable Earth topic (SAR/InSAR, radar
+    # altimetry, elevation products). Three lessons were fixed by hand after repair kept
+    # restoring grounded overstatements: clouds are bright in NIR (snow is not), geostationary
+    # satellites cannot see the poles, altimeters do not measure wavelength or wind direction.
+    ("remote-sensing-b-2027", "current"),
 ]
 
 # (event id, why this course is not 2027 coverage). Division B verified against the manual.
