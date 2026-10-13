@@ -1,10 +1,59 @@
 from __future__ import annotations
 from datetime import datetime, timedelta, timezone
+import logging
 import random
 from sqlalchemy import select
 from sqlalchemy.orm import Session
 from app.models.entities import MasteryState, Question, RemediationCase, TransferAttempt
-from app.services.scoring import score_response
+from app.services.answer_grading import _override_from_grade, grade_batch
+from app.services.scoring import is_gradeable, score_response
+
+_log = logging.getLogger(__name__)
+
+# Short-answer keys are rubric-style ("Answers will vary. Example: …"), so the key shown to the
+# grader is an example, never the only accepted wording.
+_EXAMPLE_KEY_RUBRIC = (
+    "The reference answer is only an example. Accept any answer that correctly and "
+    "completely addresses the question, in the student's own words."
+)
+
+
+def _score_remediation_answer(payload: dict, answer: dict) -> tuple[bool, float, dict]:
+    """Score a transfer or retention answer.
+
+    Exams grade short answers with the model (answer_grading); remediation used the strict
+    exact-match scorer alone. A correct answer in the student's own words ("Polymorphs — the
+    atoms are arranged differently…") was marked wrong against the key "They are polymorphs…",
+    and a key that begins "Answers will vary" could never be matched at all, so those cases
+    could never be fixed. Multiple choice and numeric stay deterministic; an exact match still
+    passes without a model call; and if the model is unavailable the deterministic result stands.
+    """
+    class SnapshotQuestion:
+        question_type = payload["question_type"]
+        answer_spec = payload["answer_spec"]
+
+    deterministic = score_response(SnapshotQuestion(), answer)
+    if deterministic[0] or payload["question_type"] != "short_answer":
+        return deterministic
+    spec = payload["answer_spec"] or {}
+    text = str((answer or {}).get("text", "")).strip()
+    if not text or not is_gradeable("short_answer", spec):
+        return deterministic
+    reference = str(spec.get("answer", ""))
+    rubric = str(spec.get("rubric", "") or "")
+    if reference.strip().lower().startswith("answers will vary"):
+        rubric = f"{rubric} {_EXAMPLE_KEY_RUBRIC}".strip()
+    try:
+        grade = grade_batch([{
+            "id": 0, "question": str(payload.get("stem", ""))[:600], "reference_answer": reference,
+            "accepted": spec.get("accepted", []), "rubric": rubric, "student_answer": text[:600],
+        }]).get(0)
+        if grade is None:
+            return deterministic
+        return _override_from_grade(grade, reference, float(spec.get("points", 1)))
+    except Exception:  # noqa: BLE001 — grading is best-effort; never block the student on the model
+        _log.warning("remediation_llm_grading_failed_fell_back_to_deterministic", exc_info=True)
+        return deterministic
 
 
 def build_transfer_question(db: Session, case: RemediationCase) -> TransferAttempt:
@@ -77,11 +126,7 @@ def _variant(source: dict, seed: int) -> dict:
 
 
 def grade_transfer(db: Session, transfer: TransferAttempt, answer: dict) -> TransferAttempt:
-    class SnapshotQuestion:
-        question_type = transfer.question_payload["question_type"]
-        answer_spec = transfer.question_payload["answer_spec"]
-
-    correct, _, diagnostic = score_response(SnapshotQuestion(), answer)
+    correct, _, diagnostic = _score_remediation_answer(transfer.question_payload, answer)
     now = datetime.now(timezone.utc)
     transfer.answer = answer
     transfer.is_correct = correct
@@ -156,11 +201,7 @@ def grade_delayed_review(db: Session, transfer: TransferAttempt, answer: dict) -
     if transfer.question_payload.get("review_phase") != "delayed":
         raise ValueError("Transfer attempt is not a delayed review")
 
-    class SnapshotQuestion:
-        question_type = transfer.question_payload["question_type"]
-        answer_spec = transfer.question_payload["answer_spec"]
-
-    correct, _, diagnostic = score_response(SnapshotQuestion(), answer)
+    correct, _, diagnostic = _score_remediation_answer(transfer.question_payload, answer)
     now = datetime.now(timezone.utc)
     transfer.answer = answer
     transfer.is_correct = correct
