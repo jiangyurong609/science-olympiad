@@ -1498,6 +1498,7 @@ function renderExams() {
         ? `<button class="button button-dark" type="button" data-start-exam="${exam.id}">Resume Exam</button>
            <p class="exam-open-attempt">${escapeHtml(openAttemptNote(exam.open_attempt))}</p>`
         : `<button class="button button-dark" type="button" data-start-exam="${exam.id}">Start Exam</button>`}
+    <div class="exam-last-result" data-last-result="${exam.id}"></div>
   </article>`).join('');
   loadResultsHistory();
 }
@@ -1512,6 +1513,14 @@ async function loadResultsHistory() {
   }
   {
     const rows = state.resultsHistory;
+    // Each exam card links to its most recent submission, so a handed-in exam can be checked
+    // from the place the student started it.
+    document.querySelectorAll('[data-last-result]').forEach(slot => {
+      const last = rows.find(a => String(a.exam_id) === slot.dataset.lastResult);
+      slot.innerHTML = last
+        ? `<button class="button button-secondary" type="button" data-review-attempt="${last.attempt_id}" data-score="${last.score ?? 0}" data-max="${last.max_score ?? 0}">View your submission · ${last.ratio == null ? '—' : Math.round(last.ratio * 100) + '%'}</button>`
+        : '';
+    });
     $('results-history-block').hidden = rows.length === 0;
     $('results-history-list').innerHTML = rows.map(a => {
       const pct = a.ratio == null ? '—' : `${Math.round(a.ratio * 100)}%`;
@@ -1524,7 +1533,7 @@ async function loadResultsHistory() {
   }
 }
 
-$('results-history-list').addEventListener('click', event => {
+document.addEventListener('click', event => {
   const btn = event.target.closest('[data-review-attempt]');
   if (!btn) return;
   loadReview(Number(btn.dataset.reviewAttempt),
@@ -1585,9 +1594,16 @@ function renderPracticeLab() {
 }
 
 function renderNotebook() {
-  const cases = state.dashboard?.open_remediation || [];
-  $('error-empty').hidden = cases.length > 0;
-  $('error-notebook-list').innerHTML = cases.map(item => {
+  const all = state.dashboard?.open_remediation || [];
+  // A case that passed its transfer check is waiting on a dated retention check. It is not an
+  // open question any more, so it leaves the list and sits in a collapsed note below.
+  const waiting = all.filter(item => item.status === 'delayed_review' && item.next_review_at && new Date(item.next_review_at).getTime() > Date.now());
+  const cases = all.filter(item => !waiting.includes(item));
+  $('error-empty').hidden = all.length > 0;
+  const waitingNote = waiting.length
+    ? `<details class="repair-waiting"><summary>${waiting.length} fixed — recheck scheduled</summary><ul>${waiting.map(item => `<li>${escapeHtml(item.error_type.replaceAll('_', ' '))} · recheck ${escapeHtml(new Intl.DateTimeFormat(undefined, { dateStyle: 'medium' }).format(new Date(item.next_review_at)))}</li>`).join('')}</ul></details>`
+    : '';
+  $('error-notebook-list').innerHTML = waitingNote + cases.map(item => {
     const diagnosis = item.diagnosis || {};
     const plan = item.plan || {};
     const due = item.next_review_at ? new Date(item.next_review_at) : null;
@@ -4614,7 +4630,13 @@ async function submitTransfer(transferId, caseId, button) {
   setBusy(button, true, 'Checking Answer…');
   try {
     const result = await api(`/remediation/transfer/${transferId}/submit`, { method: 'POST', body: JSON.stringify({ answer }) });
-    elements.status.innerHTML = result.correct ? '<p>Transfer passed. Your retention check is scheduled for 3 days from now.</p>' : `<p>Not yet. Return to the explanation, strengthen your reflection, then try a new transfer check.</p><button class="button button-primary" type="button" data-start-transfer="${caseId}">Try Another Transfer Check</button>`;
+    if (result.correct) {
+      toast('Fixed. Your recheck is scheduled for 3 days from now.');
+      state.dashboard = await api(`/student/dashboard?event_slug=${encodeURIComponent(state.activeEventSlug)}`);
+      updateDashboard();
+      return;
+    }
+    elements.status.innerHTML = `<p>Not yet. Return to the explanation, strengthen your reflection, then try a new transfer check.</p><button class="button button-primary" type="button" data-start-transfer="${caseId}">Try Another Transfer Check</button>`;
   } catch (error) { toast(error.message); }
   finally { setBusy(button, false); }
 }

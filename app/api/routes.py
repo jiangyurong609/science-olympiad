@@ -5035,7 +5035,7 @@ def my_attempts(
     for a in rows:
         exam = exams.get(a.exam_id)
         out.append({
-            "attempt_id": a.id,
+            "attempt_id": a.id, "exam_id": a.exam_id,
             "exam_title": exam.title if exam else "Exam",
             "event": event_names.get(exam.event_id, "") if exam else "",
             "score": a.score, "max_score": a.max_score,
