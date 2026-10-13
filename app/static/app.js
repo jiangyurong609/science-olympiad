@@ -4107,6 +4107,10 @@ async function startExam(id) {
       question => !Object.hasOwn(state.answers, question.id)
     ));
     state.questionEnteredAt = Date.now();
+    // Whatever happened to the previous exam (submitted, left, or failed mid-submit), this one
+    // starts with a working Submit button.
+    state.submitting = false;
+    setBusy($('submit-exam'), false);
     showSection('exam');
     $('exam-title').textContent = state.exam.title;
     $('exam-release-label').textContent = state.exam.release_label;
@@ -4405,6 +4409,7 @@ async function submitExam(autoSubmit = false) {
   }
   state.submitting = true;
   setBusy($('submit-exam'), true, 'Submitting…');
+  let submitted = false;
   try {
     const pendingQuestionIds = [...state.saveQueue.keys()].filter(id => Object.hasOwn(state.answers, id));
     state.saveQueue.forEach(timeout => clearTimeout(timeout));
@@ -4423,15 +4428,26 @@ async function submitExam(autoSubmit = false) {
     const result = await api(`/attempts/${state.attempt}/submit`, {
       method: 'POST', headers: { 'X-Exam-Client-Session': state.examClientSession },
     });
+    submitted = true;
     localStorage.removeItem(offlineStorageKey());
     state.pendingAutoSubmit = false;
     state.resultsHistory = null;  // a new attempt was just recorded — refresh the cache
-    await loadReview(state.attempt, result);
-  } catch (error) {
-    toast(error.message);
+    // The Submit button is one element shared by every exam in this page session. It used to be
+    // released only on failure, so after the first successful submit it stayed disabled and
+    // labelled "Submitting…" for every later exam until the page was reloaded: the click did
+    // nothing, sent no request, and so left nothing in any server log.
     state.submitting = false;
     setBusy($('submit-exam'), false);
-    startTimer(state.exam.deadline_at);
+    await loadReview(state.attempt, result);
+  } catch (error) {
+    // Once the server has accepted the submit the exam IS handed in. A failure after that point
+    // is only the review page failing to load: say so, and never restart the exam clock.
+    toast(submitted
+      ? 'Your exam was submitted. The review page could not load — open it from Practice & Exams.'
+      : error.message);
+    state.submitting = false;
+    setBusy($('submit-exam'), false);
+    if (!submitted) startTimer(state.exam.deadline_at);
   }
 }
 
