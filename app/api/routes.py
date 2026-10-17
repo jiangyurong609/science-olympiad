@@ -8,6 +8,7 @@ import secrets
 from urllib.parse import urlparse
 from fastapi import APIRouter, Depends, File, Form, Header, HTTPException, Query, UploadFile
 from jose import JWTError
+from pydantic import BaseModel, Field
 from sqlalchemy import func, or_, select
 from sqlalchemy.orm import Session
 from app.core.config import get_settings
@@ -159,6 +160,39 @@ def current_user(authorization: str | None = Header(default=None), db: Session =
     if not user or not user.is_active:
         raise HTTPException(status_code=401, detail="User profile not found or inactive")
     return user
+
+
+class ClientEvent(BaseModel):
+    kind: str = Field(max_length=40)
+    detail: dict = Field(default_factory=dict)
+    at: str = Field(default="", max_length=40)
+
+
+class ClientEventBatch(BaseModel):
+    events: list[ClientEvent] = Field(max_length=20)
+    page: str = Field(default="", max_length=120)
+    build: str = Field(default="", max_length=40)
+
+
+@router.post("/client-events", status_code=204)
+def client_events(payload: ClientEventBatch, authorization: str | None = Header(default=None),
+                  user_agent: str | None = Header(default=None), db: Session = Depends(get_db)):
+    """Browser-side breadcrumbs: a click on a dead button or a script error never reaches the
+    server, so the server log could not tell "he never tried" from "it silently failed". These
+    land in the request log as `client_event` lines. No answers or free text are accepted:
+    only short scalar facts, each truncated."""
+    uid = None
+    if authorization:
+        try:
+            uid = current_user(authorization, db).id
+        except HTTPException:
+            uid = None
+    for event in payload.events:
+        detail = {str(k)[:40]: (str(v)[:200] if not isinstance(v, (int, float, bool)) else v)
+                  for k, v in list(event.detail.items())[:12]}
+        _log.warning("client_event %s", json.dumps({
+            "kind": event.kind, "user": uid, "page": payload.page, "build": payload.build,
+            "at": event.at, "ua": (user_agent or "")[:120], **{"d": detail}}))
 
 
 def require_content_staff(user: User = Depends(current_user)) -> User:

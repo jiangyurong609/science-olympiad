@@ -214,6 +214,36 @@ function confirmDialog({ title = 'Are you sure?', body = '', confirmLabel = 'Con
   });
 }
 
+// Browser-side breadcrumbs. A click on a disabled button or a script error never reaches the
+// server, so the request log could not tell "never tried" from "silently failed". Facts only —
+// never answers or typed text.
+const clientLog = (() => {
+  const queue = [];
+  let sent = 0;
+  let timer = null;
+  let BUILD = '';
+  try { BUILD = String(document.querySelector('script[src*="app.js"]')?.src || '').match(/v=(\d+)/)?.[1] || ''; } catch { /* build tag is optional */ }
+  function flush() {
+    timer = null;
+    if (!queue.length || sent > 200) return;
+    const events = queue.splice(0, 20);
+    sent += events.length;
+    const body = JSON.stringify({ events, page: location.hash.slice(0, 100), build: BUILD });
+    const headers = { 'Content-Type': 'application/json' };
+    if (state.token) headers.Authorization = `Bearer ${state.token}`;
+    try { fetch('/api/client-events', { method: 'POST', headers, body, keepalive: true }).catch(() => {}); } catch { /* logging must never break the app */ }
+  }
+  return (kind, detail = {}) => {
+    try {
+      queue.push({ kind, detail, at: new Date().toISOString() });
+      if (!timer) timer = setTimeout(flush, 1500);
+    } catch { /* ignore */ }
+  };
+})();
+window.addEventListener('error', event => clientLog('js_error', { message: event.message, source: String(event.filename || '').split('/').pop(), line: event.lineno }));
+window.addEventListener('unhandledrejection', event => clientLog('js_rejection', { message: String(event.reason?.message || event.reason || '') }));
+window.addEventListener('pagehide', () => clientLog('page_hide'));
+
 async function api(path, options = {}) {
   if (state.authConfig?.provider === 'firebase' && path !== '/auth/config') await refreshFirebaseTokenIfNeeded();
   const headers = { 'Content-Type': 'application/json', ...(options.headers || {}) };
@@ -222,10 +252,12 @@ async function api(path, options = {}) {
   try {
     response = await fetch(`/api${path}`, { ...options, headers });
   } catch (error) {
+    if (!path.startsWith('/client-events')) clientLog('api_unreachable', { method: options.method || 'GET', path: path.replace(/\d+/g, 'N').slice(0, 80), online: navigator.onLine });
     throw new Error('You appear to be offline. Check your connection and try again.');
   }
   const data = await response.json().catch(() => ({}));
   if (!response.ok) {
+    clientLog('api_error', { method: options.method || 'GET', path: path.replace(/\d+/g, 'N').slice(0, 80), status: response.status });
     // Only tear down an established session: during login/bootstrap a 401
     // simply means the profile does not exist yet, and clearing the token
     // here would strip the Authorization header from the follow-up
@@ -4128,6 +4160,7 @@ async function startExam(id) {
     // starts with a working Submit button.
     state.submitting = false;
     setBusy($('submit-exam'), false);
+    clientLog('exam_start', { attempt: state.attempt, submit_enabled: !$('submit-exam').disabled });
     showSection('exam');
     $('exam-title').textContent = state.exam.title;
     $('exam-release-label').textContent = state.exam.release_label;
@@ -4378,6 +4411,18 @@ function updateExamNavigation() {
 $('previous-question').addEventListener('click', () => goToQuestion(state.currentQuestion - 1));
 $('next-question').addEventListener('click', () => goToQuestion(state.currentQuestion + 1));
 $('submit-exam').addEventListener('click', submitExam);
+// A disabled button swallows its own click, which is exactly how a stuck Submit went unseen.
+// A press that lands on the dead button's box is recorded.
+document.addEventListener('pointerdown', event => {
+  try {
+    const target = $('submit-exam');
+    if (!target.disabled || target.hidden) return;
+    const box = target.getBoundingClientRect();
+    if (event.clientX >= box.left && event.clientX <= box.right && event.clientY >= box.top && event.clientY <= box.bottom) {
+      clientLog('submit_blocked', { reason: state.submitting ? 'busy' : 'disabled', attempt: state.attempt });
+    }
+  } catch { /* logging only */ }
+}, true);
 
 async function exitExam() {
   if (!(await confirmDialog({
@@ -4409,6 +4454,7 @@ function startTimer(deadlineAt) {
 }
 
 async function submitExam(autoSubmit = false) {
+  clientLog('submit_click', { auto: autoSubmit === true, already_submitting: state.submitting, online: navigator.onLine, attempt: state.attempt });
   if (state.submitting) return;
   const unanswered = state.exam.questions.filter(question => !isAnswered(question.id)).length;
   if (!autoSubmit && unanswered > 0 && !(await confirmDialog({
@@ -4446,6 +4492,7 @@ async function submitExam(autoSubmit = false) {
       method: 'POST', headers: { 'X-Exam-Client-Session': state.examClientSession },
     });
     submitted = true;
+    clientLog('submit_ok', { attempt: state.attempt });
     localStorage.removeItem(offlineStorageKey());
     state.pendingAutoSubmit = false;
     state.resultsHistory = null;  // a new attempt was just recorded — refresh the cache
@@ -4457,6 +4504,7 @@ async function submitExam(autoSubmit = false) {
     setBusy($('submit-exam'), false);
     await loadReview(state.attempt, result);
   } catch (error) {
+    clientLog('submit_failed', { submitted, message: error.message, status: error.status || 0 });
     // Once the server has accepted the submit the exam IS handed in. A failure after that point
     // is only the review page failing to load: say so, and never restart the exam clock.
     toast(submitted
