@@ -1664,3 +1664,7 @@ h2[tabindex="-1"]:focus-visible { outline: 0; }
 
 /* A gated Continue is waiting on the student, not on the network. */
 #lesson-next:disabled { cursor: not-allowed; }
+
+.remediation.is-fixed { opacity: .75; }
+.repair-waiting { margin: 0 0 12px; }
+.repair-waiting summary { cursor: pointer; }

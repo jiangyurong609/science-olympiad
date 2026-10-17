@@ -75,7 +75,7 @@ const state = {
 sessionStorage.setItem('fieldstoneExamClientSession', state.examClientSession);
 
 const $ = id => document.getElementById(id);
-const appViews = ['dashboard', 'learn', 'practice', 'errors', 'coach', 'content', 'parent'];
+const appViews = ['dashboard', 'learn', 'practice', 'results', 'errors', 'coach', 'content', 'parent'];
 const mainSections = ['auth', 'app-shell', 'exam', 'review'];
 const prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)');
 
@@ -254,7 +254,7 @@ function showSection(id) {
 // field. No data leaked, because every staff endpoint answers a student with 403, but the
 // student got staff chrome and a raw role error where their app should be. A hard page load
 // of the same URL redirected correctly; only in-SPA navigation slipped through.
-const STUDENT_VIEWS = ['dashboard', 'learn', 'practice', 'errors'];
+const STUDENT_VIEWS = ['dashboard', 'learn', 'practice', 'results', 'errors'];
 const VIEWS_BY_ROLE = {
   student: STUDENT_VIEWS,
   coach: [...STUDENT_VIEWS, 'coach'],
@@ -295,6 +295,7 @@ function showView(id, updateHash = true) {
     const eventSuffix = ['learn', 'practice'].includes(id) ? `?event=${encodeURIComponent(state.activeEventSlug)}` : '';
     history.replaceState(null, '', `#${route}${eventSuffix}`);
   }
+  if (id === 'results') loadResultsHistory();
   $(`${id === 'dashboard' ? 'welcome' : `${id}-title`}`)?.focus?.({ preventScroll: true });
 }
 
@@ -1509,7 +1510,7 @@ async function loadResultsHistory() {
   // switches — cache it and only refetch when invalidated (after a submit).
   if (!state.resultsHistory) {
     try { state.resultsHistory = (await api('/me/attempts')).attempts || []; }
-    catch { $('results-history-block').hidden = true; return; }
+    catch { $('results-empty').hidden = false; return; }
   }
   {
     const rows = state.resultsHistory;
@@ -1521,13 +1522,13 @@ async function loadResultsHistory() {
         ? `<button class="button button-secondary" type="button" data-review-attempt="${last.attempt_id}" data-score="${last.score ?? 0}" data-max="${last.max_score ?? 0}">View your submission · ${last.ratio == null ? '—' : Math.round(last.ratio * 100) + '%'}</button>`
         : '';
     });
-    $('results-history-block').hidden = rows.length === 0;
+    $('results-empty').hidden = rows.length > 0;
     $('results-history-list').innerHTML = rows.map(a => {
       const pct = a.ratio == null ? '—' : `${Math.round(a.ratio * 100)}%`;
       return `<article class="result-row surface">
         <div class="result-meta"><strong>${escapeHtml(a.exam_title)}</strong><small>${escapeHtml(a.event)} · ${escapeHtml(formatDate(a.submitted_at))}</small></div>
         <div class="result-score"><span class="result-pct">${pct}</span><small>${a.score ?? 0} / ${a.max_score ?? 0} pts</small></div>
-        <button class="button button-secondary" type="button" data-review-attempt="${a.attempt_id}" data-score="${a.score ?? 0}" data-max="${a.max_score ?? 0}">Review</button>
+        <button class="button button-secondary" type="button" data-review-attempt="${a.attempt_id}" data-score="${a.score ?? 0}" data-max="${a.max_score ?? 0}">${a.open_fixes ? `Review · ${a.open_fixes} to fix` : 'Review'}</button>
       </article>`;
     }).join('');
   }
@@ -4495,6 +4496,15 @@ async function renderAnswerKey(attemptId) {
   } catch { panel.hidden = true; }
 }
 
+// A case that has passed its transfer check (or is closed) is finished business. Reopening an
+// old review used to show every case as a fresh blank reflection form, as if nothing had been fixed.
+function fixedCaseMarkup(item, index) {
+  if (!['delayed_review', 'resolved'].includes(item.status)) return '';
+  const when = item.next_review_at ? new Intl.DateTimeFormat(undefined, { dateStyle: 'medium' }).format(new Date(item.next_review_at)) : '';
+  const note = item.status === 'resolved' ? 'Fixed and rechecked.' : `Fixed. Recheck ${when ? `on ${escapeHtml(when)}` : 'scheduled'}.`;
+  return `<article class="remediation surface is-fixed" data-case-id="${item.id}"><span class="remediation-step">Step ${index + 1} · ${escapeHtml(item.error_type.replaceAll('_', ' '))}</span><p><span aria-hidden="true">✓</span> ${note}</p><p>${escapeHtml(item.diagnosis?.question_stem || '')}</p></article>`;
+}
+
 async function loadReview(attemptId, result) {
   const review = await api(`/attempts/${attemptId}/review`);
   state.reviewAttemptId = attemptId;
@@ -4509,12 +4519,12 @@ async function loadReview(attemptId, result) {
   $('challenge-question').innerHTML = review.challengeable_items.map(item => `<option value="${item.question_id}" ${item.challenge ? 'disabled' : ''}>Question ${item.position} · ${item.challenge ? `Report ${escapeHtml(item.challenge.status.replaceAll('_', ' '))}` : escapeHtml(item.stem)}</option>`).join('');
   $('student-challenge-form').querySelector('button[type="submit"]').disabled = review.challengeable_items.every(item => item.challenge);
   $('student-challenge-status').textContent = review.challengeable_items.some(item => item.challenge?.public_note) ? 'A correction decision is available in your content report history.' : '';
-  $('remediation-list').innerHTML = review.remediation_cases.length ? review.remediation_cases.map((item, index) => `<article class="remediation surface" data-case-id="${item.id}">
+  $('remediation-list').innerHTML = review.remediation_cases.length ? review.remediation_cases.map((item, index) => fixedCaseMarkup(item, index) || `<article class="remediation surface" data-case-id="${item.id}">
     <span class="remediation-step">Step ${index + 1} · ${escapeHtml(item.error_type.replaceAll('_', ' '))}</span>
     <h2>Understand What Happened</h2><p><strong>Question:</strong> ${escapeHtml(item.diagnosis.question_stem)}</p><p><strong>Targeted explanation:</strong> ${escapeHtml(item.plan.explanation)}</p>
     <ol>${item.plan.steps.map(step => `<li>${escapeHtml(step)}</li>`).join('')}</ol>
     <label for="reflection-${item.id}"><strong>Explain your original approach and where it changed course.</strong></label><textarea id="reflection-${item.id}" rows="5" minlength="10">${escapeHtml(item.student_reflection || '')}</textarea>
-    <div class="review-actions"><button class="button button-dark" type="button" data-save-reflection="${item.id}">Save Reflection & Continue</button><button class="button button-secondary" type="button" data-open-tutor="remediation" data-tutor-context-id="${item.id}">Ask Grounded Tutor</button></div><div class="case-status" data-case-status aria-live="polite"></div>
+    <div class="review-actions"><button class="button button-dark" type="button" data-save-reflection="${item.id}">Save Reflection & Continue</button><button class="button button-secondary" type="button" data-open-tutor="remediation" data-tutor-context-id="${item.id}">Ask Grounded Tutor</button></div><div class="case-status" data-case-status aria-live="polite">${item.status === 'guided_practice' ? `Reflection saved. <button class="button button-primary" type="button" data-start-transfer="${item.id}">Start Unseen Transfer Check</button>` : ''}</div>
   </article>`).join('') : '<div class="empty-state surface"><span aria-hidden="true">✓</span><h2>Strong Work</h2><p>No remediation cases were created. Keep the knowledge fresh with your next review.</p></div>';
   state.submitting = false;
 }
@@ -4632,8 +4642,16 @@ async function submitTransfer(transferId, caseId, button) {
     const result = await api(`/remediation/transfer/${transferId}/submit`, { method: 'POST', body: JSON.stringify({ answer }) });
     if (result.correct) {
       toast('Fixed. Your recheck is scheduled for 3 days from now.');
-      state.dashboard = await api(`/student/dashboard?event_slug=${encodeURIComponent(state.activeEventSlug)}`);
-      updateDashboard();
+      // On a review page the card is not re-rendered by the dashboard, so close it here.
+      if (elements.card.parentElement?.id === 'remediation-list') {
+        elements.card.classList.add('is-fixed');
+        elements.card.innerHTML = '<p><span aria-hidden="true">✓</span> Fixed. Your recheck is scheduled for 3 days from now.</p>';
+      }
+      state.resultsHistory = null;
+      try {
+        state.dashboard = await api(`/student/dashboard?event_slug=${encodeURIComponent(state.activeEventSlug)}`);
+        updateDashboard();
+      } catch { /* the card already shows the result; the list refreshes on the next load */ }
       return;
     }
     elements.status.innerHTML = `<p>Not yet. Return to the explanation, strengthen your reflection, then try a new transfer check.</p><button class="button button-primary" type="button" data-start-transfer="${caseId}">Try Another Transfer Check</button>`;
@@ -4671,8 +4689,9 @@ async function submitDelayedReview(transferId, caseId, button) {
 
 $('back-dashboard').addEventListener('click', async () => {
   state.attempt = null;
+  state.resultsHistory = null;
   await loadApplication();
-  showView('dashboard');
+  showView('results');
 });
 
 window.addEventListener('beforeunload', event => {
@@ -4707,7 +4726,7 @@ window.addEventListener('hashchange', () => {
   // Non-student roles have no student dashboard, so #overview (the brand logo)
   // must land them on their own home instead of an empty student view.
   const roleHome = roleHomeView();
-  let view = { '#learn': 'learn', '#practice': 'practice', '#errors': 'errors', '#coach': 'coach', '#content': 'content', '#insights': 'content', '#parent': 'parent' }[hashRoute] || roleHome;
+  let view = { '#learn': 'learn', '#practice': 'practice', '#results': 'results', '#errors': 'errors', '#coach': 'coach', '#content': 'content', '#insights': 'content', '#parent': 'parent' }[hashRoute] || roleHome;
   // A student who has not chosen a subject yet has nothing to see in Courses or
   // Practice — land them on the guided picker instead of an empty shell.
   if (['learn', 'practice'].includes(view) && roleHome === 'dashboard' && state.events.length && !activeEvent()) {

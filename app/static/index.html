@@ -12,7 +12,7 @@
   <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='16' fill='%231f5a45'/%3E%3Ctext x='32' y='44' text-anchor='middle' font-size='38' fill='white'%3EF%3C/text%3E%3C/svg%3E">
   <link rel="preload" href="/static/fonts/Fraunces.woff2" as="font" type="font/woff2" crossorigin>
   <link rel="preload" href="/static/fonts/AtkinsonHyperlegibleNext.woff2" as="font" type="font/woff2" crossorigin>
-  <link rel="stylesheet" href="/static/styles.css?v=63">
+  <link rel="stylesheet" href="/static/styles.css?v=64">
   <link rel="stylesheet" href="/static/theme.css?v=63">
 </head>
 <body>
@@ -118,6 +118,7 @@
           <a href="#overview" data-view-link="dashboard" data-student-nav class="active"><span aria-hidden="true">⌂</span>Home</a>
           <a href="#learn" data-view-link="learn" data-student-nav><span aria-hidden="true">◇</span>Courses</a>
           <a href="#practice" data-view-link="practice" data-student-nav><span aria-hidden="true">◎</span>Practice</a>
+          <a href="#results" data-view-link="results" data-student-nav><span aria-hidden="true">✓</span>Results</a>
           <a href="#errors" data-view-link="errors" data-student-nav><span aria-hidden="true">↻</span>Review <span id="nav-error-count" class="nav-count">0</span></a>
           <a href="#coach" data-view-link="coach" data-coach-nav hidden><span aria-hidden="true">⌂</span>Coach Overview</a>
           <a href="#content" data-view-link="content" data-content-tab-link="workspace" data-content-nav hidden><span aria-hidden="true">◫</span>Content Review</a>
@@ -347,9 +348,6 @@
           <div id="exam-list" class="exam-grid" aria-live="polite"></div>
           <div id="exam-empty" class="empty-state surface" hidden><span aria-hidden="true">◇</span><h3>No Reviewed Exams Yet</h3><p>Your official resources are ready above. A non-graded preview exam will appear after question review.</p></div>
           </section>
-          <section class="section-block" id="results-history-block" aria-labelledby="results-history-title" hidden><div class="section-heading"><div><p class="kicker">Your progress</p><h2 id="results-history-title">Recent Results</h2></div></div>
-          <div id="results-history-list" class="results-history" aria-live="polite"></div>
-          </section>
           </div>
 
           <article id="material-reader" class="material-reader surface" aria-labelledby="material-reader-title" hidden>
@@ -371,6 +369,11 @@
           </article>
         </section>
 
+        <section id="results" class="view" aria-labelledby="results-title" hidden>
+          <div class="page-heading"><p class="kicker">Finished exams</p><h1 id="results-title" tabindex="-1">My Results</h1><p class="lede">Open any exam to see your answers, the score, and what is left to fix.</p></div>
+          <div id="results-history-block"><div id="results-history-list" class="results-history" aria-live="polite"></div></div>
+          <div id="results-empty" class="empty-state surface" hidden><span aria-hidden="true">◇</span><h2>No finished exams yet</h2><p>When you submit an exam it will be kept here with your score and answers.</p></div>
+        </section>
         <section id="errors" class="view" aria-labelledby="errors-title" hidden>
           <div class="page-heading"><p class="kicker">Error notebook</p><h1 id="errors-title">Make the Miss Useful</h1><p class="lede">Diagnose the cause, repair the idea, prove it on a new problem, then check it again later.</p></div>
           <div class="repair-roadmap surface" aria-label="Error repair process"><span>1 · Explain</span><span>2 · Repair</span><span>3 · Prove</span><span>4 · Recheck</span></div>
@@ -631,7 +634,7 @@
         <div id="answer-key-list"></div>
       </section>
       <div id="remediation-list"></div>
-      <button id="back-dashboard" class="button button-secondary" type="button">Return to Overview</button>
+      <button id="back-dashboard" class="button button-secondary" type="button">Back to my results</button>
     </section>
   </main>
 
@@ -655,6 +658,6 @@
       </div>
     </div>
   </div>
-  <script src="/static/app.js?v=62"></script>
+  <script src="/static/app.js?v=63"></script>
 </body>
 </html>

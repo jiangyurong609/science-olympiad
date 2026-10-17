@@ -4324,6 +4324,7 @@ def review_attempt(attempt_id: int, db: Session = Depends(get_db), user: User = 
             "id": c.id, "question_id": c.question_id, "error_type": c.error_type,
             "status": c.status, "diagnosis": c.diagnosis, "plan": c.plan,
             "student_reflection": c.student_reflection,
+            "next_review_at": (c.plan or {}).get("next_review_at"),
         } for c in cases],
         "challengeable_items": [{
             "question_id": item.question_id,
@@ -5015,7 +5016,7 @@ def admin_update_user(
 
 @router.get("/me/attempts")
 def my_attempts(
-    limit: int = Query(20, ge=1, le=100),
+    limit: int = Query(50, ge=1, le=100),
     db: Session = Depends(get_db),
     user: User = Depends(current_user),
 ):
@@ -5031,10 +5032,19 @@ def my_attempts(
         select(Exam).where(Exam.id.in_({a.exam_id for a in rows})))} if rows else {}
     event_names = dict(db.execute(select(Event.id, Event.name).where(
         Event.id.in_({e.event_id for e in exams.values()}))).all()) if exams else {}
+    # Fixes still owed per exam: a case waiting on its dated recheck, or already resolved,
+    # is not outstanding.
+    owed = dict(db.execute(
+        select(RemediationCase.attempt_id, func.count(RemediationCase.id)).where(
+            RemediationCase.user_id == user.id,
+            RemediationCase.attempt_id.in_([a.id for a in rows] or [0]),
+            RemediationCase.status.not_in(["resolved", "delayed_review"]),
+        ).group_by(RemediationCase.attempt_id)).all())
     out = []
     for a in rows:
         exam = exams.get(a.exam_id)
         out.append({
+            "open_fixes": owed.get(a.id, 0),
             "attempt_id": a.id, "exam_id": a.exam_id,
             "exam_title": exam.title if exam else "Exam",
             "event": event_names.get(exam.event_id, "") if exam else "",
